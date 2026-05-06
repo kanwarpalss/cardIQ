@@ -1,0 +1,8 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=Libre+Baskerville:ital@0;1&display=swap');
+
+html, body { background: #0b0b0d; color: #e8e6df; }
+body { font-family: 'Sora', system-ui, sans-serif; }
