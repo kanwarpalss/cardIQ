@@ -32,7 +32,7 @@ export const HSBC_PREMIER: CardSpec = {
   },
 
   gmail: {
-    senders: ["hsbc@mail.hsbc.co.in", "alerts@hsbc.co.in", "noreply@hsbc.co.in", "creditcards@hsbc.co.in"],
+    senders: ["hsbc.co.in", "mail.hsbc.co.in"],
     subject_hints: ["transaction", "spent", "purchase", "credit card"],
   },
 };

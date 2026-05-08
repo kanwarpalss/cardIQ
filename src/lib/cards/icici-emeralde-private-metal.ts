@@ -34,7 +34,7 @@ export const ICICI_EMERALDE_PRIVATE_METAL: CardSpec = {
   },
 
   gmail: {
-    senders: ["credit_cards@icicibank.com", "alerts@icicibank.com", "transactions@icicibank.com"],
+    senders: ["icicibank.com"],
     subject_hints: ["transaction", "spent", "purchase", "credit card"],
   },
 };

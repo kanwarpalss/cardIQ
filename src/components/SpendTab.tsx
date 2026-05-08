@@ -2,14 +2,19 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { CARD_REGISTRY } from "@/lib/cards/registry";
+import { CATEGORIES } from "@/lib/categories";
+import MerchantPanel from "./MerchantPanel";
+import TransactionsTable from "./TransactionsTable";
 
 type Txn = {
+  id: string;
   card_last4: string;
   amount_inr: number;
   merchant: string | null;
   category: string | null;
   txn_at: string;
   txn_type: "debit" | "credit";
+  notes?: string | null;
 };
 
 type CardRow = { id: string; last4: string; nickname: string | null; product_key: string };
@@ -25,7 +30,6 @@ const PRESETS = [
 ];
 
 const MERCHANT_PAGE = 10;
-const TXN_PAGE = 25;
 const MILESTONE = 150000;
 
 const ymd = (d: Date) => d.toISOString().slice(0, 10);
@@ -40,7 +44,6 @@ export default function SpendTab() {
   const [selectedCards, setSelectedCards] = useState<Set<string>>(new Set(["all"]));
   const [txnType, setTxnType] = useState<"all" | "debit" | "credit">("all");
   const [categoryFilter, setCategoryFilter] = useState<string | null>(null);
-  const [search, setSearch] = useState("");
 
   // Single source of truth — fetched once, then everything else is in-memory.
   const [allData, setAllData] = useState<AllData | null>(null);
@@ -56,7 +59,6 @@ export default function SpendTab() {
   const [merchantPage, setMerchantPage] = useState(1);
   const [merchantQuery, setMerchantQuery] = useState("");
   const [showAllMerchants, setShowAllMerchants] = useState(false);
-  const [txnPage, setTxnPage] = useState(1);
 
   async function loadAll() {
     setLoading(true);
@@ -67,7 +69,7 @@ export default function SpendTab() {
   }
 
   useEffect(() => { loadAll(); }, []);
-  useEffect(() => { setTxnPage(1); setMerchantPage(1); }, [fromDate, toDate, selectedCards, txnType, categoryFilter, search]);
+  useEffect(() => { setMerchantPage(1); }, [fromDate, toDate, selectedCards, txnType, categoryFilter]);
 
   function applyPreset(p: typeof PRESETS[0]) {
     const [a, b] = p.f();
@@ -103,9 +105,48 @@ export default function SpendTab() {
             if (msg.status === "listing") setSyncProgress("Counting emails…");
             else if (msg.status === "syncing") {
               const pct = msg.total ? Math.round((msg.fetched / msg.total) * 100) : 0;
-              setSyncProgress(`${pct}%  ·  ${msg.fetched ?? 0} / ${msg.total ?? "?"} emails  ·  ${msg.parsed ?? 0} parsed  ·  ${msg.inserted ?? 0} new`);
+              setSyncProgress(`${pct}%  ·  ${msg.fetched ?? 0} / ${msg.total ?? "?"} emails  ·  ${msg.new_txns ?? 0} new transactions`);
             } else if (msg.status === "done") {
-              setSyncResult(`✓ ${msg.parsed} transactions, ${msg.inserted} new (${msg.fetched} emails)`);
+              const newCount = msg.new_txns ?? 0;
+              setSyncResult(newCount > 0
+                ? `✓ ${newCount} new transaction${newCount === 1 ? "" : "s"} added (${msg.fetched} emails checked)`
+                : `✓ Already up to date — ${msg.fetched} emails checked, 0 new transactions`);
+              setSyncProgress(null); loadAll();
+            } else if (msg.status === "error") throw new Error(msg.message);
+          } catch (e) { if ((e as Error).message === "Sync failed") throw e; }
+        }
+      }
+    } catch (e) { setSyncResult(`Error: ${(e as Error).message}`); setSyncProgress(null); }
+    finally { setSyncing(false); }
+  }
+
+  async function syncBackfill() {
+    if (!confirm("This will fetch all your card emails going back 5 years — it can take 10–20 minutes. Your app will stay usable. Continue?")) return;
+    setSyncing(true); setSyncResult(null); setSyncProgress(null);
+    try {
+      const res = await fetch("/api/gmail/sync", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ lookback_days: 1825 }), // 5 years
+      });
+      if (!res.ok || !res.body) throw new Error("Sync failed");
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        for (const line of decoder.decode(value).split("\n").filter(Boolean)) {
+          try {
+            const msg = JSON.parse(line);
+            if (msg.status === "listing") setSyncProgress("Counting 5-year history…");
+            else if (msg.status === "syncing") {
+              const pct = msg.total ? Math.round((msg.fetched / msg.total) * 100) : 0;
+              setSyncProgress(`${pct}%  ·  ${msg.fetched ?? 0} / ${msg.total ?? "?"} emails  ·  ${msg.new_txns ?? 0} new transactions`);
+            } else if (msg.status === "done") {
+              const newCount = msg.new_txns ?? 0;
+              setSyncResult(newCount > 0
+                ? `✓ Full history: ${newCount} new transaction${newCount === 1 ? "" : "s"} added (${msg.fetched} emails scanned). Change the date range above to see older data.`
+                : `✓ Full history scanned — ${msg.fetched} emails checked. All ${msg.parsed} transactions were already in your database. Change the date range above to explore all periods.`);
               setSyncProgress(null); loadAll();
             } else if (msg.status === "error") throw new Error(msg.message);
           } catch (e) { if ((e as Error).message === "Sync failed") throw e; }
@@ -125,13 +166,101 @@ export default function SpendTab() {
     } else setSyncResult(`Error: ${json.error}`);
   }
 
-  // ── Client-side filtering pipeline (instant) ──
+  /** Rename a merchant and/or change its category for ALL transactions. */
+  async function handleMerchantSave(old_name: string, new_name: string, category: string) {
+    const res = await fetch("/api/merchant-mappings", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ old_name, new_name, category }),
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      setSyncResult(`Error saving mapping: ${err.error ?? "unknown"}`);
+      return;
+    }
+    // Optimistic update: patch allData in-memory so the UI reflects instantly.
+    setAllData((prev) => {
+      if (!prev) return prev;
+      return {
+        ...prev,
+        transactions: prev.transactions.map((t) =>
+          t.merchant === old_name ? { ...t, merchant: new_name, category } : t
+        ),
+      };
+    });
+  }
+
+  /** Update a single transaction's category. */
+  async function handleTxnCategoryChange(txnId: string, category: string) {
+    const res = await fetch(`/api/transactions/${txnId}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ category }),
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      setSyncResult(`Error updating category: ${err.error ?? "unknown"}`);
+      return;
+    }
+    // Optimistic update.
+    setAllData((prev) => {
+      if (!prev) return prev;
+      return {
+        ...prev,
+        transactions: prev.transactions.map((t) =>
+          t.id === txnId ? { ...t, category } : t
+        ),
+      };
+    });
+  }
+
+  /** Update a single transaction's note (free-form text, "" clears it). */
+  async function handleTxnNotesChange(txnId: string, notes: string) {
+    const res = await fetch(`/api/transactions/${txnId}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ notes }),
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      setSyncResult(`Error saving note: ${err.error ?? "unknown"}`);
+      return;
+    }
+    setAllData((prev) => {
+      if (!prev) return prev;
+      return {
+        ...prev,
+        transactions: prev.transactions.map((t) =>
+          t.id === txnId ? { ...t, notes } : t
+        ),
+      };
+    });
+  }
+
+  /** Canonical CATEGORIES + any custom categories the user has used before. */
+  const allCategories = useMemo(() => {
+    const set = new Set<string>(CATEGORIES);
+    for (const t of allData?.transactions ?? []) {
+      if (t.category && t.category.trim()) set.add(t.category.trim());
+    }
+    return Array.from(set);
+  }, [allData]);
+
+  /** All distinct existing notes — fed to TransactionsTable for autofill. */
+  const existingNotes = useMemo(() => {
+    const set = new Set<string>();
+    for (const t of allData?.transactions ?? []) {
+      if (t.notes && t.notes.trim()) set.add(t.notes.trim());
+    }
+    return Array.from(set);
+  }, [allData]);
+
+  // ── Client-side filtering pipeline (global filters only; search/amount live in TransactionsTable) ──
   const filteredTxns = useMemo(() => {
     if (!allData) return [];
-    const fromMs = new Date(fromDate + "T00:00:00").getTime();
-    const toMs   = new Date(toDate + "T23:59:59").getTime();
+    const fromMs  = new Date(fromDate + "T00:00:00").getTime();
+    const toMs    = new Date(toDate + "T23:59:59").getTime();
     const cardSet = selectedCards.has("all") ? null : selectedCards;
-    const q = search.trim().toLowerCase();
 
     return allData.transactions.filter((t) => {
       const ts = new Date(t.txn_at).getTime();
@@ -139,10 +268,9 @@ export default function SpendTab() {
       if (cardSet && !cardSet.has(t.card_last4)) return false;
       if (txnType !== "all" && t.txn_type !== txnType) return false;
       if (categoryFilter && t.category !== categoryFilter) return false;
-      if (q && !(t.merchant?.toLowerCase().includes(q))) return false;
       return true;
     });
-  }, [allData, fromDate, toDate, selectedCards, txnType, categoryFilter, search]);
+  }, [allData, fromDate, toDate, selectedCards, txnType, categoryFilter]);
 
   // Aggregations
   const aggregates = useMemo(() => {
@@ -202,9 +330,6 @@ export default function SpendTab() {
   const maxMerchantTotal = filteredMerchants[0]?.total ?? 1;
   const maxCategoryTotal = aggregates.by_category[0]?.total ?? 1;
 
-  const totalTxnPages = Math.ceil(filteredTxns.length / TXN_PAGE);
-  const visibleTxns = filteredTxns.slice((txnPage - 1) * TXN_PAGE, txnPage * TXN_PAGE);
-
   return (
     <div className="max-w-5xl mx-auto p-6 space-y-6 pb-20">
       {/* Header */}
@@ -217,6 +342,11 @@ export default function SpendTab() {
             </span>
           )}
           <button onClick={recategorize} className="text-xs px-2.5 py-1 border border-line rounded hover:border-gold/60">Re-categorize</button>
+          <button onClick={syncBackfill} disabled={syncing}
+            className="text-xs px-2.5 py-1 border border-line rounded hover:border-gold/60 disabled:opacity-50"
+            title="Fetch all emails going back 5 years (one-time, takes 10–20 min)">
+            {syncing ? "…" : "Load full history"}
+          </button>
           <button onClick={sync} disabled={syncing}
             className="bg-gold text-ink px-3 py-1.5 rounded text-sm font-medium disabled:opacity-50">
             {syncing ? "Syncing…" : "Sync Gmail"}
@@ -282,14 +412,12 @@ export default function SpendTab() {
               </button>
             ))}
           </div>
-          <div className="ml-auto flex items-center gap-2">
-            <input type="text" placeholder="Search merchant…" value={search} onChange={(e) => setSearch(e.target.value)}
-              className="bg-panel border border-line rounded px-3 py-1 text-xs w-48 focus:border-gold outline-none" />
-            {(categoryFilter || search) && (
-              <button onClick={() => { setCategoryFilter(null); setSearch(""); }}
-                className="text-xs opacity-50 hover:opacity-100">clear</button>
-            )}
-          </div>
+          {categoryFilter && (
+            <div className="ml-auto">
+              <button onClick={() => setCategoryFilter(null)}
+                className="text-xs opacity-50 hover:opacity-100">clear filter</button>
+            </div>
+          )}
         </div>
 
         {categoryFilter && (
@@ -314,7 +442,7 @@ export default function SpendTab() {
           </div>
 
           {/* Milestone bars */}
-          {txnType !== "credit" && !categoryFilter && !search && (
+          {txnType !== "credit" && !categoryFilter && (
             <div className="border border-line rounded-lg p-4 space-y-3 bg-panel/30">
               <h3 className="text-xs uppercase tracking-widest opacity-50">Milestones</h3>
               {allData.cards
@@ -389,23 +517,12 @@ export default function SpendTab() {
                   <option value="name">By name</option>
                 </select>
               </div>
-              <div className="space-y-2">
-                {visibleMerchants.map((m) => (
-                  <div key={m.merchant}>
-                    <div className="flex justify-between items-baseline text-sm gap-2">
-                      <span className="truncate flex-1">{m.merchant}</span>
-                      <span className="text-xs opacity-40 shrink-0">{m.category}</span>
-                      <span className="text-gold/80 shrink-0">{fmt(m.total)}</span>
-                    </div>
-                    <div className="flex items-center gap-2 mt-1">
-                      <div className="flex-1 h-1 bg-line rounded-full overflow-hidden">
-                        <div className="h-full bg-gold/40 rounded-full" style={{ width: `${(m.total / maxMerchantTotal) * 100}%` }} />
-                      </div>
-                      <span className="text-xs opacity-40 w-10 text-right shrink-0">{m.count}×</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
+              <MerchantPanel
+                merchants={visibleMerchants}
+                maxTotal={maxMerchantTotal}
+                categories={allCategories}
+                onSave={handleMerchantSave}
+              />
               {filteredMerchants.length > MERCHANT_PAGE && (
                 <div className="pt-2 border-t border-line flex items-center justify-between">
                   <button onClick={() => { setShowAllMerchants((v) => !v); setMerchantPage(1); }}
@@ -420,47 +537,15 @@ export default function SpendTab() {
             </div>
           </div>
 
-          <div className="border border-line rounded-lg overflow-hidden bg-panel/30">
-            <div className="px-4 py-3 border-b border-line flex items-center justify-between gap-3 flex-wrap">
-              <h3 className="text-xs uppercase tracking-widest opacity-50">Transactions</h3>
-              <input type="text" placeholder="Search transactions by merchant…" value={search} onChange={(e) => setSearch(e.target.value)}
-                className="flex-1 min-w-[200px] max-w-sm bg-panel border border-line rounded px-3 py-1 text-xs focus:border-gold outline-none" />
-              <span className="text-xs opacity-40 shrink-0">
-                Showing {(txnPage - 1) * TXN_PAGE + 1}–{Math.min(txnPage * TXN_PAGE, filteredTxns.length)} of {filteredTxns.length}
-              </span>
-            </div>
-            <table className="w-full text-sm">
-              <thead className="text-xs opacity-50 border-b border-line">
-                <tr>
-                  <th className="text-left px-4 py-2 font-normal">Date</th>
-                  <th className="text-left px-4 py-2 font-normal">Merchant</th>
-                  <th className="text-left px-4 py-2 font-normal">Category</th>
-                  <th className="text-left px-4 py-2 font-normal">Card</th>
-                  <th className="text-right px-4 py-2 font-normal">Amount</th>
-                </tr>
-              </thead>
-              <tbody>
-                {visibleTxns.map((t, i) => (
-                  <tr key={i} className="border-b border-line/40 last:border-0 hover:bg-white/[0.02]">
-                    <td className="px-4 py-2 opacity-60 text-xs whitespace-nowrap">
-                      {new Date(t.txn_at).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "2-digit" })}
-                    </td>
-                    <td className="px-4 py-2">{t.merchant || <span className="opacity-30 italic">missing</span>}</td>
-                    <td className="px-4 py-2 opacity-70 text-xs">{t.category || "Uncategorized"}</td>
-                    <td className="px-4 py-2 opacity-50 text-xs">··{t.card_last4}</td>
-                    <td className={`px-4 py-2 text-right font-medium whitespace-nowrap ${t.txn_type === "credit" ? "text-green-400" : ""}`}>
-                      {t.txn_type === "credit" ? "+" : ""}{fmt(t.amount_inr)}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            {totalTxnPages > 1 && (
-              <div className="px-4 py-3 border-t border-line flex justify-end">
-                <Pager page={txnPage} count={totalTxnPages} onChange={setTxnPage} />
-              </div>
-            )}
-          </div>
+          <TransactionsTable
+            transactions={filteredTxns}
+            cards={allData.cards}
+            categories={allCategories}
+            existingNotes={existingNotes}
+            onMerchantSave={handleMerchantSave}
+            onCategoryChange={handleTxnCategoryChange}
+            onNotesChange={handleTxnNotesChange}
+          />
         </>
       )}
     </div>

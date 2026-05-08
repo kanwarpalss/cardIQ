@@ -35,7 +35,7 @@ export const HDFC_INFINIA: CardSpec = {
   },
 
   gmail: {
-    senders: ["alerts@hdfcbank.net", "alerts@hdfcbank.com", "InstaAlerts@hdfcbank.net"],
+    senders: ["hdfcbank.net", "hdfcbank.com"],
     subject_hints: ["transaction", "spent", "purchase", "credit card"],
   },
 };

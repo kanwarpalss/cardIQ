@@ -20,7 +20,9 @@ const SUBJECT_CREDIT_RE = /INR\s+([\d,]+(?:\.\d{1,2})?)\s+(?:refund\s+)?credited
 const BODY_AMOUNT_RE    = /Transaction\s+Amount:\s+INR\s+([\d,]+(?:\.\d{1,2})?)/i;
 // Multiple merchant patterns to handle HTML-stripped vs. plain text
 const MERCHANT_REGEXES = [
-  /Merchant\s+Name\s*[:\-]\s*([^\n\r]+?)(?=\s{2,}|\s+Axis\s+Bank|\s+Credit\s+Card\s+No|$)/i,
+  // Stop at 4+ consecutive spaces (field separator in stripped HTML), not 2+,
+  // so merchant names that happen to have a double space don't get truncated early.
+  /Merchant\s+Name\s*[:\-]\s*([^\n\r]+?)(?=\s{4,}|\s+Axis\s+Bank|\s+Credit\s+Card\s+No|$)/i,
   /Merchant\s+Name\s*[:\-]\s*([A-Za-z0-9*&.,'\-\s]{2,80}?)(?=\s+Axis|\s+Credit|\s+No\.|\s+If\s+the|\s+CLICK|$)/i,
 ];
 const DATE_RE = /(\d{2})-(\d{2})-(\d{2,4})/;

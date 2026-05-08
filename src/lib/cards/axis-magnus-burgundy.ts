@@ -38,12 +38,9 @@ export const AXIS_MAGNUS_BURGUNDY: CardSpec = {
   },
 
   gmail: {
-    senders: [
-      "alerts@axisbank.com",
-      "alerts@axis.bank.in",        // alternate domain Axis uses for some accounts
-      "cc.alerts@axisbank.com",
-      "creditcards@axisbank.com",
-    ],
+    // Domain-level match: Gmail's `from:axisbank.com` catches every sender at that domain
+    // (alerts@, cc.alerts@, creditcards@, noreply@, plus any historical formats).
+    senders: ["axisbank.com", "axis.bank.in"],
     subject_hints: ["transaction", "spent", "purchase", "Card ending"],
   },
 };

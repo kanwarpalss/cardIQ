@@ -79,7 +79,14 @@ const TRAILING_NOISE_RE = /\s+(?:[A-Z]{2,4}|[A-Z]{2,4}\s+IN|\d{2,6}|IND|MUMBAI|D
 
 function titleCaseIfAllCaps(s: string): string {
   if (!/^[A-Z0-9\s&.,'\-]+$/.test(s)) return s;
+  // Short strings are likely acronyms (e.g. EPM, PVR) — keep them uppercase.
+  const letters = s.replace(/[^A-Za-z]/g, "");
+  if (letters.length <= 4) return s;
   return s.toLowerCase().replace(/\b([a-z])/g, (_, c) => c.toUpperCase());
+}
+
+function capitalize(s: string): string {
+  return s.length ? s[0].toUpperCase() + s.slice(1) : s;
 }
 
 export function cleanMerchant(raw: string | null | undefined): string | null {
@@ -92,10 +99,30 @@ export function cleanMerchant(raw: string | null | undefined): string | null {
     if (match.test(s)) return name;
   }
 
-  // Stage 2: generic cleanup
+  // Stage 2: strip known payment-processor prefixes (e.g. pyu*, raz*)
   s = s.replace(PREFIX_RE, "").trim();
+
+  // Stage 3: X*Y format — use Y if it's substantive (> 2 chars); otherwise
+  // fall back to X (the prefix brand). E.g. "RSP*bloonT" → "bloonT",
+  // "EPM*I" → "EPM" (Y is just one char so we keep the brand).
+  const starIdx = s.indexOf("*");
+  if (starIdx !== -1) {
+    const before = s.slice(0, starIdx).trim();
+    const after  = s.slice(starIdx + 1).trim();
+    s = after.length > 2 ? after : (before || s);
+  }
+
+  // Stage 4: strip trailing location / noise codes
   s = s.replace(TRAILING_NOISE_RE, "").trim();
-  s = titleCaseIfAllCaps(s);
+
+  // Stage 5: title-case all-caps strings; ensure first letter is capitalised
+  s = capitalize(titleCaseIfAllCaps(s));
+
+  // Safety: never emit a 1–2 char result — it almost certainly means over-stripping.
+  // Fall back to the original trimmed string with light capitalisation.
+  if (s.length <= 2) {
+    s = capitalize(titleCaseIfAllCaps(raw.trim().replace(/\s+/g, " ")));
+  }
 
   return s || null;
 }
