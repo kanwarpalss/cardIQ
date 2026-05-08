@@ -261,9 +261,12 @@ export async function POST(req: Request) {
             user_id: user.id,
             gmail_message_id: id,
           }));
-          await supabase
+          const { error } = await supabase
             .from("gmail_seen_messages")
             .upsert(rows, { onConflict: "user_id,gmail_message_id" });
+          if (error) {
+            result.errors.push(`CRITICAL: Failed to record ${rows.length} seen IDs: ${error.message}`);
+          }
         }
 
         for (let i = 0; i < idsToFetch.length; i++) {
