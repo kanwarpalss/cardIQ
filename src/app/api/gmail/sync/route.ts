@@ -155,16 +155,20 @@ export async function POST(req: Request) {
   auth.setCredentials({ refresh_token: decrypt(settings.google_refresh_token_encrypted) });
   const gmail = google.gmail({ version: "v1", auth });
 
-  // ── Pre-load existing Gmail message IDs so we can tell new vs. already-stored ──
-  // This is a lightweight query (IDs only). Having this set lets us report
-  // accurate "new transactions" counts instead of misleadingly counting all upserts.
-  const { data: existingMsgRows } = await supabase
-    .from("transactions")
-    .select("gmail_message_id")
-    .eq("user_id", user.id);
-  const knownMsgIds = new Set<string>(
-    (existingMsgRows || []).map((r) => r.gmail_message_id).filter(Boolean)
-  );
+  // ── Pre-load ALL previously-seen Gmail message IDs ───────────────────────
+  // We pull from TWO sources so we never re-fetch any email, whether it
+  // produced a transaction or was skipped as non-transactional:
+  //   1. transactions        — emails that parsed into a transaction row
+  //   2. gmail_seen_messages — emails fetched but skipped (marketing, statements, etc.)
+  // Any ID in either set is never downloaded again, even across "Load full history" runs.
+  const [txnRows, seenRows] = await Promise.all([
+    supabase.from("transactions").select("gmail_message_id").eq("user_id", user.id),
+    supabase.from("gmail_seen_messages").select("gmail_message_id").eq("user_id", user.id),
+  ]);
+  const knownMsgIds = new Set<string>([
+    ...(txnRows.data || []).map((r) => r.gmail_message_id).filter(Boolean),
+    ...(seenRows.data || []).map((r) => r.gmail_message_id).filter(Boolean),
+  ]);
 
   const stream = new ReadableStream({
     async start(controller) {
@@ -246,7 +250,22 @@ export async function POST(req: Request) {
               : `Found ${idsToFetch.length} new email${idsToFetch.length === 1 ? "" : "s"} since ${afterDate}. Fetching…`,
         });
 
-        // ── Step 2: fetch full email only for IDs not already in the DB ───
+        // ── Step 2: fetch full email only for IDs not already seen ──────────
+        // After processing each email (parsed OR skipped), we write its ID to
+        // gmail_seen_messages so it is never re-fetched on any future run.
+        // We batch writes every 50 emails to reduce round-trips.
+        const seenBatch: string[] = [];
+        async function flushSeenBatch() {
+          if (!seenBatch.length) return;
+          const rows = seenBatch.splice(0).map((id) => ({
+            user_id: user.id,
+            gmail_message_id: id,
+          }));
+          await supabase
+            .from("gmail_seen_messages")
+            .upsert(rows, { onConflict: "user_id,gmail_message_id" });
+        }
+
         for (let i = 0; i < idsToFetch.length; i++) {
           const msgId = idsToFetch[i];
           result.fetched++;
@@ -280,7 +299,13 @@ export async function POST(req: Request) {
             const snippet = full.data.snippet || "";
 
             const parsed = parseTxnEmail(fromHeader, subject, body, snippet);
-            if (!parsed) { result.skipped++; continue; }
+            if (!parsed) {
+              result.skipped++;
+              // Mark as seen so we never re-fetch this non-transactional email.
+              seenBatch.push(msgId);
+              if (seenBatch.length >= 50) await flushSeenBatch();
+              continue;
+            }
             result.parsed++;
 
             const txnAt = dateHeader ? new Date(dateHeader) : parsed.txn_at;
@@ -321,11 +346,21 @@ export async function POST(req: Request) {
               if (knownMsgIds.has(msgId)) result.updated++;
               else { result.new_txns++; knownMsgIds.add(msgId); }
             }
+            // Mark as seen whether the upsert succeeded or not — we fetched it,
+            // so we never need to download this email again.
+            seenBatch.push(msgId);
+            if (seenBatch.length >= 50) await flushSeenBatch();
 
           } catch (e) {
             result.errors.push(`${msgId}: ${(e as Error).message}`);
+            // Still mark as seen on error — retrying won't fix a parse error.
+            seenBatch.push(msgId);
+            if (seenBatch.length >= 50) await flushSeenBatch();
           }
         }
+
+        // Final flush of any remaining seen IDs.
+        await flushSeenBatch();
 
         // ── Advance the cursor & record coverage ───────────────────────────
         // Only persist if we actually processed something without a fatal error.
