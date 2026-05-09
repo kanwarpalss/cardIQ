@@ -7,17 +7,20 @@ import { cleanMerchant } from "@/lib/merchant-clean";
 import { CARD_REGISTRY } from "@/lib/cards/registry";
 
 /**
- * Fallback lookback for the very first sync only.
- * After the first sync, the cursor (last_internal_date) takes over and
- * only new emails are fetched — this constant is never used again.
+ * Lookback window for the very first ever sync only.
+ * Once a cursor is saved in gmail_sync_state, this constant is never used again.
+ * Subsequent syncs only fetch emails newer than the cursor — regardless of
+ * what date-range the user has selected in the UI (that filter is view-only).
  */
 const FIRST_SYNC_LOOKBACK_DAYS = 365;
 
 /**
- * Sentinel key used in gmail_sync_state to represent the combined-sender cursor.
- * We query all senders together in a single Gmail request, so one cursor covers all.
+ * Sentinel key stored in gmail_sync_state to represent the single combined query.
+ * We query all bank senders together, so one cursor row covers the whole account.
  */
 const CURSOR_KEY = "_all";
+
+// ─── helpers ────────────────────────────────────────────────────────────────
 
 function getOAuthClient() {
   return new google.auth.OAuth2(
@@ -78,6 +81,8 @@ function extractBody(payload: any): string {
   return "";
 }
 
+// ─── route ──────────────────────────────────────────────────────────────────
+
 export async function POST(req: Request) {
   const supabase = createClient();
   const { data: { user } } = await supabase.auth.getUser();
@@ -96,6 +101,7 @@ export async function POST(req: Request) {
     );
   }
 
+  // ── Cards & merchant mappings ────────────────────────────────────────────
   const { data: cards } = await supabase
     .from("cards")
     .select("id, last4")
@@ -103,7 +109,6 @@ export async function POST(req: Request) {
 
   const cardByLast4 = new Map((cards || []).map((c) => [c.last4, c.id]));
 
-  // Load merchant mappings for instant normalization during sync.
   const { data: mappingsRaw } = await supabase
     .from("merchant_mappings")
     .select("raw_name, normalized_name, category")
@@ -113,28 +118,38 @@ export async function POST(req: Request) {
     (mappingsRaw || []).map((m) => [m.raw_name.toLowerCase(), m])
   );
 
-  // ── Load the incremental sync cursor ──────────────────────────────────────
-  // If a cursor exists, we only ask Gmail for messages newer than that point.
-  // On first-ever sync there is no cursor — we fall back to FIRST_SYNC_LOOKBACK_DAYS.
-  const { data: cursorRow } = await supabase
+  // ── Read the forward cursor ───────────────────────────────────────────────
+  // gmail_sync_state holds the internalDate (ms) of the most-recent email
+  // we have ever downloaded. The next sync queries Gmail for messages AFTER
+  // this point, so we never re-fetch the same time range.
+  //
+  // If the cursor is missing (first ever sync, or the table was just created),
+  // we fall back to FIRST_SYNC_LOOKBACK_DAYS and write the cursor afterward.
+  const { data: cursorRow, error: cursorErr } = await supabase
     .from("gmail_sync_state")
     .select("last_internal_date, message_count")
     .eq("user_id", user.id)
     .eq("sender", CURSOR_KEY)
     .maybeSingle();
 
+  if (cursorErr) {
+    console.error("[gmail/sync] cursor read error:", cursorErr.message);
+  }
+
   // ── Parse optional backfill override from request body ───────────────────
-  // If `lookback_days` is provided, we ignore the cursor and go that far back.
-  // Useful for a one-time "load full history" operation.
+  // The UI's date-range filter is VIEW-ONLY — it never affects what we fetch
+  // from Gmail. This is the only legitimate way to expand the fetch window,
+  // and only new (not-yet-seen) message IDs will actually be downloaded.
   const body = await req.json().catch(() => ({}));
   const backfillDays = typeof body?.lookback_days === "number" ? body.lookback_days : null;
   const isBackfill = backfillDays !== null;
 
   const isFirstSync = !isBackfill && !cursorRow?.last_internal_date;
-  // Gmail `after:` filter takes SECONDS (not ms). Add 1s so we don't re-fetch
-  // the exact boundary message (only needed for cursor mode, not backfill).
+
+  // Gmail `after:` filter expects UNIX seconds (not ms). Add 1s on cursor mode
+  // to avoid re-fetching the exact boundary message.
   const afterSeconds = isBackfill
-    ? Math.floor((Date.now() - backfillDays * 86400 * 1000) / 1000)
+    ? Math.floor((Date.now() - backfillDays! * 86400 * 1000) / 1000)
     : isFirstSync
       ? Math.floor((Date.now() - FIRST_SYNC_LOOKBACK_DAYS * 86400 * 1000) / 1000)
       : Math.floor(cursorRow!.last_internal_date / 1000) + 1;
@@ -143,7 +158,7 @@ export async function POST(req: Request) {
     day: "numeric", month: "short", year: "numeric",
   });
 
-  // Build the combined-sender Gmail query.
+  // ── Build the combined-sender Gmail query ────────────────────────────────
   const allSenders = new Set<string>();
   for (const spec of Object.values(CARD_REGISTRY)) {
     spec.gmail.senders.forEach((s) => allSenders.add(s));
@@ -155,39 +170,51 @@ export async function POST(req: Request) {
   auth.setCredentials({ refresh_token: decrypt(settings.google_refresh_token_encrypted) });
   const gmail = google.gmail({ version: "v1", auth });
 
-  // ── Pre-load ALL previously-seen Gmail message IDs ───────────────────────
-  // We pull from TWO sources so we never re-fetch any email, whether it
-  // produced a transaction or was skipped as non-transactional:
-  //   1. transactions        — emails that parsed into a transaction row
-  //   2. gmail_seen_messages — emails fetched but skipped (marketing, statements, etc.)
-  // Any ID in either set is never downloaded again, even across "Load full history" runs.
+  // ── Pre-load ALL previously-seen Gmail message IDs ────────────────────────
+  // gmail_seen_messages is our permanent "never re-download" ledger. Every
+  // message we fetch (transaction OR skipped/non-transactional) gets recorded
+  // there after processing. This means:
+  //   • Changing the lookback window does NOT re-download already-seen emails.
+  //   • Adding a new card does NOT trigger re-downloading old emails — the
+  //     parser re-runs on the already-stored raw_body if needed instead.
+  //   • Only genuinely new Gmail message IDs (not in this set) get fetched.
+  //
+  // We also query the transactions table as a fallback for emails that were
+  // synced before migration 006 created gmail_seen_messages.
   const [txnRows, seenRows] = await Promise.all([
     supabase.from("transactions").select("gmail_message_id").eq("user_id", user.id),
     supabase.from("gmail_seen_messages").select("gmail_message_id").eq("user_id", user.id),
   ]);
+
+  if (seenRows.error) {
+    console.error("[gmail/sync] gmail_seen_messages read error — did you run migration 006?", seenRows.error.message);
+  }
+
   const knownMsgIds = new Set<string>([
     ...(txnRows.data || []).map((r) => r.gmail_message_id).filter(Boolean),
     ...(seenRows.data || []).map((r) => r.gmail_message_id).filter(Boolean),
   ]);
 
+  // ── Streaming response ────────────────────────────────────────────────────
   const stream = new ReadableStream({
     async start(controller) {
       const result = {
-        fetched: 0, parsed: 0,
-        new_txns: 0,    // genuinely new records (not previously in DB)
-        updated: 0,     // already existed — upsert refreshed them
+        fetched: 0,
+        parsed: 0,
+        new_txns: 0,
+        updated: 0,    // already in DB — upsert was a no-op
         skipped: 0,
         errors: [] as string[],
         is_first_sync: isFirstSync,
         is_backfill: isBackfill,
       };
 
-      // Tracks the newest internalDate seen across all fetched messages.
-      // We use this to advance the cursor after a successful sync.
-      let maxInternalDate = cursorRow?.last_internal_date ?? 0;
+      // Highest internalDate (ms) seen across all fetched messages.
+      // Advances the cursor at the end so future syncs start from here.
+      let maxInternalDate: number = cursorRow?.last_internal_date ?? 0;
 
       try {
-        // ── Step 1: list all matching message IDs (lightweight, no body) ──
+        // ── Step 1: list matching message IDs (lightweight) ────────────────
         send(controller, {
           status: "listing",
           message: isBackfill
@@ -213,7 +240,6 @@ export async function POST(req: Request) {
           pageToken = listRes.data.nextPageToken ?? undefined;
         } while (pageToken);
 
-        // ── Nothing new since last sync ────────────────────────────────────
         if (allIds.length === 0) {
           send(controller, {
             status: "done",
@@ -224,11 +250,11 @@ export async function POST(req: Request) {
           return;
         }
 
-        // ── Filter out IDs we already have in the DB ──────────────────────
-        // knownMsgIds was built before the stream started. Any ID already there
-        // is already parsed + stored — no point re-downloading the email body.
+        // ── Filter: skip IDs we've already downloaded ─────────────────────
+        // knownMsgIds was built from both gmail_seen_messages AND transactions,
+        // so any email we've ever fetched (transactional or not) is excluded.
         const idsToFetch = allIds.filter((id) => !knownMsgIds.has(id));
-        result.updated += allIds.length - idsToFetch.length; // count skipped as already-done
+        result.updated += allIds.length - idsToFetch.length;
 
         if (idsToFetch.length === 0) {
           send(controller, {
@@ -250,22 +276,29 @@ export async function POST(req: Request) {
               : `Found ${idsToFetch.length} new email${idsToFetch.length === 1 ? "" : "s"} since ${afterDate}. Fetching…`,
         });
 
-        // ── Step 2: fetch full email only for IDs not already seen ──────────
-        // After processing each email (parsed OR skipped), we write its ID to
-        // gmail_seen_messages so it is never re-fetched on any future run.
-        // We batch writes every 50 emails to reduce round-trips.
-        const seenBatch: string[] = [];
+        // ── Step 2: fetch & process only unseen emails ────────────────────
+        // After each email (whether it parses into a transaction or gets
+        // skipped), we record its ID in gmail_seen_messages so it is NEVER
+        // re-downloaded on any future sync run — regardless of what lookback
+        // window the user selects. This is the "once and forever" guarantee.
+        //
+        // We batch writes every 50 emails to reduce DB round-trips.
+        const seenBatch: Array<{ user_id: string; gmail_message_id: string; txn_id: string | null }> = [];
+
         async function flushSeenBatch() {
           if (!seenBatch.length) return;
-          const rows = seenBatch.splice(0).map((id) => ({
-            user_id: user.id,
-            gmail_message_id: id,
-          }));
+          const rows = seenBatch.splice(0);
           const { error } = await supabase
             .from("gmail_seen_messages")
             .upsert(rows, { onConflict: "user_id,gmail_message_id" });
           if (error) {
-            result.errors.push(`CRITICAL: Failed to record ${rows.length} seen IDs: ${error.message}`);
+            // This is non-fatal for the sync itself but means those IDs won't
+            // be remembered. Log loudly so it's visible in server logs.
+            console.error(
+              `[gmail/sync] WARN: failed to record ${rows.length} seen IDs — did you run migration 006?`,
+              error.message
+            );
+            result.errors.push(`seen-batch flush failed: ${error.message}`);
           }
         }
 
@@ -283,6 +316,8 @@ export async function POST(req: Request) {
             });
           }
 
+          let insertedTxnId: string | null = null;
+
           try {
             const full = await gmail.users.messages.get({
               userId: "me",
@@ -290,7 +325,6 @@ export async function POST(req: Request) {
               format: "full",
             });
 
-            // Track the newest message timestamp to advance the cursor.
             const msgInternalDate = parseInt(full.data.internalDate ?? "0", 10);
             if (msgInternalDate > maxInternalDate) maxInternalDate = msgInternalDate;
 
@@ -298,100 +332,119 @@ export async function POST(req: Request) {
             const subject = headers.find((h) => h.name?.toLowerCase() === "subject")?.value || "";
             const dateHeader = headers.find((h) => h.name?.toLowerCase() === "date")?.value;
             const fromHeader = headers.find((h) => h.name?.toLowerCase() === "from")?.value || "";
-            const body = extractBody(full.data.payload);
+            const emailBody = extractBody(full.data.payload);
             const snippet = full.data.snippet || "";
 
-            const parsed = parseTxnEmail(fromHeader, subject, body, snippet);
+            const parsed = parseTxnEmail(fromHeader, subject, emailBody, snippet);
+
             if (!parsed) {
               result.skipped++;
-              // Mark as seen so we never re-fetch this non-transactional email.
-              seenBatch.push(msgId);
+              // Not a transaction — mark as seen so we skip it next time.
+              seenBatch.push({ user_id: user!.id, gmail_message_id: msgId, txn_id: null });
               if (seenBatch.length >= 50) await flushSeenBatch();
               continue;
             }
+
             result.parsed++;
 
             const txnAt = dateHeader ? new Date(dateHeader) : parsed.txn_at;
             const cardId = cardByLast4.get(parsed.card_last4) ?? null;
 
-            // Two-pass merchant lookup:
-            // 1st: exact raw name from email parser (e.g. "SWIGGY*MUMBAI")
-            // 2nd: cleaned name (e.g. "Swiggy") — picks up UI display-name overrides
             const rawKey = parsed.merchant_raw?.toLowerCase() ?? "";
             const cleaned = cleanMerchant(parsed.merchant_raw);
             const cleanedKey = cleaned?.toLowerCase() ?? "";
-            const mapping = (rawKey ? merchantMap.get(rawKey) : undefined)
-              ?? (cleanedKey ? merchantMap.get(cleanedKey) : undefined);
+            const mapping =
+              (rawKey ? merchantMap.get(rawKey) : undefined) ??
+              (cleanedKey ? merchantMap.get(cleanedKey) : undefined);
 
             const merchant = mapping?.normalized_name ?? cleaned ?? null;
             const category = mapping?.category ?? categorize(merchant);
 
-            const { error } = await supabase.from("transactions").upsert(
+            const { data: upserted, error: upsertErr } = await supabase
+              .from("transactions")
+              .upsert(
+                {
+                  user_id: user!.id,
+                  card_id: cardId,
+                  card_last4: parsed.card_last4,
+                  amount_inr: parsed.amount_inr,
+                  merchant,
+                  category,
+                  txn_type: parsed.txn_type,
+                  txn_at: txnAt.toISOString(),
+                  gmail_message_id: msgId,
+                  raw_subject: subject,
+                  raw_body: emailBody,
+                },
+                { onConflict: "user_id,gmail_message_id" }
+              )
+              .select("id")
+              .maybeSingle();
+
+            if (upsertErr) {
+              result.errors.push(`txn upsert ${msgId}: ${upsertErr.message}`);
+            } else {
+              if (knownMsgIds.has(msgId)) {
+                result.updated++;
+              } else {
+                result.new_txns++;
+                knownMsgIds.add(msgId);
+              }
+              insertedTxnId = upserted?.id ?? null;
+            }
+          } catch (e) {
+            result.errors.push(`fetch ${msgId}: ${(e as Error).message}`);
+            // Still mark as seen — retrying a network error is fine, but
+            // retrying a parse failure just wastes time. The raw email body
+            // is stored in the transactions table if parsing succeeded.
+          }
+
+          // Always record the message ID so it's never re-downloaded,
+          // even if parsing or the DB upsert failed.
+          seenBatch.push({ user_id: user!.id, gmail_message_id: msgId, txn_id: insertedTxnId });
+          if (seenBatch.length >= 50) await flushSeenBatch();
+        }
+
+        // Flush any remaining seen IDs.
+        await flushSeenBatch();
+
+        // ── Advance the cursor ────────────────────────────────────────────
+        // This MUST happen after processing so future syncs start from after
+        // the newest email we just downloaded. Wrapped in its own try/catch
+        // so a DB error here doesn't kill the response the client is reading.
+        if (maxInternalDate > 0) {
+          const { error: cursorSaveErr } = await supabase
+            .from("gmail_sync_state")
+            .upsert(
               {
-                user_id: user.id,
-                card_id: cardId,
-                card_last4: parsed.card_last4,
-                amount_inr: parsed.amount_inr,
-                merchant,
-                category,
-                txn_type: parsed.txn_type,
-                txn_at: txnAt.toISOString(),
-                gmail_message_id: msgId,
-                raw_subject: subject,
-                raw_body: body,
+                user_id: user!.id,
+                sender: CURSOR_KEY,
+                last_internal_date: maxInternalDate,
+                last_synced_at: new Date().toISOString(),
+                message_count: (cursorRow?.message_count ?? 0) + result.fetched,
               },
-              { onConflict: "user_id,gmail_message_id" }
+              { onConflict: "user_id,sender" }
             );
 
-            if (error) {
-              result.errors.push(`${msgId}: ${error.message}`);
-            } else {
-              if (knownMsgIds.has(msgId)) result.updated++;
-              else { result.new_txns++; knownMsgIds.add(msgId); }
-            }
-            // Mark as seen whether the upsert succeeded or not — we fetched it,
-            // so we never need to download this email again.
-            seenBatch.push(msgId);
-            if (seenBatch.length >= 50) await flushSeenBatch();
-
-          } catch (e) {
-            result.errors.push(`${msgId}: ${(e as Error).message}`);
-            // Still mark as seen on error — retrying won't fix a parse error.
-            seenBatch.push(msgId);
-            if (seenBatch.length >= 50) await flushSeenBatch();
+          if (cursorSaveErr) {
+            console.error("[gmail/sync] CRITICAL: cursor save failed — next sync will restart from the beginning!", cursorSaveErr.message);
+            result.errors.push(`cursor save failed: ${cursorSaveErr.message} — did you run migration 004?`);
+          } else {
+            // Record the covered date range for this sync run (append-only log).
+            await supabase.from("gmail_sync_ranges").insert({
+              user_id: user!.id,
+              sender: CURSOR_KEY,
+              range_start: new Date(afterSeconds * 1000).toISOString().slice(0, 10),
+              range_end: new Date().toISOString().slice(0, 10),
+            });
           }
         }
 
-        // Final flush of any remaining seen IDs.
-        await flushSeenBatch();
-
-        // ── Advance the cursor & record coverage ───────────────────────────
-        // Only persist if we actually processed something without a fatal error.
-        if (maxInternalDate > 0) {
-          await supabase
-            .from("gmail_sync_state")
-            .upsert({
-              user_id: user.id,
-              sender: CURSOR_KEY,
-              last_internal_date: maxInternalDate,
-              last_synced_at: new Date().toISOString(),
-              message_count: (cursorRow?.message_count ?? 0) + result.fetched,
-            }, { onConflict: "user_id,sender" });
-
-          // Record the covered date range for this sync run.
-          await supabase.from("gmail_sync_ranges").insert({
-            user_id: user.id,
-            sender: CURSOR_KEY,
-            range_start: new Date(afterSeconds * 1000).toISOString().slice(0, 10),
-            range_end: new Date().toISOString().slice(0, 10),
-          });
-        }
-
-        // Keep legacy last_gmail_sync_at in user_settings for backwards compat.
+        // Keep legacy last_gmail_sync_at for backwards compatibility.
         await supabase
           .from("user_settings")
           .update({ last_gmail_sync_at: new Date().toISOString() })
-          .eq("user_id", user.id);
+          .eq("user_id", user!.id);
 
         send(controller, { status: "done", ...result });
 

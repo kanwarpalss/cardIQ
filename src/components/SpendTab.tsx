@@ -108,9 +108,11 @@ export default function SpendTab() {
               setSyncProgress(`${pct}%  ·  ${msg.fetched ?? 0} / ${msg.total ?? "?"} emails  ·  ${msg.new_txns ?? 0} new transactions`);
             } else if (msg.status === "done") {
               const newCount = msg.new_txns ?? 0;
+              const errCount = (msg.errors as string[] | undefined)?.length ?? 0;
+              const errSuffix = errCount > 0 ? ` ⚠️ ${errCount} error${errCount === 1 ? "" : "s"} — check server logs (run migrations 004 & 006 in Supabase if this is a first-time setup).` : "";
               setSyncResult(newCount > 0
-                ? `✓ ${newCount} new transaction${newCount === 1 ? "" : "s"} added (${msg.fetched} emails checked)`
-                : `✓ Already up to date — ${msg.fetched} emails checked, 0 new transactions`);
+                ? `✓ ${newCount} new transaction${newCount === 1 ? "" : "s"} added (${msg.fetched} emails checked)${errSuffix}`
+                : `✓ Already up to date — ${msg.fetched} emails checked, 0 new transactions${errSuffix}`);
               setSyncProgress(null); loadAll();
             } else if (msg.status === "error") throw new Error(msg.message);
           } catch (e) { if ((e as Error).message === "Sync failed") throw e; }
@@ -144,9 +146,11 @@ export default function SpendTab() {
               setSyncProgress(`${pct}%  ·  ${msg.fetched ?? 0} / ${msg.total ?? "?"} emails  ·  ${msg.new_txns ?? 0} new transactions`);
             } else if (msg.status === "done") {
               const newCount = msg.new_txns ?? 0;
+              const errCount = (msg.errors as string[] | undefined)?.length ?? 0;
+              const errSuffix = errCount > 0 ? ` ⚠️ ${errCount} error${errCount === 1 ? "" : "s"} — check server logs (run migrations 004 & 006 in Supabase if this is a first-time setup).` : "";
               setSyncResult(newCount > 0
-                ? `✓ Full history: ${newCount} new transaction${newCount === 1 ? "" : "s"} added (${msg.fetched} emails scanned). Change the date range above to see older data.`
-                : `✓ Full history scanned — ${msg.fetched} emails checked. All ${msg.parsed} transactions were already in your database. Change the date range above to explore all periods.`);
+                ? `✓ Full history: ${newCount} new transaction${newCount === 1 ? "" : "s"} added (${msg.fetched} emails scanned). Change the date range above to see older data.${errSuffix}`
+                : `✓ Full history scanned — ${msg.fetched} emails checked. Already up to date — new cards will auto-link to these stored emails. Change the date range above to explore all periods.${errSuffix}`);
               setSyncProgress(null); loadAll();
             } else if (msg.status === "error") throw new Error(msg.message);
           } catch (e) { if ((e as Error).message === "Sync failed") throw e; }
