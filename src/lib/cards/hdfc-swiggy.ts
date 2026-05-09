@@ -27,7 +27,7 @@ export const HDFC_SWIGGY: CardSpec = {
   },
 
   gmail: {
-    senders: ["hdfcbank.net", "hdfcbank.com"],
-    subject_hints: ["transaction", "spent", "purchase", "Swiggy"],
+    senders: ["hdfcbank.bank.in", "hdfcbank.net", "hdfcbank.com"],
+    subject_hints: ["transaction", "spent", "purchase", "Swiggy", "debited"],
   },
 };

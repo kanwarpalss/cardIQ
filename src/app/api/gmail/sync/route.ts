@@ -409,6 +409,10 @@ export async function POST(req: Request) {
                   card_id: cardId,
                   card_last4: parsed.card_last4,
                   amount_inr: parsed.amount_inr,
+                  // Foreign-currency txns: store original side-by-side so we
+                  // can later show "USD 224.28 (₹18,923)" instead of just INR.
+                  original_currency: parsed.currency ?? "INR",
+                  original_amount: parsed.amount_original ?? parsed.amount_inr,
                   merchant,
                   category,
                   txn_type: parsed.txn_type,

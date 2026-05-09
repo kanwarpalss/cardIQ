@@ -249,6 +249,8 @@ export async function POST(req: Request) {
               card_id: cardId,
               card_last4: parsed.card_last4,
               amount_inr: parsed.amount_inr,
+              original_currency: parsed.currency ?? "INR",
+              original_amount: parsed.amount_original ?? parsed.amount_inr,
               merchant,
               category,
               txn_type: parsed.txn_type,

@@ -35,7 +35,10 @@ export const HDFC_INFINIA: CardSpec = {
   },
 
   gmail: {
-    senders: ["hdfcbank.net", "hdfcbank.com"],
-    subject_hints: ["transaction", "spent", "purchase", "credit card"],
+    // hdfcbank.bank.in is the new (2025+) alerts domain. Old alerts came
+    // from hdfcbank.net and hdfcbank.com. We keep all three so historical
+    // and current emails both match.
+    senders: ["hdfcbank.bank.in", "hdfcbank.net", "hdfcbank.com"],
+    subject_hints: ["transaction", "spent", "purchase", "credit card", "payment", "debited"],
   },
 };

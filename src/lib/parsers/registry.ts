@@ -15,7 +15,8 @@ const SENDER_PARSERS: Array<{
     parse: parseAxisTxn,
   },
   {
-    match: (s) => s.includes("hdfcbank.net") || s.includes("hdfcbank.com"),
+    // hdfcbank.bank.in is the new (2025+) alerts domain.
+    match: (s) => s.includes("hdfcbank.net") || s.includes("hdfcbank.com") || s.includes("hdfcbank.bank.in"),
     parse: parseHdfcTxn,
   },
   {
