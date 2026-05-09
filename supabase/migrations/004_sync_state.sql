@@ -26,6 +26,7 @@ create table if not exists gmail_sync_state (
 );
 
 alter table gmail_sync_state enable row level security;
+drop policy if exists "own sync state" on gmail_sync_state;
 create policy "own sync state" on gmail_sync_state
   for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
 
@@ -42,6 +43,7 @@ create table if not exists gmail_sync_ranges (
 );
 
 alter table gmail_sync_ranges enable row level security;
+drop policy if exists "own sync ranges" on gmail_sync_ranges;
 create policy "own sync ranges" on gmail_sync_ranges
   for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
 

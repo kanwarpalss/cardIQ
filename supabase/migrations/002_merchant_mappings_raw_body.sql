@@ -16,6 +16,7 @@ create table if not exists merchant_mappings (
 );
 
 alter table merchant_mappings enable row level security;
+drop policy if exists "own mappings" on merchant_mappings;
 create policy "own mappings" on merchant_mappings
   for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
 

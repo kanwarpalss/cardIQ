@@ -24,6 +24,7 @@ create table if not exists gmail_seen_messages (
 );
 
 alter table gmail_seen_messages enable row level security;
+drop policy if exists "own seen messages" on gmail_seen_messages;
 create policy "own seen messages" on gmail_seen_messages
   for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
 
