@@ -298,7 +298,15 @@ export async function POST(req: Request) {
         // window the user selects. This is the "once and forever" guarantee.
         //
         // We batch writes every 50 emails to reduce DB round-trips.
-        const seenBatch: Array<{ user_id: string; gmail_message_id: string; txn_id: string | null }> = [];
+        const seenBatch: Array<{
+          user_id: string;
+          gmail_message_id: string;
+          txn_id: string | null;
+          raw_subject: string;
+          raw_body: string;
+          raw_from: string;
+          internal_date: number;
+        }> = [];
 
         async function flushSeenBatch() {
           if (!seenBatch.length) return;
@@ -307,10 +315,8 @@ export async function POST(req: Request) {
             .from("gmail_seen_messages")
             .upsert(rows, { onConflict: "user_id,gmail_message_id" });
           if (error) {
-            // This is non-fatal for the sync itself but means those IDs won't
-            // be remembered. Log loudly so it's visible in server logs.
             console.error(
-              `[gmail/sync] WARN: failed to record ${rows.length} seen IDs — did you run migration 006?`,
+              `[gmail/sync] WARN: failed to record ${rows.length} seen IDs \u2014 did you run migrations 006 + 007?`,
               error.message
             );
             result.errors.push(`seen-batch flush failed: ${error.message}`);
@@ -332,6 +338,12 @@ export async function POST(req: Request) {
           }
 
           let insertedTxnId: string | null = null;
+          // Captured outside the try so the seen-record write below has access
+          // even when the parse/upsert path threw partway through.
+          let lastSubject = "";
+          let lastBody = "";
+          let lastFrom = "";
+          let lastInternalDate = 0;
 
           try {
             const full = await gmail.users.messages.get({
@@ -342,6 +354,7 @@ export async function POST(req: Request) {
 
             const msgInternalDate = parseInt(full.data.internalDate ?? "0", 10);
             if (msgInternalDate > maxInternalDate) maxInternalDate = msgInternalDate;
+            lastInternalDate = msgInternalDate;
 
             const headers = full.data.payload?.headers || [];
             const subject = headers.find((h) => h.name?.toLowerCase() === "subject")?.value || "";
@@ -350,12 +363,25 @@ export async function POST(req: Request) {
             const emailBody = extractBody(full.data.payload);
             const snippet = full.data.snippet || "";
 
+            lastSubject = subject;
+            lastBody = emailBody;
+            lastFrom = fromHeader;
+
             const parsed = parseTxnEmail(fromHeader, subject, emailBody, snippet);
 
             if (!parsed) {
               result.skipped++;
-              // Not a transaction — mark as seen so we skip it next time.
-              seenBatch.push({ user_id: user!.id, gmail_message_id: msgId, txn_id: null });
+              // Not a transaction — mark as seen WITH the raw body so future
+              // parser improvements can retry it locally w-hitting Gmail.
+              seenBatch.push({
+                user_id: user!.id,
+                gmail_message_id: msgId,
+                txn_id: null,
+                raw_subject: subject,
+                raw_body: emailBody,
+                raw_from: fromHeader,
+                internal_date: msgInternalDate,
+              });
               if (seenBatch.length >= 50) await flushSeenBatch();
               continue;
             }
@@ -415,8 +441,17 @@ export async function POST(req: Request) {
           }
 
           // Always record the message ID so it's never re-downloaded,
-          // even if parsing or the DB upsert failed.
-          seenBatch.push({ user_id: user!.id, gmail_message_id: msgId, txn_id: insertedTxnId });
+          // even if parsing or the DB upsert failed. Store the raw body so
+          // future parser improvements can re-categorize without re-fetching.
+          seenBatch.push({
+            user_id: user!.id,
+            gmail_message_id: msgId,
+            txn_id: insertedTxnId,
+            raw_subject: lastSubject,
+            raw_body: lastBody,
+            raw_from: lastFrom,
+            internal_date: lastInternalDate,
+          });
           if (seenBatch.length >= 50) await flushSeenBatch();
         }
 

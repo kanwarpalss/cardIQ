@@ -49,6 +49,10 @@ export default function SyncPanel({ onSyncComplete }: Props) {
   const [result, setResult]         = useState<string | null>(null);
   const [resultOk, setResultOk]     = useState(true);
 
+  // Reprocess (recover failed-parse emails) state — separate so the two
+  // operations can run independently and have distinct progress messages.
+  const [reprocessing, setReprocessing] = useState(false);
+
   const pickerRef = useRef<HTMLDivElement>(null);
 
   // ── Load sync state ──────────────────────────────────────────────────────
@@ -154,6 +158,70 @@ export default function SyncPanel({ onSyncComplete }: Props) {
       setProgress(null);
     } finally {
       setSyncing(false);
+    }
+  }
+
+  // ── Reprocess (retry failed-parse emails) ───────────────────────────
+  // Walks gmail_seen_messages where txn_id IS NULL and re-runs the parsers.
+  // Phase A is offline (uses stored raw_body). Phase B (online) re-fetches
+  // from Gmail for legacy rows saved before raw_body was stored. We pass
+  // online:true so legacy rows get recovered too — limited to 1500/call.
+  async function runReprocess() {
+    setReprocessing(true);
+    setResult(null);
+    setProgress("Re-parsing emails that previously didn't match\u2026");
+    try {
+      const res = await fetch("/api/gmail/reprocess", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ online: true, limit: 1500 }),
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({ message: `HTTP ${res.status}` }));
+        throw new Error(err.message || `HTTP ${res.status}`);
+      }
+      if (!res.body) throw new Error("Reprocess returned no body");
+      const reader  = res.body.getReader();
+      const decoder = new TextDecoder();
+      let final: any = null;
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        for (const line of decoder.decode(value).split("\n").filter(Boolean)) {
+          try {
+            const msg = JSON.parse(line);
+            if (msg.status === "offline_progress" || msg.status === "offline_start") {
+              setProgress(`Offline retry: ${msg.offline_retried ?? 0} checked \u00b7 ${msg.new_txns ?? 0} recovered`);
+            } else if (msg.status === "online_progress" || msg.status === "online_start") {
+              setProgress(`Re-fetch from Gmail: ${msg.online_refetched ?? 0}/${msg.total ?? "?"} \u00b7 ${msg.new_txns ?? 0} recovered`);
+            } else if (msg.status === "done") {
+              final = msg;
+            } else if (msg.status === "error") {
+              throw new Error(msg.message);
+            }
+          } catch { /* ignore parse errors on partial chunks */ }
+        }
+      }
+      if (final) {
+        const recovered = final.new_txns ?? 0;
+        const errs = final.errors?.length ?? 0;
+        setResult(
+          recovered > 0
+            ? `\u2728 Recovered ${recovered} transaction${recovered === 1 ? "" : "s"} from previously-failed emails` +
+              (errs > 0 ? ` \u00b7 \u26a0 ${errs} error${errs === 1 ? "" : "s"}` : "")
+            : `No new transactions found in ${(final.offline_retried ?? 0) + (final.online_refetched ?? 0)} reprocessed emails` +
+              (errs > 0 ? ` \u00b7 \u26a0 ${errs} error${errs === 1 ? "" : "s"}` : "")
+        );
+        setResultOk(errs === 0);
+        await loadSyncState();
+        onSyncComplete();
+      }
+    } catch (e) {
+      setResult(`Error: ${(e as Error).message}`);
+      setResultOk(false);
+    } finally {
+      setProgress(null);
+      setReprocessing(false);
     }
   }
 
@@ -278,7 +346,7 @@ export default function SyncPanel({ onSyncComplete }: Props) {
         {/* Sync button */}
         <button
           onClick={runSync}
-          disabled={syncing}
+          disabled={syncing || reprocessing}
           className="flex items-center gap-2 px-4 py-1.5 rounded-lg bg-gold-shimmer text-ink text-xs font-semibold shadow-glow-gold hover:opacity-90 disabled:opacity-50 transition-all"
         >
           {syncing ? (
@@ -296,6 +364,26 @@ export default function SyncPanel({ onSyncComplete }: Props) {
               Sync Gmail
             </>
           )}
+        </button>
+
+        {/* Reprocess button — retries emails that previously failed to parse.
+            Useful after parser improvements or to recover from broken syncs. */}
+        <button
+          onClick={runReprocess}
+          disabled={syncing || reprocessing}
+          title="Retry emails that were marked seen but didn't produce a transaction. Safe to run anytime."
+          className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-rim bg-surface hover:bg-hover text-mist/60 hover:text-mist text-xs font-medium transition-all disabled:opacity-40"
+        >
+          {reprocessing ? (
+            <svg className="w-3 h-3 animate-spin-slow" fill="none" viewBox="0 0 16 16">
+              <circle cx="8" cy="8" r="6" stroke="currentColor" strokeWidth="2" strokeDasharray="20 12"/>
+            </svg>
+          ) : (
+            <svg className="w-3 h-3" fill="none" viewBox="0 0 16 16" stroke="currentColor" strokeWidth={2}>
+              <path d="M3 8a5 5 0 0 1 9-3M13 8a5 5 0 0 1-9 3M11 5h2V3M5 11H3v2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          )}
+          {reprocessing ? "Reprocessing\u2026" : "Reprocess failed"}
         </button>
 
       </div>
