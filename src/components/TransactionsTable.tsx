@@ -198,38 +198,38 @@ export default function TransactionsTable({
 
   // ── Render ──
   return (
-    <div className="border border-line rounded-lg overflow-hidden bg-panel/30">
+    <div className="rounded-2xl border border-rim bg-surface shadow-card overflow-hidden">
 
       {/* Filter bar */}
-      <div className="px-4 py-3 border-b border-line flex items-center gap-2 flex-wrap">
-        <h3 className="text-xs uppercase tracking-widest opacity-50 shrink-0">Transactions</h3>
-        <input type="text" placeholder="Search merchant…" value={search}
+      <div className="px-5 py-3 border-b border-wire flex items-center gap-2 flex-wrap">
+        <h3 className="text-2xs uppercase tracking-widest text-mist/30 shrink-0">Transactions</h3>
+        <input type="text" placeholder="Search merchant or note…" value={search}
           onChange={(e) => { setSearch(e.target.value); setPage(1); }}
-          className="flex-1 min-w-[150px] max-w-xs bg-panel border border-line rounded px-3 py-1 text-xs focus:border-gold outline-none" />
+          className="flex-1 min-w-[150px] max-w-xs bg-ink border border-rim rounded-lg px-3 py-1.5 text-xs text-mist placeholder:text-mist/25 focus:border-gold/40 outline-none" />
         <input type="number" placeholder="Min ₹" value={amtMin}
           onChange={(e) => { setAmtMin(e.target.value); setPage(1); }}
-          className="w-20 bg-panel border border-line rounded px-2 py-1 text-xs focus:border-gold outline-none" />
+          className="w-20 bg-ink border border-rim rounded-lg px-2 py-1.5 text-xs text-mist placeholder:text-mist/25 focus:border-gold/40 outline-none" />
         <input type="number" placeholder="Max ₹" value={amtMax}
           onChange={(e) => { setAmtMax(e.target.value); setPage(1); }}
-          className="w-20 bg-panel border border-line rounded px-2 py-1 text-xs focus:border-gold outline-none" />
-        <span className="text-xs opacity-40 ml-auto shrink-0">
+          className="w-20 bg-ink border border-rim rounded-lg px-2 py-1.5 text-xs text-mist placeholder:text-mist/25 focus:border-gold/40 outline-none" />
+        <span className="text-2xs text-mist/30 ml-auto shrink-0">
           {processed.length === transactions.length
             ? `${processed.length} transactions`
-            : `${processed.length} of ${transactions.length} transactions`}
+            : `${processed.length} of ${transactions.length}`}
         </span>
       </div>
 
       <table className="w-full text-sm">
-        <thead className="text-xs opacity-50 border-b border-line">
+        <thead className="border-b border-wire">
           <tr>
             {(["date", "merchant", "category", "card"] as const).map((col) => (
               <th key={col} onClick={() => toggleSort(col)}
-                className="text-left px-4 py-2 font-normal cursor-pointer hover:opacity-80 select-none capitalize">
+                className="text-left px-5 py-2.5 text-2xs font-medium uppercase tracking-widest text-mist/30 cursor-pointer hover:text-mist/50 select-none capitalize">
                 {col} <SortIcon col={col} />
               </th>
             ))}
             <th onClick={() => toggleSort("amount")}
-              className="text-right px-4 py-2 font-normal cursor-pointer hover:opacity-80 select-none">
+              className="text-right px-5 py-2.5 text-2xs font-medium uppercase tracking-widest text-mist/30 cursor-pointer hover:text-mist/50 select-none">
               Amount <SortIcon col="amount" />
             </th>
           </tr>
@@ -242,23 +242,23 @@ export default function TransactionsTable({
             const noteSuggestions   = isNoteEditing ? suggestNotes(editNoteText, existingNotes) : [];
 
             return (
-              <tr key={t.id} className="group border-b border-line/40 last:border-0 hover:bg-white/[0.02]">
+              <tr key={t.id} className="group border-b border-wire last:border-0 hover:bg-raised transition-colors">
 
                 {/* Date */}
-                <td className="px-4 py-2 opacity-60 text-xs whitespace-nowrap align-top pt-3">
+                <td className="px-5 py-3 text-mist/40 text-xs whitespace-nowrap align-top">
                   {new Date(t.txn_at).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "2-digit" })}
                 </td>
 
                 {/* Merchant — click to rename (applies to ALL transactions with same name) */}
-                <td className="px-4 py-2 align-top min-w-[140px]">
+                <td className="px-5 py-3 align-top min-w-[140px]">
                   {isMerchantEditing ? (
                     <div className="space-y-1.5 py-0.5">
                       <input autoFocus value={editMerchantName}
                         onChange={(e) => setEditMerchantName(e.target.value)}
                         onKeyDown={(e) => { if (e.key === "Enter") commitMerchantEdit(t.merchant || ""); if (e.key === "Escape") cancelMerchantEdit(); }}
-                        className="w-full bg-panel border border-gold/50 rounded px-2 py-1 text-xs focus:border-gold outline-none" />
+                        className="w-full bg-ink border border-gold/40 rounded-lg px-2 py-1 text-xs text-mist focus:border-gold outline-none" />
                       <select value={editMerchantCat} onChange={(e) => setEditMerchantCat(e.target.value)}
-                        className="w-full bg-panel border border-line rounded px-2 py-1 text-xs focus:border-gold outline-none">
+                        className="w-full bg-ink border border-rim rounded-lg px-2 py-1 text-xs text-mist focus:border-gold/40 outline-none">
                         {categories.map((c) => <option key={c} value={c}>{c}</option>)}
                         <option value="Other">Other (type below)</option>
                       </select>
@@ -266,25 +266,25 @@ export default function TransactionsTable({
                         <input placeholder="Custom category…" value={editMerchantCustom}
                           onChange={(e) => setEditMerchantCustom(e.target.value)}
                           onKeyDown={(e) => { if (e.key === "Enter") commitMerchantEdit(t.merchant || ""); if (e.key === "Escape") cancelMerchantEdit(); }}
-                          className="w-full bg-panel border border-line rounded px-2 py-1 text-xs focus:border-gold outline-none" />
+                          className="w-full bg-ink border border-rim rounded-lg px-2 py-1 text-xs text-mist focus:border-gold/40 outline-none" />
                       )}
                       <div className="flex items-center gap-1.5 pt-0.5">
                         <button onClick={() => commitMerchantEdit(t.merchant || "")} disabled={savingMerchant}
-                          className="px-2.5 py-1 text-xs bg-gold text-ink rounded font-medium disabled:opacity-50">
+                          className="px-2.5 py-1 text-xs bg-gold-shimmer text-ink rounded-lg font-semibold disabled:opacity-50">
                           {savingMerchant ? "…" : "Save"}
                         </button>
                         <button onClick={cancelMerchantEdit}
-                          className="px-2.5 py-1 text-xs border border-line rounded hover:border-gold/60">
+                          className="px-2.5 py-1 text-xs border border-rim rounded-lg hover:border-gold/30 text-mist/60 hover:text-mist">
                           Cancel
                         </button>
-                        <span className="text-[10px] opacity-30 ml-1">renames all "{t.merchant}"</span>
+                        <span className="text-2xs text-mist/25 ml-1">renames all "{t.merchant}"</span>
                       </div>
                     </div>
                   ) : (
                     <button onClick={() => startMerchantEdit(t)} title="Click to rename merchant"
-                      className="group/m flex items-center gap-1 text-left w-full hover:text-gold/90 transition">
-                      <span>{t.merchant || <span className="opacity-30 italic">missing</span>}</span>
-                      <span className="opacity-0 group-hover/m:opacity-40 text-[10px] shrink-0">✏</span>
+                      className="group/m flex items-center gap-1 text-left w-full text-mist/80 hover:text-gold transition-colors">
+                      <span>{t.merchant || <span className="text-mist/25 italic text-xs">missing</span>}</span>
+                      <span className="opacity-0 group-hover/m:opacity-40 text-2xs shrink-0 ml-0.5">✏</span>
                     </button>
                   )}
 
@@ -298,13 +298,13 @@ export default function TransactionsTable({
                             if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) commitNoteEdit(t.id);
                             if (e.key === "Escape") cancelNoteEdit();
                           }}
-                          className="w-full bg-panel border border-gold/50 rounded px-2 py-1 text-xs focus:border-gold outline-none resize-none" />
+                          className="w-full bg-ink border border-gold/40 rounded-lg px-2 py-1 text-xs text-mist focus:border-gold outline-none resize-none" />
                         {noteSuggestions.length > 0 && (
-                          <div className="absolute z-10 left-0 right-0 top-full mt-0.5 bg-panel border border-line rounded shadow-lg max-h-40 overflow-y-auto">
-                            <div className="px-2 py-1 text-[10px] uppercase tracking-wider opacity-40 border-b border-line/40">Existing notes</div>
+                          <div className="absolute z-10 left-0 right-0 top-full mt-0.5 bg-raised border border-rim rounded-xl shadow-dropdown max-h-40 overflow-y-auto">
+                            <div className="px-2 py-1 text-2xs uppercase tracking-widest text-mist/30 border-b border-wire">Existing notes</div>
                             {noteSuggestions.map((s, i) => (
                               <button key={i} onMouseDown={(e) => { e.preventDefault(); setEditNoteText(s); }}
-                                className="w-full text-left px-2 py-1 text-xs hover:bg-gold/10 truncate">
+                                className="w-full text-left px-2 py-1.5 text-xs text-mist/70 hover:bg-hover hover:text-mist truncate transition-colors">
                                 {s}
                               </button>
                             ))}
@@ -312,25 +312,25 @@ export default function TransactionsTable({
                         )}
                         <div className="flex items-center gap-1.5">
                           <button onClick={() => commitNoteEdit(t.id)} disabled={savingNote}
-                            className="px-2 py-0.5 text-[11px] bg-gold text-ink rounded font-medium disabled:opacity-50">
+                            className="px-2 py-0.5 text-[11px] bg-gold-shimmer text-ink rounded-lg font-semibold disabled:opacity-50">
                             {savingNote ? "…" : "Save"}
                           </button>
                           <button onClick={cancelNoteEdit}
-                            className="px-2 py-0.5 text-[11px] border border-line rounded hover:border-gold/60">
+                            className="px-2 py-0.5 text-[11px] border border-rim rounded-lg hover:border-gold/30 text-mist/60">
                             Cancel
                           </button>
-                          <span className="text-[10px] opacity-30 ml-0.5">⌘↵ to save</span>
+                          <span className="text-2xs text-mist/25 ml-0.5">⌘↵</span>
                         </div>
                       </div>
                     ) : t.notes ? (
                       <button onClick={() => startNoteEdit(t)} title="Click to edit note"
-                        className="group/n mt-0.5 flex items-start gap-1 text-left text-[11px] italic opacity-60 hover:opacity-100 transition w-full">
-                        <span className="text-gold/60 shrink-0 not-italic">📝</span>
+                        className="group/n mt-1 flex items-start gap-1 text-left text-xs italic text-mist/40 hover:text-mist/70 transition-colors w-full">
+                        <span className="text-gold/40 shrink-0 not-italic text-2xs mt-0.5">📝</span>
                         <span className="break-words">{t.notes}</span>
                       </button>
                     ) : (
                       <button onClick={() => startNoteEdit(t)}
-                        className="opacity-0 group-hover:opacity-50 hover:!opacity-100 mt-0.5 text-[10px] italic transition">
+                        className="opacity-0 group-hover:opacity-40 hover:!opacity-80 mt-1 text-2xs text-mist/50 italic transition-opacity">
                         + add note
                       </button>
                     )
@@ -338,7 +338,7 @@ export default function TransactionsTable({
                 </td>
 
                 {/* Category — click to change (this transaction only) */}
-                <td className="px-4 py-2 text-xs opacity-70 align-top pt-3">
+                <td className="px-5 py-3 text-xs align-top">
                   {isCatEditing ? (
                     <div className="space-y-1">
                       <select autoFocus value={editCatValue}
@@ -347,7 +347,7 @@ export default function TransactionsTable({
                           if (e.target.value !== "Other") commitCatEdit(t.id, e.target.value);
                         }}
                         onBlur={() => { if (editCatValue !== "Other") setEditCatId(null); }}
-                        className="bg-panel border border-gold/50 rounded px-1 py-0.5 text-xs outline-none">
+                        className="bg-ink border border-gold/40 rounded-lg px-2 py-1 text-xs text-mist outline-none">
                         {categories.map((c) => <option key={c} value={c}>{c}</option>)}
                         <option value="Other">Other (type below)</option>
                       </select>
@@ -359,27 +359,29 @@ export default function TransactionsTable({
                               if (e.key === "Enter") commitCatEdit(t.id, editCatCustom);
                               if (e.key === "Escape") setEditCatId(null);
                             }}
-                            className="w-28 bg-panel border border-gold/50 rounded px-1 py-0.5 text-xs outline-none" />
+                            className="w-28 bg-ink border border-gold/40 rounded-lg px-2 py-1 text-xs text-mist outline-none" />
                           <button onClick={() => commitCatEdit(t.id, editCatCustom)}
-                            className="px-1.5 py-0.5 text-xs bg-gold text-ink rounded">✓</button>
+                            className="px-2 py-1 text-xs bg-gold-shimmer text-ink rounded-lg font-semibold">✓</button>
                         </div>
                       )}
                     </div>
                   ) : (
                     <button onClick={() => startCatEdit(t)} title="Click to change category (this transaction)"
-                      className="hover:text-gold transition text-left">
+                      className="text-mist/50 hover:text-gold transition-colors text-left">
                       {t.category || "Uncategorized"}
                     </button>
                   )}
                 </td>
 
                 {/* Card — show nickname */}
-                <td className="px-4 py-2 opacity-50 text-xs align-top pt-3 whitespace-nowrap">
+                <td className="px-5 py-3 text-mist/35 text-xs align-top whitespace-nowrap">
                   {cardNicknameMap.get(t.card_last4) ?? `··${t.card_last4}`}
                 </td>
 
                 {/* Amount */}
-                <td className={`px-4 py-2 text-right font-medium whitespace-nowrap align-top pt-3 ${t.txn_type === "credit" ? "text-green-400" : ""}`}>
+                <td className={`px-5 py-3 text-right font-semibold whitespace-nowrap align-top tabular-nums ${
+                  t.txn_type === "credit" ? "text-emerald" : "text-mist/90"
+                }`}>
                   {t.txn_type === "credit" ? "+" : ""}{fmt(t.amount_inr)}
                 </td>
               </tr>
@@ -389,16 +391,16 @@ export default function TransactionsTable({
       </table>
 
       {totalPages > 1 && (
-        <div className="px-4 py-3 border-t border-line flex items-center justify-between">
-          <span className="text-xs opacity-40">
+        <div className="px-5 py-3 border-t border-wire flex items-center justify-between">
+          <span className="text-2xs text-mist/30 tabular-nums">
             {(page - 1) * PAGE + 1}–{Math.min(page * PAGE, processed.length)} of {processed.length}
           </span>
-          <div className="flex items-center gap-2 text-xs">
+          <div className="flex items-center gap-1.5 text-xs">
             <button disabled={page <= 1} onClick={() => setPage((p) => p - 1)}
-              className="px-2 py-1 border border-line rounded disabled:opacity-30 hover:border-gold/60">‹</button>
-            <span className="opacity-60">Page {page} of {totalPages}</span>
+              className="px-2 py-1 border border-rim rounded-lg disabled:opacity-20 hover:border-gold/30 text-mist/60 hover:text-mist transition-all">‹</button>
+            <span className="text-mist/40 tabular-nums">{page}/{totalPages}</span>
             <button disabled={page >= totalPages} onClick={() => setPage((p) => p + 1)}
-              className="px-2 py-1 border border-line rounded disabled:opacity-30 hover:border-gold/60">›</button>
+              className="px-2 py-1 border border-rim rounded-lg disabled:opacity-20 hover:border-gold/30 text-mist/60 hover:text-mist transition-all">›</button>
           </div>
         </div>
       )}

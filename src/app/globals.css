@@ -2,7 +2,61 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=Libre+Baskerville:ital@0;1&display=swap');
+/* ── Fonts ──────────────────────────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&family=Inter:wght@300;400;500;600;700&display=swap');
 
-html, body { background: #0b0b0d; color: #e8e6df; }
-body { font-family: 'Sora', system-ui, sans-serif; }
+/* ── Base ───────────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body {
+  background: #070b14;
+  color: #ede9e0;
+  font-family: 'Inter', ui-sans-serif, system-ui;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Tabular numerals everywhere — makes financial figures align perfectly */
+body { font-variant-numeric: tabular-nums; }
+
+/* ── Scrollbars ─────────────────────────────────────────────────────────── */
+::-webkit-scrollbar       { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+
+/* ── Focus rings ────────────────────────────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid rgba(224,180,74,0.6);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ── Selection ──────────────────────────────────────────────────────────── */
+::selection { background: rgba(224,180,74,0.25); }
+
+/* ── Smooth transitions on interactive elements ─────────────────────────── */
+button, a, input, select, textarea {
+  transition-property: color, background-color, border-color, opacity, box-shadow, transform;
+  transition-duration: 150ms;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ── Gold shimmer text utility ──────────────────────────────────────────── */
+.text-gold-shimmer {
+  background: linear-gradient(135deg, #e0b44a 0%, #c9983a 50%, #e8c060 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── Glass card surface ─────────────────────────────────────────────────── */
+.glass {
+  background: rgba(15, 20, 34, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+/* ── Thin horizontal rule ───────────────────────────────────────────────── */
+hr.wire { border: none; border-top: 1px solid rgba(255,255,255,0.06); }

@@ -11,15 +11,24 @@ type CardRow = {
   last4: string;
 };
 
+const NETWORK_ICON: Record<string, string> = {
+  Visa:       "V",
+  Mastercard: "M",
+  RuPay:      "R",
+  Amex:       "A",
+};
+
 export default function CardsTab() {
   const supabase = createClient();
-  const [cards, setCards] = useState<CardRow[]>([]);
+  const [cards,      setCards]      = useState<CardRow[]>([]);
   const [productKey, setProductKey] = useState(Object.keys(CARD_REGISTRY)[0]);
-  const [last4, setLast4] = useState("");
-  const [nickname, setNickname] = useState("");
-  const [apiKey, setApiKey] = useState("");
-  const [profile, setProfile] = useState("");
-  const [savedKey, setSavedKey] = useState(false);
+  const [last4,      setLast4]      = useState("");
+  const [nickname,   setNickname]   = useState("");
+  const [apiKey,     setApiKey]     = useState("");
+  const [profile,    setProfile]    = useState("");
+  const [savedKey,   setSavedKey]   = useState(false);
+  const [formError,  setFormError]  = useState<string | null>(null);
+  const [saving,     setSaving]     = useState(false);
 
   async function load() {
     const { data: cardsData } = await supabase.from("cards").select("*").order("created_at");
@@ -32,112 +41,145 @@ export default function CardsTab() {
     setProfile(settings?.profile_text || "");
   }
 
-  useEffect(() => {
-    load();
-  }, []);
+  useEffect(() => { load(); }, []);
 
   async function addCard() {
-    if (!last4.match(/^\d{4}$/)) return alert("last4 must be 4 digits");
+    setFormError(null);
+    if (!last4.match(/^\d{4}$/)) { setFormError("Last 4 must be exactly 4 digits."); return; }
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return;
     const { error } = await supabase.from("cards").insert({
-      user_id: user.id,
-      product_key: productKey,
-      nickname: nickname || null,
-      last4,
+      user_id: user.id, product_key: productKey, nickname: nickname || null, last4,
     });
-    if (error) return alert(error.message);
-    setLast4("");
-    setNickname("");
+    if (error) { setFormError(error.message); return; }
+    setLast4(""); setNickname("");
     load();
   }
 
   async function removeCard(id: string) {
+    if (!confirm("Remove this card? Its transactions will stay in your history.")) return;
     await supabase.from("cards").delete().eq("id", id);
     load();
   }
 
   async function saveSettings() {
+    setSaving(true);
     const res = await fetch("/api/settings", {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({ anthropic_key: apiKey || undefined, profile_text: profile }),
     });
-    if (!res.ok) return alert("save failed");
+    setSaving(false);
+    if (!res.ok) return;
     setApiKey("");
     load();
   }
 
-  return (
-    <div className="max-w-3xl mx-auto p-6 space-y-8">
-      <section>
-        <h2 className="font-serif text-2xl text-gold mb-3">Settings</h2>
-        <label className="text-xs opacity-60">Anthropic API Key {savedKey && <span className="text-green-400">(saved)</span>}</label>
-        <input
-          type="password"
-          value={apiKey}
-          onChange={(e) => setApiKey(e.target.value)}
-          placeholder={savedKey ? "•••••• (replace)" : "sk-ant-..."}
-          className="w-full bg-panel border border-line rounded px-3 py-2 mb-3"
-        />
-        <label className="text-xs opacity-60">Profile (spending habits, goals, preferences)</label>
-        <textarea
-          value={profile}
-          onChange={(e) => setProfile(e.target.value)}
-          rows={3}
-          className="w-full bg-panel border border-line rounded px-3 py-2 mb-3"
-        />
-        <button onClick={saveSettings} className="bg-gold text-ink px-4 py-1.5 rounded text-sm">
-          Save settings
-        </button>
-      </section>
+  const selectedSpec = CARD_REGISTRY[productKey];
 
-      <section>
-        <h2 className="font-serif text-2xl text-gold mb-3">My Cards</h2>
-        <div className="space-y-2 mb-4">
-          {cards.map((c) => (
-            <div key={c.id} className="flex justify-between items-center border border-line rounded px-3 py-2">
-              <div>
-                <div>{c.nickname || CARD_REGISTRY[c.product_key]?.display_name || c.product_key}</div>
-                <div className="text-xs opacity-50">••{c.last4}</div>
+  return (
+    <div className="max-w-3xl mx-auto px-6 py-8 space-y-8">
+
+      {/* ── My Cards ─────────────────────────────────────────────────── */}
+      <section className="rounded-2xl border border-rim bg-surface p-6 shadow-card space-y-5">
+        <h2 className="font-serif text-lg font-semibold text-gold">My Cards</h2>
+
+        {cards.length === 0 && (
+          <p className="text-mist/40 text-sm">No cards added yet. Add your first card below.</p>
+        )}
+
+        <div className="space-y-2.5">
+          {cards.map((c) => {
+            const spec = CARD_REGISTRY[c.product_key];
+            const name = c.nickname || spec?.display_name || c.product_key;
+            const net  = spec?.network ?? "";
+            return (
+              <div key={c.id}
+                className="flex items-center justify-between px-4 py-3 rounded-xl border border-rim bg-raised hover:bg-hover transition-colors">
+                <div className="flex items-center gap-3">
+                  {/* Card chip icon */}
+                  <div className="w-9 h-6 rounded bg-gold-shimmer flex items-center justify-center shadow-glow-gold shrink-0">
+                    <span className="text-ink font-bold text-xs">{NETWORK_ICON[net] ?? "★"}</span>
+                  </div>
+                  <div>
+                    <div className="text-sm font-medium text-mist/90">{name}</div>
+                    <div className="text-2xs text-mist/30">
+                      <span className="tracking-widest">●●●● ●●●● ●●●● {c.last4}</span>
+                    </div>
+                  </div>
+                </div>
+              <button onClick={() => removeCard(c.id)}
+                  className="text-2xs text-mist/25 hover:text-ruby transition-colors px-2 py-1">
+                  Remove
+                </button>
               </div>
-              <button onClick={() => removeCard(c.id)} className="text-xs opacity-50 hover:opacity-100">
-                remove
-              </button>
-            </div>
-          ))}
-          {cards.length === 0 && <p className="opacity-50 text-sm">No cards yet.</p>}
+            );
+          })}
         </div>
 
-        <div className="border border-line rounded p-3 space-y-2">
-          <div className="text-sm opacity-70">Add card</div>
-          <select
-            value={productKey}
-            onChange={(e) => setProductKey(e.target.value)}
-            className="w-full bg-panel border border-line rounded px-3 py-2"
-          >
+        {/* Add card form */}
+        <div className="border-t border-wire pt-5 space-y-3">
+          <div className="text-2xs uppercase tracking-widest text-mist/30 mb-1">Add card</div>
+
+          <select value={productKey} onChange={(e) => setProductKey(e.target.value)}
+            className="w-full bg-ink border border-rim rounded-xl px-3 py-2 text-sm text-mist focus:border-gold/40 outline-none">
             {Object.values(CARD_REGISTRY).map((s) => (
-              <option key={s.product_key} value={s.product_key}>
-                {s.display_name}
-              </option>
+              <option key={s.product_key} value={s.product_key}>{s.display_name}</option>
             ))}
           </select>
-          <input
-            value={nickname}
-            onChange={(e) => setNickname(e.target.value)}
-            placeholder="Nickname (optional)"
-            className="w-full bg-panel border border-line rounded px-3 py-2"
-          />
-          <input
-            value={last4}
-            onChange={(e) => setLast4(e.target.value)}
-            placeholder="Last 4 digits"
-            className="w-full bg-panel border border-line rounded px-3 py-2"
-          />
-          <button onClick={addCard} className="bg-gold text-ink px-4 py-1.5 rounded text-sm">
-            Add
+
+          {selectedSpec && (
+            <div className="text-2xs text-mist/35 px-1">
+              {selectedSpec.issuer} · {selectedSpec.network}
+            </div>
+          )}
+
+          <div className="grid grid-cols-2 gap-2">
+            <input value={nickname} onChange={(e) => setNickname(e.target.value)}
+              placeholder="Nickname (optional)"
+              className="bg-ink border border-rim rounded-xl px-3 py-2 text-sm text-mist placeholder:text-mist/25 focus:border-gold/40 outline-none" />
+            <input value={last4} onChange={(e) => setLast4(e.target.value)} maxLength={4}
+              placeholder="Last 4 digits"
+              className="bg-ink border border-rim rounded-xl px-3 py-2 text-sm text-mist placeholder:text-mist/25 focus:border-gold/40 outline-none font-mono tracking-widest" />
+          </div>
+
+          {formError && (
+            <div className="text-xs text-ruby px-1">{formError}</div>
+          )}
+
+          <button onClick={addCard}
+            className="bg-gold-shimmer text-ink px-5 py-2 rounded-xl text-sm font-semibold shadow-glow-gold hover:opacity-90 transition-all">
+            Add card
           </button>
         </div>
+      </section>
+
+      {/* ── Settings ─────────────────────────────────────────────────── */}
+      <section className="rounded-2xl border border-rim bg-surface p-6 shadow-card space-y-5">
+        <h2 className="font-serif text-lg font-semibold text-gold">Settings</h2>
+
+        <div className="space-y-1.5">
+          <label className="text-2xs uppercase tracking-widest text-mist/30 block">
+            Anthropic API Key {savedKey && <span className="text-emerald normal-case ml-1">● saved</span>}
+          </label>
+          <input type="password" value={apiKey} onChange={(e) => setApiKey(e.target.value)}
+            placeholder={savedKey ? "•••••• (enter new to replace)" : "sk-ant-…"}
+            className="w-full bg-ink border border-rim rounded-xl px-3 py-2 text-sm text-mist placeholder:text-mist/25 focus:border-gold/40 outline-none" />
+          <p className="text-2xs text-mist/25">Used for the Chat tab — Claude-powered spending insights.</p>
+        </div>
+
+        <div className="space-y-1.5">
+          <label className="text-2xs uppercase tracking-widest text-mist/30 block">Profile</label>
+          <textarea value={profile} onChange={(e) => setProfile(e.target.value)} rows={4}
+            placeholder="Describe your spending habits, goals, and what matters to you (e.g. 'I travel frequently, care about lounge access, and spend heavily on dining')…"
+            className="w-full bg-ink border border-rim rounded-xl px-3 py-2 text-sm text-mist placeholder:text-mist/25 focus:border-gold/40 outline-none resize-none leading-relaxed" />
+          <p className="text-2xs text-mist/25">Helps the AI give you more relevant advice.</p>
+        </div>
+
+        <button onClick={saveSettings} disabled={saving}
+          className="bg-gold-shimmer text-ink px-5 py-2 rounded-xl text-sm font-semibold shadow-glow-gold hover:opacity-90 disabled:opacity-50 transition-all">
+          {saving ? "Saving…" : "Save settings"}
+        </button>
       </section>
     </div>
   );
