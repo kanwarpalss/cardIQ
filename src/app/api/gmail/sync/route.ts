@@ -1,7 +1,7 @@
 import { google } from "googleapis";
 import { createClient } from "@/lib/supabase/server";
 import { decrypt } from "@/lib/crypto";
-import { parseTxnEmail } from "@/lib/parsers/registry";
+import { parseTxnEmailWithFallback } from "@/lib/parsers/registry";
 import { categorize } from "@/lib/categorize";
 import { cleanMerchant } from "@/lib/merchant-clean";
 import { CARD_REGISTRY } from "@/lib/cards/registry";
@@ -123,6 +123,7 @@ export async function POST(req: Request) {
     .eq("user_id", user.id);
 
   const cardByLast4 = new Map((cards || []).map((c) => [c.last4, c.id]));
+  const knownLast4s = new Set((cards || []).map((c) => c.last4));
 
   const { data: mappingsRaw } = await supabase
     .from("merchant_mappings")
@@ -367,7 +368,7 @@ export async function POST(req: Request) {
             lastBody = emailBody;
             lastFrom = fromHeader;
 
-            const parsed = parseTxnEmail(fromHeader, subject, emailBody, snippet);
+            const parsed = parseTxnEmailWithFallback(fromHeader, subject, emailBody, snippet, knownLast4s);
 
             if (!parsed) {
               result.skipped++;
@@ -413,6 +414,10 @@ export async function POST(req: Request) {
                   // can later show "USD 224.28 (₹18,923)" instead of just INR.
                   original_currency: parsed.currency ?? "INR",
                   original_amount: parsed.amount_original ?? parsed.amount_inr,
+                  // Generic-sniffer matches are flagged for user review since
+                  // they didn't match a bank-specific parser — amount/merchant
+                  // could be a hair off vs. the canonical format.
+                  low_confidence: parsed.low_confidence ?? false,
                   merchant,
                   category,
                   txn_type: parsed.txn_type,

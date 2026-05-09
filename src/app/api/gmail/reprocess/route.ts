@@ -1,7 +1,7 @@
 import { google } from "googleapis";
 import { createClient } from "@/lib/supabase/server";
 import { decrypt } from "@/lib/crypto";
-import { parseTxnEmail } from "@/lib/parsers/registry";
+import { parseTxnEmailWithFallback, type ParsedTxn } from "@/lib/parsers/registry";
 import { categorize } from "@/lib/categorize";
 import { cleanMerchant } from "@/lib/merchant-clean";
 
@@ -103,6 +103,7 @@ export async function POST(req: Request) {
     supabase.from("merchant_mappings").select("raw_name, normalized_name, category").eq("user_id", user.id),
   ]);
   const cardByLast4 = new Map((cardsRes.data || []).map((c) => [c.last4, c.id]));
+  const knownLast4s = new Set((cardsRes.data || []).map((c) => c.last4));
   const merchantMap = new Map((mappingsRes.data || []).map((m) => [m.raw_name.toLowerCase(), m]));
 
   const stream = new ReadableStream({
@@ -137,7 +138,7 @@ export async function POST(req: Request) {
             send(controller, { status: "offline_progress", ...result });
           }
 
-          const parsed = parseTxnEmail(row.raw_from || "", row.raw_subject || "", row.raw_body || "", "");
+          const parsed = parseTxnEmailWithFallback(row.raw_from || "", row.raw_subject || "", row.raw_body || "", "", knownLast4s);
           if (!parsed) {
             result.still_no_match++;
             continue;
@@ -194,7 +195,7 @@ export async function POST(req: Request) {
               const bodyTxt = extractBody(full.data.payload);
               const internalDate = parseInt(full.data.internalDate ?? "0", 10);
 
-              const parsed = parseTxnEmail(fromHdr, subject, bodyTxt, full.data.snippet || "");
+              const parsed = parseTxnEmailWithFallback(fromHdr, subject, bodyTxt, full.data.snippet || "", knownLast4s);
 
               if (parsed) {
                 await upsertTxnAndLink(parsed, row.gmail_message_id, subject, bodyTxt, internalDate, fromHdr);
@@ -222,7 +223,7 @@ export async function POST(req: Request) {
 
       // ─── helper: insert/update txn and link to seen row ───────────────────
       async function upsertTxnAndLink(
-        parsed: ReturnType<typeof parseTxnEmail>,
+        parsed: (ParsedTxn & { low_confidence?: boolean }) | null,
         msgId: string,
         subject: string,
         bodyTxt: string,
@@ -251,6 +252,7 @@ export async function POST(req: Request) {
               amount_inr: parsed.amount_inr,
               original_currency: parsed.currency ?? "INR",
               original_amount: parsed.amount_original ?? parsed.amount_inr,
+              low_confidence: parsed.low_confidence ?? false,
               merchant,
               category,
               txn_type: parsed.txn_type,

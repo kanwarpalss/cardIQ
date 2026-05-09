@@ -197,10 +197,10 @@ describe("parseIciciTxn", () => {
     expect(out?.txn_at.getMonth()).toBe(3); // April = month index 3
   });
 
-  it("parses credit/reversal", () => {
+  it("parses credit/reversal with date capture", () => {
     const out = parseIciciTxn(
       "Transaction alert",
-      "INR 500.00 has been reversed to your ICICI Bank Credit Card XX9004",
+      "INR 500.00 has been reversed to your ICICI Bank Credit Card XX9004 on Apr 06, 2026 at 10:35:11",
       ""
     );
     expect(out).toMatchObject({
@@ -208,6 +208,10 @@ describe("parseIciciTxn", () => {
       amount_inr: 500,
       txn_type: "credit",
     });
+    // Critical regression: previous version dropped the date and used today.
+    expect(out?.txn_at.getFullYear()).toBe(2026);
+    expect(out?.txn_at.getMonth()).toBe(3); // April
+    expect(out?.txn_at.getDate()).toBe(6);
   });
 });
 
@@ -235,6 +239,21 @@ describe("parseHsbcTxn", () => {
       "marketing body",
       ""
     )).toBeNull();
+  });
+
+  it("parses refund/credit (new in V2)", () => {
+    const out = parseHsbcTxn(
+      "Refund processed",
+      "INR 250.50 has been credited to your Credit card no ending with 3337 on 02 May 2026 at 10:00.",
+      ""
+    );
+    expect(out).toMatchObject({
+      card_last4: "3337",
+      amount_inr: 250.50,
+      txn_type: "credit",
+    });
+    expect(out?.txn_at.getFullYear()).toBe(2026);
+    expect(out?.txn_at.getMonth()).toBe(4); // May
   });
 });
 

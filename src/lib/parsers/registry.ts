@@ -2,8 +2,9 @@ import { parseAxisTxn, type ParsedTxn } from "./axis";
 import { parseHdfcTxn } from "./hdfc";
 import { parseIciciTxn } from "./icici";
 import { parseHsbcTxn } from "./hsbc";
+import { genericSniff, type GenericParsed } from "./generic-sniffer";
 
-export type { ParsedTxn };
+export type { ParsedTxn, GenericParsed };
 
 // Maps each known sender domain to its parser
 const SENDER_PARSERS: Array<{
@@ -49,4 +50,30 @@ export function parseTxnEmail(
     if (match(lower)) return parse(subject, body, snippet);
   }
   return null;
+}
+
+/**
+ * Belt-and-suspenders: try the sender-specific parser first; if it returns
+ * null, fall back to the generic sniffer using the user's known card last4s.
+ *
+ * Returns the result PLUS a flag indicating which path matched. Callers can
+ * use the flag to mark low-confidence rows for review.
+ *
+ * Example use in sync route:
+ *   const out = parseTxnEmailWithFallback(from, subject, body, snippet, knownLast4s);
+ *   if (out) {
+ *     if (out.low_confidence) await markForReview(msgId, out);
+ *     else await insertTxn(out);
+ *   }
+ */
+export function parseTxnEmailWithFallback(
+  sender: string,
+  subject: string,
+  body: string,
+  snippet: string,
+  knownLast4s: Set<string>,
+): (ParsedTxn & { low_confidence?: boolean }) | null {
+  const strict = parseTxnEmail(sender, subject, body, snippet);
+  if (strict) return strict;
+  return genericSniff(subject, body, snippet, knownLast4s);
 }

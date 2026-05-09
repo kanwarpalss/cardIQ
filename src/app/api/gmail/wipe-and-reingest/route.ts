@@ -1,7 +1,7 @@
 import { google } from "googleapis";
 import { createClient } from "@/lib/supabase/server";
 import { decrypt } from "@/lib/crypto";
-import { parseTxnEmail } from "@/lib/parsers/registry";
+import { parseTxnEmailWithFallback } from "@/lib/parsers/registry";
 import { categorize } from "@/lib/categorize";
 import { cleanMerchant } from "@/lib/merchant-clean";
 import { CARD_REGISTRY } from "@/lib/cards/registry";
@@ -115,6 +115,7 @@ export async function POST(req: Request) {
   }
 
   const cardByLast4 = new Map((cardsRes.data || []).map((c) => [c.last4, c.id]));
+  const knownLast4s = new Set((cardsRes.data || []).map((c) => c.last4));
   const merchantMap = new Map((mappingsRes.data || []).map((m) => [m.raw_name.toLowerCase(), m]));
 
   const auth = getOAuthClient();
@@ -240,7 +241,7 @@ export async function POST(req: Request) {
             internalDate = parseInt(full.data.internalDate ?? "0", 10);
             if (internalDate > maxInternalDate) maxInternalDate = internalDate;
 
-            const parsed = parseTxnEmail(fromHdr, subject, bodyTxt, full.data.snippet || "");
+            const parsed = parseTxnEmailWithFallback(fromHdr, subject, bodyTxt, full.data.snippet || "", knownLast4s);
 
             if (parsed) {
               result.parsed++;
@@ -263,6 +264,7 @@ export async function POST(req: Request) {
                     amount_inr: parsed.amount_inr,
                     original_currency: parsed.currency ?? "INR",
                     original_amount: parsed.amount_original ?? parsed.amount_inr,
+                    low_confidence: parsed.low_confidence ?? false,
                     merchant,
                     category,
                     txn_type: parsed.txn_type,
