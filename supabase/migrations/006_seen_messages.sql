@@ -23,6 +23,14 @@ create table if not exists gmail_seen_messages (
   primary key (user_id, gmail_message_id)
 );
 
+-- Defensive: if an older partial version of this migration was run, the table
+-- might exist without txn_id. CREATE TABLE IF NOT EXISTS would silently skip,
+-- so we explicitly add the column here. Safe to re-run.
+alter table gmail_seen_messages
+  add column if not exists txn_id uuid references transactions(id) on delete set null;
+alter table gmail_seen_messages
+  add column if not exists seen_at timestamptz not null default now();
+
 alter table gmail_seen_messages enable row level security;
 drop policy if exists "own seen messages" on gmail_seen_messages;
 create policy "own seen messages" on gmail_seen_messages

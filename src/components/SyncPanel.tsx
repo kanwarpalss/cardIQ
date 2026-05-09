@@ -105,7 +105,13 @@ export default function SyncPanel({ onSyncComplete }: Props) {
         body,
       });
 
-      if (!res.ok || !res.body) throw new Error("Sync request failed");
+      // Non-streaming error response (e.g. 400 / 500 with JSON body).
+      // Without this the UI would spin forever waiting for stream chunks.
+      if (!res.ok) {
+        const errBody = await res.json().catch(() => ({ message: `HTTP ${res.status}` }));
+        throw new Error(errBody.message || errBody.error || `HTTP ${res.status}`);
+      }
+      if (!res.body) throw new Error("Sync request returned no response body");
 
       const reader  = res.body.getReader();
       const decoder = new TextDecoder();

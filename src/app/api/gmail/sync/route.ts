@@ -88,6 +88,21 @@ export async function POST(req: Request) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return new Response(JSON.stringify({ error: "unauthorized" }), { status: 401 });
 
+  // ── Fail fast on missing env vars ────────────────────────────────────────
+  // Without GOOGLE_CLIENT_ID/SECRET the OAuth2 client cannot exchange the
+  // refresh token for an access token. The first Gmail API call fails ~3s in
+  // and the streaming response just dies silently. Surface it loudly instead.
+  if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET) {
+    console.error("[gmail/sync] FATAL: GOOGLE_CLIENT_ID and/or GOOGLE_CLIENT_SECRET missing from .env.local");
+    return new Response(
+      JSON.stringify({
+        error: "missing_google_credentials",
+        message: "GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET must be set in .env.local. Restart the dev server after adding them.",
+      }),
+      { status: 500, headers: { "Content-Type": "application/json" } }
+    );
+  }
+
   const { data: settings } = await supabase
     .from("user_settings")
     .select("google_refresh_token_encrypted")
