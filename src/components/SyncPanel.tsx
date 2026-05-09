@@ -53,6 +53,10 @@ export default function SyncPanel({ onSyncComplete }: Props) {
   // operations can run independently and have distinct progress messages.
   const [reprocessing, setReprocessing] = useState(false);
 
+  // Wipe & reingest — nuclear option, separate state to disable other actions
+  // while it runs (it's a multi-minute streaming operation).
+  const [wiping, setWiping] = useState(false);
+
   const pickerRef = useRef<HTMLDivElement>(null);
 
   // ── Load sync state ──────────────────────────────────────────────────────
@@ -225,6 +229,86 @@ export default function SyncPanel({ onSyncComplete }: Props) {
     }
   }
 
+  // ── Wipe & Reingest ──────────────────────────────────────────
+  // The nuclear option: deletes ALL transactions + seen-message records +
+  // sync cursor for this user, then re-fetches the last N years from Gmail
+  // through the *current* parsers. Use this when:
+  //   - a parser was broken for a stretch (à la HDFC V3) and you want to
+  //     recover the missing window without surgical patching
+  //   - the cursor got poisoned (e.g. last_internal_date jumped past a real
+  //     range due to a buggy email)
+  // Confirmation prompt prevents the obvious "oh no I clicked it" disaster.
+  async function runWipeAndReingest() {
+    const confirmed = window.confirm(
+      "\u26a0 WIPE & REINGEST will:\n\n" +
+      "  • DELETE all your transactions\n" +
+      "  • DELETE all email-sync state\n" +
+      "  • RE-FETCH 8 years of bank emails from Gmail\n" +
+      "  • RE-PARSE everything with the latest parsers\n\n" +
+      "This takes a few minutes. Tag/category overrides on transactions will be lost.\n\n" +
+      "Continue?"
+    );
+    if (!confirmed) return;
+
+    setWiping(true);
+    setResult(null);
+    setProgress("Starting wipe-and-reingest\u2026");
+    try {
+      const res = await fetch("/api/gmail/wipe-and-reingest", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ confirm: "WIPE-AND-REINGEST", years: 8 }),
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({ message: `HTTP ${res.status}` }));
+        throw new Error(err.message || `HTTP ${res.status}`);
+      }
+      if (!res.body) throw new Error("Wipe returned no body");
+      const reader  = res.body.getReader();
+      const decoder = new TextDecoder();
+      let final: any = null;
+      let buffer = "";
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        // Buffer partial lines across chunks — NDJSON can split mid-line.
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split("\n");
+        buffer = lines.pop() ?? "";
+        for (const line of lines.filter(Boolean)) {
+          try {
+            const msg = JSON.parse(line);
+            if (msg.status === "wiping")     setProgress("Wiping old data\u2026");
+            else if (msg.status === "wiped") setProgress(`Wiped ${msg.deleted_transactions} txns. Listing emails\u2026`);
+            else if (msg.status === "listing")   setProgress(`Listing emails: ${msg.listed} found so far\u2026`);
+            else if (msg.status === "listed")    setProgress(`Found ${msg.total} emails. Fetching & parsing\u2026`);
+            else if (msg.status === "ingesting") setProgress(`Ingesting ${msg.fetched}/${msg.total} \u00b7 ${msg.new_txns} txns recovered`);
+            else if (msg.status === "done")      final = msg;
+            else if (msg.status === "error")     throw new Error(msg.message);
+          } catch { /* partial chunk parse errors are fine */ }
+        }
+      }
+
+      if (final) {
+        const errs = final.errors?.length ?? 0;
+        setResult(
+          `\u2728 Wipe complete: ${final.new_txns} transactions from ${final.fetched} emails (${final.years}-year window)` +
+          (errs > 0 ? ` \u00b7 \u26a0 ${errs} error${errs === 1 ? "" : "s"}` : "")
+        );
+        setResultOk(errs === 0);
+        await loadSyncState();
+        onSyncComplete();
+      }
+    } catch (e) {
+      setResult(`Wipe failed: ${(e as Error).message}`);
+      setResultOk(false);
+    } finally {
+      setProgress(null);
+      setWiping(false);
+    }
+  }
+
   // ── Helpers ──────────────────────────────────────────────────────────────
   function pickBackfillMonth(year: number, month: number) {
     // Format as YYYY-MM (no day — firstDay added when calculating lookback)
@@ -346,7 +430,7 @@ export default function SyncPanel({ onSyncComplete }: Props) {
         {/* Sync button */}
         <button
           onClick={runSync}
-          disabled={syncing || reprocessing}
+          disabled={syncing || reprocessing || wiping}
           className="flex items-center gap-2 px-4 py-1.5 rounded-lg bg-gold-shimmer text-ink text-xs font-semibold shadow-glow-gold hover:opacity-90 disabled:opacity-50 transition-all"
         >
           {syncing ? (
@@ -370,7 +454,7 @@ export default function SyncPanel({ onSyncComplete }: Props) {
             Useful after parser improvements or to recover from broken syncs. */}
         <button
           onClick={runReprocess}
-          disabled={syncing || reprocessing}
+          disabled={syncing || reprocessing || wiping}
           title="Retry emails that were marked seen but didn't produce a transaction. Safe to run anytime."
           className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-rim bg-surface hover:bg-hover text-mist/60 hover:text-mist text-xs font-medium transition-all disabled:opacity-40"
         >
@@ -384,6 +468,27 @@ export default function SyncPanel({ onSyncComplete }: Props) {
             </svg>
           )}
           {reprocessing ? "Reprocessing\u2026" : "Reprocess failed"}
+        </button>
+
+        {/* Wipe & Reingest — destructive, last in the row, red-tinted to
+            signal danger. Use when a parser bug or domain change left a
+            blind spot in your history. Requires explicit confirmation. */}
+        <button
+          onClick={runWipeAndReingest}
+          disabled={syncing || reprocessing || wiping}
+          title="Wipe all transactions and re-ingest 8 years of bank emails from Gmail. Use after parser fixes that need to backfill missing data."
+          className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-red-900/40 bg-red-950/20 hover:bg-red-900/30 text-red-300/70 hover:text-red-200 text-xs font-medium transition-all disabled:opacity-40"
+        >
+          {wiping ? (
+            <svg className="w-3 h-3 animate-spin-slow" fill="none" viewBox="0 0 16 16">
+              <circle cx="8" cy="8" r="6" stroke="currentColor" strokeWidth="2" strokeDasharray="20 12"/>
+            </svg>
+          ) : (
+            <svg className="w-3 h-3" fill="none" viewBox="0 0 16 16" stroke="currentColor" strokeWidth={2}>
+              <path d="M3 4h10M5 4V2h6v2M4 4l1 10h6l1-10" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          )}
+          {wiping ? "Wiping\u2026" : "Wipe & Reingest"}
         </button>
 
       </div>
