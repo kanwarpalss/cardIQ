@@ -202,19 +202,39 @@ export async function POST(req: Request) {
   //
   // We also query the transactions table as a fallback for emails that were
   // synced before migration 006 created gmail_seen_messages.
-  const [txnRows, seenRows] = await Promise.all([
-    supabase.from("transactions").select("gmail_message_id").eq("user_id", user.id),
-    supabase.from("gmail_seen_messages").select("gmail_message_id").eq("user_id", user.id),
-  ]);
-
-  if (seenRows.error) {
-    console.error("[gmail/sync] gmail_seen_messages read error — did you run migration 006?", seenRows.error.message);
+  //
+  // CRITICAL: Supabase defaults to 1000 rows per .select(). Without explicit
+  // pagination, users with >1000 synced emails would have their later IDs
+  // missing from knownMsgIds — causing those emails to be re-downloaded
+  // and re-counted as "new" on every single sync (the user-reported bug:
+  // "says 1 new txn every time even when nothing actually changed").
+  // We paginate explicitly with .range() until we've drained both tables.
+  const PAGE = 1000;
+  async function loadAllIds(table: string): Promise<string[]> {
+    const out: string[] = [];
+    for (let from = 0; ; from += PAGE) {
+      const { data, error } = await supabase
+        .from(table)
+        .select("gmail_message_id")
+        .eq("user_id", user!.id)
+        .range(from, from + PAGE - 1);
+      if (error) {
+        console.error(`[gmail/sync] ${table} read error—`, error.message);
+        break;
+      }
+      if (!data || data.length === 0) break;
+      for (const r of data) if (r.gmail_message_id) out.push(r.gmail_message_id);
+      if (data.length < PAGE) break;
+    }
+    return out;
   }
 
-  const knownMsgIds = new Set<string>([
-    ...(txnRows.data || []).map((r) => r.gmail_message_id).filter(Boolean),
-    ...(seenRows.data || []).map((r) => r.gmail_message_id).filter(Boolean),
+  const [txnIds, seenIds] = await Promise.all([
+    loadAllIds("transactions"),
+    loadAllIds("gmail_seen_messages"),
   ]);
+
+  const knownMsgIds = new Set<string>([...txnIds, ...seenIds]);
 
   // ── Streaming response ────────────────────────────────────────────────────
   const stream = new ReadableStream({

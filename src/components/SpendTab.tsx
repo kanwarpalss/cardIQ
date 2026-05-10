@@ -34,6 +34,7 @@ function defaultRange() {
 }
 
 const MERCHANT_PAGE = 10;
+const CATEGORY_PAGE = 10;   // mirror MERCHANT_PAGE for visual consistency
 const MILESTONE     = 150_000;
 
 // ── Component ────────────────────────────────────────────────────────────────
@@ -55,6 +56,14 @@ export default function SpendTab() {
   const [merchantQuery, setMerchantQuery] = useState("");
   const [showAllMerchants, setShowAllMerchants] = useState(false);
 
+  // Category panel — same UX as merchants (filter + sort + paginate). The
+  // category list is small for most users (<20) but power users with
+  // user-defined buckets can have 50+ — so we paginate from the start.
+  const [categorySort,  setCategorySort]  = useState<"total" | "count" | "name">("total");
+  const [categoryPage,  setCategoryPage]  = useState(1);
+  const [categoryQuery, setCategoryQuery] = useState("");
+  const [showAllCategories, setShowAllCategories] = useState(false);
+
   // ── Data fetch ─────────────────────────────────────────────────────────────
   async function loadAll() {
     setLoading(true);
@@ -65,7 +74,7 @@ export default function SpendTab() {
   }
 
   useEffect(() => { loadAll(); }, []);
-  useEffect(() => { setMerchantPage(1); }, [fromDate, toDate, selectedCards, txnType, categoryFilter]);
+  useEffect(() => { setMerchantPage(1); setCategoryPage(1); }, [fromDate, toDate, selectedCards, txnType, categoryFilter]);
 
   // ── Handlers ───────────────────────────────────────────────────────────────
   function toggleCard(last4: string) {
@@ -228,7 +237,26 @@ export default function SpendTab() {
     : filteredMerchants.slice(0, MERCHANT_PAGE);
   const merchantPageCount  = Math.ceil(filteredMerchants.length / MERCHANT_PAGE);
   const maxMerchantTotal   = filteredMerchants[0]?.total ?? 1;
-  const maxCategoryTotal   = aggregates.by_category[0]?.total ?? 1;
+
+  // Same filter+sort+paginate pattern for categories.
+  const filteredCategories = useMemo(() => {
+    let list = aggregates.by_category;
+    if (categoryQuery) {
+      const q = categoryQuery.toLowerCase();
+      list = list.filter((c) => c.category.toLowerCase().includes(q));
+    }
+    return [...list].sort((a, b) => {
+      if (categorySort === "name")  return a.category.localeCompare(b.category);
+      if (categorySort === "count") return b.count - a.count;
+      return b.total - a.total;
+    });
+  }, [aggregates.by_category, categoryQuery, categorySort]);
+
+  const visibleCategories = showAllCategories
+    ? filteredCategories.slice((categoryPage - 1) * CATEGORY_PAGE, categoryPage * CATEGORY_PAGE)
+    : filteredCategories.slice(0, CATEGORY_PAGE);
+  const categoryPageCount = Math.ceil(filteredCategories.length / CATEGORY_PAGE);
+  const maxCategoryFiltered = filteredCategories[0]?.total ?? 1;
 
   // ── Render ─────────────────────────────────────────────────────────────────
   return (
@@ -367,10 +395,24 @@ export default function SpendTab() {
             <section className="rounded-2xl border border-rim bg-surface p-5 shadow-card space-y-3">
               <div className="flex items-center justify-between">
                 <h3 className="text-2xs uppercase tracking-widest text-mist/30">By category</h3>
-                <span className="text-2xs text-mist/30">{aggregates.by_category.length}</span>
+                <span className="text-2xs text-mist/30">
+                  {filteredCategories.length}
+                  {filteredCategories.length !== aggregates.by_category.length && ` / ${aggregates.by_category.length}`}
+                </span>
+              </div>
+              <div className="flex gap-2">
+                <input type="text" placeholder="Filter…" value={categoryQuery}
+                  onChange={(e) => { setCategoryQuery(e.target.value); setCategoryPage(1); }}
+                  className="flex-1 bg-ink border border-rim rounded-lg px-3 py-1.5 text-xs text-mist placeholder:text-mist/25 focus:border-gold/40 outline-none" />
+                <select value={categorySort} onChange={(e) => setCategorySort(e.target.value as typeof categorySort)}
+                  className="bg-ink border border-rim rounded-lg px-2 py-1.5 text-xs text-mist/70 focus:border-gold/40 outline-none">
+                  <option value="total">By total</option>
+                  <option value="count">By count</option>
+                  <option value="name">By name</option>
+                </select>
               </div>
               <div className="space-y-1.5">
-                {aggregates.by_category.map((c) => {
+                {visibleCategories.map((c) => {
                   const active = categoryFilter === c.category;
                   return (
                     <button key={c.category} onClick={() => setCategoryFilter(active ? null : c.category)}
@@ -386,7 +428,7 @@ export default function SpendTab() {
                       <div className="flex items-center gap-2 mt-1.5">
                         <div className="flex-1 h-0.5 bg-ink rounded-full overflow-hidden">
                           <div className="h-full bg-gold/50 rounded-full transition-all"
-                            style={{ width: `${(c.total / maxCategoryTotal) * 100}%` }} />
+                            style={{ width: `${(c.total / maxCategoryFiltered) * 100}%` }} />
                         </div>
                         <span className="text-2xs text-mist/25 w-10 text-right shrink-0">{c.count}×</span>
                       </div>
@@ -394,6 +436,17 @@ export default function SpendTab() {
                   );
                 })}
               </div>
+              {filteredCategories.length > CATEGORY_PAGE && (
+                <div className="pt-2 border-t border-wire flex items-center justify-between">
+                  <button onClick={() => { setShowAllCategories((v) => !v); setCategoryPage(1); }}
+                    className="text-xs text-mist/40 hover:text-gold transition-colors">
+                    {showAllCategories ? "Show top 10" : `Show all ${filteredCategories.length}`}
+                  </button>
+                  {showAllCategories && categoryPageCount > 1 && (
+                    <Pager page={categoryPage} count={categoryPageCount} onChange={setCategoryPage} />
+                  )}
+                </div>
+              )}
             </section>
 
             {/* Merchant */}

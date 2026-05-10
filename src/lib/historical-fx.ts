@@ -4,25 +4,23 @@
 // AT THAT TIME, not today's rate. Anything else mis-states historical
 // spend (especially over multi-year horizons where rates drift 30%+).
 //
-// Data flow:
-//   1. Check the fx_rates table cache (currency, date) → rate_to_inr.
-//   2. Cache miss → hit the upstream API (fawazahmed0/currency-api on
-//      jsdelivr; free, no API key, ECB-backed for majors + IDR/THB/etc.).
-//   3. Write result back to fx_rates so the next call is instant.
+// Data sources, in priority order:
+//   1. Local fx_rates cache (instant, written through on every fetch).
+//   2. fawazahmed0/currency-api (free, no key, ~25 yrs of data, 200+
+//      currencies including IDR/THB/MYR/HKD/KRW/VND. Coverage: data
+//      starts ~2024-03-06; for older dates we fall through.)
+//   3. Frankfurter (frankfurter.app, ECB-backed, free, no key, data
+//      from 1999. Doesn't cover IDR/THB/MYR/HKD/KRW/VND — only the
+//      ECB reference set: USD/EUR/GBP/JPY/CHF/CAD/AUD/SGD/HKD/etc.)
 //
-// Failure handling:
-//   • If the API returns nothing (rare currency, weekend gap, network
-//     down), we return null. The caller decides what to do (typically
-//     leave amount_inr=0 and let the user click "Refresh rates").
-//   • Weekends/holidays: the API itself rolls forward to the most recent
-//     business day, so we don't need to do that ourselves.
-//
-// API details:
-//   GET https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@<date>/v1/currencies/<from>.json
-//   Where <date> is "YYYY-MM-DD" or "latest".
-//   Response shape: { date: "...", <from>: { inr: 0.0053, usd: 0.000063, ... } }
+// Fallback within each source: if the exact date returns null (weekend,
+// holiday, missing data point), walk ±N calendar days outward looking
+// for the nearest available rate. Most APIs roll forward themselves on
+// weekends, but this protects against gaps the API doesn't auto-fill.
 
 import type { SupabaseClient } from "@supabase/supabase-js";
+
+const NEARBY_DAY_RADIUS = 7; // ±7 days when searching for nearest available rate
 
 /** Format a Date as YYYY-MM-DD in UTC. Used as the FX rate key. */
 function ymd(d: Date): string {
@@ -30,8 +28,16 @@ function ymd(d: Date): string {
 }
 
 /**
- * Get 1 unit of `currency` in INR on `date`. Returns null if unavailable.
- * Returns 1 immediately for INR (degenerate case — saves API/DB calls).
+ * Get 1 unit of `currency` in INR on `date`. Returns null if all sources
+ * + nearby-date fallback fail.
+ *
+ * Returns 1 immediately for INR (saves API/DB round-trips).
+ *
+ * Side effect: writes the result into the fx_rates cache (under the
+ * REQUESTED date, even if the rate came from a nearby date — the user
+ * cares "what does my SOFITEL txn convert to?", not "which exact day's
+ * rate did we use?". We tag the cache row with the actual fetched_at so
+ * future audits can reconstruct.)
  */
 export async function getRateToInr(
   supabase: SupabaseClient,
@@ -53,12 +59,11 @@ export async function getRateToInr(
 
   if (cached?.rate_to_inr != null) return Number(cached.rate_to_inr);
 
-  // 2. Cache miss — fetch from upstream.
-  const rate = await fetchUpstreamRate(code, dateStr);
+  // 2. Fetch from upstream — try exact date, then walk outward.
+  const rate = await fetchRateWithFallback(code, date);
   if (rate == null) return null;
 
-  // 3. Write-through cache. Ignore conflict (race with another writer is
-  //    fine — same rate either way).
+  // 3. Write-through cache under the REQUESTED date.
   await supabase.from("fx_rates").upsert(
     { currency: code, rate_date: dateStr, rate_to_inr: rate },
     { onConflict: "currency,rate_date" },
@@ -68,49 +73,95 @@ export async function getRateToInr(
 }
 
 /**
- * Hit the fawazahmed0/currency-api endpoint. Returns null on any failure
- * (network, 404, malformed JSON, missing INR key) — caller treats null
- * as "not available, try later".
- *
- * The CDN URL is intentionally hard-coded (jsdelivr) — no env var, no
- * config. If/when we want a different provider, swap this function.
+ * Try the exact requested date, then walk ±1, ±2, … ±NEARBY_DAY_RADIUS
+ * days looking for a rate. Each "candidate" date is tried against ALL
+ * upstream providers in order before moving to the next candidate, so
+ * we don't fall back to a date that's further away when the original
+ * date works on a different provider.
  */
-async function fetchUpstreamRate(code: string, dateStr: string): Promise<number | null> {
-  const lower = code.toLowerCase();
+async function fetchRateWithFallback(code: string, date: Date): Promise<number | null> {
+  for (let offset = 0; offset <= NEARBY_DAY_RADIUS; offset++) {
+    const candidates: Date[] = offset === 0
+      ? [date]
+      : [addDays(date, -offset), addDays(date, +offset)];
 
-  // Two CDN mirrors — try the second if the first fails (jsdelivr has
-  // occasional regional flakiness).
-  const urls = [
-    `https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@${dateStr}/v1/currencies/${lower}.json`,
-    `https://${dateStr}.currency-api.pages.dev/v1/currencies/${lower}.json`,
-  ];
+    for (const cand of candidates) {
+      const candStr = ymd(cand);
 
-  for (const url of urls) {
-    try {
-      const res = await fetch(url, { signal: AbortSignal.timeout(5000) });
-      if (!res.ok) continue;
-      const json: Record<string, unknown> = await res.json();
-      // Response shape: { date: "...", "<lower>": { inr: <number>, ... } }
-      const block = json[lower];
-      if (block && typeof block === "object" && "inr" in block) {
-        const rate = Number((block as Record<string, unknown>).inr);
-        if (isFinite(rate) && rate > 0) return rate;
-      }
-    } catch {
-      // Fall through to the next URL.
+      const r1 = await fetchFromFawazahmed(code, candStr);
+      if (r1 != null) return r1;
+
+      const r2 = await fetchFromFrankfurter(code, candStr);
+      if (r2 != null) return r2;
     }
   }
   return null;
 }
 
+function addDays(d: Date, n: number): Date {
+  const copy = new Date(d);
+  copy.setUTCDate(copy.getUTCDate() + n);
+  return copy;
+}
+
 /**
- * Bulk-fetch rates for many (currency, date) pairs. Used by the
- * "Refresh rates" sweep endpoint to avoid N synchronous HTTP calls.
+ * fawazahmed0/currency-api on jsdelivr CDN. Wide currency coverage
+ * (IDR/THB/MYR/HKD/KRW/VND etc), but only ~2024-03-06 onwards.
+ * Two CDN mirrors with one retry each — be polite.
+ */
+async function fetchFromFawazahmed(code: string, dateStr: string): Promise<number | null> {
+  const lower = code.toLowerCase();
+  const urls = [
+    `https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@${dateStr}/v1/currencies/${lower}.json`,
+    `https://${dateStr}.currency-api.pages.dev/v1/currencies/${lower}.json`,
+  ];
+  for (const url of urls) {
+    try {
+      const res = await fetch(url, { signal: AbortSignal.timeout(5000) });
+      if (!res.ok) continue;
+      const json: Record<string, unknown> = await res.json();
+      const block = json[lower];
+      if (block && typeof block === "object" && "inr" in block) {
+        const rate = Number((block as Record<string, unknown>).inr);
+        if (isFinite(rate) && rate > 0) return rate;
+      }
+    } catch { /* try next URL */ }
+  }
+  return null;
+}
+
+/**
+ * Frankfurter (frankfurter.app), ECB reference rates back to 1999.
+ * Limited currency set — does NOT cover IDR/THB/MYR/HKD/KRW/VND.
+ * Used as an older-data fallback for the majors.
  *
- * Returns a Map keyed by `${code}|${date}` → rate (or null if unavailable).
- * Rates are written to the cache as a side effect.
- *
- * Concurrency capped at 5 to be polite to the free CDN.
+ * Endpoint: GET https://api.frankfurter.app/<date>?from=<CODE>&to=INR
+ * Response: { amount: 1, base: "USD", date: "...", rates: { INR: 84.32 } }
+ */
+async function fetchFromFrankfurter(code: string, dateStr: string): Promise<number | null> {
+  // Frankfurter uses ISO codes uppercase. Skip currencies it doesn't have.
+  const SUPPORTED = new Set([
+    "USD","EUR","GBP","JPY","CHF","CAD","AUD","SGD","HKD","NZD","SEK","NOK",
+    "DKK","CZK","HUF","PLN","RON","BGN","TRY","ZAR","MXN","BRL","CNY","KRW",
+    "ILS","ISK","INR","IDR","MYR","PHP","THB",
+  ]);
+  if (!SUPPORTED.has(code)) return null;
+
+  try {
+    const url = `https://api.frankfurter.app/${dateStr}?from=${code}&to=INR`;
+    const res = await fetch(url, { signal: AbortSignal.timeout(5000) });
+    if (!res.ok) return null;
+    const json: { rates?: { INR?: number } } = await res.json();
+    const rate = json.rates?.INR;
+    if (rate != null && isFinite(rate) && rate > 0) return rate;
+  } catch { /* swallow */ }
+  return null;
+}
+
+/**
+ * Bulk-fetch rates for many (currency, date) pairs. Concurrency-capped
+ * at 5 to be polite to the free CDNs. Each pair goes through the full
+ * cache → fawazahmed0 → frankfurter → ±N day fallback pipeline.
  */
 export async function getRatesBulk(
   supabase: SupabaseClient,

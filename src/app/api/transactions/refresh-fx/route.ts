@@ -22,21 +22,28 @@ export async function POST() {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
 
-  // 1. Find rows that need filling.
-  //    - foreign currency
-  //    - amount_inr == 0  (or null in legacy rows)
-  const { data: rows, error: selErr } = await supabase
-    .from("transactions")
-    .select("id, original_currency, original_amount, txn_at, amount_inr")
-    .eq("user_id", user.id)
-    .neq("original_currency", "INR")
-    .or("amount_inr.eq.0,amount_inr.is.null")
-    .limit(1000);
-
-  if (selErr) {
-    return NextResponse.json({ error: `select: ${selErr.message}` }, { status: 500 });
+  // 1. Find rows that need filling. Page through to bypass Supabase's
+  //    default 1000-row limit — over multi-year horizons users could
+  //    easily have more foreign txns than that.
+  const PAGE = 1000;
+  const rows: Array<{ id: string; original_currency: string; original_amount: number; txn_at: string; amount_inr: number }> = [];
+  for (let from = 0; ; from += PAGE) {
+    const { data, error: selErr } = await supabase
+      .from("transactions")
+      .select("id, original_currency, original_amount, txn_at, amount_inr")
+      .eq("user_id", user.id)
+      .neq("original_currency", "INR")
+      .or("amount_inr.eq.0,amount_inr.is.null")
+      .range(from, from + PAGE - 1);
+    if (selErr) {
+      return NextResponse.json({ error: `select: ${selErr.message}` }, { status: 500 });
+    }
+    if (!data || data.length === 0) break;
+    rows.push(...data as typeof rows);
+    if (data.length < PAGE) break;
   }
-  if (!rows || rows.length === 0) {
+
+  if (rows.length === 0) {
     return NextResponse.json({ updated: 0, message: "Nothing to refresh." });
   }
 
