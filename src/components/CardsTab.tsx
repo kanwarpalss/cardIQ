@@ -28,6 +28,7 @@ export default function CardsTab() {
   const [profile,    setProfile]    = useState("");
   const [savedKey,   setSavedKey]   = useState(false);
   const [formError,  setFormError]  = useState<string | null>(null);
+  const [backfillNote, setBackfillNote] = useState<string | null>(null);
   const [saving,     setSaving]     = useState(false);
 
   async function load() {
@@ -45,14 +46,47 @@ export default function CardsTab() {
 
   async function addCard() {
     setFormError(null);
+    setBackfillNote(null);
     if (!last4.match(/^\d{4}$/)) { setFormError("Last 4 must be exactly 4 digits."); return; }
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return;
-    const { error } = await supabase.from("cards").insert({
-      user_id: user.id, product_key: productKey, nickname: nickname || null, last4,
-    });
+
+    // Insert the card and grab its id back so we can immediately backfill.
+    const { data: inserted, error } = await supabase
+      .from("cards")
+      .insert({ user_id: user.id, product_key: productKey, nickname: nickname || null, last4 })
+      .select("id")
+      .maybeSingle();
     if (error) { setFormError(error.message); return; }
+    if (!inserted?.id) { setFormError("Card inserted but id missing."); return; }
+
     setLast4(""); setNickname("");
+    setBackfillNote("Linking historic transactions\u2026");
+
+    // Auto-run the offline backfill: links orphan transactions with matching
+    // last4 + re-runs the sniffer over previously-unparsed emails. No Gmail
+    // round-trip, so this finishes in seconds.
+    try {
+      const res = await fetch("/api/cards/backfill", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ card_id: inserted.id }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setBackfillNote(`\u26a0 Backfill issue: ${data.error || "unknown"}`);
+      } else {
+        const total = (data.linked_orphans ?? 0) + (data.recovered_from_unparsed ?? 0);
+        setBackfillNote(
+          total > 0
+            ? `\u2728 Linked ${data.linked_orphans} existing txns + recovered ${data.recovered_from_unparsed} from previously-unparsed emails.`
+            : `\u2713 No historic transactions found for this card (yet). New ones will appear after the next sync.`
+        );
+      }
+    } catch (e) {
+      setBackfillNote(`\u26a0 Backfill failed: ${(e as Error).message}`);
+    }
+
     load();
   }
 
@@ -145,6 +179,9 @@ export default function CardsTab() {
 
           {formError && (
             <div className="text-xs text-ruby px-1">{formError}</div>
+          )}
+          {backfillNote && (
+            <div className="text-xs text-mist/60 px-1">{backfillNote}</div>
           )}
 
           <button onClick={addCard}

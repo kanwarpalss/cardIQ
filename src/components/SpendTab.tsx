@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { CARD_REGISTRY } from "@/lib/cards/registry";
 import { CATEGORIES }    from "@/lib/categories";
-import MonthRangePicker  from "./MonthRangePicker";
+import PeriodPicker      from "./PeriodPicker";
 import MerchantPanel     from "./MerchantPanel";
 import SyncPanel         from "./SyncPanel";
 import TransactionsTable from "./TransactionsTable";
@@ -245,7 +245,7 @@ export default function SpendTab() {
         {/* Period row */}
         <div className="flex items-center gap-3 flex-wrap">
           <span className="text-2xs uppercase tracking-widest text-mist/30 w-12 shrink-0">Period</span>
-          <MonthRangePicker
+          <PeriodPicker
             from={fromDate}
             to={toDate}
             onChange={(f, t) => { setFromDate(f); setToDate(t); }}

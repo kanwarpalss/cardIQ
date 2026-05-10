@@ -12,7 +12,11 @@ import { CARD_REGISTRY } from "@/lib/cards/registry";
  * Subsequent syncs only fetch emails newer than the cursor — regardless of
  * what date-range the user has selected in the UI (that filter is view-only).
  */
-const FIRST_SYNC_LOOKBACK_DAYS = 365;
+// First-time sync window: pull 8 years of bank emails. Once a cursor is
+// stored in gmail_sync_state, this constant is never used again — incremental
+// syncs only fetch since the cursor. The user's mental model: "sync everything
+// once, forever; clicks after that just grab what's new".
+const FIRST_SYNC_LOOKBACK_DAYS = 365 * 8;
 
 /**
  * Sentinel key stored in gmail_sync_state to represent the single combined query.
