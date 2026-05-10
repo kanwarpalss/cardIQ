@@ -35,6 +35,7 @@
 //               HDFC Bank Credit Card ending 5906. From Merchant:A Grab"
 
 import type { ParsedTxn } from "./axis";
+import { detectCurrency, isInr } from "../currency";
 
 // ─── Regexes ─────────────────────────────────────────────────────────────────
 // V2/V3 unified debit body. Allows:
@@ -80,10 +81,17 @@ function parseDMonY(s: string): Date | null {
   return isNaN(d.getTime()) ? null : d;
 }
 
-// ─── Main ────────────────────────────────────────────────────────────────────
+// ─── Main ──────────────────────────────────────────────────────────────────────
 export function parseHdfcTxn(subject: string, body: string, snippet: string = ""): ParsedTxn | null {
   const combined = `${body} ${snippet}`.replace(/\s+/g, " ").trim();
   const subj = subject.trim();
+
+  // Foreign-currency guard. HDFC's regexes are hardcoded for "Rs." — a
+  // foreign-currency txn (e.g. "USD 50.00 was charged...") would match
+  // none of them, but we don't want it silently dropped either. Return
+  // null here and let the generic sniffer handle it (which uses
+  // lib/currency.ts and will tag it correctly).
+  if (!isInr(detectCurrency(`${subj} ${combined}`))) return null;
 
   // ── 1. NEW debit (V2 + V3) — body is canonical, ignore subject wording ───
   const newDebit = BODY_DEBIT_NEW_RE.exec(combined);

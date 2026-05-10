@@ -279,6 +279,50 @@ describe("parseHsbcTxn", () => {
   });
 });
 
+// ─── FOREIGN-CURRENCY GUARDS ─────────────────────────────────────────────
+// HDFC/ICICI/HSBC parsers are hardcoded for INR amounts. If a foreign-
+// currency txn arrives via one of these senders (rare but possible —
+// e.g. HDFC sends a USD alert), the specific parser MUST return null so
+// the registry's parseTxnEmailWithFallback hands it off to the generic
+// sniffer (which uses lib/currency.ts and tags the currency correctly).
+describe("foreign-currency guards on bank-specific parsers", () => {
+  it("HDFC parser returns null for a USD body", () => {
+    const out = parseHdfcTxn(
+      "A payment was made using your Credit Card",
+      "USD 50.00 has been debited from your HDFC Bank Credit Card ending 5906 towards APPLE.COM on 08 May, 2026 at 08:27:30.",
+      "",
+    );
+    expect(out).toBeNull();
+  });
+
+  it("ICICI parser returns null for an EUR body", () => {
+    const out = parseIciciTxn(
+      "Transaction alert",
+      "Your ICICI Bank Credit Card XX9004 has been used for a transaction of EUR 50.00 on Apr 06, 2026 at 10:35:11.",
+      "",
+    );
+    expect(out).toBeNull();
+  });
+
+  it("HSBC parser returns null for an AED body", () => {
+    const out = parseHsbcTxn(
+      "You have used your HSBC Credit Card",
+      "your Credit card no ending with 3337, has been used for AED 200.00 for payment to DUBAI MALL on 01 May 2026 at 21:22.",
+      "",
+    );
+    expect(out).toBeNull();
+  });
+
+  it("HDFC parser still works for INR (regression check on the guard)", () => {
+    const out = parseHdfcTxn(
+      "A payment was made using your Credit Card",
+      "Rs. 9939.79 has been debited from your HDFC Bank Credit Card ending 5906 towards ASSPL on 08 May, 2026 at 08:27:30.",
+      "",
+    );
+    expect(out?.amount_inr).toBe(9939.79);
+  });
+});
+
 // ─── REGISTRY (sender → parser routing) ────────────────────────────────────
 describe("parseTxnEmail", () => {
   it("routes axis.bank.in to Axis parser", () => {

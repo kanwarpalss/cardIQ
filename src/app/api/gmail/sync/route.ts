@@ -4,6 +4,7 @@ import { decrypt } from "@/lib/crypto";
 import { parseTxnEmailWithFallback } from "@/lib/parsers/registry";
 import { categorize } from "@/lib/categorize";
 import { cleanMerchant } from "@/lib/merchant-clean";
+import { enrichAmount } from "@/lib/txn-enrich";
 import { CARD_REGISTRY } from "@/lib/cards/registry";
 
 /**
@@ -406,6 +407,12 @@ export async function POST(req: Request) {
             const merchant = mapping?.normalized_name ?? cleaned ?? null;
             const category = mapping?.category ?? categorize(merchant);
 
+            // Centralized foreign-currency handling. enrichAmount looks up the
+            // historical FX rate for the txn date when needed, so foreign
+            // amounts are stored in INR using the rate that was in effect AT
+            // THE TIME of the transaction (not today). See lib/txn-enrich.ts.
+            const enriched = await enrichAmount(supabase, parsed, txnAt);
+
             const { data: upserted, error: upsertErr } = await supabase
               .from("transactions")
               .upsert(
@@ -413,11 +420,9 @@ export async function POST(req: Request) {
                   user_id: user!.id,
                   card_id: cardId,
                   card_last4: parsed.card_last4,
-                  amount_inr: parsed.amount_inr,
-                  // Foreign-currency txns: store original side-by-side so we
-                  // can later show "USD 224.28 (₹18,923)" instead of just INR.
-                  original_currency: parsed.currency ?? "INR",
-                  original_amount: parsed.amount_original ?? parsed.amount_inr,
+                  amount_inr:        enriched.amount_inr,
+                  original_currency: enriched.original_currency,
+                  original_amount:   enriched.original_amount,
                   // Generic-sniffer matches are flagged for user review since
                   // they didn't match a bank-specific parser — amount/merchant
                   // could be a hair off vs. the canonical format.

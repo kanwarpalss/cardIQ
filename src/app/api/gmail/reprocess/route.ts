@@ -4,6 +4,7 @@ import { decrypt } from "@/lib/crypto";
 import { parseTxnEmailWithFallback, type ParsedTxn } from "@/lib/parsers/registry";
 import { categorize } from "@/lib/categorize";
 import { cleanMerchant } from "@/lib/merchant-clean";
+import { enrichAmount } from "@/lib/txn-enrich";
 
 /**
  * Reprocess emails that are in gmail_seen_messages but did NOT produce a
@@ -242,6 +243,8 @@ export async function POST(req: Request) {
 
         const txnAt = internalDate > 0 ? new Date(internalDate) : parsed.txn_at;
 
+        const enriched = await enrichAmount(supabase, parsed, txnAt);
+
         const { data: upserted, error: upsertErr } = await supabase
           .from("transactions")
           .upsert(
@@ -249,9 +252,9 @@ export async function POST(req: Request) {
               user_id: user!.id,
               card_id: cardId,
               card_last4: parsed.card_last4,
-              amount_inr: parsed.amount_inr,
-              original_currency: parsed.currency ?? "INR",
-              original_amount: parsed.amount_original ?? parsed.amount_inr,
+              amount_inr:        enriched.amount_inr,
+              original_currency: enriched.original_currency,
+              original_amount:   enriched.original_amount,
               low_confidence: parsed.low_confidence ?? false,
               merchant,
               category,

@@ -11,6 +11,7 @@
 //    on Apr 06, 2026 at 10:35:11."
 
 import type { ParsedTxn } from "./axis";
+import { detectCurrency, isInr } from "../currency";
 
 // "Credit Card XX9004 has been used for a transaction of INR 6000.00 on Apr 06, 2026 at 10:35:11. Info: MERCHANT"
 const TXN_RE =
@@ -45,6 +46,9 @@ function parseMonDY(s: string): Date | null {
 
 export function parseIciciTxn(subject: string, body: string, snippet: string = ""): ParsedTxn | null {
   const combined = `${body} ${snippet}`.replace(/\s+/g, " ").trim();
+
+  // Foreign-currency guard — see hdfc.ts for rationale.
+  if (!isInr(detectCurrency(`${subject} ${combined}`))) return null;
 
   const m = TXN_RE.exec(combined);
   if (m) {

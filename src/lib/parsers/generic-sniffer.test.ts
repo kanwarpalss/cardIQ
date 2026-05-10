@@ -58,6 +58,64 @@ describe("genericSniff", () => {
     expect(out?.amount_inr).toBe(0);
   });
 
+  // ── New: foreign currencies that the OLD sniffer missed entirely ──
+  it("captures IDR (Indonesian Rupiah) — the SOFITEL bug currency", () => {
+    const out = genericSniff(
+      "Card alert",
+      "IDR 12272062 was debited from your card ending 5906 at SOFITEL BAL",
+      "",
+      KNOWN
+    );
+    expect(out?.currency).toBe("IDR");
+    expect(out?.amount_original).toBe(12272062);
+    expect(out?.amount_inr).toBe(0);
+    expect(out?.card_last4).toBe("5906");
+  });
+
+  it("captures THB via the ฿ symbol", () => {
+    const out = genericSniff(
+      "Card alert",
+      "฿800 was charged to your card ending 5906 at PHUKET HOTEL",
+      "",
+      KNOWN
+    );
+    expect(out?.currency).toBe("THB");
+    expect(out?.amount_original).toBe(800);
+  });
+
+  it("captures MYR via the RM symbol", () => {
+    const out = genericSniff(
+      "Card alert",
+      "RM 250.00 was debited from your card ending 5906 at KLIA",
+      "",
+      KNOWN
+    );
+    expect(out?.currency).toBe("MYR");
+    expect(out?.amount_original).toBe(250);
+  });
+
+  it("captures HKD", () => {
+    const out = genericSniff(
+      "Card alert",
+      "HKD 1500 was debited from your card ending 5906 at HK DISNEYLAND",
+      "",
+      KNOWN
+    );
+    expect(out?.currency).toBe("HKD");
+    expect(out?.amount_original).toBe(1500);
+  });
+
+  it("captures ₹ symbol as INR", () => {
+    const out = genericSniff(
+      "Card alert",
+      "₹1500 was debited from your card ending 5906 at SWIGGY",
+      "",
+      KNOWN
+    );
+    expect(out?.currency).toBeUndefined(); // INR doesn't set the currency field
+    expect(out?.amount_inr).toBe(1500);
+  });
+
   it("rejects marketing email despite mentioning amount + card", () => {
     // "Get Rs 500 cashback when you spend Rs 5000 on your card ending 5906"
     // — has amount, has last4, has 'spend' verb. But also has 2 marketing

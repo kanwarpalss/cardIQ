@@ -12,6 +12,7 @@
 //    ending with 3337 on DD Mon YYYY at HH:MM."
 
 import type { ParsedTxn } from "./axis";
+import { detectCurrency, isInr } from "../currency";
 
 // Debit
 const TXN_RE =
@@ -42,6 +43,9 @@ function parseDMonY(s: string): Date | null {
 
 export function parseHsbcTxn(subject: string, body: string, snippet: string = ""): ParsedTxn | null {
   const combined = `${body} ${snippet}`.replace(/\s+/g, " ").trim();
+
+  // Foreign-currency guard — see hdfc.ts for rationale.
+  if (!isInr(detectCurrency(`${subject} ${combined}`))) return null;
 
   const m = TXN_RE.exec(combined);
   if (m) {

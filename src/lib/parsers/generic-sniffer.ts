@@ -15,14 +15,23 @@
 // `low_confidence: true` flag so the caller can decide how to treat it.
 
 import type { ParsedTxn } from "./axis";
+import { detectCurrency } from "../currency";
 
 export type GenericParsed = ParsedTxn & { low_confidence: true };
 
-// ─── Regexes ─────────────────────────────────────────────────────────────────
-// Currency-prefixed amount: "Rs. 123.45", "Rs.123", "INR 1,234.56", "USD 50",
-// "EUR 99.99", "GBP 10", "AED 500". Captures (currency, amount).
-const AMOUNT_RE =
-  /\b(Rs\.?|INR|USD|EUR|GBP|AED|SGD|AUD|CAD|JPY|CHF)\s*([\d,]+(?:\.\d{1,2})?)\b/i;
+// ─── Regexes ──────────────────────────────────────────────────────────────
+// Amount detection: any digit run with optional thousands separators +
+// decimals. We DON'T anchor this to a currency keyword — currency is
+// detected separately via lib/currency.ts (which knows about ₹, $, Rp,
+// IDR, MYR, etc.). This way we catch amounts no matter what symbol/code
+// the bank chose.
+//
+// IMPORTANT: NO `i` flag. With case-insensitive matching, `[A-Z]{3}`
+// would also match "ing" (as in "ending 5906") and capture the card
+// number as the amount. Lowercase variants for `Rs`/`Rp` are spelled
+// out explicitly.
+const AMOUNT_NEAR_CURRENCY_RE =
+  /(?:[A-Z]{3}|\b(?:Rs|RS|rs|Rp|RP|rp|RM)\.?\b|[\u20B9$\u20AC\u00A3\u00A5\u20A9\u20AB\u0E3F])\s*([\d,]+(?:\.\d{1,2})?)/;
 
 // Card last4 reference: matches XX1234, **1234, ending 1234, ending with 1234,
 // "card no. 1234". Captures the 4 digits.
@@ -110,12 +119,17 @@ export function genericSniff(
     return null;
   }
 
-  // 4. Must contain a currency amount.
-  const amtMatch = AMOUNT_RE.exec(combined);
+  // 4. Must contain a currency-tagged amount (catches ₹, $, Rs., IDR, etc.).
+  const amtMatch = AMOUNT_NEAR_CURRENCY_RE.exec(combined);
   if (!amtMatch) return null;
-  const currencyRaw = amtMatch[1].toUpperCase();
-  const currency = currencyRaw === "RS" || currencyRaw === "RS." ? "INR" : currencyRaw;
-  const amount = parseAmountStr(amtMatch[2]);
+  const amount = parseAmountStr(amtMatch[1]);
+
+  // Run the centralized detector on the matched fragment + a small window
+  // around it so we use the strongest local currency signal (rather than a
+  // distant "INR" footer leaking into a foreign txn or vice versa).
+  const idx = amtMatch.index;
+  const window = combined.slice(Math.max(0, idx - 30), Math.min(combined.length, idx + amtMatch[0].length + 30));
+  const currency = detectCurrency(window);
 
   // 5. Decide debit vs credit from the surrounding text.
   const txn_type: "debit" | "credit" = CREDIT_SIGNALS_RE.test(combined) ? "credit" : "debit";

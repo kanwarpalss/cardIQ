@@ -4,6 +4,7 @@ import { decrypt } from "@/lib/crypto";
 import { parseTxnEmailWithFallback } from "@/lib/parsers/registry";
 import { categorize } from "@/lib/categorize";
 import { cleanMerchant } from "@/lib/merchant-clean";
+import { enrichAmount } from "@/lib/txn-enrich";
 import { CARD_REGISTRY } from "@/lib/cards/registry";
 
 /**
@@ -254,6 +255,9 @@ export async function POST(req: Request) {
               const merchant = mapping?.normalized_name ?? cleaned ?? null;
               const category = mapping?.category ?? categorize(merchant);
 
+              const txnAt = internalDate > 0 ? new Date(internalDate) : parsed.txn_at;
+              const enriched = await enrichAmount(supabase, parsed, txnAt);
+
               const { data: upserted, error: upsertErr } = await supabase
                 .from("transactions")
                 .upsert(
@@ -261,14 +265,14 @@ export async function POST(req: Request) {
                     user_id: user.id,
                     card_id: cardId,
                     card_last4: parsed.card_last4,
-                    amount_inr: parsed.amount_inr,
-                    original_currency: parsed.currency ?? "INR",
-                    original_amount: parsed.amount_original ?? parsed.amount_inr,
+                    amount_inr:        enriched.amount_inr,
+                    original_currency: enriched.original_currency,
+                    original_amount:   enriched.original_amount,
                     low_confidence: parsed.low_confidence ?? false,
                     merchant,
                     category,
                     txn_type: parsed.txn_type,
-                    txn_at: internalDate > 0 ? new Date(internalDate).toISOString() : parsed.txn_at.toISOString(),
+                    txn_at: txnAt.toISOString(),
                     gmail_message_id: msgId,
                     raw_subject: subject,
                     raw_body: bodyTxt,

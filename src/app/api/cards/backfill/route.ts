@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { parseTxnEmailWithFallback } from "@/lib/parsers/registry";
 import { categorize } from "@/lib/categorize";
 import { cleanMerchant } from "@/lib/merchant-clean";
+import { enrichAmount } from "@/lib/txn-enrich";
 
 /**
  * Card-added backfill. Run this immediately after a user adds a new card —
@@ -122,6 +123,8 @@ export async function POST(req: Request) {
     const category = mapping?.category ?? categorize(merchant);
     const txnAt    = row.internal_date ? new Date(row.internal_date) : parsed.txn_at;
 
+    const enriched = await enrichAmount(supabase, parsed, txnAt);
+
     const { data: upserted, error: upsertErr } = await supabase
       .from("transactions")
       .upsert(
@@ -129,9 +132,9 @@ export async function POST(req: Request) {
           user_id: user.id,
           card_id: matchedCardId,
           card_last4: parsed.card_last4,
-          amount_inr: parsed.amount_inr,
-          original_currency: parsed.currency ?? "INR",
-          original_amount: parsed.amount_original ?? parsed.amount_inr,
+          amount_inr:        enriched.amount_inr,
+          original_currency: enriched.original_currency,
+          original_amount:   enriched.original_amount,
           low_confidence: parsed.low_confidence ?? false,
           merchant,
           category,
