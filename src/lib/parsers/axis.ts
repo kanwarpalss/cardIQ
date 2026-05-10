@@ -3,13 +3,22 @@
 // Confirmed format (debit, INR):
 //   Subject: "INR 1042 spent on credit card no. XX4455"
 //
-// Confirmed format (debit, foreign currency):
+// Confirmed format (debit, foreign currency w/ INR equivalent):
 //   Subject: "USD 224.28 spent on credit card no. XX4455"
 //   Body:    "...Transaction Amount: USD 224.28 ... Indian Rupee Equivalent: INR 18923.45..."
 //
-// We match ANY 3-letter currency code in the subject. For foreign-currency
-// transactions we prefer the INR equivalent from the body when present;
-// otherwise we keep the original amount and currency code (caller can convert).
+// Confirmed format (debit, foreign currency WITHOUT INR equivalent):
+//   Subject: "IDR 12272062 spent on credit card no. XX4455"
+//   Body:    "...Transaction Amount: IDR 12272062 ... Available Limit: INR 112060.04 ..."
+//   The body's "Available Limit" / "Total Credit Limit" lines also contain INR
+//   amounts — we MUST NOT pick those up as the transaction amount.
+//
+// Rules:
+//   • amount_inr is set ONLY when the txn currency is INR or when an
+//     "Indian Rupee Equivalent" line is present. Otherwise amount_inr=0
+//     (sentinel) and original_currency + original_amount carry the truth.
+//     This prevents IDR/USD/etc. amounts from being summed as INR in the
+//     dashboard.
 //
 // Credit/refund:
 //   Subject: "INR 1042 refund credited to credit card no. XX4455"
@@ -82,18 +91,22 @@ export function parseAxisTxn(subject: string, body: string, snippet: string = ""
   const bodyCurrency = bodyAmt?.[1]?.toUpperCase() ?? subjectCurrency;
   const bodyAmount   = bodyAmt ? parseAmount(bodyAmt[2]) : parseAmount(sm[2]);
 
-  // Foreign-currency txn: prefer the "Indian Rupee Equivalent" if present.
+  // Foreign-currency txn:
+  //   • If "Indian Rupee Equivalent: INR X" is present → amount_inr = X
+  //   • Otherwise → amount_inr = 0 (sentinel). The dashboard sums only
+  //     amount_inr where original_currency = 'INR', so a 0 here keeps the
+  //     row visible (under the foreign-currency breakdown) without
+  //     polluting INR totals. This is critical: pre-fix we put the
+  //     foreign amount in amount_inr which inflated totals catastrophically
+  //     (e.g. 1 IDR ≈ 0.005 INR → IDR 12,272,062 looked like ₹1.2 crore).
   let amount_inr = bodyAmount;
   let currency: string | undefined;
   let amount_original: number | undefined;
 
   if (bodyCurrency !== "INR") {
     const inrEquiv = BODY_INR_EQUIV_RE.exec(combined);
-    if (inrEquiv) {
-      amount_inr = parseAmount(inrEquiv[1]);
-    }
-    // We still record the original currency + amount even when INR equiv exists.
-    currency = bodyCurrency;
+    amount_inr      = inrEquiv ? parseAmount(inrEquiv[1]) : 0;
+    currency        = bodyCurrency;
     amount_original = bodyAmount;
   }
 

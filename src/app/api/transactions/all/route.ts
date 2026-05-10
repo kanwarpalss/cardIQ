@@ -16,7 +16,7 @@ export async function GET() {
   while (true) {
     const { data, error } = await supabase
       .from("transactions")
-      .select("id, card_last4, amount_inr, merchant, category, txn_at, txn_type, card_id, notes")
+      .select("id, card_last4, amount_inr, original_currency, original_amount, merchant, category, txn_at, txn_type, card_id, notes")
       .eq("user_id", user.id)
       .order("txn_at", { ascending: false })
       .range(from, from + PAGE - 1);

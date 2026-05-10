@@ -45,7 +45,7 @@ describe("genericSniff", () => {
     expect(out?.card_last4).toBe("5906");
   });
 
-  it("captures USD as foreign currency", () => {
+  it("captures USD as foreign currency — amount_inr=0 (sentinel)", () => {
     const out = genericSniff(
       "Foreign txn",
       "USD 50.00 charged to card ending 5906 at APPLE.COM",
@@ -54,6 +54,8 @@ describe("genericSniff", () => {
     );
     expect(out?.currency).toBe("USD");
     expect(out?.amount_original).toBe(50);
+    // Critical: NOT 50 — dashboard would otherwise sum it as ₹50.
+    expect(out?.amount_inr).toBe(0);
   });
 
   it("rejects marketing email despite mentioning amount + card", () => {

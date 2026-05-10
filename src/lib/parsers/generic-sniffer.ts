@@ -122,7 +122,11 @@ export function genericSniff(
 
   return {
     card_last4: last4,
-    amount_inr: currency === "INR" ? amount : amount,  // caller can convert
+    // CRITICAL: only treat the parsed amount as INR if currency is INR.
+    // For foreign currency without an INR conversion, leave amount_inr=0
+    // so the dashboard's INR totals don't get polluted (see Axis parser
+    // header comment for the disaster this prevented).
+    amount_inr: currency === "INR" ? amount : 0,
     merchant_raw: extractMerchant(combined),
     txn_at: new Date(),                                 // caller should overwrite with email date
     txn_type,

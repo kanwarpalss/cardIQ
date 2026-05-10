@@ -7,10 +7,13 @@ import PeriodPicker      from "./PeriodPicker";
 import MerchantPanel     from "./MerchantPanel";
 import SyncPanel         from "./SyncPanel";
 import TransactionsTable from "./TransactionsTable";
+import ForeignCurrencyPanel from "./ForeignCurrencyPanel";
 
-// ── Types ────────────────────────────────────────────────────────────────────
+// ── Types ───────────────────────────────────────────────────────
 type Txn = {
   id: string; card_last4: string; amount_inr: number;
+  original_currency: string | null;
+  original_amount:   number | null;
   merchant: string | null; category: string | null;
   txn_at: string; txn_type: "debit" | "credit"; notes?: string | null;
 };
@@ -155,9 +158,23 @@ export default function SpendTab() {
     });
   }, [allData, fromDate, toDate, selectedCards, txnType, categoryFilter]);
 
+  // Currency split: keep INR txns for all the ₹-denominated panels (totals,
+  // merchants, categories, milestones) and route foreign-currency txns to a
+  // dedicated panel. Legacy rows with a NULL original_currency are treated
+  // as INR (true for everything synced before multi-currency support).
+  const inrTxns = useMemo(
+    () => filteredTxns.filter((t) => !t.original_currency || t.original_currency.toUpperCase() === "INR"),
+    [filteredTxns]
+  );
+  const foreignTxns = useMemo(
+    () => filteredTxns.filter((t) => t.original_currency && t.original_currency.toUpperCase() !== "INR"),
+    [filteredTxns]
+  );
+
   const aggregates = useMemo(() => {
-    const debits  = filteredTxns.filter((t) => t.txn_type === "debit");
-    const credits = filteredTxns.filter((t) => t.txn_type === "credit");
+    // INR-ONLY aggregates. Foreign txns get their own panel below.
+    const debits  = inrTxns.filter((t) => t.txn_type === "debit");
+    const credits = inrTxns.filter((t) => t.txn_type === "credit");
     const total_debit  = debits.reduce((s, t) => s + Number(t.amount_inr), 0);
     const total_credit = credits.reduce((s, t) => s + Number(t.amount_inr), 0);
 
@@ -188,10 +205,10 @@ export default function SpendTab() {
 
     return {
       summary: { total_debit, total_credit, net: total_debit - total_credit,
-        txn_count: filteredTxns.length, debit_count: debits.length, credit_count: credits.length },
+        txn_count: inrTxns.length, debit_count: debits.length, credit_count: credits.length },
       by_merchant, by_category, totals,
     };
-  }, [filteredTxns]);
+  }, [inrTxns]);
 
   const filteredMerchants = useMemo(() => {
     let list = aggregates.by_merchant;
@@ -419,9 +436,9 @@ export default function SpendTab() {
             </section>
           </div>
 
-          {/* ── Transactions table ─────────────────────────────────────── */}
+          {/* ── Transactions table (INR only) ───────────────────────────────── */}
           <TransactionsTable
-            transactions={filteredTxns}
+            transactions={inrTxns}
             cards={allData.cards}
             categories={allCategories}
             existingNotes={existingNotes}
@@ -429,6 +446,9 @@ export default function SpendTab() {
             onCategoryChange={handleTxnCategoryChange}
             onNotesChange={handleTxnNotesChange}
           />
+
+          {/* ── Foreign currency panel (renders only if foreign txns exist) ── */}
+          <ForeignCurrencyPanel transactions={foreignTxns} />
         </>
       )}
     </div>

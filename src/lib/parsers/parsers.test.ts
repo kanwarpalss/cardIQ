@@ -55,7 +55,7 @@ describe("parseAxisTxn", () => {
     });
   });
 
-  it("parses USD without INR equivalent — keeps original amount as fallback", () => {
+  it("parses USD without INR equivalent — amount_inr=0 (sentinel), original preserved", () => {
     const out = parseAxisTxn(
       "USD 50.00 spent on credit card no. XX4455",
       "Transaction Amount: USD 50.00 Merchant Name: SOMECORP",
@@ -63,7 +63,29 @@ describe("parseAxisTxn", () => {
     );
     expect(out?.currency).toBe("USD");
     expect(out?.amount_original).toBe(50);
-    expect(out?.amount_inr).toBe(50); // graceful degradation — caller can convert
+    // Critical: NOT 50 (would be summed as ₹50 in INR totals → wrong).
+    expect(out?.amount_inr).toBe(0);
+  });
+
+  it("parses IDR transaction (real sample) without confusing INR-shaped 'Available Limit' line", () => {
+    // Real sample from kanwarpalss@gmail.com 01-Jan-2026.
+    // Body has 'Available Limit: INR 112060.04' and 'Total Credit Limit: INR 1217000'
+    // — these MUST NOT be picked up as the transaction amount.
+    const out = parseAxisTxn(
+      "IDR 12272062 spent on credit card no. XX4455",
+      "Dear Kanwar Pal Singh Sethi, Here's the summary of your Axis Bank Credit Card Transaction: " +
+      "Transaction Amount: IDR 12272062    Merchant Name: SOFITEL BAL    Axis Bank Credit Card No. XX4455    " +
+      "Date & Time: 01-01-2026, 17:27:43 IST    Available Limit*: INR 112060.04    Total Credit Limit*: INR 1217000",
+      ""
+    );
+    expect(out).not.toBeNull();
+    expect(out?.card_last4).toBe("4455");
+    expect(out?.currency).toBe("IDR");
+    expect(out?.amount_original).toBe(12272062);
+    // The bug: pre-fix this was 12272062 (treated as INR → ₹1.2 crore in totals).
+    expect(out?.amount_inr).toBe(0);
+    expect(out?.merchant_raw).toBe("SOFITEL BAL");
+    expect(out?.txn_type).toBe("debit");
   });
 
   it("ignores non-transactional Axis emails", () => {
