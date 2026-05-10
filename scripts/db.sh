@@ -18,10 +18,23 @@ set -euo pipefail
 
 PROJECT_REF="dmmhtzwxqkduxvxipfqs"
 
+# Walmart corporate network blocks direct DNS to api.supabase.com.
+# Route through the Walmart sysproxy so every command Just Works.
+# If you're ever off-network and these break, comment these two lines out.
+export HTTP_PROXY="http://sysproxy.wal-mart.com:8080"
+export HTTPS_PROXY="http://sysproxy.wal-mart.com:8080"
+
 cmd="${1:-help}"
 shift || true
 
 case "$cmd" in
+  login)
+    echo "🔐 Logging in to Supabase…"
+    echo "   IMPORTANT: when it prompts to open browser, copy the URL it prints and"
+    echo "   paste it in SAFARI (where you're signed in as your personal account)."
+    echo "   Don't press Enter — that opens Chrome (logged into Walmart)."
+    supabase login
+    ;;
   link)
     echo "🔗 Linking to project $PROJECT_REF…"
     echo "   You'll be asked for your DB password (the one you set when creating the Supabase project)."
@@ -50,6 +63,16 @@ case "$cmd" in
     [[ "$confirm" == "y" ]] && supabase db reset
     ;;
   help|*)
-    head -20 "$0" | tail -15
+    echo ""
+    echo "CardIQ DB wrapper — commands:"
+    echo "  ./scripts/db.sh login                 → one-time: log in to Supabase (use Safari!)"
+    echo "  ./scripts/db.sh link                  → one-time: link this repo to your project"
+    echo "  ./scripts/db.sh push                  → apply new migrations to remote"
+    echo "  ./scripts/db.sh status                → show migration status"
+    echo "  ./scripts/db.sh new <name>            → scaffold a new migration"
+    echo "  ./scripts/db.sh pull                  → pull dashboard schema changes back to git"
+    echo "  ./scripts/db.sh reset                 → ⚠️ wipe + re-apply local DB only"
+    echo ""
+    echo "Walmart proxy is auto-applied. No env-var prefix needed."
     ;;
 esac
