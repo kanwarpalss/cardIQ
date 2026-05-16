@@ -1,186 +1,248 @@
-# Dining — Mac mini runbook
+# 🍽 CardIQ Dining — Mac mini setup runbook
 
 **Where this runs**: KP's personal Mac mini at home, on personal
 Supabase / GitHub / Vercel. **Not** on the Walmart laptop.
 
-**Status as of 2026-05-16**: chunks 1–5a built + tested on the
-Walmart laptop. Login CLI ready. Scrapers (5b–d), dedupe, UI,
-scheduler not yet built — those come after first successful login
-captures, so we know what each platform's API actually returns.
+**Last updated**: 2026-05-16
+**Total time**: ~20 min (most of it waiting for Chromium to download + your OTPs)
+**What you get at the end**: Dining tab live, empty-state, ready for the scraper round next session.
 
 ---
 
-## 0. One-time prereqs (run once, ever)
+## Phase 0 — Sanity check you're in the right place (30 sec)
 
 ```bash
 cd ~/Code/cardIQ
-git pull                                    # grab the latest from origin
-npm install                                 # picks up playwright + tsx + dotenv
-npx playwright install chromium             # ~150MB, the actual browser binary
+pwd                          # should print /Users/<you>/Code/cardIQ
+git remote -v                # should show kanwarpalss/cardIQ
+node --version               # should be v20 or higher
 ```
 
-Confirm `.env.local` has these (copy from `.env.local.example` if not):
-
-```
-NEXT_PUBLIC_SUPABASE_URL=...
-SUPABASE_SERVICE_ROLE_KEY=...           ← service-role; never goes to browser
-ENCRYPTION_KEY=<32-byte hex>            ← same one already used for Gmail token
-CARDIQ_USER_ID=<your auth.users.id>     ← find via Supabase dashboard
-```
-
-Find `CARDIQ_USER_ID`: Supabase dashboard → Authentication → Users →
-your row → copy the UUID.
+If `node` < 20: `brew install node@20` first.
 
 ---
 
-## 1. Apply the schema migration
+## Phase 1 — Pull the code (1 min)
+
+```bash
+git pull origin main
+```
+
+You should see ~11 new commits land. The latest one should be the
+`docs(dining): record dedupe + API + UI + verify-session in HANDOFF`
+commit (or this very runbook commit, even newer).
+
+---
+
+## Phase 2 — Install deps + Chromium binary (5–8 min)
+
+```bash
+npm install
+```
+
+This picks up `playwright`, `tsx`, `dotenv` (new this round) plus
+anything else.
+
+```bash
+npx playwright install chromium
+```
+
+This downloads the actual ~150MB Chromium binary that the login script
+drives. **This is the slow step** — go make tea.
+
+---
+
+## Phase 3 — Update `.env.local` with your user ID (2 min)
+
+You need the UUID Supabase assigned to your account. Find it:
+
+1. Go to https://supabase.com/dashboard
+2. Open your CardIQ project
+3. Sidebar → **Authentication** → **Users**
+4. Click your row → copy the **User UID** (looks like `a1b2c3d4-...`)
+
+Then:
+
+```bash
+# Open .env.local in your editor of choice
+open -e .env.local                # opens in TextEdit
+# OR: nano .env.local
+# OR: code .env.local             # if you have VS Code
+```
+
+Add this line at the bottom (or update if already there):
+
+```
+CARDIQ_USER_ID=<paste-the-uuid-here>
+```
+
+Save the file.
+
+> **⚠️ Check while you're in there**: confirm `ENCRYPTION_KEY` is set
+> (32-byte hex). If you've been running CardIQ already, it should be.
+> If it's blank, you'll need to set it — but **use the same value
+> you've been using all along**, otherwise it'll orphan your existing
+> Gmail tokens. If you've never set it, generate one:
+>
+> ```bash
+> node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+> ```
+
+---
+
+## Phase 4 — Apply the schema migration (1 min)
 
 ```bash
 ./scripts/db.sh push
 ```
 
-If the wrapper complains (Walmart proxy is hardcoded in there for the
-laptop case), comment out the two `export HTTP_PROXY` lines in
-`scripts/db.sh` while running from home. The new tables are:
-`dining_restaurants`, `dining_listings`, `dining_offers`,
-`dining_runs`, `dining_scrape_pages`, `dining_sessions`,
-`dining_manual_links`.
+> The script has Walmart proxy hard-coded for the laptop case. From
+> home it'll fail at the proxy step — if so, edit `scripts/db.sh`
+> and comment out the two `export HTTP_PROXY` / `HTTPS_PROXY` lines
+> near the top, then re-run.
 
-Verify in the dashboard SQL editor:
+Confirm the 7 new tables exist. In Supabase dashboard → SQL Editor:
 
 ```sql
 select table_name from information_schema.tables
  where table_name like 'dining_%' order by 1;
--- should return 7 rows.
 ```
+
+Expected output: 7 rows — `dining_listings`, `dining_manual_links`,
+`dining_offers`, `dining_restaurants`, `dining_runs`,
+`dining_scrape_pages`, `dining_sessions`.
 
 ---
 
-## 2. Capture one session per platform (~3 × 2 min)
+## Phase 5 — Capture the three logins (6 min total — 2 min each)
 
 ```bash
 npx tsx scripts/dining-login.ts zomato
 ```
 
-A Chromium window opens. **Log in with your real number + OTP** the
-way you normally would. Stay on the post-login page until the
-terminal prints `✅ Saved encrypted session for zomato`.
+A Chromium window opens at `zomato.com/bangalore/dine-out`. **Log in
+with your real phone + OTP, the same way you normally would.** Stay
+on the post-login page; the script polls every 3 seconds.
 
-Repeat for the other two:
+When it detects you're logged in, the terminal prints:
+
+```
+✅ Saved encrypted session for zomato
+   Cookies captured: 4 (cid, csrf-token, ...)
+   Bearer token:     no
+   Expires:          2026-06-...
+```
+
+The browser closes automatically. Repeat for the other two:
 
 ```bash
 npx tsx scripts/dining-login.ts swiggy
 npx tsx scripts/dining-login.ts eazydiner
 ```
 
-Verify in Supabase SQL editor:
+> **If a window doesn't navigate after login**: just wait. Some
+> platforms keep you on the same URL. The script polls cookies, not
+> URL.
+>
+> **If it times out (10 min)**: try again. Sometimes Cloudflare adds
+> a one-time verification on first visit; let that complete first.
 
-```sql
-select platform, expires_at, last_validated_at
-  from dining_sessions
- where user_id = '<your CARDIQ_USER_ID>';
--- should return 3 rows.
-```
+---
 
-Alternatively, just run the sanity-check CLI:
+## Phase 6 — Verify all three sessions decrypted cleanly (10 sec)
 
 ```bash
 npx tsx scripts/dining-verify-session.ts
 ```
 
-It decrypts each session and prints cookie count, bearer presence,
-and days remaining. Exit code 0 means all three look good.
+Expected output:
+
+```
+Dining sessions — sanity check
+========================================
+
+🔎  zomato
+----------------------------------------
+   ✅ captured at:   2026-05-...
+   🍪 cookies:       4
+   🔑 bearer token:  no
+   ⏰ expires:       2026-06-...
+   📅 30 days remaining (heuristic)
+
+🔎  swiggy
+... (similar)
+
+🔎  eazydiner
+... (similar)
+
+✨ All sessions look good.
+```
+
+If any show `⚠️ no session row` or `❌ load failed`: re-run the login
+CLI for just that one.
 
 ---
 
-## 3. Verify the UI works (empty state)
-
-With all three sessions captured, the Dining tab is functional but
-shows an empty state (no scraped data yet):
+## Phase 7 — See the Dining tab live (2 min)
 
 ```bash
 npm run dev
 ```
 
-Open http://localhost:3000, click the **Dining** tab. You should see:
-- Three green dots in the header (one per platform, all 'active')
-- An empty state: "No restaurants scraped yet"
-- No error banners
+Open http://localhost:3000 → sign in → click the **Dining** tab
+(between Spend and Chat — fork-and-knife icon).
 
-If any dot is red, run `dining-login.ts <platform>` again for that one.
+**Expected**:
 
----
+- ✅ Three green dots in the top-right of the tab header (zomato,
+  swiggy, eazydiner — all "active")
+- ✅ A search box you can type into
+- ✅ An empty state: *"No restaurants scraped yet. Run the scraper on
+  the Mac mini, or wait for the weekly cron."*
+- ✅ **No** red error banner
+- ✅ **No** amber re-auth banner
 
-## 4. What to do next (next coding session)
+If any dot is red:
 
-Once all three sessions are captured, the next session can build the
-actual scrapers (chunks 5b–d). The plan is:
-
-1. Use the captured sessions to make ~5 real read-only API calls per
-   platform from the Mac mini, capturing the actual JSON responses
-   as fixtures in `src/lib/dining/scrapers/__fixtures__/`.
-2. Write a parser per platform against those captured fixtures
-   (TDD-style, parser code never runs without a fixture test green
-   first).
-3. Wire the list-endpoint walker + detail-endpoint fetcher into the
-   shared HTTP client (`lib/dining/http.ts`) and the dedupe layer
-   (`lib/dining/dedupe.ts`).
-4. Run a one-shot discovery sweep, watch `dining_runs` populate, see
-   the DiningTab fill with real data.
-5. launchd plist for the weekly schedule.
-
-To kick off the next session, paste this:
-
-> "CardIQ Dining — sessions captured on Mac mini, all three
-> dining-verify-session.ts checks pass. Ready for chunks 5b–d (the
-> per-platform scrapers + orchestrator). Read HANDOFF.md +
-> docs/DINING_BUILD_PLAN.md + docs/DINING_SCRAPE_STRATEGY.md +
-> docs/DINING_RUNBOOK.md first."
-
-Each step is independently revertable. Nothing in chunks 5b+ has
-been written yet — we hold off until we have real API shapes to
-design against (otherwise we'd be coding to assumed schemas, which
-always ends in tears).
-
-Each step is independently revertable. Nothing in chunks 6+ has been
-written yet — we hold off until we have real API shapes to design
-against (otherwise we'd be coding to assumed schemas, which always
-ends in tears).
+- Hovering should tell you which platform is missing/expired
+- Re-run `npx tsx scripts/dining-login.ts <that-platform>`
+- Refresh the browser tab
 
 ---
 
-## 5. Troubleshooting
+## Phase 8 — Ping Code Puppy back when ready
 
-**"ENCRYPTION_KEY not set"** — the script needs the same key as the
-main CardIQ app. If you've already been running CardIQ locally, it's
-in your `.env.local`. If not, generate one with:
+When you want to start the next session (capturing real API fixtures
++ building the actual scrapers), paste this prompt verbatim:
 
-```bash
-node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
-```
-
-Keep this same value forever — rotating it orphans all encrypted
-data (Gmail refresh tokens, dining sessions).
-
-**"Timed out waiting for login"** — increase TIMEOUT_MS in the
-script, or just re-run. Sometimes Cloudflare adds a one-time
-verification step on first visit; let it complete, then log in.
-
-**"Decryption failed"** — your `ENCRYPTION_KEY` doesn't match what
-encrypted the row. Either restore the old key or wipe the affected
-session row and re-run the login CLI.
-
-**Chromium window opens but doesn't go anywhere** — the platform
-might be doing a regional check. Confirm you're on Indian internet
-(any normal residential connection is fine — VPNs sometimes route
-through other countries and break things).
-
-**"npx playwright install" hangs** — the binary download server can
-be slow. Let it run; usually 2–5 min on residential broadband.
+> **CardIQ Dining — sessions captured on Mac mini, all three
+> `dining-verify-session.ts` checks pass, Dining tab shows empty
+> state cleanly with 3 green session dots. Ready for chunks 5b–d
+> (per-platform scrapers + orchestrator). Read `HANDOFF.md` +
+> `docs/DINING_BUILD_PLAN.md` + `docs/DINING_SCRAPE_STRATEGY.md` +
+> `docs/DINING_RUNBOOK.md` first.**
 
 ---
 
-## 6. Safety notes
+## 🆘 Troubleshooting — most likely failure modes
+
+| Symptom | Fix |
+|---|---|
+| `npx playwright install` hangs | Just wait — it's downloading 150MB. If >10 min, check `~/Library/Logs/Playwright/` |
+| `./scripts/db.sh push` proxy error | Comment out the two `export HTTP_PROXY` lines in `scripts/db.sh` |
+| `ENCRYPTION_KEY not set` | Add it to `.env.local` (see Phase 3 note) |
+| `CARDIQ_USER_ID not set` | Add it to `.env.local` (see Phase 3 main step) |
+| Chromium login window blank | Refresh the page; if first visit, Cloudflare may want a one-time verify |
+| `Decryption failed for X session` | Your `ENCRYPTION_KEY` doesn't match what encrypted the row. Delete the row in Supabase and re-run the login CLI |
+| Dining tab shows 3 red dots after login | Browser cached old `/api/dining/sessions/status` response — hard refresh (Cmd+Shift+R) |
+| `git pull` fails with merge conflict | The Mac mini has local commits that diverge from origin. `git status` to see, then ping Code Puppy with the conflict details |
+| `npm install` fails on a specific package | You might be on a proxy that's blocking a registry. Try `npm config set registry https://registry.npmjs.org/` then re-run |
+
+Anything else weird, screenshot it and share next session 📸
+
+---
+
+## 🛡 Safety notes
 
 - Sessions are encrypted at rest in Supabase (`aes-256-gcm` via
   `lib/crypto.ts`). The encryption key never leaves your laptop /
@@ -196,3 +258,18 @@ be slow. Let it run; usually 2–5 min on residential broadband.
   happens, message the next Code Puppy session with the details and
   we'll figure out whether to slow further, pause, or abandon that
   platform.
+
+---
+
+## 📚 For context (not required reading to run the runbook)
+
+- `docs/DINING_FEASIBILITY.md` — why no public API exists, options
+  considered, the card-first reframe.
+- `docs/DINING_BUILD_PLAN.md` — 9-chunk plan, 7-table data model,
+  locked decisions D1–D5, definition of done.
+- `docs/DINING_SCRAPE_STRATEGY.md` — two endpoint tiers × three
+  freshness tiers; bootstrap math; politeness policy.
+- `HANDOFF.md` — current state of the whole CardIQ project, what's
+  shipped, what's pending, conventions.
+
+Good luck — see you on the other side 🚀
