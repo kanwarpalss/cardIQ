@@ -5,8 +5,9 @@ import { createClient } from "@/lib/supabase/client";
 import ChatTab     from "@/components/ChatTab";
 import SpendTab    from "@/components/SpendTab";
 import CardsTab    from "@/components/CardsTab";
+import DiningTab   from "@/components/DiningTab";
 
-const TABS = ["Spend", "Chat", "Cards"] as const;
+const TABS = ["Spend", "Dining", "Chat", "Cards"] as const;
 type Tab = (typeof TABS)[number];
 
 const TAB_ICONS: Record<Tab, React.ReactNode> = {
@@ -14,6 +15,13 @@ const TAB_ICONS: Record<Tab, React.ReactNode> = {
     <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 16 16" stroke="currentColor" strokeWidth={1.8}>
       <path d="M2 5h12M2 5a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V5z"/>
       <circle cx="8" cy="10" r="1.5" fill="currentColor" stroke="none"/>
+    </svg>
+  ),
+  Dining: (
+    // Fork + knife — semantic, matches the gold/serif aesthetic per L25.
+    <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 16 16" stroke="currentColor" strokeWidth={1.8}>
+      <path d="M5 2v5a1 1 0 0 1-2 0V2M4 7v7" strokeLinecap="round"/>
+      <path d="M11 2v12M9 2c0 2 0 4 2 5" strokeLinecap="round"/>
     </svg>
   ),
   Chat: (
@@ -89,9 +97,10 @@ export default function Home() {
 
       {/* ── Content ────────────────────────────────────────────────────── */}
       <main className="flex-1 overflow-auto">
-        {tab === "Spend" && <SpendTab />}
-        {tab === "Chat"  && <ChatTab />}
-        {tab === "Cards" && <CardsTab />}
+        {tab === "Spend"  && <SpendTab />}
+        {tab === "Dining" && <DiningTab />}
+        {tab === "Chat"   && <ChatTab />}
+        {tab === "Cards"  && <CardsTab />}
       </main>
     </div>
   );
