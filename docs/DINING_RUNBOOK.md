@@ -82,9 +82,36 @@ select platform, expires_at, last_validated_at
 -- should return 3 rows.
 ```
 
+Alternatively, just run the sanity-check CLI:
+
+```bash
+npx tsx scripts/dining-verify-session.ts
+```
+
+It decrypts each session and prints cookie count, bearer presence,
+and days remaining. Exit code 0 means all three look good.
+
 ---
 
-## 3. What to do next (next coding session)
+## 3. Verify the UI works (empty state)
+
+With all three sessions captured, the Dining tab is functional but
+shows an empty state (no scraped data yet):
+
+```bash
+npm run dev
+```
+
+Open http://localhost:3000, click the **Dining** tab. You should see:
+- Three green dots in the header (one per platform, all 'active')
+- An empty state: "No restaurants scraped yet"
+- No error banners
+
+If any dot is red, run `dining-login.ts <platform>` again for that one.
+
+---
+
+## 4. What to do next (next coding session)
 
 Once all three sessions are captured, the next session can build the
 actual scrapers (chunks 5b–d). The plan is:
@@ -92,13 +119,28 @@ actual scrapers (chunks 5b–d). The plan is:
 1. Use the captured sessions to make ~5 real read-only API calls per
    platform from the Mac mini, capturing the actual JSON responses
    as fixtures in `src/lib/dining/scrapers/__fixtures__/`.
-2. Write a parser per platform against thostured fixtures
+2. Write a parser per platform against those captured fixtures
    (TDD-style, parser code never runs without a fixture test green
    first).
 3. Wire the list-endpoint walker + detail-endpoint fetcher into the
-   shared HTTP client (`lib/dining/http.ts`).
-4. Run a one-shot discovery sweep, watch `dining_runs` populate.
-5. Build the dedupe + UI on top.
+   shared HTTP client (`lib/dining/http.ts`) and the dedupe layer
+   (`lib/dining/dedupe.ts`).
+4. Run a one-shot discovery sweep, watch `dining_runs` populate, see
+   the DiningTab fill with real data.
+5. launchd plist for the weekly schedule.
+
+To kick off the next session, paste this:
+
+> "CardIQ Dining — sessions captured on Mac mini, all three
+> dining-verify-session.ts checks pass. Ready for chunks 5b–d (the
+> per-platform scrapers + orchestrator). Read HANDOFF.md +
+> docs/DINING_BUILD_PLAN.md + docs/DINING_SCRAPE_STRATEGY.md +
+> docs/DINING_RUNBOOK.md first."
+
+Each step is independently revertable. Nothing in chunks 5b+ has
+been written yet — we hold off until we have real API shapes to
+design against (otherwise we'd be coding to assumed schemas, which
+always ends in tears).
 
 Each step is independently revertable. Nothing in chunks 6+ has been
 written yet — we hold off until we have real API shapes to design
@@ -107,7 +149,7 @@ ends in tears).
 
 ---
 
-## 4. Troubleshooting
+## 5. Troubleshooting
 
 **"ENCRYPTION_KEY not set"** — the script needs the same key as the
 main CardIQ app. If you've already been running CardIQ locally, it's
@@ -138,7 +180,7 @@ be slow. Let it run; usually 2–5 min on residential broadband.
 
 ---
 
-## 5. Safety notes
+## 6. Safety notes
 
 - Sessions are encrypted at rest in Supabase (`aes-256-gcm` via
   `lib/crypto.ts`). The encryption key never leaves your laptop /

@@ -144,18 +144,32 @@ Weekly refresh. Card-stack offers are Phase 2.
   haversine, Levenshtein, `matchConfidence()`. 35 tests.
 - `src/lib/dining/http.ts` + tests — polite fetch wrapper with
   jitter, backoff, captcha sniff, hard-abort policy. 24 tests.
+- `src/lib/dining/dedupe.ts` + tests — incremental dedupe +
+  post-run merge; honours manual overrides. 19 tests.
 - `src/lib/dining/sessions.ts` — encrypted session storage
   (mirrors crypto pattern from Gmail OAuth).
 - `scripts/dining-login.ts` — Playwright CLI: opens browser, KP
   logs in by hand, saves encrypted session to Supabase.
+- `scripts/dining-verify-session.ts` — sanity-check that captured
+  sessions decrypt cleanly and aren't expired.
+- `src/app/api/dining/search/route.ts` — search + best-offer ranking.
+- `src/app/api/dining/sessions/status/route.ts` — backs re-auth banner.
+- `src/components/DiningTab.tsx` + nav wiring in `app/page.tsx` —
+  full UI: search box, per-restaurant card with all 3 platforms
+  side-by-side, re-auth banner, session health dots, empty states.
 - `package.json` — added `playwright`, `tsx`, `dotenv` devDeps;
-  `npm run dining:login <platform>` shortcut.
+  `npm run dining:login` shortcut.
+
+Total tests: 152 (74 existing + 78 dining-related).
 
 **Not yet built (next session, after KP captures sessions on Mac mini):**
-- Scrapers per platform (chunks 5b–5d). Need real API fixtures first.
+- Per-platform scrapers (chunks 5b–5d). Need real API fixtures first —
+  capture by logged-in browser DevTools or via a small fixture-grab
+  script using the already-stored sessions.
 - Discovery + detail orchestrator (`scripts/dining-scrape.ts`).
-- Cross-platform dedupe.
-- `app/api/dining/...` routes + `DiningTab.tsx`.
+- Hot/warm/cold tier classification (joins to existing transactions).
+- Mutations API: POST /api/dining/manual-links (decide same/different).
+- Manual-link review widget in DiningTab.
 - launchd plist for the weekly schedule.
 
 ---
