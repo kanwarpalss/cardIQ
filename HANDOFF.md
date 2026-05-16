@@ -124,6 +124,42 @@ npx tsc --noEmit     # must be clean
 
 ---
 
+## Dining tab (in progress, May 2026)
+
+Goal: aggregate restaurant listings + native discounts from Zomato
+Dining Out, Swiggy Dineout, EazyDiner. Dedupe across platforms.
+Weekly refresh. Card-stack offers are Phase 2.
+
+**Design docs** (read in this order):
+- `docs/DINING_FEASIBILITY.md` — why no public API, options
+  considered.
+- `docs/DINING_BUILD_PLAN.md` — 9 chunks, data model, decisions.
+- `docs/DINING_SCRAPE_STRATEGY.md` — two-tier endpoints ×
+  three-tier freshness; bootstrap math; politeness policy.
+- `docs/DINING_RUNBOOK.md` — what KP runs on the Mac mini.
+
+**Shipped so far (committed, tested):**
+- `supabase/migrations/010_dining_schema.sql` — 7 new tables.
+- `src/lib/dining/normalize.ts` + tests — name/area cleaning,
+  haversine, Levenshtein, `matchConfidence()`. 35 tests.
+- `src/lib/dining/http.ts` + tests — polite fetch wrapper with
+  jitter, backoff, captcha sniff, hard-abort policy. 24 tests.
+- `src/lib/dining/sessions.ts` — encrypted session storage
+  (mirrors crypto pattern from Gmail OAuth).
+- `scripts/dining-login.ts` — Playwright CLI: opens browser, KP
+  logs in by hand, saves encrypted session to Supabase.
+- `package.json` — added `playwright`, `tsx`, `dotenv` devDeps;
+  `npm run dining:login <platform>` shortcut.
+
+**Not yet built (next session, after KP captures sessions on Mac mini):**
+- Scrapers per platform (chunks 5b–5d). Need real API fixtures first.
+- Discovery + detail orchestrator (`scripts/dining-scrape.ts`).
+- Cross-platform dedupe.
+- `app/api/dining/...` routes + `DiningTab.tsx`.
+- launchd plist for the weekly schedule.
+
+---
+
 ## How to start a new conversation
 
 Paste this into the new chat:
