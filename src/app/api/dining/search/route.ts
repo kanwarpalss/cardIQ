@@ -59,13 +59,14 @@ export async function GET(req: NextRequest) {
     max_discount: number | null;
     terms: string | null;
     offer_type: string | null;
+    booking_type: string | null;
     snapshot_run_id: string;
     observed_at: string;
   }> = [];
   if (listingIds.length > 0) {
     const { data: rawOffers } = await supabase
       .from("dining_offers")
-      .select("listing_id, headline, discount_pct, min_bill, max_discount, terms, offer_type, snapshot_run_id, observed_at")
+      .select("listing_id, headline, discount_pct, min_bill, max_discount, terms, offer_type, booking_type, snapshot_run_id, observed_at")
       .in("listing_id", listingIds)
       .order("observed_at", { ascending: false });
     offers = (rawOffers ?? []) as typeof offers;

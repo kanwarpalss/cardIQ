@@ -16,7 +16,7 @@ interface Offer {
   max_discount: number | null;
   terms: string | null;
   offer_type: string | null;
-  booking_type: "prebooking" | "walkin" | "either" | null;
+  booking_type: "prebook" | "walkin" | "either" | null;
   snapshot_run_id: string;
   observed_at: string;
 }
@@ -59,7 +59,7 @@ const PLATFORM_META: Record<Platform, { label: string; color: string; bg: string
 const PLATFORMS: Platform[] = ["zomato", "swiggy", "eazydiner"];
 
 const BOOKING_TYPE_LABEL: Record<string, string> = {
-  prebooking: "Prebook",
+  prebook: "Prebook",
   walkin: "Walk-in",
   either: "",
 };
@@ -213,7 +213,7 @@ function PlatformOfferCell({ platform, listing }: { platform: Platform; listing?
   }
 
   // Split offers into prebook vs walk-in; fall back to showing top offer if unclassified.
-  const prebookOffers = listing.offers.filter((o) => o.booking_type === "prebooking");
+  const prebookOffers = listing.offers.filter((o) => o.booking_type === "prebook");
   const walkinOffers = listing.offers.filter((o) => o.booking_type === "walkin");
   const otherOffers = listing.offers.filter((o) => !o.booking_type || o.booking_type === "either");
 
