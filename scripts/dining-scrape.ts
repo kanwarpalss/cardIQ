@@ -13,7 +13,8 @@
  * After a successful run, the DiningTab UI will show live offer data.
  */
 
-import "dotenv/config";
+import { config } from "dotenv";
+config({ path: ".env.local" });
 import { createClient } from "@supabase/supabase-js";
 import { scrapeDistrict } from "../src/lib/dining/scrapers/district";
 import { scrapeSwiggy } from "../src/lib/dining/scrapers/swiggy";
