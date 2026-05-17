@@ -1,0 +1,32 @@
+{
+  "meta": {
+    "restaurant": {
+      "slug": "hoot",
+      "name": "Hoot",
+      "area": "Koramangala",
+      "districtSlugs": [
+        "hoot-craftwork-2-0-1-sarjapur-road-bangalore"
+      ]
+    },
+    "found": true,
+    "offerSummary": [
+      "[prebook] FLAT 30% OFF",
+      "[bank] Flat ₹150 OFF using Google Pay",
+      "[bank] 10% OFF up to ₹200 on TIDE Cards",
+      "[bank] Flat ₹500 OFF on Credit Cards",
+      "[bank] 12% OFF up to ₹1000 on HSBC Prive Credit Cards",
+      "[bank] 20% OFF for up to ₹150 using Cred Indusind Credit Card",
+      "[bank] 15% OFF up to ₹1500 on Amex Corporate Credit Cards",
+      "[bank] Flat ₹400 OFF using PNB Luxura Visa Credit Card",
+      "[bank] 25% OFF for up to ₹5000 using RBL Bank LUMIÈRE Credit Card",
+      "[bank] 10% OFF up to ₹1000 on HSBC TravelOne Credit Card",
+      "[bank] 20% OFF up to ₹1500 on Kotak Bank Solitaire Debit Card",
+      "[bank] 20% OFF up to ₹750 on Kotak 811 Infinity Metal Debit Card",
+      "[bank] 10% OFF for up to ₹3000 using RBL Bank NOVA Credit Card"
+    ]
+  },
+  "raw": {
+    "rscLength": 60994,
+    "pageUrl": "https://www.district.in/dining/bangalore/hoot-craftwork-2-0-1-sarjapur-road-bangalore"
+  }
+}

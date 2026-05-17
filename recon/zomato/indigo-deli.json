@@ -1,0 +1,13 @@
+{
+  "meta": {
+    "restaurant": {
+      "slug": "indigo-deli",
+      "name": "Indigo Deli",
+      "area": "Koramangala"
+    },
+    "found": false,
+    "error": "Search HTTP 404",
+    "offerSummary": []
+  },
+  "raw": null
+}

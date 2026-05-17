@@ -31,7 +31,7 @@ import {
   matchConfidence,
   Confidence,
 } from "./normalize";
-import type { Platform } from "./sessions";
+import type { Platform } from "./types";
 
 // ────────────────────────────────────────────────────────────────────
 // Public types

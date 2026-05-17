@@ -1,0 +1,14 @@
+{
+  "meta": {
+    "restaurant": {
+      "slug": "indigo-deli",
+      "name": "Indigo Deli",
+      "area": "Koramangala",
+      "districtSlugs": []
+    },
+    "found": false,
+    "error": "not in District sitemap — slug not mapped",
+    "offerSummary": []
+  },
+  "raw": null
+}

@@ -1,0 +1,13 @@
+{
+  "meta": {
+    "restaurant": {
+      "slug": "mtr",
+      "name": "MTR",
+      "area": "Lalbagh"
+    },
+    "found": false,
+    "error": "Search HTTP 404",
+    "offerSummary": []
+  },
+  "raw": null
+}

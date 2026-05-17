@@ -1,0 +1,505 @@
+{
+  "meta": {
+    "restaurant": {
+      "slug": "permit-room",
+      "name": "The Permit Room",
+      "area": "Indiranagar",
+      "districtSlugs": [
+        "the-permit-room-indiranagar-bangalore"
+      ],
+      "eazyDinerSlug": "the-permit-room-richmond-town-central-bengaluru-613800"
+    },
+    "found": true,
+    "offerSummary": []
+  },
+  "raw": {
+    "data": {
+      "id": 613800,
+      "url": "https://www.eazydiner.com/bengaluru/the-permit-room-richmond-town-central-bengaluru-613800",
+      "code": "bengaluru/the-permit-room-richmond-town-central-bengaluru-613800",
+      "default_image": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/home/restaurant-default-image.png",
+      "favourite_count": "608",
+      "primeTag": "",
+      "name": "The Permit Room",
+      "images": [
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/613800/restaurant020160428154200.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/reviewimages/613800/703bfde3a03d401d67cd6eb5cbc578948674d29f.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/reviewimages/613800/36e72c78463f5553ec075811c35755359756e044.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/reviewimages/613800/c0daeefc402b14c03e8aa96e8a3f8b1920bdf68e.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/reviewimages/613800/3a182eeddc898f6655dc0384d6a7298694a08380.jpg?width=818&height=450&mode=fit"
+      ],
+      "cost_for_two": "₹ 1000 for two approx.",
+      "currency": "₹",
+      "location": {
+        "address": "16/3, Commissariat Road, Richmond Town, Bengaluru",
+        "locality": "Richmond Town, Central Bengaluru",
+        "code": "richmond-town",
+        "latitude": 12.970366,
+        "longitude": 77.610511,
+        "region_code": "Central Bengaluru",
+        "area_name": "Richmond Town",
+        "city_code": "bengaluru",
+        "city_id": 3,
+        "country_id": 1,
+        "group_id": 1556,
+        "name": "Richmond Town, Central Bengaluru",
+        "city_name": "Bengaluru"
+      },
+      "phone": "+919019113388",
+      "cuisines": "Cocktail Menu",
+      "timings": {
+        "today": [
+          "12:00 PM - 11:30 PM"
+        ],
+        "week": {
+          "Monday": [
+            "12:00 PM - 11:30 PM"
+          ],
+          "Tuesday": [
+            "12:00 PM - 11:30 PM"
+          ],
+          "Wednesday": [
+            "12:00 PM - 11:30 PM"
+          ],
+          "Thursday": [
+            "12:00 PM - 11:30 PM"
+          ],
+          "Friday": [
+            "12:00 PM - 01:00 AM"
+          ],
+          "Saturday": [
+            "12:00 PM - 01:00 AM"
+          ],
+          "Sunday": [
+            "12:00 PM - 11:30 PM"
+          ]
+        }
+      },
+      "user_reviews": {
+        "avg_rating": 4.5,
+        "count": 2
+      },
+      "critic_review": "",
+      "webview_menu_url": null,
+      "accepts_eazypay": false,
+      "is_favorite": false,
+      "menu_last_updated": null,
+      "is_qsr": false,
+      "faq": [
+        {
+          "@type": "Question",
+          "name": "What cuisines are served at The Permit Room?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The main cuisine served at The Permit Room is Cocktail Menu."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the cost for two at The Permit Room?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The cost of two at The Permit Room is ₹ 1000."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "The Permit Room is pure vegetarian restaurant?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "   The Permit Room serves both veg and non veg food."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What are the operational timings of The Permit Room?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The Permit Room restaurant operational timings are MONDAY: 12:00 PM to 11:30 PM, TUESDAY: 12:00 PM to 11:30 PM, WEDNESDAY: 12:00 PM to 11:30 PM, THURSDAY: 12:00 PM to 11:30 PM, FRIDAY: 12:00 PM to 01:00 AM, SATURDAY: 12:00 PM to 01:00 AM, SUNDAY: 12:00 PM to 11:30 PM"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does The Permit Room serve buffet?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": " No, The Permit Room does not serve buffet."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does The Permit Room restaurant have a bar or serve alcohol?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": " No, The Permit Room does not serve alcohol."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is there a parking facility at The Permit Room?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": " No, a parking facility is not available at The Permit Room."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does The Permit Room accept bill payment via PayEazy?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No, The Permit Room is not a PayEazy-enabled restaurant."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How can I save EXTRA with PayEazy at The Permit Room?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Book a table at The Permit Room. Get your bill with the pre-applied EazyDiner deal. Pay your bill via PayEazy & save EXTRA"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does The Permit Room restaurant play live music?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": " No, The Permit Room doesn't play live music."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What are current deals at The Permit Room?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "There is no deal at The Permit Room on EazyDiner. Browse through EazyDiner to avail dining discounts upto 50% OFF."
+          }
+        }
+      ],
+      "category": "Bar/Pub",
+      "restaurant_type": "free standing",
+      "chain": "No",
+      "wallet_config": {
+        "type": "percentage",
+        "percentage": 25,
+        "min_transaction_amount": 0,
+        "text": "25% of the total amount can be paid from wallet balance in a single transaction ."
+      },
+      "reservation_status": false,
+      "deal_data": {
+        "default_deal_type": "deal_types[]=postpaid",
+        "title": "More Deals",
+        "period": 30,
+        "freeze_time": 0,
+        "other_deals": null
+      },
+      "foodie_awards": [],
+      "buffet_deals": [],
+      "error": {
+        "heading": "Discover amazing restaurants nearby",
+        "message": "Choose from higher ranked restaurants which were booked by many users this week.",
+        "date": "",
+        "time": "",
+        "icon": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant_detail/shop_1.png",
+        "action": "No Action",
+        "notBookableAction": "https://www.eazydiner.com/restaurants?location=richmond-town",
+        "notBookableText": "Explore Nearby Restaurants"
+      },
+      "hasPrimeDeal": false,
+      "primeIcon": "",
+      "restaurant_subtype": "Table",
+      "hygiene_rating": "",
+      "has_dynamic_buffet": false,
+      "bottomsheet_notification": "",
+      "force_direct_booking": true,
+      "new_rdv_layout": false,
+      "rdv_offer_data": {
+        "default_deal_type": "deal_types=postpaid",
+        "freeze_time": 0,
+        "period": 30
+      },
+      "link_only_payeazy": "",
+      "sample_discount_calculator": "",
+      "qbf": {
+        "qbf_gif": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/banner/qbf/qbf_final_single_nov_23.gif",
+        "success_confirmed_gif": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/banner/qbf/success_confirm_qbf_2.gif"
+      },
+      "webEngageData": {
+        "features": [
+          {
+            "name": "Nightlife",
+            "code": "nightlife",
+            "icon": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/features/59/nightlife3x.png"
+          }
+        ],
+        "cost_for_two": 1000,
+        "offer_title": " + 25%"
+      },
+      "chain_id": null
+    },
+    "meta": {
+      "tab_data": [
+        {
+          "title": "offers",
+          "is_active": true
+        },
+        {
+          "title": "menu",
+          "is_active": false
+        },
+        {
+          "title": "photos",
+          "is_active": false
+        },
+        {
+          "title": "about",
+          "is_active": false
+        }
+      ],
+      "meta_title": "Explore The Permit Room in Richmond Town, Central Bengaluru",
+      "meta_description": "Get all the details for The Permit Room, Richmond Town, Central Bengaluru. Check out reviews, photos, menu highlights, contact info, and much more on EazyDiner.",
+      "breadcrumbs": [
+        {
+          "title": "Home",
+          "url": "/"
+        },
+        {
+          "title": "Bengaluru",
+          "url": "/bengaluru"
+        },
+        {
+          "title": " Top Restaurants in Bengaluru",
+          "url": "/bengaluru/restaurants"
+        },
+        {
+          "title": "Central Bengaluru",
+          "url": "/bengaluru/restaurants/central-bengaluru"
+        },
+        {
+          "title": "Richmond Town",
+          "url": "/bengaluru/restaurants/richmond-town"
+        },
+        {
+          "title": "The Permit Room",
+          "url": "/bengaluru/the-permit-room-richmond-town-central-bengaluru-613800"
+        }
+      ],
+      "jsonSchema": {
+        "title": "Explore The Permit Room in Richmond Town, Central Bengaluru",
+        "description": "Get all the details for The Permit Room, Richmond Town, Central Bengaluru. Check out reviews, photos, menu highlights, contact info, and much more on EazyDiner.",
+        "custom_deeplink": {
+          "ios": "eazydiner://action?url=https://www.eazydiner.com/bengaluru/the-permit-room-richmond-town-central-bengaluru-613800",
+          "android": "eazydiner://action?url=https://www.eazydiner.com/bengaluru/the-permit-room-richmond-town-central-bengaluru-613800?"
+        },
+        "og_data": {
+          "title": "The Permit Room, Richmond Town, Central Bengaluru",
+          "description": "EazyDiner",
+          "image_url": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/613800/restaurant020160428154200.jpg?width=750&height=436&mode=fit",
+          "brand": "EazyDiner",
+          "availability": "discontinued",
+          "condition": "new",
+          "amount": 1000,
+          "currency": "Inr",
+          "retailer_item_id": 613800
+        },
+        "json_schema": {
+          "@context": "http://schema.org",
+          "@graph": [
+            {
+              "@type": "Restaurant",
+              "@id": "https://www.eazydiner.com/bengaluru/the-permit-room-richmond-town-central-bengaluru-613800",
+              "name": "The Permit Room",
+              "url": "https://www.eazydiner.com/bengaluru/the-permit-room-richmond-town-central-bengaluru-613800",
+              "hasMenu": "https://www.eazydiner.com/bengaluru/the-permit-room-richmond-town-central-bengaluru-613800/menu",
+              "image": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/613800/restaurant020160428154200.jpg?width=750&height=436&mode=fit",
+              "servesCuisine": "Cocktail Menu",
+              "priceRange": "₹ 1000 for two approx. ",
+              "telephone": null,
+              "geo": {
+                "@type": "GeoCoordinates",
+                "latitude": "12.97036600",
+                "longitude": "77.61051100"
+              },
+              "acceptsReservations": false,
+              "openingHoursSpecification": [
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Monday"
+                  ],
+                  "opens": "12:00:00",
+                  "closes": "23:30:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Tuesday"
+                  ],
+                  "opens": "12:00:00",
+                  "closes": "23:30:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Wednesday"
+                  ],
+                  "opens": "12:00:00",
+                  "closes": "23:30:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Thursday"
+                  ],
+                  "opens": "12:00:00",
+                  "closes": "23:30:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Friday"
+                  ],
+                  "opens": "12:00:00",
+                  "closes": "01:00:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Saturday"
+                  ],
+                  "opens": "12:00:00",
+                  "closes": "01:00:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Sunday"
+                  ],
+                  "opens": "12:00:00",
+                  "closes": "23:30:00"
+                }
+              ],
+              "currenciesAccepted": "INR",
+              "paymentAccepted": "Cash, Cards and Digital Payments Accepted",
+              "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "16/3, Commissariat Road, Richmond Town, Bengaluru",
+                "addressLocality": "Richmond Town, Central Bengaluru",
+                "addressRegion": "Bengaluru",
+                "postalCode": null,
+                "addressCountry": "IN"
+              },
+              "aggregateRating": {
+                "@type": "AggregateRating",
+                "ratingValue": 4.5,
+                "ratingCount": 2,
+                "bestRating": "5",
+                "worstRating": "0"
+              }
+            },
+            {
+              "@type": "FAQPage",
+              "mainEntity": [
+                {
+                  "@type": "Question",
+                  "name": "What cuisines are served at The Permit Room?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "The main cuisine served at The Permit Room is Cocktail Menu."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "What is the cost for two at The Permit Room?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "The cost of two at The Permit Room is ₹ 1000."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "The Permit Room is pure vegetarian restaurant?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "   The Permit Room serves both veg and non veg food."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "What are the operational timings of The Permit Room?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "The Permit Room restaurant operational timings are MONDAY: 12:00 PM to 11:30 PM, TUESDAY: 12:00 PM to 11:30 PM, WEDNESDAY: 12:00 PM to 11:30 PM, THURSDAY: 12:00 PM to 11:30 PM, FRIDAY: 12:00 PM to 01:00 AM, SATURDAY: 12:00 PM to 01:00 AM, SUNDAY: 12:00 PM to 11:30 PM"
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Does The Permit Room serve buffet?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": " No, The Permit Room does not serve buffet."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Does The Permit Room restaurant have a bar or serve alcohol?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": " No, The Permit Room does not serve alcohol."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Is there a parking facility at The Permit Room?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": " No, a parking facility is not available at The Permit Room."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Does The Permit Room accept bill payment via PayEazy?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "No, The Permit Room is not a PayEazy-enabled restaurant."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "How can I save EXTRA with PayEazy at The Permit Room?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Book a table at The Permit Room. Get your bill with the pre-applied EazyDiner deal. Pay your bill via PayEazy & save EXTRA"
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Does The Permit Room restaurant play live music?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": " No, The Permit Room doesn't play live music."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "What are current deals at The Permit Room?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "There is no deal at The Permit Room on EazyDiner. Browse through EazyDiner to avail dining discounts upto 50% OFF."
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "remarketing_tag_params": {
+          "dynx_itemid": 613800,
+          "dynx_itemid2": "The Permit Room",
+          "dynx_pagetype": "restaurantdetail"
+        },
+        "amp_meta_tag": false,
+        "android_deeplink": "android-app://com.easydiner/eazydiner/action?url=https://www.eazydiner.com/bengaluru/the-permit-room-richmond-town-central-bengaluru-613800",
+        "is_noindex": false
+      }
+    }
+  }
+}

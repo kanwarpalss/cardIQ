@@ -1,0 +1,1072 @@
+{
+  "meta": {
+    "restaurant": {
+      "slug": "absolute-barbecues",
+      "name": "Absolute Barbecues",
+      "area": "Koramangala",
+      "districtSlugs": [
+        "abs-absolute-barbecues-koramangala-5th-block-bangalore"
+      ],
+      "eazyDinerSlug": "abs-absolute-barbecues-whitefield-east-bengaluru-662250"
+    },
+    "found": true,
+    "offerSummary": [
+      "[payeazy] Pay now & get EXTRA 25% OFF upto ₹1000",
+      "[discount] ₹487 off on ₹1950 bill (PayEazy)",
+      "[buffet] 28 buffet deal(s) available"
+    ]
+  },
+  "raw": {
+    "data": {
+      "id": 662250,
+      "url": "https://www.eazydiner.com/bengaluru/abs-absolute-barbecues-whitefield-east-bengaluru-662250",
+      "code": "bengaluru/abs-absolute-barbecues-whitefield-east-bengaluru-662250",
+      "default_image": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/home/restaurant-default-image.png",
+      "favourite_count": "831",
+      "primeTag": "",
+      "name": "AB's - Absolute Barbecues",
+      "images": [
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/group/5743/menu020210928051822.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/group/5743/menu020190304100827.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/group/5743/menu120190304100827.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/group/5743/menu220190304100827.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/group/5743/menu320190304100827.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/group/5743/menu420190304100827.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/group/5743/menu520190304100827.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/group/5743/menu620190304100827.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/group/5743/menu720190304100827.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/group/5743/menu820190304100827.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/group/5743/menu920190304100827.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/reviewimages/662250/85a93410737cec34f910a9cfa1db114236783c9a.20210718140731.jpg?width=818&height=450&mode=fit"
+      ],
+      "cost_for_two": "₹ 1950 for two approx.",
+      "currency": "₹",
+      "location": {
+        "address": "120/A, 2nd Floor, EPIP Zone, Whitefield, Bengaluru",
+        "locality": "Whitefield, East Bengaluru",
+        "code": "whitefield",
+        "latitude": 12.9770183,
+        "longitude": 77.7249093,
+        "region_code": "East Bengaluru",
+        "area_name": "Whitefield",
+        "city_code": "bengaluru",
+        "city_id": 3,
+        "country_id": 1,
+        "group_id": 1563,
+        "name": "Whitefield, East Bengaluru",
+        "city_name": "Bengaluru"
+      },
+      "phone": "7861004444",
+      "cuisines": "Multicuisine, Barbeque",
+      "timings": {
+        "today": [
+          "11:30 AM - 04:30 PM",
+          "06:30 PM - 11:30 PM"
+        ],
+        "week": {
+          "Monday": [
+            "11:30 AM - 04:30 PM",
+            "06:30 PM - 11:30 PM"
+          ],
+          "Tuesday": [
+            "11:30 AM - 04:30 PM",
+            "06:30 PM - 11:30 PM"
+          ],
+          "Wednesday": [
+            "11:30 AM - 04:30 PM",
+            "06:30 PM - 11:30 PM"
+          ],
+          "Thursday": [
+            "11:30 AM - 04:30 PM",
+            "06:30 PM - 11:30 PM"
+          ],
+          "Friday": [
+            "11:30 AM - 04:30 PM",
+            "06:30 PM - 11:30 PM"
+          ],
+          "Saturday": [
+            "11:30 AM - 04:30 PM",
+            "06:30 PM - 11:30 PM"
+          ],
+          "Sunday": [
+            "11:30 AM - 04:30 PM",
+            "06:30 PM - 11:30 PM"
+          ]
+        }
+      },
+      "user_reviews": {
+        "avg_rating": 4.5,
+        "count": 699
+      },
+      "critic_review": "",
+      "webview_menu_url": null,
+      "accepts_eazypay": true,
+      "eazypay_details": {
+        "text": "Pay now & get EXTRA 25% OFF upto ₹1000",
+        "summary_text": "Pay your bill on the app to get EXTRA 25% OFF upto ₹1000",
+        "booking_confirmation_text": "Remember to pay restaurant bill via PayEazy to get additional discount *",
+        "image": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/payeazy/logo/payeazy_tag.png",
+        "url": "https://www.eazydiner.com//ed-payeazy?restaurant_id=bengaluru/abs-absolute-barbecues-whitefield-east-bengaluru-662250"
+      },
+      "is_favorite": false,
+      "menu_last_updated": "Last updated this week",
+      "is_qsr": false,
+      "faq": [
+        {
+          "@type": "Question",
+          "name": "What cuisines are served at AB's - Absolute Barbecues?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The main cuisine served at AB's - Absolute Barbecues are Multicuisine, Barbeque."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the cost for two at AB's - Absolute Barbecues?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The cost of two at AB's - Absolute Barbecues is ₹ 1950. You can save EXTRA over and above the restaurant deal applied by paying your restaurant bill on the EazyDiner app via PayEazy.."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "AB's - Absolute Barbecues is pure vegetarian restaurant?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "   AB's - Absolute Barbecues serves both veg and non veg food."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What are the operational timings of AB's - Absolute Barbecues?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "AB's - Absolute Barbecues restaurant operational timings are MONDAY: 11:30 AM to 04:30 PM, MONDAY: 06:30 PM to 11:30 PM, TUESDAY: 11:30 AM to 04:30 PM, TUESDAY: 06:30 PM to 11:30 PM, WEDNESDAY: 11:30 AM to 04:30 PM, WEDNESDAY: 06:30 PM to 11:30 PM, THURSDAY: 11:30 AM to 04:30 PM, THURSDAY: 06:30 PM to 11:30 PM, FRIDAY: 11:30 AM to 04:30 PM, FRIDAY: 06:30 PM to 11:30 PM, SATURDAY: 11:30 AM to 04:30 PM, SATURDAY: 06:30 PM to 11:30 PM, SUNDAY: 11:30 AM to 04:30 PM, SUNDAY: 06:30 PM to 11:30 PM"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does AB's - Absolute Barbecues serve buffet?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, AB's - Absolute Barbecues serves buffet."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does AB's - Absolute Barbecues restaurant have a bar or serve alcohol?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, AB's - Absolute Barbecues serves alcohol."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is there a parking facility at AB's - Absolute Barbecues?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, the parking facility is available at AB's - Absolute Barbecues."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does AB's - Absolute Barbecues accept bill payment via PayEazy?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, AB's - Absolute Barbecues is a PayEazy-enabled restaurant & accepts card payments via EazyDiner. You can pay the restaurant bill using debit/credit cards."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How can I save EXTRA with PayEazy at AB's - Absolute Barbecues?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Book a table at AB's - Absolute Barbecues. Get your bill with the pre-applied EazyDiner deal. Pay your bill via PayEazy & save EXTRA"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does AB's - Absolute Barbecues restaurant play live music?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, AB's - Absolute Barbecues plays live music."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What are current deals at AB's - Absolute Barbecues?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "There is no deal at AB's - Absolute Barbecues on EazyDiner. Browse through EazyDiner to avail dining discounts upto 50% OFF."
+          }
+        }
+      ],
+      "category": "Casual Dining",
+      "restaurant_type": "free standing",
+      "chain": "Yes",
+      "wallet_config": {
+        "type": "percentage",
+        "percentage": 25,
+        "min_transaction_amount": 0,
+        "text": "25% of the total amount can be paid from wallet balance in a single transaction ."
+      },
+      "reservation_status": true,
+      "deal_data": {
+        "default_deal_type": "deal_types[]=postpaid",
+        "title": "More Deals",
+        "period": 30,
+        "freeze_time": 30,
+        "other_deals": [
+          {
+            "icon": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant_detail/qsr.png",
+            "title": "Discount Coupon Deals",
+            "freeze_time": 30,
+            "code": "deal_types[]=qsr",
+            "period": 30,
+            "allowed_pax": [
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10
+            ],
+            "subtitle": "Pay now & redeem at the restaurant.",
+            "action_type": null
+          }
+        ],
+        "default_deal_allowed_pax": [
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ]
+      },
+      "foodie_awards": [],
+      "buffet_deals": [
+        {
+          "id": 87719,
+          "meal": "lunch",
+          "type": "veg",
+          "price_excluding_tax": 599,
+          "price_including_tax": 0,
+          "extra_info": "Mon",
+          "additional_info": null,
+          "extra_title": null,
+          "buffet_time": "12:00 PM - 04:29 PM",
+          "buffet_days": "MON",
+          "meal_type": "Veg",
+          "inclusion": ""
+        },
+        {
+          "id": 87720,
+          "meal": "lunch",
+          "type": "veg",
+          "price_excluding_tax": 599,
+          "price_including_tax": 0,
+          "extra_info": "Tue",
+          "additional_info": null,
+          "extra_title": null,
+          "buffet_time": "12:00 PM - 04:29 PM",
+          "buffet_days": "TUE",
+          "meal_type": "Veg",
+          "inclusion": ""
+        },
+        {
+          "id": 87721,
+          "meal": "lunch",
+          "type": "veg",
+          "price_excluding_tax": 649,
+          "price_including_tax": 0,
+          "extra_info": "Wed",
+          "additional_info": null,
+          "extra_title": null,
+          "buffet_time": "12:00 PM - 04:29 PM",
+          "buffet_days": "WED",
+          "meal_type": "Veg",
+          "inclusion": ""
+        },
+        {
+          "id": 87722,
+          "meal": "lunch",
+          "type": "veg",
+          "price_excluding_tax": 649,
+          "price_including_tax": 0,
+          "extra_info": "Thur",
+          "additional_info": null,
+          "extra_title": null,
+          "buffet_time": "12:00 PM - 04:29 PM",
+          "buffet_days": "THU",
+          "meal_type": "Veg",
+          "inclusion": ""
+        },
+        {
+          "id": 87723,
+          "meal": "lunch",
+          "type": "veg",
+          "price_excluding_tax": 649,
+          "price_including_tax": 0,
+          "extra_info": "Fri",
+          "additional_info": null,
+          "extra_title": null,
+          "buffet_time": "12:00 PM - 04:29 PM",
+          "buffet_days": "FRI",
+          "meal_type": "Veg",
+          "inclusion": ""
+        },
+        {
+          "id": 87724,
+          "meal": "lunch",
+          "type": "veg",
+          "price_excluding_tax": 699,
+          "price_including_tax": 0,
+          "extra_info": "Sat",
+          "additional_info": null,
+          "extra_title": null,
+          "buffet_time": "12:00 PM - 04:29 PM",
+          "buffet_days": "SAT",
+          "meal_type": "Veg",
+          "inclusion": ""
+        },
+        {
+          "id": 87725,
+          "meal": "lunch",
+          "type": "veg",
+          "price_excluding_tax": 909,
+          "price_including_tax": 0,
+          "extra_info": "Sun",
+          "additional_info": null,
+          "extra_title": null,
+          "buffet_time": "12:00 PM - 04:29 PM",
+          "buffet_days": "SUN",
+          "meal_type": "Veg",
+          "inclusion": ""
+        },
+        {
+          "id": 88020,
+          "meal": "lunch",
+          "type": "non-veg",
+          "price_excluding_tax": 649,
+          "price_including_tax": 0,
+          "extra_info": "Mon",
+          "additional_info": null,
+          "extra_title": null,
+          "buffet_time": "12:00 PM - 04:29 PM",
+          "buffet_days": "MON",
+          "meal_type": "Non-veg",
+          "inclusion": ""
+        },
+        {
+          "id": 88021,
+          "meal": "lunch",
+          "type": "non-veg",
+          "price_excluding_tax": 649,
+          "price_including_tax": 0,
+          "extra_info": "Tue",
+          "additional_info": null,
+          "extra_title": null,
+          "buffet_time": "12:00 PM - 04:29 PM",
+          "buffet_days": "TUE",
+          "meal_type": "Non-veg",
+          "inclusion": ""
+        },
+        {
+          "id": 88022,
+          "meal": "lunch",
+          "type": "non-veg",
+          "price_excluding_tax": 699,
+          "price_including_tax": 0,
+          "extra_info": "Wed",
+          "additional_info": null,
+          "extra_title": null,
+          "buffet_time": "12:00 PM - 04:29 PM",
+          "buffet_days": "WED",
+          "meal_type": "Non-veg",
+          "inclusion": ""
+        },
+        {
+          "id": 88023,
+          "meal": "lunch",
+          "type": "non-veg",
+          "price_excluding_tax": 699,
+          "price_including_tax": 0,
+          "extra_info": "Thur",
+          "additional_info": null,
+          "extra_title": null,
+          "buffet_time": "12:00 PM - 04:29 PM",
+          "buffet_days": "THU",
+          "meal_type": "Non-veg",
+          "inclusion": ""
+        },
+        {
+          "id": 88024,
+          "meal": "lunch",
+          "type": "non-veg",
+          "price_excluding_tax": 699,
+          "price_including_tax": 0,
+          "extra_info": "Fri",
+          "additional_info": null,
+          "extra_title": null,
+          "buffet_time": "12:00 PM - 04:29 PM",
+          "buffet_days": "FRI",
+          "meal_type": "Non-veg",
+          "inclusion": ""
+        },
+        {
+          "id": 88025,
+          "meal": "lunch",
+          "type": "non-veg",
+          "price_excluding_tax": 849,
+          "price_including_tax": 0,
+          "extra_info": "Sat",
+          "additional_info": null,
+          "extra_title": null,
+          "buffet_time": "12:00 PM - 04:29 PM",
+          "buffet_days": "SAT",
+          "meal_type": "Non-veg",
+          "inclusion": ""
+        },
+        {
+          "id": 88026,
+          "meal": "lunch",
+          "type": "non-veg",
+          "price_excluding_tax": 999,
+          "price_including_tax": 0,
+          "extra_info": "Sun",
+          "additional_info": null,
+          "extra_title": null,
+          "buffet_time": "12:00 PM - 04:29 PM",
+          "buffet_days": "SUN",
+          "meal_type": "Non-veg",
+          "inclusion": ""
+        },
+        {
+          "id": 88321,
+          "meal": "dinner",
+          "type": "veg",
+          "price_excluding_tax": 649,
+          "price_including_tax": 0,
+          "extra_info": "Mon",
+          "additional_info": null,
+          "extra_title": null,
+          "buffet_time": "07:30 PM - 11:30 PM",
+          "buffet_days": "MON",
+          "meal_type": "Veg",
+          "inclusion": ""
+        },
+        {
+          "id": 88322,
+          "meal": "dinner",
+          "type": "veg",
+          "price_excluding_tax": 649,
+          "price_including_tax": 0,
+          "extra_info": "Tue",
+          "additional_info": null,
+          "extra_title": null,
+          "buffet_time": "07:30 PM - 11:30 PM",
+          "buffet_days": "TUE",
+          "meal_type": "Veg",
+          "inclusion": ""
+        },
+        {
+          "id": 88323,
+          "meal": "dinner",
+          "type": "veg",
+          "price_excluding_tax": 899,
+          "price_including_tax": 0,
+          "extra_info": "Wed",
+          "additional_info": null,
+          "extra_title": null,
+          "buffet_time": "07:30 PM - 11:30 PM",
+          "buffet_days": "WED",
+          "meal_type": "Veg",
+          "inclusion": ""
+        },
+        {
+          "id": 88324,
+          "meal": "dinner",
+          "type": "veg",
+          "price_excluding_tax": 899,
+          "price_including_tax": 0,
+          "extra_info": "Thur",
+          "additional_info": null,
+          "extra_title": null,
+          "buffet_time": "07:30 PM - 11:30 PM",
+          "buffet_days": "THU",
+          "meal_type": "Veg",
+          "inclusion": ""
+        },
+        {
+          "id": 88325,
+          "meal": "dinner",
+          "type": "veg",
+          "price_excluding_tax": 899,
+          "price_including_tax": 0,
+          "extra_info": "Fri",
+          "additional_info": null,
+          "extra_title": null,
+          "buffet_time": "07:30 PM - 11:30 PM",
+          "buffet_days": "FRI",
+          "meal_type": "Veg",
+          "inclusion": ""
+        },
+        {
+          "id": 88326,
+          "meal": "dinner",
+          "type": "veg",
+          "price_excluding_tax": 699,
+          "price_including_tax": 0,
+          "extra_info": "Sat",
+          "additional_info": null,
+          "extra_title": null,
+          "buffet_time": "07:30 PM - 11:30 PM",
+          "buffet_days": "SAT",
+          "meal_type": "Veg",
+          "inclusion": ""
+        },
+        {
+          "id": 88327,
+          "meal": "dinner",
+          "type": "veg",
+          "price_excluding_tax": 909,
+          "price_including_tax": 0,
+          "extra_info": "Sun",
+          "additional_info": null,
+          "extra_title": null,
+          "buffet_time": "07:30 PM - 11:30 PM",
+          "buffet_days": "SUN",
+          "meal_type": "Veg",
+          "inclusion": ""
+        },
+        {
+          "id": 88622,
+          "meal": "dinner",
+          "type": "non-veg",
+          "price_excluding_tax": 729,
+          "price_including_tax": 0,
+          "extra_info": "Mon",
+          "additional_info": null,
+          "extra_title": null,
+          "buffet_time": "07:30 PM - 11:30 PM",
+          "buffet_days": "MON",
+          "meal_type": "Non-veg",
+          "inclusion": ""
+        },
+        {
+          "id": 88623,
+          "meal": "dinner",
+          "type": "non-veg",
+          "price_excluding_tax": 729,
+          "price_including_tax": 0,
+          "extra_info": "Tue",
+          "additional_info": null,
+          "extra_title": null,
+          "buffet_time": "07:30 PM - 11:30 PM",
+          "buffet_days": "TUE",
+          "meal_type": "Non-veg",
+          "inclusion": ""
+        },
+        {
+          "id": 88624,
+          "meal": "dinner",
+          "type": "non-veg",
+          "price_excluding_tax": 999,
+          "price_including_tax": 0,
+          "extra_info": "Wed",
+          "additional_info": null,
+          "extra_title": null,
+          "buffet_time": "07:30 PM - 11:30 PM",
+          "buffet_days": "WED",
+          "meal_type": "Non-veg",
+          "inclusion": ""
+        },
+        {
+          "id": 88625,
+          "meal": "dinner",
+          "type": "non-veg",
+          "price_excluding_tax": 999,
+          "price_including_tax": 0,
+          "extra_info": "Thur",
+          "additional_info": null,
+          "extra_title": null,
+          "buffet_time": "07:30 PM - 11:30 PM",
+          "buffet_days": "THU",
+          "meal_type": "Non-veg",
+          "inclusion": ""
+        },
+        {
+          "id": 88626,
+          "meal": "dinner",
+          "type": "non-veg",
+          "price_excluding_tax": 999,
+          "price_including_tax": 0,
+          "extra_info": "Fri",
+          "additional_info": null,
+          "extra_title": null,
+          "buffet_time": "07:30 PM - 11:30 PM",
+          "buffet_days": "FRI",
+          "meal_type": "Non-veg",
+          "inclusion": ""
+        },
+        {
+          "id": 88627,
+          "meal": "dinner",
+          "type": "non-veg",
+          "price_excluding_tax": 849,
+          "price_including_tax": 0,
+          "extra_info": "Sat",
+          "additional_info": null,
+          "extra_title": null,
+          "buffet_time": "07:30 PM - 11:30 PM",
+          "buffet_days": "SAT",
+          "meal_type": "Non-veg",
+          "inclusion": ""
+        },
+        {
+          "id": 88628,
+          "meal": "dinner",
+          "type": "non-veg",
+          "price_excluding_tax": 989,
+          "price_including_tax": 0,
+          "extra_info": "Sun",
+          "additional_info": null,
+          "extra_title": null,
+          "buffet_time": "07:30 PM - 11:30 PM",
+          "buffet_days": "SUN",
+          "meal_type": "Non-veg",
+          "inclusion": ""
+        }
+      ],
+      "hasPrimeDeal": false,
+      "primeIcon": "",
+      "restaurant_subtype": "Table",
+      "hygiene_rating": {
+        "icon": "https://d4t7t8y8xqo0t.cloudfront.net/app/https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant_detail/rest_header_payeazy.png"
+      },
+      "has_dynamic_buffet": false,
+      "bottomsheet_notification": "",
+      "force_direct_booking": true,
+      "new_rdv_layout": true,
+      "rdv_offer_data": {
+        "default_deal_type": "deal_types=postpaid",
+        "freeze_time": 30,
+        "period": 30
+      },
+      "link_only_payeazy": "",
+      "sample_discount_calculator": {
+        "heading": "<font color='#000000'><strong>Sample Bill</strong></font> <small>(Approx Discount)</small>",
+        "total_bill": 1950,
+        "restaurant_offer": 0,
+        "payment_offer": 487
+      },
+      "qbf": {
+        "qbf_gif": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/banner/qbf/qbf_final_single_nov_23.gif",
+        "success_confirmed_gif": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/banner/qbf/success_confirm_qbf_2.gif"
+      },
+      "webEngageData": {
+        "features": [
+          {
+            "name": "Home Delivery",
+            "code": "home-delivery",
+            "icon": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/features/53/home-delivery3x.png"
+          },
+          {
+            "name": "Alcohol Served",
+            "code": "alcohol-served",
+            "icon": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/features/54/alcohol-served3x.png"
+          },
+          {
+            "name": "Air Condition",
+            "code": "air-condition",
+            "icon": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/features/58/air-condition3x.png"
+          },
+          {
+            "name": "Nightlife",
+            "code": "nightlife",
+            "icon": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/features/59/nightlife3x.png"
+          },
+          {
+            "name": "Live Music",
+            "code": "live-music",
+            "icon": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/features/62/live-music3x.png"
+          },
+          {
+            "name": "Valet Parking",
+            "code": "valet-parking",
+            "icon": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/features/63/valet-parking3x.png"
+          },
+          {
+            "name": "Wheelchair Accessible",
+            "code": "wheelchair-accessible",
+            "icon": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/features/68/wheelchair-accessible3x.png"
+          },
+          {
+            "name": "Kids Allowed",
+            "code": "kids-allowed",
+            "icon": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/features/72/kids-allowed3x.png"
+          },
+          {
+            "name": "Dessert",
+            "code": "dessert",
+            "icon": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/features/86/dessert3x.png"
+          },
+          {
+            "name": "Buffet",
+            "code": "buffet",
+            "icon": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/features/87/buffet3x.png"
+          }
+        ],
+        "cost_for_two": 1950,
+        "offer_title": " + 25%"
+      },
+      "chain_id": 5743
+    },
+    "meta": {
+      "tab_data": [
+        {
+          "title": "offers",
+          "is_active": true
+        },
+        {
+          "title": "menu",
+          "is_active": false
+        },
+        {
+          "title": "photos",
+          "is_active": false
+        },
+        {
+          "title": "about",
+          "is_active": false
+        }
+      ],
+      "meta_title": "AB's - Absolute Barbecue Whitefield, Bengaluru - EazyDiner",
+      "meta_description": "You'll be ready for a smokey meal at Absolute Barbecue Whitefield. Book a table on EazyDiner, go on an eating-out spree, and save when you pay on the app.",
+      "breadcrumbs": [
+        {
+          "title": "Home",
+          "url": "/"
+        },
+        {
+          "title": "Bengaluru",
+          "url": "/bengaluru"
+        },
+        {
+          "title": " Top Restaurants in Bengaluru",
+          "url": "/bengaluru/restaurants"
+        },
+        {
+          "title": "East Bengaluru",
+          "url": "/bengaluru/restaurants/east-bengaluru"
+        },
+        {
+          "title": "Whitefield",
+          "url": "/bengaluru/restaurants/whitefield"
+        },
+        {
+          "title": "AB's - Absolute Barbecues",
+          "url": "/bengaluru/abs-absolute-barbecues-whitefield-east-bengaluru-662250"
+        }
+      ],
+      "jsonSchema": {
+        "title": "AB's - Absolute Barbecue Whitefield, Bengaluru - EazyDiner",
+        "description": "You'll be ready for a smokey meal at Absolute Barbecue Whitefield. Book a table on EazyDiner, go on an eating-out spree, and save when you pay on the app.",
+        "custom_deeplink": {
+          "ios": "eazydiner://action?url=https://www.eazydiner.com/bengaluru/abs-absolute-barbecues-whitefield-east-bengaluru-662250",
+          "android": "eazydiner://action?url=https://www.eazydiner.com/bengaluru/abs-absolute-barbecues-whitefield-east-bengaluru-662250?"
+        },
+        "og_data": {
+          "title": "AB's - Absolute Barbecues, Whitefield, East Bengaluru",
+          "description": "EazyDiner",
+          "image_url": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/group/5743/menu020210928051822.jpg?width=750&height=436&mode=fit",
+          "brand": "EazyDiner",
+          "availability": "available for order",
+          "condition": "new",
+          "amount": 1950,
+          "currency": "Inr",
+          "retailer_item_id": 662250
+        },
+        "json_schema": {
+          "@context": "http://schema.org",
+          "@graph": [
+            {
+              "@type": "Restaurant",
+              "@id": "https://www.eazydiner.com/bengaluru/abs-absolute-barbecues-whitefield-east-bengaluru-662250",
+              "name": "AB's - Absolute Barbecues",
+              "url": "https://www.eazydiner.com/bengaluru/abs-absolute-barbecues-whitefield-east-bengaluru-662250",
+              "hasMenu": "https://www.eazydiner.com/bengaluru/abs-absolute-barbecues-whitefield-east-bengaluru-662250/menu",
+              "image": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/group/5743/menu020210928051822.jpg?width=750&height=436&mode=fit",
+              "servesCuisine": "Multicuisine,Barbeque",
+              "priceRange": "₹ 1950 for two approx. ",
+              "telephone": "+918045659913",
+              "geo": {
+                "@type": "GeoCoordinates",
+                "latitude": "12.97701830",
+                "longitude": "77.72490930"
+              },
+              "acceptsReservations": true,
+              "openingHoursSpecification": [
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Monday"
+                  ],
+                  "opens": "11:30:00",
+                  "closes": "16:30:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Monday"
+                  ],
+                  "opens": "18:30:00",
+                  "closes": "23:30:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Tuesday"
+                  ],
+                  "opens": "11:30:00",
+                  "closes": "16:30:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Tuesday"
+                  ],
+                  "opens": "18:30:00",
+                  "closes": "23:30:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Wednesday"
+                  ],
+                  "opens": "11:30:00",
+                  "closes": "16:30:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Wednesday"
+                  ],
+                  "opens": "18:30:00",
+                  "closes": "23:30:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Thursday"
+                  ],
+                  "opens": "11:30:00",
+                  "closes": "16:30:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Thursday"
+                  ],
+                  "opens": "18:30:00",
+                  "closes": "23:30:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Friday"
+                  ],
+                  "opens": "11:30:00",
+                  "closes": "16:30:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Friday"
+                  ],
+                  "opens": "18:30:00",
+                  "closes": "23:30:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Saturday"
+                  ],
+                  "opens": "11:30:00",
+                  "closes": "16:30:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Saturday"
+                  ],
+                  "opens": "18:30:00",
+                  "closes": "23:30:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Sunday"
+                  ],
+                  "opens": "11:30:00",
+                  "closes": "16:30:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Sunday"
+                  ],
+                  "opens": "18:30:00",
+                  "closes": "23:30:00"
+                }
+              ],
+              "currenciesAccepted": "INR",
+              "paymentAccepted": "Cash, Cards and Digital Payments Accepted",
+              "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "120/A, 2nd Floor, EPIP Zone, Whitefield, Bengaluru",
+                "addressLocality": "Whitefield, East Bengaluru",
+                "addressRegion": "Bengaluru",
+                "postalCode": "560066",
+                "addressCountry": "IN"
+              },
+              "potentialAction": {
+                "@type": "ReserveAction",
+                "target": {
+                  "@type": "EntryPoint",
+                  "urlTemplate": "https://www.eazydiner.com/bengaluru/abs-absolute-barbecues-whitefield-east-bengaluru-662250",
+                  "inLanguage": "en-US",
+                  "actionPlatform": [
+                    "http://schema.org/MobileWebPlatform",
+                    "http://schema.org/DesktopWebPlatform",
+                    "http://schema.org/IOSPlatform",
+                    "http://schema.org/AndroidPlatform"
+                  ]
+                },
+                "result": {
+                  "@type": "FoodEstablishmentReservation",
+                  "name": "Reserve Table"
+                }
+              },
+              "aggregateRating": {
+                "@type": "AggregateRating",
+                "ratingValue": 4.4,
+                "ratingCount": 699,
+                "bestRating": "5",
+                "worstRating": "0"
+              }
+            },
+            {
+              "@type": "FAQPage",
+              "mainEntity": [
+                {
+                  "@type": "Question",
+                  "name": "What cuisines are served at AB's - Absolute Barbecues?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "The main cuisine served at AB's - Absolute Barbecues are Multicuisine, Barbeque."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "What is the cost for two at AB's - Absolute Barbecues?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "The cost of two at AB's - Absolute Barbecues is ₹ 1950. You can save EXTRA over and above the restaurant deal applied by paying your restaurant bill on the EazyDiner app via PayEazy.."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "AB's - Absolute Barbecues is pure vegetarian restaurant?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "   AB's - Absolute Barbecues serves both veg and non veg food."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "What are the operational timings of AB's - Absolute Barbecues?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "AB's - Absolute Barbecues restaurant operational timings are MONDAY: 11:30 AM to 04:30 PM, MONDAY: 06:30 PM to 11:30 PM, TUESDAY: 11:30 AM to 04:30 PM, TUESDAY: 06:30 PM to 11:30 PM, WEDNESDAY: 11:30 AM to 04:30 PM, WEDNESDAY: 06:30 PM to 11:30 PM, THURSDAY: 11:30 AM to 04:30 PM, THURSDAY: 06:30 PM to 11:30 PM, FRIDAY: 11:30 AM to 04:30 PM, FRIDAY: 06:30 PM to 11:30 PM, SATURDAY: 11:30 AM to 04:30 PM, SATURDAY: 06:30 PM to 11:30 PM, SUNDAY: 11:30 AM to 04:30 PM, SUNDAY: 06:30 PM to 11:30 PM"
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Does AB's - Absolute Barbecues serve buffet?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Yes, AB's - Absolute Barbecues serves buffet."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Does AB's - Absolute Barbecues restaurant have a bar or serve alcohol?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Yes, AB's - Absolute Barbecues serves alcohol."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Is there a parking facility at AB's - Absolute Barbecues?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Yes, the parking facility is available at AB's - Absolute Barbecues."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Does AB's - Absolute Barbecues accept bill payment via PayEazy?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Yes, AB's - Absolute Barbecues is a PayEazy-enabled restaurant & accepts card payments via EazyDiner. You can pay the restaurant bill using debit/credit cards."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "How can I save EXTRA with PayEazy at AB's - Absolute Barbecues?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Book a table at AB's - Absolute Barbecues. Get your bill with the pre-applied EazyDiner deal. Pay your bill via PayEazy & save EXTRA"
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Does AB's - Absolute Barbecues restaurant play live music?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Yes, AB's - Absolute Barbecues plays live music."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "What are current deals at AB's - Absolute Barbecues?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "There is no deal at AB's - Absolute Barbecues on EazyDiner. Browse through EazyDiner to avail dining discounts upto 50% OFF."
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "remarketing_tag_params": {
+          "dynx_itemid": 662250,
+          "dynx_itemid2": "AB's - Absolute Barbecues",
+          "dynx_pagetype": "restaurantdetail"
+        },
+        "amp_meta_tag": false,
+        "android_deeplink": "android-app://com.easydiner/eazydiner/action?url=https://www.eazydiner.com/bengaluru/abs-absolute-barbecues-whitefield-east-bengaluru-662250",
+        "is_noindex": false
+      }
+    }
+  }
+}

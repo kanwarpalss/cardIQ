@@ -1,0 +1,35 @@
+{
+  "meta": {
+    "restaurant": {
+      "slug": "misu",
+      "name": "Misu",
+      "area": "Indiranagar",
+      "districtSlugs": [
+        "misu-1-race-course-road-bangalore",
+        "misu-ashok-nagar-bangalore",
+        "misu-hebbal-bangalore",
+        "misu-indiranagar-bangalore",
+        "misu-kumaraswamy-layout-bangalore"
+      ]
+    },
+    "found": true,
+    "offerSummary": [
+      "[bank] Flat ₹150 OFF using Google Pay",
+      "[bank] Flat ₹400 OFF using PNB Luxura Visa Credit Card",
+      "[bank] 10% OFF for up to ₹3000 using RBL Bank NOVA Credit Card",
+      "[bank] 20% OFF for up to ₹150 using Cred Indusind Credit Card",
+      "[bank] 12% OFF up to ₹1000 on HSBC Prive Credit Cards",
+      "[bank] 10% OFF up to ₹200 on TIDE Cards",
+      "[bank] 10% OFF up to ₹1200 on Kotak Bank Privy Black Debit Card",
+      "[bank] 20% OFF up to ₹1500 on Kotak Bank Solitaire Debit Card",
+      "[bank] 15% OFF up to ₹1000 on Credit Cards",
+      "[bank] Get 10% OFF up to ₹500 using YES BANK Credit Cards",
+      "[bank] Flat ₹300 OFF using SBI VISA Debit Cards",
+      "[bank] Flat ₹500 OFF on Credit Cards"
+    ]
+  },
+  "raw": {
+    "rscLength": 55993,
+    "pageUrl": "https://www.district.in/dining/bangalore/misu-1-race-course-road-bangalore"
+  }
+}

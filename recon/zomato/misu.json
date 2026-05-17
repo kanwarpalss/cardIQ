@@ -1,0 +1,13 @@
+{
+  "meta": {
+    "restaurant": {
+      "slug": "misu",
+      "name": "Misu",
+      "area": "Indiranagar"
+    },
+    "found": false,
+    "error": "Search HTTP 404",
+    "offerSummary": []
+  },
+  "raw": null
+}

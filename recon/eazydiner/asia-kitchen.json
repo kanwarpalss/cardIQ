@@ -1,0 +1,14 @@
+{
+  "meta": {
+    "restaurant": {
+      "slug": "asia-kitchen",
+      "name": "Asia Kitchen",
+      "area": "Indiranagar",
+      "districtSlugs": []
+    },
+    "found": false,
+    "error": "not in EazyDiner sitemap — slug not mapped",
+    "offerSummary": []
+  },
+  "raw": null
+}

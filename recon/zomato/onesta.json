@@ -1,0 +1,13 @@
+{
+  "meta": {
+    "restaurant": {
+      "slug": "onesta",
+      "name": "Onesta",
+      "area": "Koramangala"
+    },
+    "found": false,
+    "error": "Search HTTP 404",
+    "offerSummary": []
+  },
+  "raw": null
+}

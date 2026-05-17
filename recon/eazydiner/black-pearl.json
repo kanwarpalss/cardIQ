@@ -1,0 +1,18 @@
+{
+  "meta": {
+    "restaurant": {
+      "slug": "black-pearl",
+      "name": "The Black Pearl",
+      "area": "Indiranagar",
+      "districtSlugs": [
+        "the-black-pearl-1-rajajinagar-bangalore",
+        "the-black-pearl-indiranagar-bangalore",
+        "the-black-pearl-kadubeesanahalli-bangalore"
+      ]
+    },
+    "found": false,
+    "error": "not in EazyDiner sitemap — slug not mapped",
+    "offerSummary": []
+  },
+  "raw": null
+}

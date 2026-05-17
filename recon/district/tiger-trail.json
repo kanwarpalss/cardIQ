@@ -1,0 +1,34 @@
+{
+  "meta": {
+    "restaurant": {
+      "slug": "tiger-trail",
+      "name": "Tiger Trail",
+      "area": "Jayamahal",
+      "districtSlugs": [
+        "tiger-trail-regenta-place-shivajinagar-bangalore"
+      ],
+      "eazyDinerSlug": "tiger-trail-ramada-bangalore-shivajinagar-330037"
+    },
+    "found": true,
+    "offerSummary": [
+      "[prebook] FLAT 10% OFF",
+      "[prebook] FLAT 25% OFF",
+      "[bank] Flat ₹150 OFF using Google Pay",
+      "[bank] 20% OFF for up to ₹150 using Cred Indusind Credit Card",
+      "[bank] Flat ₹500 OFF on Credit Cards",
+      "[bank] Get 10% OFF up to ₹500 using YES BANK Credit Cards",
+      "[bank] 12% OFF up to ₹1000 on HSBC Prive Credit Cards",
+      "[bank] 12% OFF up to ₹1000 on Taj Credit Card",
+      "[bank] 10% OFF for up to ₹1000 on Premier Credit Cards",
+      "[bank] 25% OFF for up to ₹5000 using RBL Bank LUMIÈRE Credit Card",
+      "[bank] 10% OFF up to ₹1000 on Kotak Bank Privy Platinum Debit Card",
+      "[bank] 10% OFF up to ₹600 on Kotak Bank Privy Neon Debit Card",
+      "[bank] Flat ₹400 OFF using PNB Luxura Visa Credit Card",
+      "[bank] 15% OFF up to ₹750 on IDFC Wealth Debit Cards"
+    ]
+  },
+  "raw": {
+    "rscLength": 75664,
+    "pageUrl": "https://www.district.in/dining/bangalore/tiger-trail-regenta-place-shivajinagar-bangalore"
+  }
+}

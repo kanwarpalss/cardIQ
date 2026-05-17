@@ -1,0 +1,1868 @@
+{
+  "meta": {
+    "restaurant": {
+      "slug": "onesta",
+      "name": "Onesta",
+      "area": "Koramangala",
+      "districtSlugs": [
+        "onesta-koramangala-5th-block-bangalore"
+      ]
+    },
+    "found": true,
+    "offerSummary": [
+      "aggregatedDiscountInfo",
+      "aggregatedDiscountInfoV2",
+      "showEoOffer",
+      "aggregatedDiscountInfoV3",
+      "50% OFF",
+      "discountTag",
+      "FLAT DEAL",
+      "10% OFF",
+      "UPTO ₹40"
+    ]
+  },
+  "raw": {
+    "statusCode": 0,
+    "data": {
+      "statusMessage": "done successfully",
+      "cards": [
+        {
+          "card": {
+            "card": {
+              "@type": "type.googleapis.com/swiggy.gandalf.widgets.v2.Navigation",
+              "tab": [
+                {
+                  "id": "RESTAURANT",
+                  "title": "Restaurants",
+                  "selected": true,
+                  "analytics": {
+                    "screenName": "explore",
+                    "context": "{\"tid\":\"undefined\",\"query\":\"Onesta\"}",
+                    "objectValue": "RESTAURANT",
+                    "clickObjectName": "click-tab"
+                  },
+                  "selectedBgColor": "#1B1E24",
+                  "unselectedBgColor": "#FFFFFF",
+                  "selectedTextColor": "#BFFFFFFF",
+                  "unselectedTextColor": "#9902060C",
+                  "selectedBorderColor": "#1B1E24",
+                  "unselectedBorderColor": "#E2E2E7"
+                },
+                {
+                  "id": "DISH",
+                  "title": "Dishes",
+                  "analytics": {
+                    "screenName": "explore",
+                    "context": "{\"tid\":\"undefined\",\"query\":\"Onesta\"}",
+                    "objectValue": "DISH",
+                    "clickObjectName": "click-tab"
+                  },
+                  "selectedBgColor": "#1B1E24",
+                  "unselectedBgColor": "#FFFFFF",
+                  "selectedTextColor": "#BFFFFFFF",
+                  "unselectedTextColor": "#9902060C",
+                  "selectedBorderColor": "#1B1E24",
+                  "unselectedBorderColor": "#E2E2E7"
+                }
+              ],
+              "meta": {
+                "orderable": "false",
+                "correctedQuery": "",
+                "suggestionType": "",
+                "queryIntent": "RESTAURANT"
+              }
+            }
+          }
+        },
+        {
+          "groupedCard": {
+            "cardGroupMap": {
+              "RESTAURANT": {
+                "cards": [
+                  {
+                    "card": {
+                      "card": {
+                        "@type": "type.googleapis.com/swiggy.presentation.food.v2.Restaurant",
+                        "info": {
+                          "id": "655141",
+                          "name": "Onesta",
+                          "city": "1",
+                          "slugs": {
+                            "restaurant": "onesta-malleshwaram-malleshwaram",
+                            "city": "bangalore"
+                          },
+                          "cloudinaryImageId": "6e6533685160fdcb8393da739f86634d",
+                          "address": "Onesta , Third Floor ,Food Court ,Mantri Square,No.1,Sampige Road, Bbmp North,Bangalore,Karnataka 560003",
+                          "locality": "Sampige Road",
+                          "areaName": "Malleshwaram",
+                          "costForTwo": "20000",
+                          "costForTwoMessage": "₹200 FOR TWO",
+                          "cuisines": [
+                            "Italian",
+                            "Desserts",
+                            "Pizzas"
+                          ],
+                          "avgRating": 4,
+                          "feeDetails": {},
+                          "parentId": "11785",
+                          "avgRatingString": "4.0",
+                          "totalRatingsString": "959",
+                          "sla": {
+                            "serviceability": "NON_SERVICEABLE",
+                            "rainMode": "RAIN_MODE_DEFAULT",
+                            "iconType": "ICON_TYPE_EMPTY"
+                          },
+                          "availability": {
+                            "restaurantClosedMeta": {
+                              "title": "UNAVAILABLE",
+                              "subtitle": "AT YOUR LOCATION"
+                            }
+                          },
+                          "aggregatedDiscountInfo": {
+                            "visible": true
+                          },
+                          "badges": {},
+                          "unorderableMessage": "Does not deliver to selected location",
+                          "aggregatedDiscountInfoV2": {
+                            "visible": true
+                          },
+                          "ratingSlab": "RATING_SLAB_4",
+                          "availabilityServiceabilityMessage": "Does not deliver to your location",
+                          "orderabilityCommunication": {
+                            "title": {
+                              "text": "UNAVAILABLE"
+                            },
+                            "subTitle": {
+                              "text": "FOR DELIVERY"
+                            },
+                            "message": {
+                              "text": "Outside the outlet's delivery area",
+                              "textColour": "negative"
+                            },
+                            "customIcon": {
+                              "bgGradientColorStart": "#F64C41",
+                              "bgGradientColorEnd": "#E53554"
+                            },
+                            "commsStyling": {}
+                          },
+                          "cartOrderabilityNudgeBanner": {
+                            "parameters": {},
+                            "presentation": {}
+                          },
+                          "externalRatings": {
+                            "aggregatedRating": {
+                              "rating": "3.7",
+                              "ratingCount": "48"
+                            },
+                            "source": "GOOGLE",
+                            "sourceIconImageId": "v1704440323/google_ratings/rating_google_tag"
+                          },
+                          "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY",
+                          "featuredSectionInfo": {},
+                          "showEoOffer": true,
+                          "priceComparisonComms": {}
+                        },
+                        "analytics": {
+                          "screenName": "explore",
+                          "context": "{\"tid\":\"undefined\",\"grid\":\"fa3cb3f4-a891-4f0e-ab8d-6d78b8c1daf8\",\"queryUniqueId\":\"undefined\",\"query\":\"Onesta\"}",
+                          "objectValue": "655141",
+                          "impressionObjectName": "impression-restaurant",
+                          "clickObjectName": "click-restaurant"
+                        },
+                        "ctaWithParams": {
+                          "text": "This Restaurant is no longer available for ordering",
+                          "type": "TEXT",
+                          "params": {
+                            "qrEnabled": "false",
+                            "restaurant_id": "655141",
+                            "query": "Onesta",
+                            "sourceSessionId": "re615148c4a-f2c9-4cbb-9cb4-c5f1aa97c",
+                            "source": "SEARCH",
+                            "isSld": "false",
+                            "sourceRequestId": "00000000000000000000000000000000"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "card": {
+                      "card": {
+                        "@type": "type.googleapis.com/swiggy.presentation.food.v2.RestaurantCollection",
+                        "title": "More results like this",
+                        "restaurants": [
+                          {
+                            "info": {
+                              "id": "10582",
+                              "name": "Pizza Hut",
+                              "city": "1",
+                              "slugs": {
+                                "restaurant": "pizza-hut-hosur-main-road-koramangala"
+                              },
+                              "cloudinaryImageId": "RX_THUMBNAIL/IMAGES/VENDOR/2026/2/12/77cce0e2-9d15-4c7e-831f-8080b5870841_10582.JPG",
+                              "locality": "Maruti Nagar",
+                              "areaName": "Maruti Nagar",
+                              "costForTwo": "₹300 for two",
+                              "cuisines": [
+                                "Pizzas"
+                              ],
+                              "avgRating": 4.1,
+                              "feeDetails": {
+                                "restaurantId": "10582",
+                                "title": "Delivery Charge",
+                                "amount": "0"
+                              },
+                              "totalRatingsString": "13K+",
+                              "sla": {
+                                "deliveryTime": 39,
+                                "minDeliveryTime": 35,
+                                "maxDeliveryTime": 40,
+                                "serviceability": "SERVICEABLE",
+                                "slaString": "35-40 MINS",
+                                "lastMileTravelString": "6.9 km",
+                                "iconType": "ICON_TYPE_EMPTY"
+                              },
+                              "availability": {
+                                "nextCloseTime": "2026-05-17 07:00:00",
+                                "opened": true
+                              },
+                              "badges": {},
+                              "aggregatedDiscountInfoV3": {
+                                "header": "50% OFF",
+                                "discountTag": "FLAT DEAL"
+                              },
+                              "externalRatings": {
+                                "aggregatedRating": {
+                                  "rating": "4.8",
+                                  "ratingCount": "1.9K+"
+                                },
+                                "source": "GOOGLE",
+                                "sourceIconImageId": "v1704440323/google_ratings/rating_google_tag"
+                              },
+                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
+                            },
+                            "analytics": {},
+                            "cta": {}
+                          },
+                          {
+                            "info": {
+                              "id": "1016710",
+                              "name": "La Pino'z Pizza",
+                              "city": "1",
+                              "slugs": {
+                                "restaurant": "la-pinoz-pizza-indiranagar-marathahalli"
+                              },
+                              "cloudinaryImageId": "RX_THUMBNAIL/IMAGES/VENDOR/2024/12/29/ae211d87-7b26-4f52-ae62-4fa6e1ce4529_1016710.jpg",
+                              "locality": "Indira Nagar",
+                              "areaName": "Indiranagar",
+                              "costForTwo": "₹250 for two",
+                              "cuisines": [
+                                "Pizzas",
+                                "Pastas",
+                                "Italian",
+                                "Desserts",
+                                "Beverages"
+                              ],
+                              "avgRating": 4.3,
+                              "feeDetails": {
+                                "restaurantId": "1016710",
+                                "title": "Delivery Charge",
+                                "amount": "0"
+                              },
+                              "totalRatingsString": "1.8K+",
+                              "sla": {
+                                "deliveryTime": 48,
+                                "minDeliveryTime": 45,
+                                "maxDeliveryTime": 50,
+                                "serviceability": "SERVICEABLE",
+                                "slaString": "45-50 MINS",
+                                "lastMileTravelString": "7.2 km",
+                                "iconType": "ICON_TYPE_EMPTY"
+                              },
+                              "availability": {
+                                "nextCloseTime": "2026-05-17 10:00:00",
+                                "opened": true
+                              },
+                              "aggregatedDiscountInfo": {},
+                              "badges": {},
+                              "aggregatedDiscountInfoV2": {},
+                              "externalRatings": {
+                                "aggregatedRating": {
+                                  "rating": "--"
+                                }
+                              },
+                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
+                            },
+                            "analytics": {},
+                            "cta": {}
+                          },
+                          {
+                            "info": {
+                              "id": "657064",
+                              "name": "Pizza House",
+                              "city": "1",
+                              "slugs": {
+                                "restaurant": "pizza-house-kammanahalli/kalyan-nagar-kammanahalli/kalyan-nagar"
+                              },
+                              "cloudinaryImageId": "d57061840c856db9f90602bb146cd477",
+                              "locality": "AM Road, Sulthangunta",
+                              "areaName": "Shivaji Nagar",
+                              "costForTwo": "₹400 for two",
+                              "cuisines": [
+                                "Pizzas"
+                              ],
+                              "avgRating": 3.7,
+                              "feeDetails": {
+                                "restaurantId": "657064",
+                                "title": "Delivery Charge",
+                                "amount": "0"
+                              },
+                              "totalRatingsString": "341",
+                              "sla": {
+                                "deliveryTime": 46,
+                                "minDeliveryTime": 45,
+                                "maxDeliveryTime": 55,
+                                "serviceability": "SERVICEABLE",
+                                "slaString": "45-55 MINS",
+                                "lastMileTravelString": "3.5 km",
+                                "iconType": "ICON_TYPE_EMPTY"
+                              },
+                              "availability": {
+                                "nextCloseTime": "2026-05-24 00:00:00",
+                                "opened": true
+                              },
+                              "badges": {},
+                              "aggregatedDiscountInfoV3": {
+                                "header": "10% OFF",
+                                "subHeader": "UPTO ₹40",
+                                "logoCtx": {
+                                  "text": "BENEFITS"
+                                }
+                              },
+                              "externalRatings": {
+                                "aggregatedRating": {
+                                  "rating": "--"
+                                }
+                              },
+                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
+                            },
+                            "analytics": {},
+                            "cta": {}
+                          },
+                          {
+                            "info": {
+                              "id": "583172",
+                              "name": "Pizza Party",
+                              "city": "1",
+                              "slugs": {
+                                "restaurant": "pub-g-m-pizza-indiranagar-indiranagar"
+                              },
+                              "cloudinaryImageId": "cjmua3ulhheyp93th1qy",
+                              "locality": "18th C Main, HAL 2nd Stage",
+                              "areaName": "indranagar",
+                              "costForTwo": "₹150 for two",
+                              "cuisines": [
+                                "Pizzas"
+                              ],
+                              "avgRating": 4.6,
+                              "feeDetails": {
+                                "restaurantId": "583172",
+                                "title": "Delivery Charge",
+                                "amount": "0"
+                              },
+                              "totalRatingsString": "52",
+                              "sla": {
+                                "deliveryTime": 52,
+                                "minDeliveryTime": 50,
+                                "maxDeliveryTime": 60,
+                                "serviceability": "SERVICEABLE",
+                                "slaString": "50-60 MINS",
+                                "lastMileTravelString": "7.4 km",
+                                "iconType": "ICON_TYPE_EMPTY"
+                              },
+                              "availability": {
+                                "nextCloseTime": "2026-05-17 23:59:00",
+                                "opened": true
+                              },
+                              "aggregatedDiscountInfo": {},
+                              "badges": {},
+                              "aggregatedDiscountInfoV2": {},
+                              "externalRatings": {
+                                "aggregatedRating": {
+                                  "rating": "--"
+                                }
+                              },
+                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
+                            },
+                            "analytics": {},
+                            "cta": {}
+                          },
+                          {
+                            "info": {
+                              "id": "480488",
+                              "name": "High Ultra Express Pizza",
+                              "city": "1",
+                              "slugs": {
+                                "restaurant": "high-ultra-express-pizza-indiranagar-indiranagar"
+                              },
+                              "cloudinaryImageId": "ackkhgq1m74vknebpxf0",
+                              "locality": "18th C Main, HAL 2nd Stage",
+                              "areaName": "indranagar ",
+                              "costForTwo": "₹200 for two",
+                              "cuisines": [
+                                "Pizzas"
+                              ],
+                              "avgRating": 3.7,
+                              "feeDetails": {
+                                "restaurantId": "480488",
+                                "title": "Delivery Charge",
+                                "amount": "0"
+                              },
+                              "totalRatingsString": "104",
+                              "sla": {
+                                "deliveryTime": 47,
+                                "minDeliveryTime": 45,
+                                "maxDeliveryTime": 50,
+                                "serviceability": "SERVICEABLE",
+                                "slaString": "45-50 MINS",
+                                "lastMileTravelString": "7.4 km",
+                                "iconType": "ICON_TYPE_EMPTY"
+                              },
+                              "availability": {
+                                "nextCloseTime": "2026-05-24 00:00:00",
+                                "opened": true
+                              },
+                              "aggregatedDiscountInfo": {},
+                              "badges": {},
+                              "aggregatedDiscountInfoV2": {},
+                              "externalRatings": {
+                                "aggregatedRating": {
+                                  "rating": "--"
+                                }
+                              },
+                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
+                            },
+                            "analytics": {},
+                            "cta": {}
+                          },
+                          {
+                            "info": {
+                              "id": "559737",
+                              "name": "crunch pizza 24/7",
+                              "city": "1",
+                              "slugs": {
+                                "restaurant": "fresh-crunch-pizza-indiranagar-indiranagar"
+                              },
+                              "cloudinaryImageId": "ojsvhtrmvqprjp8etfqg",
+                              "locality": "18th C Main, HAL 2nd Stage",
+                              "areaName": " indranagar ",
+                              "costForTwo": "₹400 for two",
+                              "cuisines": [
+                                "Pizzas",
+                                "Burgers"
+                              ],
+                              "avgRating": 4.6,
+                              "feeDetails": {
+                                "restaurantId": "559737",
+                                "title": "Delivery Charge",
+                                "amount": "0"
+                              },
+                              "totalRatingsString": "57",
+                              "sla": {
+                                "deliveryTime": 53,
+                                "minDeliveryTime": 50,
+                                "maxDeliveryTime": 60,
+                                "serviceability": "SERVICEABLE",
+                                "slaString": "50-60 MINS",
+                                "lastMileTravelString": "7.4 km",
+                                "iconType": "ICON_TYPE_EMPTY"
+                              },
+                              "availability": {
+                                "nextCloseTime": "2026-05-17 23:59:00",
+                                "opened": true
+                              },
+                              "aggregatedDiscountInfo": {},
+                              "badges": {},
+                              "aggregatedDiscountInfoV2": {},
+                              "externalRatings": {
+                                "aggregatedRating": {
+                                  "rating": "--"
+                                }
+                              },
+                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
+                            },
+                            "analytics": {},
+                            "cta": {}
+                          },
+                          {
+                            "info": {
+                              "id": "430620",
+                              "name": "Joey's pizza delivery",
+                              "city": "1",
+                              "slugs": {
+                                "restaurant": "joey's-pizza-24\\7-indiranagar-indiranagar"
+                              },
+                              "cloudinaryImageId": "qmxth2yq9e8eihjt3ucw",
+                              "locality": "18th C Main, HAL 2nd Stage",
+                              "areaName": "indranagar",
+                              "costForTwo": "₹250 for two",
+                              "cuisines": [
+                                "Italian"
+                              ],
+                              "avgRating": 4.4,
+                              "feeDetails": {
+                                "restaurantId": "430620",
+                                "title": "Delivery Charge",
+                                "amount": "0"
+                              },
+                              "totalRatingsString": "364",
+                              "sla": {
+                                "deliveryTime": 50,
+                                "minDeliveryTime": 45,
+                                "maxDeliveryTime": 50,
+                                "serviceability": "SERVICEABLE",
+                                "slaString": "45-50 MINS",
+                                "lastMileTravelString": "7.4 km",
+                                "iconType": "ICON_TYPE_EMPTY"
+                              },
+                              "availability": {
+                                "nextCloseTime": "2026-05-17 23:59:00",
+                                "opened": true
+                              },
+                              "aggregatedDiscountInfo": {},
+                              "badges": {},
+                              "aggregatedDiscountInfoV2": {},
+                              "externalRatings": {
+                                "aggregatedRating": {
+                                  "rating": "--"
+                                }
+                              },
+                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
+                            },
+                            "analytics": {},
+                            "cta": {}
+                          },
+                          {
+                            "info": {
+                              "id": "657599",
+                              "name": "Pizza Town",
+                              "city": "1",
+                              "slugs": {
+                                "restaurant": "pizza-town-kammanahalli/kalyan-nagar-kammanahalli/kalyan-nagar"
+                              },
+                              "cloudinaryImageId": "21e7e5e45176da8b791c06a0ea555246",
+                              "locality": "AM Road, Sulthangunta",
+                              "areaName": "Shivaji Nagar",
+                              "costForTwo": "₹400 for two",
+                              "cuisines": [
+                                "Pizzas"
+                              ],
+                              "avgRating": 4,
+                              "feeDetails": {
+                                "restaurantId": "657599",
+                                "title": "Delivery Charge",
+                                "amount": "0"
+                              },
+                              "totalRatingsString": "161",
+                              "sla": {
+                                "deliveryTime": 40,
+                                "minDeliveryTime": 40,
+                                "maxDeliveryTime": 45,
+                                "serviceability": "SERVICEABLE",
+                                "slaString": "40-45 MINS",
+                                "lastMileTravelString": "3.5 km",
+                                "iconType": "ICON_TYPE_EMPTY"
+                              },
+                              "availability": {
+                                "nextCloseTime": "2026-05-23 00:00:00",
+                                "opened": true
+                              },
+                              "badges": {},
+                              "aggregatedDiscountInfoV3": {
+                                "header": "10% OFF",
+                                "subHeader": "UPTO ₹40",
+                                "logoCtx": {
+                                  "text": "BENEFITS"
+                                }
+                              },
+                              "externalRatings": {
+                                "aggregatedRating": {
+                                  "rating": "--"
+                                }
+                              },
+                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
+                            },
+                            "analytics": {},
+                            "cta": {}
+                          },
+                          {
+                            "info": {
+                              "id": "417711",
+                              "name": "Crunch Pizza Express Delivery",
+                              "city": "1",
+                              "slugs": {
+                                "restaurant": "crunch-pizza-express-delivery-indiranagar-indiranagar"
+                              },
+                              "cloudinaryImageId": "ryr4wdduipdymkltj64q",
+                              "locality": "18th C Main, HAL 2nd Stage",
+                              "areaName": "indranagar",
+                              "costForTwo": "₹300 for two",
+                              "cuisines": [
+                                "Italian",
+                                "Pizzas"
+                              ],
+                              "avgRating": 4.4,
+                              "feeDetails": {
+                                "restaurantId": "417711",
+                                "title": "Delivery Charge",
+                                "amount": "0"
+                              },
+                              "totalRatingsString": "362",
+                              "sla": {
+                                "deliveryTime": 48,
+                                "minDeliveryTime": 45,
+                                "maxDeliveryTime": 50,
+                                "serviceability": "SERVICEABLE",
+                                "slaString": "45-50 MINS",
+                                "lastMileTravelString": "7.4 km",
+                                "iconType": "ICON_TYPE_EMPTY"
+                              },
+                              "availability": {
+                                "nextCloseTime": "2026-05-17 23:59:00",
+                                "opened": true
+                              },
+                              "aggregatedDiscountInfo": {},
+                              "badges": {},
+                              "aggregatedDiscountInfoV2": {},
+                              "externalRatings": {
+                                "aggregatedRating": {
+                                  "rating": "--"
+                                }
+                              },
+                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
+                            },
+                            "analytics": {},
+                            "cta": {}
+                          },
+                          {
+                            "info": {
+                              "id": "1033274",
+                              "name": "Pizza Palette",
+                              "city": "1",
+                              "slugs": {
+                                "restaurant": "pizza-palette-arekere-arekere"
+                              },
+                              "cloudinaryImageId": "RX_THUMBNAIL/IMAGES/VENDOR/2025/1/24/3039a49b-f3d3-499a-bd96-291d0a3b1630_1033274.JPG",
+                              "locality": "Arekempanahalli Jayanagar",
+                              "areaName": "Mavallipura",
+                              "costForTwo": "₹200 for two",
+                              "cuisines": [
+                                "Bakery",
+                                "Beverages",
+                                "Pizzas",
+                                "Burgers"
+                              ],
+                              "avgRating": 4.3,
+                              "feeDetails": {
+                                "restaurantId": "1033274",
+                                "title": "Delivery Charge",
+                                "amount": "0"
+                              },
+                              "totalRatingsString": "6",
+                              "sla": {
+                                "deliveryTime": 38,
+                                "minDeliveryTime": 35,
+                                "maxDeliveryTime": 40,
+                                "serviceability": "SERVICEABLE",
+                                "slaString": "35-40 MINS",
+                                "lastMileTravelString": "4.3 km",
+                                "iconType": "ICON_TYPE_EMPTY"
+                              },
+                              "availability": {
+                                "nextCloseTime": "2026-05-17 23:00:00",
+                                "opened": true
+                              },
+                              "badges": {},
+                              "aggregatedDiscountInfoV3": {
+                                "header": "₹100 OFF",
+                                "subHeader": "ABOVE ₹499",
+                                "discountTag": "FLAT DEAL",
+                                "logoCtx": {
+                                  "text": "BENEFITS"
+                                }
+                              },
+                              "externalRatings": {
+                                "aggregatedRating": {
+                                  "rating": "--"
+                                }
+                              },
+                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
+                            },
+                            "analytics": {},
+                            "cta": {}
+                          },
+                          {
+                            "info": {
+                              "id": "50710",
+                              "name": "Wood Fire Pizza",
+                              "city": "1",
+                              "slugs": {
+                                "restaurant": "woodfire-pizza-indiranagar-indiranagar"
+                              },
+                              "cloudinaryImageId": "ocx9ixmjekwtw7a0crwr",
+                              "locality": "Subbanna Palya",
+                              "areaName": "Kammanahalli/Kalyan Nagar",
+                              "costForTwo": "₹400 for two",
+                              "cuisines": [
+                                "Italian",
+                                "Pizzas",
+                                "Pastas",
+                                "Beverages",
+                                "American",
+                                "Desserts",
+                                "Snacks"
+                              ],
+                              "avgRating": 4.1,
+                              "feeDetails": {
+                                "restaurantId": "50710",
+                                "title": "Delivery Charge",
+                                "amount": "0"
+                              },
+                              "totalRatingsString": "2.4K+",
+                              "sla": {
+                                "deliveryTime": 53,
+                                "minDeliveryTime": 50,
+                                "maxDeliveryTime": 60,
+                                "serviceability": "SERVICEABLE",
+                                "slaString": "50-60 MINS",
+                                "lastMileTravelString": "8.3 km",
+                                "iconType": "ICON_TYPE_EMPTY"
+                              },
+                              "availability": {
+                                "nextCloseTime": "2026-05-24 00:00:00",
+                                "opened": true
+                              },
+                              "badges": {},
+                              "aggregatedDiscountInfoV3": {
+                                "header": "ITEMS",
+                                "subHeader": "AT ₹89",
+                                "logoCtx": {
+                                  "text": "BENEFITS"
+                                }
+                              },
+                              "externalRatings": {
+                                "aggregatedRating": {
+                                  "rating": "--"
+                                }
+                              },
+                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
+                            },
+                            "analytics": {},
+                            "cta": {}
+                          },
+                          {
+                            "info": {
+                              "id": "403216",
+                              "name": "Burger It Up",
+                              "city": "1",
+                              "slugs": {
+                                "restaurant": "burger-it-up-central-bangalore-central-bangalore"
+                              },
+                              "cloudinaryImageId": "ja1zrans2vibycwmcccn",
+                              "locality": "Millars Road",
+                              "areaName": "R.T. Nagar",
+                              "costForTwo": "₹150 for two",
+                              "cuisines": [
+                                "Burgers",
+                                "Beverages",
+                                "Desserts",
+                                "American",
+                                "Cafe"
+                              ],
+                              "avgRating": 3.6,
+                              "feeDetails": {
+                                "restaurantId": "403216",
+                                "title": "Delivery Charge",
+                                "amount": "0"
+                              },
+                              "totalRatingsString": "215",
+                              "sla": {
+                                "deliveryTime": 43,
+                                "minDeliveryTime": 40,
+                                "maxDeliveryTime": 45,
+                                "serviceability": "SERVICEABLE",
+                                "slaString": "40-45 MINS",
+                                "lastMileTravelString": "4.1 km",
+                                "iconType": "ICON_TYPE_EMPTY"
+                              },
+                              "availability": {
+                                "nextCloseTime": "2026-05-18 03:00:00",
+                                "opened": true
+                              },
+                              "badges": {},
+                              "aggregatedDiscountInfoV3": {
+                                "header": "ITEMS",
+                                "subHeader": "AT ₹69"
+                              },
+                              "externalRatings": {
+                                "aggregatedRating": {
+                                  "rating": "--"
+                                }
+                              },
+                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
+                            },
+                            "analytics": {},
+                            "cta": {}
+                          },
+                          {
+                            "info": {
+                              "id": "1136024",
+                              "name": "The ZZ Bistro",
+                              "city": "1",
+                              "slugs": {
+                                "restaurant": "the-zz-bistro-sanjay-nagar,-new-bel-road-sanjay-nagar,-new-bel-road"
+                              },
+                              "cloudinaryImageId": "RX_THUMBNAIL/IMAGES/VENDOR/2025/8/11/b9c2367a-7cbe-4ff9-a505-3726681445a0_1136024 (1).jpg",
+                              "locality": "MANORAYANAPALYA",
+                              "areaName": "RT Nagar",
+                              "costForTwo": "₹400 for two",
+                              "cuisines": [
+                                "Chinese",
+                                "Beverages",
+                                "Cafe"
+                              ],
+                              "avgRating": 4.2,
+                              "feeDetails": {
+                                "restaurantId": "1136024",
+                                "title": "Delivery Charge",
+                                "amount": "0"
+                              },
+                              "totalRatingsString": "38",
+                              "sla": {
+                                "deliveryTime": 48,
+                                "minDeliveryTime": 45,
+                                "maxDeliveryTime": 50,
+                                "serviceability": "SERVICEABLE",
+                                "slaString": "45-50 MINS",
+                                "lastMileTravelString": "7.3 km",
+                                "iconType": "ICON_TYPE_EMPTY"
+                              },
+                              "availability": {
+                                "nextCloseTime": "2026-05-17 23:45:00",
+                                "opened": true
+                              },
+                              "badges": {},
+                              "aggregatedDiscountInfoV3": {
+                                "header": "ITEMS",
+                                "subHeader": "AT ₹89",
+                                "logoCtx": {
+                                  "text": "BENEFITS"
+                                }
+                              },
+                              "externalRatings": {
+                                "aggregatedRating": {
+                                  "rating": "4.7",
+                                  "ratingCount": "62"
+                                },
+                                "source": "GOOGLE",
+                                "sourceIconImageId": "v1704440323/google_ratings/rating_google_tag"
+                              },
+                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
+                            },
+                            "analytics": {},
+                            "cta": {}
+                          },
+                          {
+                            "info": {
+                              "id": "903490",
+                              "name": "Cremeux Pizza & Bakery Cafe",
+                              "city": "1",
+                              "slugs": {
+                                "restaurant": "cremeux-btm-btm"
+                              },
+                              "cloudinaryImageId": "RX_THUMBNAIL/IMAGES/VENDOR/2024/9/11/8441e1eb-9b96-4bb1-b544-c39d38698b55_903490.jpg",
+                              "locality": "7th Cross Rd, NS Palya",
+                              "areaName": "BTM Layout",
+                              "costForTwo": "₹600 for two",
+                              "cuisines": [
+                                "Cakes",
+                                "Cake",
+                                "pizza",
+                                "Bakery",
+                                "Pastas",
+                                "sandwich",
+                                "Desserts",
+                                "Italian",
+                                "Beverages",
+                                "Cakes & Pastries"
+                              ],
+                              "avgRating": 4.2,
+                              "feeDetails": {
+                                "restaurantId": "903490",
+                                "title": "Delivery Charge",
+                                "amount": "0"
+                              },
+                              "totalRatingsString": "1.3K+",
+                              "sla": {
+                                "deliveryTime": 44,
+                                "minDeliveryTime": 40,
+                                "maxDeliveryTime": 45,
+                                "serviceability": "SERVICEABLE",
+                                "slaString": "40-45 MINS",
+                                "lastMileTravelString": "8.8 km",
+                                "iconType": "ICON_TYPE_EMPTY"
+                              },
+                              "availability": {
+                                "nextCloseTime": "2026-05-20 00:00:00",
+                                "opened": true
+                              },
+                              "badges": {},
+                              "aggregatedDiscountInfoV3": {
+                                "header": "ITEMS",
+                                "subHeader": "AT ₹42",
+                                "logoCtx": {
+                                  "text": "BENEFITS"
+                                }
+                              },
+                              "externalRatings": {
+                                "aggregatedRating": {
+                                  "rating": "--"
+                                }
+                              },
+                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
+                            },
+                            "analytics": {},
+                            "cta": {}
+                          },
+                          {
+                            "info": {
+                              "id": "658363",
+                              "name": "Pizza Box",
+                              "city": "1",
+                              "slugs": {
+                                "restaurant": "pizza-box-kammanahalli/kalyan-nagar-kammanahalli/kalyan-nagar"
+                              },
+                              "cloudinaryImageId": "21e7e5e45176da8b791c06a0ea555246",
+                              "locality": "AM Road, Sulthangunta",
+                              "areaName": "Shivaji Nagar",
+                              "costForTwo": "₹400 for two",
+                              "cuisines": [
+                                "Pizzas"
+                              ],
+                              "avgRating": 3.9,
+                              "feeDetails": {
+                                "restaurantId": "658363",
+                                "title": "Delivery Charge",
+                                "amount": "0"
+                              },
+                              "totalRatingsString": "141",
+                              "sla": {
+                                "deliveryTime": 43,
+                                "minDeliveryTime": 40,
+                                "maxDeliveryTime": 45,
+                                "serviceability": "SERVICEABLE",
+                                "slaString": "40-45 MINS",
+                                "lastMileTravelString": "3.5 km",
+                                "iconType": "ICON_TYPE_EMPTY"
+                              },
+                              "availability": {
+                                "nextCloseTime": "2026-05-18 00:01:00",
+                                "opened": true
+                              },
+                              "badges": {},
+                              "aggregatedDiscountInfoV3": {
+                                "header": "10% OFF",
+                                "subHeader": "UPTO ₹40",
+                                "logoCtx": {
+                                  "text": "BENEFITS"
+                                }
+                              },
+                              "externalRatings": {
+                                "aggregatedRating": {
+                                  "rating": "--"
+                                }
+                              },
+                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
+                            },
+                            "analytics": {},
+                            "cta": {}
+                          },
+                          {
+                            "info": {
+                              "id": "460878",
+                              "name": "Kutty's Pizzeria",
+                              "city": "1",
+                              "slugs": {
+                                "restaurant": "kutty's-pizzeria-banaswadi-banaswadi"
+                              },
+                              "cloudinaryImageId": "fazimgukkzmonlo3krp6",
+                              "locality": "Subbannaiah Palya",
+                              "areaName": "Lingrajapuram",
+                              "costForTwo": "₹300 for two",
+                              "cuisines": [
+                                "Pizzas"
+                              ],
+                              "avgRating": 3.7,
+                              "feeDetails": {
+                                "restaurantId": "460878",
+                                "title": "Delivery Charge",
+                                "amount": "0"
+                              },
+                              "totalRatingsString": "51",
+                              "sla": {
+                                "deliveryTime": 50,
+                                "minDeliveryTime": 50,
+                                "maxDeliveryTime": 60,
+                                "serviceability": "SERVICEABLE",
+                                "slaString": "50-60 MINS",
+                                "lastMileTravelString": "8.5 km",
+                                "iconType": "ICON_TYPE_EMPTY"
+                              },
+                              "availability": {
+                                "nextCloseTime": "2026-05-24 00:00:00",
+                                "opened": true
+                              },
+                              "badges": {},
+                              "aggregatedDiscountInfoV3": {
+                                "header": "ITEMS",
+                                "subHeader": "AT ₹99",
+                                "logoCtx": {
+                                  "text": "BENEFITS"
+                                }
+                              },
+                              "externalRatings": {
+                                "aggregatedRating": {
+                                  "rating": "--"
+                                }
+                              },
+                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
+                            },
+                            "analytics": {},
+                            "cta": {}
+                          },
+                          {
+                            "info": {
+                              "id": "768277",
+                              "name": "Fresh Pizza",
+                              "city": "1",
+                              "slugs": {
+                                "restaurant": "fresh-pizza-kammanahalli/kalyan-nagar-kammanahalli/kalyan-nagar"
+                              },
+                              "cloudinaryImageId": "a1b474576d7b2801cfd53a77475d5cbe",
+                              "locality": "Jayalakshmi School Rd",
+                              "areaName": "Kammanahalli/Kalyan Nagar",
+                              "costForTwo": "₹350 for two",
+                              "cuisines": [
+                                "Pizzas",
+                                "Burgers",
+                                "Snacks",
+                                "Beverages"
+                              ],
+                              "avgRating": 3.8,
+                              "feeDetails": {
+                                "restaurantId": "768277",
+                                "title": "Delivery Charge",
+                                "amount": "0"
+                              },
+                              "totalRatingsString": "12",
+                              "sla": {
+                                "deliveryTime": 61,
+                                "minDeliveryTime": 60,
+                                "maxDeliveryTime": 70,
+                                "serviceability": "SERVICEABLE",
+                                "slaString": "60-70 MINS",
+                                "lastMileTravelString": "8.5 km",
+                                "iconType": "ICON_TYPE_EMPTY"
+                              },
+                              "availability": {
+                                "nextCloseTime": "2026-05-24 00:00:00",
+                                "opened": true
+                              },
+                              "badges": {},
+                              "aggregatedDiscountInfoV3": {
+                                "header": "ITEMS",
+                                "subHeader": "AT ₹79",
+                                "logoCtx": {
+                                  "text": "BENEFITS"
+                                }
+                              },
+                              "externalRatings": {
+                                "aggregatedRating": {
+                                  "rating": "--"
+                                }
+                              },
+                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
+                            },
+                            "analytics": {},
+                            "cta": {}
+                          },
+                          {
+                            "info": {
+                              "id": "156540",
+                              "name": "Pizza Theatre",
+                              "city": "1",
+                              "slugs": {
+                                "restaurant": "pizza-theatre-test-prod-area"
+                              },
+                              "cloudinaryImageId": "j5n3wfeldydxn2k93vgz",
+                              "locality": "Subbanna Palya",
+                              "areaName": "Kammanahalli/Kalyan Nagar",
+                              "costForTwo": "₹400 for two",
+                              "cuisines": [
+                                "Italian",
+                                "American",
+                                "Desserts",
+                                "Beverages",
+                                "Pastas",
+                                "Continental"
+                              ],
+                              "avgRating": 4.1,
+                              "feeDetails": {
+                                "restaurantId": "156540",
+                                "title": "Delivery Charge",
+                                "amount": "0"
+                              },
+                              "totalRatingsString": "385",
+                              "sla": {
+                                "deliveryTime": 54,
+                                "minDeliveryTime": 50,
+                                "maxDeliveryTime": 60,
+                                "serviceability": "SERVICEABLE",
+                                "slaString": "50-60 MINS",
+                                "lastMileTravelString": "8.3 km",
+                                "iconType": "ICON_TYPE_EMPTY"
+                              },
+                              "availability": {
+                                "nextCloseTime": "2026-05-24 00:00:00",
+                                "opened": true
+                              },
+                              "badges": {},
+                              "aggregatedDiscountInfoV3": {
+                                "header": "ITEMS",
+                                "subHeader": "AT ₹129",
+                                "logoCtx": {
+                                  "text": "BENEFITS"
+                                }
+                              },
+                              "externalRatings": {
+                                "aggregatedRating": {
+                                  "rating": "--"
+                                }
+                              },
+                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
+                            },
+                            "analytics": {},
+                            "cta": {}
+                          },
+                          {
+                            "info": {
+                              "id": "423459",
+                              "name": "Boston Pizzeria",
+                              "city": "1",
+                              "slugs": {
+                                "restaurant": "boston-pizzeria-banaswadi-banaswadi"
+                              },
+                              "cloudinaryImageId": "rhh1p1v0c4kqgspwygrp",
+                              "locality": "Subbannaiah Palya",
+                              "areaName": "Lingrajapuram",
+                              "costForTwo": "₹300 for two",
+                              "cuisines": [
+                                "Pizzas"
+                              ],
+                              "avgRating": 4.1,
+                              "feeDetails": {
+                                "restaurantId": "423459",
+                                "title": "Delivery Charge",
+                                "amount": "0"
+                              },
+                              "totalRatingsString": "237",
+                              "sla": {
+                                "deliveryTime": 49,
+                                "minDeliveryTime": 45,
+                                "maxDeliveryTime": 55,
+                                "serviceability": "SERVICEABLE",
+                                "slaString": "45-55 MINS",
+                                "lastMileTravelString": "8.5 km",
+                                "iconType": "ICON_TYPE_EMPTY"
+                              },
+                              "availability": {
+                                "nextCloseTime": "2026-05-24 00:00:00",
+                                "opened": true
+                              },
+                              "badges": {},
+                              "aggregatedDiscountInfoV3": {
+                                "header": "ITEMS",
+                                "subHeader": "AT ₹99",
+                                "logoCtx": {
+                                  "text": "BENEFITS"
+                                }
+                              },
+                              "externalRatings": {
+                                "aggregatedRating": {
+                                  "rating": "--"
+                                }
+                              },
+                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
+                            },
+                            "analytics": {},
+                            "cta": {}
+                          },
+                          {
+                            "info": {
+                              "id": "389687",
+                              "name": "Crispy Cluck",
+                              "city": "1",
+                              "slugs": {
+                                "restaurant": "6360929194-indiranagar-indiranagar"
+                              },
+                              "cloudinaryImageId": "RX_THUMBNAIL/IMAGES/VENDOR/2025/6/20/042fcf6e-2356-421a-be99-8308a9f24c2d_389687 (1).jpg",
+                              "locality": "Hal 2nd Stage",
+                              "areaName": "Indiranagar",
+                              "costForTwo": "₹150 for two",
+                              "cuisines": [
+                                "American",
+                                "Burgers",
+                                "Fast Food"
+                              ],
+                              "avgRating": 3.6,
+                              "feeDetails": {
+                                "restaurantId": "389687",
+                                "title": "Delivery Charge",
+                                "amount": "0"
+                              },
+                              "totalRatingsString": "299",
+                              "sla": {
+                                "deliveryTime": 44,
+                                "minDeliveryTime": 40,
+                                "maxDeliveryTime": 45,
+                                "serviceability": "SERVICEABLE",
+                                "slaString": "40-45 MINS",
+                                "lastMileTravelString": "7.4 km",
+                                "iconType": "ICON_TYPE_EMPTY"
+                              },
+                              "availability": {
+                                "nextCloseTime": "2026-05-18 00:00:00",
+                                "opened": true
+                              },
+                              "badges": {},
+                              "aggregatedDiscountInfoV3": {
+                                "header": "30% OFF",
+                                "subHeader": "UPTO ₹75",
+                                "logoCtx": {
+                                  "text": "BENEFITS"
+                                }
+                              },
+                              "externalRatings": {
+                                "aggregatedRating": {
+                                  "rating": "--"
+                                }
+                              },
+                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
+                            },
+                            "analytics": {},
+                            "cta": {}
+                          },
+                          {
+                            "info": {
+                              "id": "818791",
+                              "name": "Pizza Bake House",
+                              "city": "1",
+                              "slugs": {
+                                "restaurant": "pizza-bake-house-vijayanagar-vijayanagar"
+                              },
+                              "cloudinaryImageId": "4a7299b3bff1f8d9ec4399e11483f9fd",
+                              "locality": "Rpc Layout",
+                              "areaName": "Attiguppe",
+                              "costForTwo": "₹500 for two",
+                              "cuisines": [
+                                "Pizzas",
+                                "Burgers",
+                                "Fast Food"
+                              ],
+                              "avgRating": 3.5,
+                              "feeDetails": {
+                                "restaurantId": "818791",
+                                "title": "Delivery Charge",
+                                "amount": "0"
+                              },
+                              "totalRatingsString": "30",
+                              "sla": {
+                                "deliveryTime": 43,
+                                "minDeliveryTime": 40,
+                                "maxDeliveryTime": 45,
+                                "serviceability": "SERVICEABLE",
+                                "slaString": "40-45 MINS",
+                                "lastMileTravelString": "7.5 km",
+                                "iconType": "ICON_TYPE_EMPTY"
+                              },
+                              "availability": {
+                                "nextCloseTime": "2026-05-17 23:00:00",
+                                "opened": true
+                              },
+                              "badges": {},
+                              "aggregatedDiscountInfoV3": {
+                                "header": "ITEMS",
+                                "subHeader": "AT ₹149",
+                                "logoCtx": {
+                                  "text": "BENEFITS"
+                                }
+                              },
+                              "externalRatings": {
+                                "aggregatedRating": {
+                                  "rating": "--"
+                                }
+                              },
+                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
+                            },
+                            "analytics": {},
+                            "cta": {}
+                          },
+                          {
+                            "info": {
+                              "id": "424153",
+                              "name": "Kuttyz Pizza",
+                              "city": "1",
+                              "slugs": {
+                                "restaurant": "kuttyz-pizza-banaswadi-banaswadi"
+                              },
+                              "cloudinaryImageId": "vexlujnihyvephlw5ecx",
+                              "locality": "Subbannaiah Palya",
+                              "areaName": "Lingrajapuram",
+                              "costForTwo": "₹400 for two",
+                              "cuisines": [
+                                "Pizzas"
+                              ],
+                              "avgRating": 3.5,
+                              "feeDetails": {
+                                "restaurantId": "424153",
+                                "title": "Delivery Charge",
+                                "amount": "0"
+                              },
+                              "totalRatingsString": "37",
+                              "sla": {
+                                "deliveryTime": 47,
+                                "minDeliveryTime": 45,
+                                "maxDeliveryTime": 50,
+                                "serviceability": "SERVICEABLE",
+                                "slaString": "45-50 MINS",
+                                "lastMileTravelString": "8.5 km",
+                                "iconType": "ICON_TYPE_EMPTY"
+                              },
+                              "availability": {
+                                "nextCloseTime": "2026-05-24 00:00:00",
+                                "opened": true
+                              },
+                              "badges": {},
+                              "aggregatedDiscountInfoV3": {
+                                "header": "ITEMS",
+                                "subHeader": "AT ₹89",
+                                "logoCtx": {
+                                  "text": "BENEFITS"
+                                }
+                              },
+                              "externalRatings": {
+                                "aggregatedRating": {
+                                  "rating": "--"
+                                }
+                              },
+                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
+                            },
+                            "analytics": {},
+                            "cta": {}
+                          },
+                          {
+                            "info": {
+                              "id": "558068",
+                              "name": "Pizza 99",
+                              "city": "1",
+                              "slugs": {
+                                "restaurant": "pizza@99-basaveshwaranagar-basaveshwaranagar"
+                              },
+                              "cloudinaryImageId": "wkrucpjnjo56buc4h2in",
+                              "locality": "3rd stage",
+                              "areaName": "Rajajinagar",
+                              "costForTwo": "₹300 for two",
+                              "cuisines": [
+                                "Pizzas"
+                              ],
+                              "avgRating": 2.8,
+                              "feeDetails": {
+                                "restaurantId": "558068",
+                                "title": "Delivery Charge",
+                                "amount": "0"
+                              },
+                              "totalRatingsString": "3",
+                              "sla": {
+                                "deliveryTime": 43,
+                                "minDeliveryTime": 40,
+                                "maxDeliveryTime": 45,
+                                "serviceability": "SERVICEABLE",
+                                "slaString": "40-45 MINS",
+                                "lastMileTravelString": "7.3 km",
+                                "iconType": "ICON_TYPE_EMPTY"
+                              },
+                              "availability": {
+                                "nextCloseTime": "2026-05-17 23:00:00",
+                                "opened": true
+                              },
+                              "aggregatedDiscountInfo": {},
+                              "badges": {},
+                              "aggregatedDiscountInfoV2": {},
+                              "externalRatings": {
+                                "aggregatedRating": {
+                                  "rating": "--"
+                                }
+                              },
+                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
+                            },
+                            "analytics": {},
+                            "cta": {}
+                          },
+                          {
+                            "info": {
+                              "id": "822257",
+                              "name": "The Cubano Express",
+                              "city": "1",
+                              "slugs": {
+                                "restaurant": "the-cubano-express-hsr-hsr"
+                              },
+                              "cloudinaryImageId": "10099994d51aaaa5bd92b253af10fcf4",
+                              "locality": "Sector 6",
+                              "areaName": "HSR",
+                              "costForTwo": "₹249 for two",
+                              "cuisines": [
+                                "Spanish",
+                                "Burgers",
+                                "Fast Food",
+                                "Snacks",
+                                "Beverages"
+                              ],
+                              "avgRating": 4.8,
+                              "feeDetails": {
+                                "restaurantId": "822257",
+                                "title": "Delivery Charge",
+                                "amount": "0"
+                              },
+                              "totalRatingsString": "10",
+                              "sla": {
+                                "deliveryTime": 49,
+                                "minDeliveryTime": 45,
+                                "maxDeliveryTime": 50,
+                                "serviceability": "SERVICEABLE",
+                                "slaString": "45-50 MINS",
+                                "lastMileTravelString": "8.6 km",
+                                "iconType": "ICON_TYPE_EMPTY"
+                              },
+                              "availability": {
+                                "nextCloseTime": "2026-05-24 00:00:00",
+                                "opened": true
+                              },
+                              "aggregatedDiscountInfo": {},
+                              "badges": {},
+                              "aggregatedDiscountInfoV2": {},
+                              "externalRatings": {
+                                "aggregatedRating": {
+                                  "rating": "--"
+                                }
+                              },
+                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
+                            },
+                            "analytics": {},
+                            "cta": {}
+                          },
+                          {
+                            "info": {
+                              "id": "702130",
+                              "name": "Bombay Burgers",
+                              "city": "1",
+                              "slugs": {
+                                "restaurant": "bombay-burger's-indiranagar-indiranagar"
+                              },
+                              "cloudinaryImageId": "e230317f0b669033935ee35ceb4592ef",
+                              "locality": "Indiranagar",
+                              "areaName": "Shanthinagara",
+                              "costForTwo": "₹800 for two",
+                              "cuisines": [
+                                "Burgers",
+                                "Snacks",
+                                "Chinese",
+                                "Beverages"
+                              ],
+                              "avgRating": 3.4,
+                              "feeDetails": {
+                                "restaurantId": "702130",
+                                "title": "Delivery Charge",
+                                "amount": "0"
+                              },
+                              "totalRatingsString": "31",
+                              "sla": {
+                                "deliveryTime": 45,
+                                "minDeliveryTime": 45,
+                                "maxDeliveryTime": 50,
+                                "serviceability": "SERVICEABLE",
+                                "slaString": "45-50 MINS",
+                                "lastMileTravelString": "7.4 km",
+                                "iconType": "ICON_TYPE_EMPTY"
+                              },
+                              "availability": {
+                                "nextCloseTime": "2026-05-17 23:59:00",
+                                "opened": true
+                              },
+                              "aggregatedDiscountInfo": {},
+                              "badges": {
+                                "imageBadges": [
+                                  {
+                                    "imageId": "v1695133679/badges/Pure_Veg111.png",
+                                    "description": "pureveg"
+                                  }
+                                ]
+                              },
+                              "aggregatedDiscountInfoV2": {},
+                              "externalRatings": {
+                                "aggregatedRating": {
+                                  "rating": "--"
+                                }
+                              },
+                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
+                            },
+                            "analytics": {},
+                            "cta": {}
+                          },
+                          {
+                            "info": {
+                              "id": "348993",
+                              "name": "Cheezy Pizza",
+                              "city": "1",
+                              "slugs": {
+                                "restaurant": "cheezy-pizza-banaswadi-banaswadi"
+                              },
+                              "cloudinaryImageId": "iidrnnzamn2tpkxrlxbg",
+                              "locality": "subbanapalya",
+                              "areaName": "Kammanahalli",
+                              "costForTwo": "₹350 for two",
+                              "cuisines": [
+                                "Italian"
+                              ],
+                              "avgRating": 4,
+                              "feeDetails": {
+                                "restaurantId": "348993",
+                                "title": "Delivery Charge",
+                                "amount": "0"
+                              },
+                              "totalRatingsString": "127",
+                              "sla": {
+                                "deliveryTime": 48,
+                                "minDeliveryTime": 45,
+                                "maxDeliveryTime": 50,
+                                "serviceability": "SERVICEABLE",
+                                "slaString": "45-50 MINS",
+                                "lastMileTravelString": "8.5 km",
+                                "iconType": "ICON_TYPE_EMPTY"
+                              },
+                              "availability": {
+                                "nextCloseTime": "2026-05-24 00:00:00",
+                                "opened": true
+                              },
+                              "badges": {},
+                              "aggregatedDiscountInfoV3": {
+                                "header": "ITEMS",
+                                "subHeader": "AT ₹129",
+                                "logoCtx": {
+                                  "text": "BENEFITS"
+                                }
+                              },
+                              "externalRatings": {
+                                "aggregatedRating": {
+                                  "rating": "--"
+                                }
+                              },
+                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
+                            },
+                            "analytics": {},
+                            "cta": {}
+                          },
+                          {
+                            "info": {
+                              "id": "964444",
+                              "name": "Little Food",
+                              "city": "1",
+                              "slugs": {
+                                "restaurant": "little-food-btm-btm"
+                              },
+                              "cloudinaryImageId": "RX_THUMBNAIL/IMAGES/VENDOR/2024/9/27/f9fdb4db-b2c7-48a9-bd93-93fd6a27c8d2_964444.jpg",
+                              "locality": "Taverekere main road",
+                              "areaName": "BTM",
+                              "costForTwo": "₹200 for two",
+                              "cuisines": [
+                                "sandwich",
+                                "Momos",
+                                "Indian",
+                                "Fast Food"
+                              ],
+                              "feeDetails": {
+                                "restaurantId": "964444",
+                                "title": "Delivery Charge",
+                                "amount": "0"
+                              },
+                              "sla": {
+                                "deliveryTime": 40,
+                                "minDeliveryTime": 35,
+                                "maxDeliveryTime": 40,
+                                "serviceability": "SERVICEABLE",
+                                "slaString": "35-40 MINS",
+                                "lastMileTravelString": "7.1 km",
+                                "iconType": "ICON_TYPE_EMPTY"
+                              },
+                              "availability": {
+                                "nextCloseTime": "2026-05-17 23:59:00",
+                                "opened": true
+                              },
+                              "aggregatedDiscountInfo": {},
+                              "badges": {},
+                              "aggregatedDiscountInfoV2": {},
+                              "externalRatings": {
+                                "aggregatedRating": {
+                                  "rating": "--"
+                                }
+                              },
+                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
+                            },
+                            "analytics": {},
+                            "cta": {}
+                          },
+                          {
+                            "info": {
+                              "id": "389140",
+                              "name": "Brownie Bites",
+                              "city": "1",
+                              "slugs": {
+                                "restaurant": "brownie-bites-basaveshwaranagar-basaveshwaranagar"
+                              },
+                              "cloudinaryImageId": "RX_THUMBNAIL/IMAGES/VENDOR/2025/2/26/8cb3ff35-c0fb-45a3-bbd3-0555885550c3_389140.jpg",
+                              "locality": "Rajajinagar",
+                              "areaName": "Rajajinagar",
+                              "costForTwo": "₹400 for two",
+                              "cuisines": [
+                                "Chinese",
+                                "Continental",
+                                "Beverages"
+                              ],
+                              "avgRating": 3.8,
+                              "feeDetails": {
+                                "restaurantId": "389140",
+                                "title": "Delivery Charge",
+                                "amount": "0"
+                              },
+                              "totalRatingsString": "144",
+                              "sla": {
+                                "deliveryTime": 50,
+                                "minDeliveryTime": 45,
+                                "maxDeliveryTime": 55,
+                                "serviceability": "SERVICEABLE",
+                                "slaString": "45-55 MINS",
+                                "lastMileTravelString": "5.7 km",
+                                "iconType": "ICON_TYPE_EMPTY"
+                              },
+                              "availability": {
+                                "nextCloseTime": "2026-05-24 00:00:00",
+                                "opened": true
+                              },
+                              "aggregatedDiscountInfo": {},
+                              "badges": {},
+                              "aggregatedDiscountInfoV2": {},
+                              "externalRatings": {
+                                "aggregatedRating": {
+                                  "rating": "1.6",
+                                  "ratingCount": "5"
+                                },
+                                "source": "GOOGLE",
+                                "sourceIconImageId": "v1704440323/google_ratings/rating_google_tag"
+                              },
+                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
+                            },
+                            "analytics": {},
+                            "cta": {}
+                          },
+                          {
+                            "info": {
+                              "id": "769431",
+                              "name": "Ghar ki Maggi",
+                              "city": "1",
+                              "slugs": {
+                                "restaurant": "ghar-ki-maggi-indiranagar-indiranagar"
+                              },
+                              "cloudinaryImageId": "dc38d3a97912823df9cc22b8ace83eda",
+                              "locality": "Indiranagar",
+                              "areaName": "Indiranagar",
+                              "costForTwo": "₹250 for two",
+                              "cuisines": [
+                                "Chinese"
+                              ],
+                              "avgRating": 3.5,
+                              "feeDetails": {
+                                "restaurantId": "769431",
+                                "title": "Delivery Charge",
+                                "amount": "0"
+                              },
+                              "totalRatingsString": "13",
+                              "sla": {
+                                "deliveryTime": 40,
+                                "minDeliveryTime": 35,
+                                "maxDeliveryTime": 40,
+                                "serviceability": "SERVICEABLE",
+                                "slaString": "35-40 MINS",
+                                "lastMileTravelString": "7.4 km",
+                                "iconType": "ICON_TYPE_EMPTY"
+                              },
+                              "availability": {
+                                "nextCloseTime": "2026-05-17 11:59:00",
+                                "opened": true
+                              },
+                              "aggregatedDiscountInfo": {},
+                              "badges": {},
+                              "aggregatedDiscountInfoV2": {},
+                              "externalRatings": {
+                                "aggregatedRating": {
+                                  "rating": "--"
+                                }
+                              },
+                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
+                            },
+                            "analytics": {},
+                            "cta": {}
+                          },
+                          {
+                            "info": {
+                              "id": "151430",
+                              "name": "Midnight Pizza And Food",
+                              "city": "1",
+                              "slugs": {
+                                "restaurant": "midnight-pizza-and-food-na-indiranagar"
+                              },
+                              "cloudinaryImageId": "RX_THUMBNAIL/IMAGES/VENDOR/2025/1/16/dab4800b-aad2-4e91-89c3-b0003ae17f58_151430 (1).jpg",
+                              "locality": "1st Stage",
+                              "areaName": "Indiranagar",
+                              "costForTwo": "₹200 for two",
+                              "cuisines": [
+                                "Biryani",
+                                "Mughlai",
+                                "Fast Food"
+                              ],
+                              "avgRating": 4.1,
+                              "feeDetails": {
+                                "restaurantId": "151430",
+                                "title": "Delivery Charge",
+                                "amount": "0"
+                              },
+                              "totalRatingsString": "578",
+                              "sla": {
+                                "deliveryTime": 41,
+                                "minDeliveryTime": 40,
+                                "maxDeliveryTime": 45,
+                                "serviceability": "SERVICEABLE",
+                                "slaString": "40-45 MINS",
+                                "lastMileTravelString": "6.3 km",
+                                "iconType": "ICON_TYPE_EMPTY"
+                              },
+                              "availability": {
+                                "nextCloseTime": "2026-05-23 00:00:00",
+                                "opened": true
+                              },
+                              "badges": {},
+                              "aggregatedDiscountInfoV3": {
+                                "header": "30% OFF",
+                                "subHeader": "UPTO ₹75",
+                                "logoCtx": {
+                                  "text": "BENEFITS"
+                                }
+                              },
+                              "externalRatings": {
+                                "aggregatedRating": {
+                                  "rating": "--"
+                                }
+                              },
+                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
+                            },
+                            "analytics": {},
+                            "cta": {}
+                          },
+                          {
+                            "info": {
+                              "id": "1346876",
+                              "name": "Chill Out cafe",
+                              "city": "1",
+                              "slugs": {
+                                "restaurant": "chill-out-cafe-vijayanagar-vijayanagar"
+                              },
+                              "cloudinaryImageId": "rest_image/c79545f0-f56d-11e9-b791-06585e0038e8Wednesday_23_October_2019__13_49id215723.jpg",
+                              "locality": "Vijayanagar",
+                              "areaName": "Vijayanagar",
+                              "costForTwo": "₹346 for two",
+                              "cuisines": [
+                                "Snacks",
+                                "Home Food",
+                                "Healthy Food",
+                                "Fast Food",
+                                "Cafe",
+                                "Pizzas",
+                                "Indian"
+                              ],
+                              "avgRating": 3.1,
+                              "feeDetails": {
+                                "restaurantId": "1346876",
+                                "title": "Delivery Charge",
+                                "amount": "0"
+                              },
+                              "totalRatingsString": "24",
+                              "sla": {
+                                "deliveryTime": 46,
+                                "minDeliveryTime": 45,
+                                "maxDeliveryTime": 50,
+                                "serviceability": "SERVICEABLE",
+                                "slaString": "45-50 MINS",
+                                "lastMileTravelString": "7.0 km",
+                                "iconType": "ICON_TYPE_EMPTY"
+                              },
+                              "availability": {
+                                "nextCloseTime": "2026-05-17 07:00:00",
+                                "opened": true
+                              },
+                              "badges": {},
+                              "aggregatedDiscountInfoV3": {
+                                "header": "ITEMS",
+                                "subHeader": "AT ₹99",
+                                "logoCtx": {
+                                  "text": "BENEFITS"
+                                }
+                              },
+                              "externalRatings": {
+                                "aggregatedRating": {
+                                  "rating": "--"
+                                }
+                              },
+                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
+                            },
+                            "analytics": {},
+                            "cta": {}
+                          }
+                        ],
+                        "cta": {},
+                        "id": "56861",
+                        "theme": "SEARCH_SIMILAR_RESTAURANTS"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      ],
+      "firstOffsetRequest": true
+    },
+    "tid": "d85c753c-1430-4e8f-8351-db4f3ccf3b73",
+    "sid": "re615148c4a-f2c9-4cbb-9cb4-c5f1aa97c",
+    "deviceId": "7fbaff87-a860-cf34-edee-f82743b760f9",
+    "csrfToken": "RAkK437QEaEl-26alG38tTu_JxvM99X6dd9fOlJY"
+  }
+}

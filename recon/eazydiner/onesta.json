@@ -1,0 +1,16 @@
+{
+  "meta": {
+    "restaurant": {
+      "slug": "onesta",
+      "name": "Onesta",
+      "area": "Koramangala",
+      "districtSlugs": [
+        "onesta-koramangala-5th-block-bangalore"
+      ]
+    },
+    "found": false,
+    "error": "not in EazyDiner sitemap — slug not mapped",
+    "offerSummary": []
+  },
+  "raw": null
+}

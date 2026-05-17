@@ -1,0 +1,14 @@
+{
+  "meta": {
+    "restaurant": {
+      "slug": "toit",
+      "name": "Toit Brewpub",
+      "area": "Indiranagar"
+    },
+    "found": true,
+    "offerSummary": []
+  },
+  "raw": {
+    "results": []
+  }
+}

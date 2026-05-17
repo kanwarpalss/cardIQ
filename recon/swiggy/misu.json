@@ -1,0 +1,218 @@
+{
+  "meta": {
+    "restaurant": {
+      "slug": "misu",
+      "name": "Misu",
+      "area": "Indiranagar",
+      "districtSlugs": [
+        "misu-1-race-course-road-bangalore",
+        "misu-ashok-nagar-bangalore",
+        "misu-hebbal-bangalore",
+        "misu-indiranagar-bangalore",
+        "misu-kumaraswamy-layout-bangalore"
+      ]
+    },
+    "found": true,
+    "offerSummary": [
+      "aggregatedDiscountInfo",
+      "aggregatedDiscountInfoV2",
+      "showEoOffer",
+      "firstOffsetRequest"
+    ]
+  },
+  "raw": {
+    "statusCode": 0,
+    "data": {
+      "statusMessage": "done successfully",
+      "cards": [
+        {
+          "card": {
+            "card": {
+              "@type": "type.googleapis.com/swiggy.gandalf.widgets.v2.Navigation",
+              "tab": [
+                {
+                  "id": "RESTAURANT",
+                  "title": "Restaurants",
+                  "selected": true,
+                  "analytics": {
+                    "screenName": "explore",
+                    "context": "{\"tid\":\"undefined\",\"query\":\"Misu\"}",
+                    "objectValue": "RESTAURANT",
+                    "clickObjectName": "click-tab"
+                  },
+                  "selectedBgColor": "#1B1E24",
+                  "unselectedBgColor": "#FFFFFF",
+                  "selectedTextColor": "#BFFFFFFF",
+                  "unselectedTextColor": "#9902060C",
+                  "selectedBorderColor": "#1B1E24",
+                  "unselectedBorderColor": "#E2E2E7"
+                },
+                {
+                  "id": "DISH",
+                  "title": "Dishes",
+                  "analytics": {
+                    "screenName": "explore",
+                    "context": "{\"tid\":\"undefined\",\"query\":\"Misu\"}",
+                    "objectValue": "DISH",
+                    "clickObjectName": "click-tab"
+                  },
+                  "selectedBgColor": "#1B1E24",
+                  "unselectedBgColor": "#FFFFFF",
+                  "selectedTextColor": "#BFFFFFFF",
+                  "unselectedTextColor": "#9902060C",
+                  "selectedBorderColor": "#1B1E24",
+                  "unselectedBorderColor": "#E2E2E7"
+                }
+              ],
+              "meta": {
+                "orderable": "false",
+                "correctedQuery": "",
+                "suggestionType": "",
+                "queryIntent": "RESTAURANT"
+              }
+            }
+          }
+        },
+        {
+          "groupedCard": {
+            "cardGroupMap": {
+              "RESTAURANT": {
+                "cards": [
+                  {
+                    "card": {
+                      "card": {
+                        "@type": "type.googleapis.com/swiggy.presentation.food.v2.Restaurant",
+                        "info": {
+                          "id": "29063",
+                          "name": "Misu",
+                          "city": "1",
+                          "slugs": {
+                            "restaurant": "misu-st-marks-road-central-bangalore",
+                            "city": "bangalore"
+                          },
+                          "cloudinaryImageId": "lx0tpfgsbqygafwh30wh",
+                          "address": "First floor F9 & F9A, No.50, Sobha Mall, St.Marks Road, Banglaore-560001",
+                          "locality": "St. Marks Road",
+                          "areaName": "St. Marks Road",
+                          "costForTwo": "130000",
+                          "costForTwoMessage": "₹1300 FOR TWO",
+                          "cuisines": [
+                            "Asian",
+                            "Chinese",
+                            "Vietnamese",
+                            "Malaysian",
+                            "Sushi",
+                            "Singaporean",
+                            "Desserts"
+                          ],
+                          "avgRating": 4.5,
+                          "feeDetails": {},
+                          "parentId": "7415",
+                          "avgRatingString": "4.5",
+                          "totalRatingsString": "6.3K+",
+                          "sla": {
+                            "deliveryTime": 34,
+                            "minDeliveryTime": 30,
+                            "maxDeliveryTime": 35,
+                            "lastMileTravel": 1.3,
+                            "serviceability": "SERVICEABLE",
+                            "rainMode": "RAIN_MODE_NONE",
+                            "slaString": "30-35 MINS",
+                            "lastMileTravelString": "1.3 km",
+                            "iconType": "ICON_TYPE_EMPTY"
+                          },
+                          "availability": {
+                            "nextOpenTimeMessage": "Opens next at 12 noon, today",
+                            "restaurantClosedMeta": {
+                              "title": "CLOSED",
+                              "subtitle": "FOR NOW"
+                            }
+                          },
+                          "aggregatedDiscountInfo": {
+                            "visible": true
+                          },
+                          "badges": {
+                            "imageBadges": [
+                              {
+                                "imageId": "newg.png",
+                                "description": "Gourmet"
+                              }
+                            ]
+                          },
+                          "unorderableMessage": "Opens next at 12 noon, today",
+                          "aggregatedDiscountInfoV2": {
+                            "visible": true
+                          },
+                          "ratingSlab": "RATING_SLAB_5",
+                          "availabilityServiceabilityMessage": "Currently closed for delivery. Opens next at 12 noon, today",
+                          "orderabilityCommunication": {
+                            "title": {
+                              "text": "CURRENTLY"
+                            },
+                            "subTitle": {
+                              "text": "CLOSED"
+                            },
+                            "message": {
+                              "text": "Opens today at 12:00 PM",
+                              "textColour": "primary"
+                            },
+                            "customIcon": {
+                              "bgGradientColorStart": "#EB8322",
+                              "bgGradientColorEnd": "#EE5803"
+                            },
+                            "commsStyling": {}
+                          },
+                          "cartOrderabilityNudgeBanner": {
+                            "parameters": {},
+                            "presentation": {}
+                          },
+                          "externalRatings": {
+                            "aggregatedRating": {
+                              "rating": "4.4",
+                              "ratingCount": "3.3K+"
+                            },
+                            "source": "GOOGLE",
+                            "sourceIconImageId": "v1704440323/google_ratings/rating_google_tag"
+                          },
+                          "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY",
+                          "featuredSectionInfo": {},
+                          "showEoOffer": true,
+                          "priceComparisonComms": {}
+                        },
+                        "analytics": {
+                          "screenName": "explore",
+                          "context": "{\"tid\":\"undefined\",\"grid\":\"577f13b6-254c-4e92-95e9-a13a17d5a806\",\"queryUniqueId\":\"undefined\",\"query\":\"Misu\"}",
+                          "objectValue": "29063",
+                          "impressionObjectName": "impression-restaurant",
+                          "clickObjectName": "click-restaurant"
+                        },
+                        "ctaWithParams": {
+                          "link": "swiggy://menu",
+                          "type": "DEEPLINK",
+                          "params": {
+                            "isSld": "false",
+                            "sourceRequestId": "00000000000000000000000000000000",
+                            "qrEnabled": "false",
+                            "restaurant_id": "29063",
+                            "query": "Misu",
+                            "sourceSessionId": "re607a1becb-8a2d-4ada-9882-0a16b7fdc",
+                            "source": "SEARCH"
+                          }
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      ],
+      "firstOffsetRequest": true
+    },
+    "tid": "f9a2d14a-6d95-40ac-8856-13036ba508f6",
+    "sid": "re607a1becb-8a2d-4ada-9882-0a16b7fdc",
+    "deviceId": "2e5dac0d-18a2-2105-bec1-d3558675be21",
+    "csrfToken": "r0fyeYroMJs7-lsc--_ntTr6EHI43JgnrLXkzypo"
+  }
+}

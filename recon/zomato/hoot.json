@@ -1,0 +1,13 @@
+{
+  "meta": {
+    "restaurant": {
+      "slug": "hoot",
+      "name": "Hoot",
+      "area": "Koramangala"
+    },
+    "found": false,
+    "error": "Search HTTP 404",
+    "offerSummary": []
+  },
+  "raw": null
+}

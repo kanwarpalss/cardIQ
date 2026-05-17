@@ -1,0 +1,18 @@
+{
+  "meta": {
+    "restaurant": {
+      "slug": "communiti",
+      "name": "Communiti",
+      "area": "Indiranagar",
+      "districtSlugs": [
+        "communiti-brigade-road-bangalore"
+      ]
+    },
+    "found": true,
+    "offerSummary": []
+  },
+  "raw": {
+    "rscLength": 38637,
+    "pageUrl": "https://www.district.in/dining/bangalore/communiti-brigade-road-bangalore"
+  }
+}

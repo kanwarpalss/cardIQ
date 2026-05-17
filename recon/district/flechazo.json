@@ -1,0 +1,18 @@
+{
+  "meta": {
+    "restaurant": {
+      "slug": "flechazo",
+      "name": "Flechazo",
+      "area": "Indiranagar",
+      "districtSlugs": [
+        "flechazo-whitefield-bangalore"
+      ]
+    },
+    "found": true,
+    "offerSummary": []
+  },
+  "raw": {
+    "rscLength": 33928,
+    "pageUrl": "https://www.district.in/dining/bangalore/flechazo-whitefield-bangalore"
+  }
+}

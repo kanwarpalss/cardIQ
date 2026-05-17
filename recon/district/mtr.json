@@ -1,0 +1,28 @@
+{
+  "meta": {
+    "restaurant": {
+      "slug": "mtr",
+      "name": "MTR",
+      "area": "Lalbagh",
+      "districtSlugs": [
+        "mavalli-tiffin-room-mtr-basavanagudi-bangalore",
+        "mavalli-tiffin-room-mtr-jakkur-bangalore",
+        "mtr-since-1924-1-kalyan-nagar-bangalore",
+        "mtr-since-1924-hsr-bangalore",
+        "mtr-since-1924-indiranagar-bangalore",
+        "mtr-since-1924-jp-nagar-bangalore",
+        "mtr-since-1924-kalyan-nagar-bangalore",
+        "mtr-since-1924-kanakapura-road-bangalore",
+        "mtr-since-1924-majestic-bangalore",
+        "mtr-since-1924-st-marks-road-bangalore"
+      ],
+      "eazyDinerSlug": "mtr-1924-st-marks-road-334798"
+    },
+    "found": true,
+    "offerSummary": []
+  },
+  "raw": {
+    "rscLength": 39554,
+    "pageUrl": "https://www.district.in/dining/bangalore/mavalli-tiffin-room-mtr-basavanagudi-bangalore"
+  }
+}

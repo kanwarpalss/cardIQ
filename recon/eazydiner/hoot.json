@@ -1,0 +1,16 @@
+{
+  "meta": {
+    "restaurant": {
+      "slug": "hoot",
+      "name": "Hoot",
+      "area": "Koramangala",
+      "districtSlugs": [
+        "hoot-craftwork-2-0-1-sarjapur-road-bangalore"
+      ]
+    },
+    "found": false,
+    "error": "not in EazyDiner sitemap — slug not mapped",
+    "offerSummary": []
+  },
+  "raw": null
+}

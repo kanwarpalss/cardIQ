@@ -1,0 +1,19 @@
+{
+  "meta": {
+    "restaurant": {
+      "slug": "permit-room",
+      "name": "The Permit Room",
+      "area": "Indiranagar",
+      "districtSlugs": [
+        "the-permit-room-indiranagar-bangalore"
+      ],
+      "eazyDinerSlug": "the-permit-room-richmond-town-central-bengaluru-613800"
+    },
+    "found": true,
+    "offerSummary": []
+  },
+  "raw": {
+    "rscLength": 40623,
+    "pageUrl": "https://www.district.in/dining/bangalore/the-permit-room-indiranagar-bangalore"
+  }
+}

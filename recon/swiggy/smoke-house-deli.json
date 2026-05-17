@@ -1,0 +1,219 @@
+{
+  "meta": {
+    "restaurant": {
+      "slug": "smoke-house-deli",
+      "name": "Smoke House Deli",
+      "area": "Indiranagar",
+      "districtSlugs": [
+        "smoke-house-deli-indiranagar-bangalore"
+      ],
+      "eazyDinerSlug": "smoke-house-deli-lavelle-road-335752"
+    },
+    "found": true,
+    "offerSummary": [
+      "aggregatedDiscountInfo",
+      "aggregatedDiscountInfoV2",
+      "showEoOffer",
+      "firstOffsetRequest"
+    ]
+  },
+  "raw": {
+    "statusCode": 0,
+    "data": {
+      "statusMessage": "done successfully",
+      "cards": [
+        {
+          "card": {
+            "card": {
+              "@type": "type.googleapis.com/swiggy.gandalf.widgets.v2.Navigation",
+              "tab": [
+                {
+                  "id": "RESTAURANT",
+                  "title": "Restaurants",
+                  "selected": true,
+                  "analytics": {
+                    "screenName": "explore",
+                    "context": "{\"tid\":\"undefined\",\"query\":\"Smoke House Deli\"}",
+                    "objectValue": "RESTAURANT",
+                    "clickObjectName": "click-tab"
+                  },
+                  "selectedBgColor": "#1B1E24",
+                  "unselectedBgColor": "#FFFFFF",
+                  "selectedTextColor": "#BFFFFFFF",
+                  "unselectedTextColor": "#9902060C",
+                  "selectedBorderColor": "#1B1E24",
+                  "unselectedBorderColor": "#E2E2E7"
+                },
+                {
+                  "id": "DISH",
+                  "title": "Dishes",
+                  "analytics": {
+                    "screenName": "explore",
+                    "context": "{\"tid\":\"undefined\",\"query\":\"Smoke House Deli\"}",
+                    "objectValue": "DISH",
+                    "clickObjectName": "click-tab"
+                  },
+                  "selectedBgColor": "#1B1E24",
+                  "unselectedBgColor": "#FFFFFF",
+                  "selectedTextColor": "#BFFFFFFF",
+                  "unselectedTextColor": "#9902060C",
+                  "selectedBorderColor": "#1B1E24",
+                  "unselectedBorderColor": "#E2E2E7"
+                }
+              ],
+              "meta": {
+                "queryIntent": "RESTAURANT",
+                "orderable": "false",
+                "correctedQuery": "",
+                "suggestionType": ""
+              }
+            }
+          }
+        },
+        {
+          "groupedCard": {
+            "cardGroupMap": {
+              "RESTAURANT": {
+                "cards": [
+                  {
+                    "card": {
+                      "card": {
+                        "@type": "type.googleapis.com/swiggy.presentation.food.v2.Restaurant",
+                        "info": {
+                          "id": "10238",
+                          "name": "Smoke House Deli",
+                          "city": "1",
+                          "slugs": {
+                            "restaurant": "smoke-house-deli-lavelle-road-central-bangalore",
+                            "city": "bangalore"
+                          },
+                          "cloudinaryImageId": "zzkjr3jcrl1pqop1pybu",
+                          "address": "52 & 53, Ground Floor, Lavelle Road, Bangalore",
+                          "locality": "Lavelle Road",
+                          "areaName": "Central Bangalore",
+                          "costForTwo": "80000",
+                          "costForTwoMessage": "₹800 FOR TWO",
+                          "cuisines": [
+                            "Italian",
+                            "Continental",
+                            "Fast Food",
+                            "Salads",
+                            "Healthy Food",
+                            "Pizzas",
+                            "Desserts"
+                          ],
+                          "avgRating": 4.6,
+                          "feeDetails": {},
+                          "parentId": "874",
+                          "avgRatingString": "4.6",
+                          "totalRatingsString": "19K+",
+                          "sla": {
+                            "deliveryTime": 167,
+                            "minDeliveryTime": 167,
+                            "maxDeliveryTime": 177,
+                            "lastMileTravel": 0.4,
+                            "serviceability": "SERVICEABLE",
+                            "rainMode": "RAIN_MODE_NONE",
+                            "slaString": "167-177 MINS",
+                            "lastMileTravelString": "0.4 km",
+                            "iconType": "ICON_TYPE_EMPTY"
+                          },
+                          "availability": {
+                            "nextOpenTimeMessage": "Opens next at 9 am, today",
+                            "restaurantClosedMeta": {
+                              "title": "CLOSED",
+                              "subtitle": "FOR NOW"
+                            }
+                          },
+                          "aggregatedDiscountInfo": {
+                            "visible": true
+                          },
+                          "badges": {
+                            "imageBadges": [
+                              {
+                                "imageId": "Health%20Hub/RX%20BADGE/BADGE2.png",
+                                "description": "EatRight"
+                              },
+                              {
+                                "imageId": "newg.png",
+                                "description": "Gourmet"
+                              }
+                            ]
+                          },
+                          "unorderableMessage": "Opens next at 9 am, today",
+                          "aggregatedDiscountInfoV2": {
+                            "visible": true
+                          },
+                          "ratingSlab": "RATING_SLAB_5",
+                          "availabilityServiceabilityMessage": "Currently closed for delivery. Opens next at 9 am, today",
+                          "orderabilityCommunication": {
+                            "title": {
+                              "text": "CURRENTLY"
+                            },
+                            "subTitle": {
+                              "text": "CLOSED"
+                            },
+                            "message": {
+                              "text": "Opens today at 9:00 AM",
+                              "textColour": "primary"
+                            },
+                            "customIcon": {
+                              "bgGradientColorStart": "#EB8322",
+                              "bgGradientColorEnd": "#EE5803"
+                            },
+                            "commsStyling": {}
+                          },
+                          "cartOrderabilityNudgeBanner": {
+                            "parameters": {},
+                            "presentation": {}
+                          },
+                          "externalRatings": {
+                            "aggregatedRating": {
+                              "rating": "4.3",
+                              "ratingCount": "5.1K+"
+                            },
+                            "source": "GOOGLE",
+                            "sourceIconImageId": "v1704440323/google_ratings/rating_google_tag"
+                          },
+                          "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY",
+                          "featuredSectionInfo": {},
+                          "showEoOffer": true,
+                          "priceComparisonComms": {}
+                        },
+                        "analytics": {
+                          "screenName": "explore",
+                          "context": "{\"tid\":\"undefined\",\"grid\":\"6d83b827-2b5e-4acf-85e3-95800252edbd\",\"queryUniqueId\":\"undefined\",\"query\":\"Smoke House Deli\"}",
+                          "objectValue": "10238",
+                          "impressionObjectName": "impression-restaurant",
+                          "clickObjectName": "click-restaurant"
+                        },
+                        "ctaWithParams": {
+                          "link": "swiggy://menu",
+                          "type": "DEEPLINK",
+                          "params": {
+                            "source": "SEARCH",
+                            "isSld": "false",
+                            "sourceRequestId": "00000000000000000000000000000000",
+                            "qrEnabled": "false",
+                            "restaurant_id": "10238",
+                            "query": "Smoke House Deli",
+                            "sourceSessionId": "re68862c638-341e-41ce-96cf-4bd241a1f"
+                          }
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      ],
+      "firstOffsetRequest": true
+    },
+    "tid": "5e970941-44b7-4b9b-b4b5-65cf370d00d4",
+    "sid": "re68862c638-341e-41ce-96cf-4bd241a1f",
+    "deviceId": "7638f963-e919-ec04-82c5-64905050f4e2",
+    "csrfToken": "KrW5L6a1mNjm-q529zmrpcdnQ459eV_GoUa89VdA"
+  }
+}

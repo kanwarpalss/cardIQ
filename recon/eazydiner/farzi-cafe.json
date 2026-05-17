@@ -1,0 +1,566 @@
+{
+  "meta": {
+    "restaurant": {
+      "slug": "farzi-cafe",
+      "name": "Farzi Cafe",
+      "area": "UB City",
+      "districtSlugs": [
+        "farzi-cafe-lavelle-road"
+      ],
+      "eazyDinerSlug": "farzi-cafe-vittal-mallya-road-337292"
+    },
+    "found": true,
+    "offerSummary": []
+  },
+  "raw": {
+    "data": {
+      "id": 337292,
+      "url": "https://www.eazydiner.com/bengaluru/farzi-cafe-vittal-mallya-road-337292",
+      "code": "bengaluru/farzi-cafe-vittal-mallya-road-337292",
+      "default_image": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/home/restaurant-default-image.png",
+      "favourite_count": "755",
+      "primeTag": "",
+      "name": "Farzi Cafe",
+      "images": [
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/337292/restaurant020180904061337.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/337292/restaurant120180904061337.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/337292/restaurant220180904061337.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/337292/restaurant320180904061337.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/337292/restaurant420180904061337.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/337292/restaurant520180904061337.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/337292/restaurant620180904061337.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/reviewimages/337292/7d578d5c72f53bb5de7de49457f8aa445623c06b.20200919151749.jpg?width=818&height=450&mode=fit"
+      ],
+      "cost_for_two": "₹ 1500 for two approx.",
+      "currency": "₹",
+      "location": {
+        "address": "202, UB City, Vittal Mallya Road, Bengaluru, Lavelle Road, Bengaluru",
+        "locality": "Vittal Mallya Road, Central Bengaluru",
+        "code": "vittal-malya-road",
+        "latitude": 12.97214262,
+        "longitude": 77.5958936,
+        "region_code": "Central Bengaluru",
+        "area_name": "Vittal Mallya Road",
+        "city_code": "bengaluru",
+        "city_id": 3,
+        "country_id": 1,
+        "group_id": 1659,
+        "name": "Vittal Mallya Road, Central Bengaluru",
+        "city_name": "Bengaluru"
+      },
+      "phone": "7861004444",
+      "cuisines": "Modern Indian",
+      "timings": {
+        "today": [
+          "12:00 PM - 01:00 AM"
+        ],
+        "week": {
+          "Monday": [
+            "12:00 PM - 01:00 AM"
+          ],
+          "Tuesday": [
+            "12:00 PM - 01:00 AM"
+          ],
+          "Wednesday": [
+            "12:00 PM - 01:00 AM"
+          ],
+          "Thursday": [
+            "12:00 PM - 01:00 AM"
+          ],
+          "Friday": [
+            "12:00 PM - 01:00 AM"
+          ],
+          "Saturday": [
+            "12:00 PM - 01:00 AM"
+          ],
+          "Sunday": [
+            "12:00 PM - 01:00 AM"
+          ]
+        }
+      },
+      "user_reviews": {
+        "avg_rating": 3.8,
+        "count": 35
+      },
+      "critic_review": "",
+      "webview_menu_url": null,
+      "accepts_eazypay": false,
+      "is_favorite": false,
+      "menu_last_updated": "Last updated few months ago",
+      "is_qsr": false,
+      "faq": [
+        {
+          "@type": "Question",
+          "name": "What cuisines are served at Farzi Cafe?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The main cuisine served at Farzi Cafe is Modern Indian."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the cost for two at Farzi Cafe?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The cost of two at Farzi Cafe is ₹ 1500."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Farzi Cafe is pure vegetarian restaurant?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "   Farzi Cafe serves both veg and non veg food."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What are the operational timings of Farzi Cafe?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Farzi Cafe restaurant operational timings are MONDAY: 12:00 PM to 01:00 AM, TUESDAY: 12:00 PM to 01:00 AM, WEDNESDAY: 12:00 PM to 01:00 AM, THURSDAY: 12:00 PM to 01:00 AM, FRIDAY: 12:00 PM to 01:00 AM, SATURDAY: 12:00 PM to 01:00 AM, SUNDAY: 12:00 PM to 01:00 AM"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does Farzi Cafe serve buffet?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": " No, Farzi Cafe does not serve buffet."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does Farzi Cafe restaurant have a bar or serve alcohol?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, Farzi Cafe serves alcohol."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is there a parking facility at Farzi Cafe?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, the parking facility is available at Farzi Cafe."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does Farzi Cafe accept bill payment via PayEazy?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No, Farzi Cafe is not a PayEazy-enabled restaurant."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How can I save EXTRA with PayEazy at Farzi Cafe?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Book a table at Farzi Cafe. Get your bill with the pre-applied EazyDiner deal. Pay your bill via PayEazy & save EXTRA"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does Farzi Cafe restaurant play live music?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, Farzi Cafe plays live music."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What are current deals at Farzi Cafe?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "There is no deal at Farzi Cafe on EazyDiner. Browse through EazyDiner to avail dining discounts upto 50% OFF."
+          }
+        }
+      ],
+      "category": "Casual Dining",
+      "restaurant_type": "free standing",
+      "chain": "No",
+      "wallet_config": {
+        "type": "percentage",
+        "percentage": 25,
+        "min_transaction_amount": 0,
+        "text": "25% of the total amount can be paid from wallet balance in a single transaction ."
+      },
+      "reservation_status": false,
+      "deal_data": {
+        "default_deal_type": "deal_types[]=postpaid",
+        "title": "More Deals",
+        "period": 30,
+        "freeze_time": 0,
+        "other_deals": null
+      },
+      "foodie_awards": [
+        {
+          "name": "Eazydiner Foodie Awards 2023",
+          "image": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/home/FAcertificate2023.png",
+          "category": "Best Modern Indian Restaurant",
+          "type": "People's Choice"
+        },
+        {
+          "name": "Eazydiner Foodie Awards 2017",
+          "image": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/home/FAcertificate2017.png",
+          "category": "TREND MAKER OF THE YEAR",
+          "type": "Vir's Choice"
+        }
+      ],
+      "buffet_deals": [],
+      "error": {
+        "heading": "Discover amazing restaurants nearby",
+        "message": "Choose from higher ranked restaurants which were booked by many users this week.",
+        "date": "",
+        "time": "",
+        "icon": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant_detail/shop_1.png",
+        "action": "No Action",
+        "notBookableAction": "https://www.eazydiner.com/restaurants?location=vittal-malya-road",
+        "notBookableText": "Explore Nearby Restaurants"
+      },
+      "hasPrimeDeal": false,
+      "primeIcon": "",
+      "restaurant_subtype": "Table",
+      "hygiene_rating": "",
+      "has_dynamic_buffet": false,
+      "bottomsheet_notification": "",
+      "force_direct_booking": true,
+      "new_rdv_layout": false,
+      "rdv_offer_data": {
+        "default_deal_type": "deal_types=postpaid",
+        "freeze_time": 0,
+        "period": 30
+      },
+      "link_only_payeazy": "",
+      "sample_discount_calculator": "",
+      "qbf": {
+        "qbf_gif": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/banner/qbf/qbf_final_single_nov_23.gif",
+        "success_confirmed_gif": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/banner/qbf/success_confirm_qbf_2.gif"
+      },
+      "webEngageData": {
+        "features": [
+          {
+            "name": "Home Delivery",
+            "code": "home-delivery",
+            "icon": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/features/53/home-delivery3x.png"
+          },
+          {
+            "name": "Take-away",
+            "code": "take-away",
+            "icon": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/features/60/take-away3x.png"
+          },
+          {
+            "name": "Outdoor Seating",
+            "code": "outdoor-seating",
+            "icon": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/features/61/outdoor-seating3x.png"
+          },
+          {
+            "name": "Live Music",
+            "code": "live-music",
+            "icon": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/features/62/live-music3x.png"
+          },
+          {
+            "name": "Wheelchair Accessible",
+            "code": "wheelchair-accessible",
+            "icon": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/features/68/wheelchair-accessible3x.png"
+          },
+          {
+            "name": "Live Sports Screening",
+            "code": "live-sports-screening",
+            "icon": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/features/69/live-sports-screening3x.png"
+          },
+          {
+            "name": "Kids Allowed",
+            "code": "kids-allowed",
+            "icon": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/features/72/kids-allowed3x.png"
+          },
+          {
+            "name": "Dessert",
+            "code": "dessert",
+            "icon": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/features/86/dessert3x.png"
+          },
+          {
+            "name": "Bar",
+            "code": "bar",
+            "icon": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/features/110/bars-3x.png"
+          },
+          {
+            "name": "Parking",
+            "code": "parking",
+            "icon": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/features/117/parking20221226161508.png"
+          }
+        ],
+        "cost_for_two": 1500,
+        "offer_title": " + 25%"
+      },
+      "chain_id": null
+    },
+    "meta": {
+      "tab_data": [
+        {
+          "title": "offers",
+          "is_active": true
+        },
+        {
+          "title": "menu",
+          "is_active": false
+        },
+        {
+          "title": "photos",
+          "is_active": false
+        },
+        {
+          "title": "about",
+          "is_active": false
+        }
+      ],
+      "meta_title": "Explore Farzi Cafe in Vittal Mallya Road, Central Bengaluru",
+      "meta_description": "Get all the details for Farzi Cafe, Vittal Mallya Road, Central Bengaluru. Check out reviews, photos, menu highlights, contact info, and much more on EazyDiner.",
+      "breadcrumbs": [
+        {
+          "title": "Home",
+          "url": "/"
+        },
+        {
+          "title": "Bengaluru",
+          "url": "/bengaluru"
+        },
+        {
+          "title": " Top Restaurants in Bengaluru",
+          "url": "/bengaluru/restaurants"
+        },
+        {
+          "title": "Central Bengaluru",
+          "url": "/bengaluru/restaurants/central-bengaluru"
+        },
+        {
+          "title": "Vittal Mallya Road",
+          "url": "/bengaluru/restaurants/vittal-malya-road"
+        },
+        {
+          "title": "Farzi Cafe",
+          "url": "/bengaluru/farzi-cafe-vittal-mallya-road-337292"
+        }
+      ],
+      "jsonSchema": {
+        "title": "Explore Farzi Cafe in Vittal Mallya Road, Central Bengaluru",
+        "description": "Get all the details for Farzi Cafe, Vittal Mallya Road, Central Bengaluru. Check out reviews, photos, menu highlights, contact info, and much more on EazyDiner.",
+        "custom_deeplink": {
+          "ios": "eazydiner://action?url=https://www.eazydiner.com/bengaluru/farzi-cafe-vittal-mallya-road-337292",
+          "android": "eazydiner://action?url=https://www.eazydiner.com/bengaluru/farzi-cafe-vittal-mallya-road-337292?"
+        },
+        "og_data": {
+          "title": "Farzi Cafe, Vittal Mallya Road, Central Bengaluru",
+          "description": "EazyDiner",
+          "image_url": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/337292/restaurant020180904061337.jpg?width=750&height=436&mode=fit",
+          "brand": "EazyDiner",
+          "availability": "discontinued",
+          "condition": "new",
+          "amount": 1500,
+          "currency": "Inr",
+          "retailer_item_id": 337292
+        },
+        "json_schema": {
+          "@context": "http://schema.org",
+          "@graph": [
+            {
+              "@type": "Restaurant",
+              "@id": "https://www.eazydiner.com/bengaluru/farzi-cafe-vittal-mallya-road-337292",
+              "name": "Farzi Cafe",
+              "url": "https://www.eazydiner.com/bengaluru/farzi-cafe-vittal-mallya-road-337292",
+              "hasMenu": "https://www.eazydiner.com/bengaluru/farzi-cafe-vittal-mallya-road-337292/menu",
+              "image": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/337292/restaurant020180904061337.jpg?width=750&height=436&mode=fit",
+              "servesCuisine": "Modern Indian",
+              "priceRange": "₹ 1500 for two approx. ",
+              "telephone": "7861004444",
+              "geo": {
+                "@type": "GeoCoordinates",
+                "latitude": "12.97214262",
+                "longitude": "77.59589360"
+              },
+              "acceptsReservations": false,
+              "openingHoursSpecification": [
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Monday"
+                  ],
+                  "opens": "12:00:00",
+                  "closes": "01:00:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Tuesday"
+                  ],
+                  "opens": "12:00:00",
+                  "closes": "01:00:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Wednesday"
+                  ],
+                  "opens": "12:00:00",
+                  "closes": "01:00:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Thursday"
+                  ],
+                  "opens": "12:00:00",
+                  "closes": "01:00:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Friday"
+                  ],
+                  "opens": "12:00:00",
+                  "closes": "01:00:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Saturday"
+                  ],
+                  "opens": "12:00:00",
+                  "closes": "01:00:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Sunday"
+                  ],
+                  "opens": "12:00:00",
+                  "closes": "01:00:00"
+                }
+              ],
+              "currenciesAccepted": "INR",
+              "paymentAccepted": "Cash, Cards and Digital Payments Accepted",
+              "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "202, UB City, Vittal Mallya Road, Bengaluru, Lavelle Road, Bengaluru",
+                "addressLocality": "Vittal Mallya Road, Central Bengaluru",
+                "addressRegion": "Bengaluru",
+                "postalCode": "560001",
+                "addressCountry": "IN"
+              },
+              "aggregateRating": {
+                "@type": "AggregateRating",
+                "ratingValue": 3.8,
+                "ratingCount": 35,
+                "bestRating": "5",
+                "worstRating": "0"
+              }
+            },
+            {
+              "@type": "FAQPage",
+              "mainEntity": [
+                {
+                  "@type": "Question",
+                  "name": "What cuisines are served at Farzi Cafe?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "The main cuisine served at Farzi Cafe is Modern Indian."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "What is the cost for two at Farzi Cafe?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "The cost of two at Farzi Cafe is ₹ 1500."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Farzi Cafe is pure vegetarian restaurant?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "   Farzi Cafe serves both veg and non veg food."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "What are the operational timings of Farzi Cafe?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Farzi Cafe restaurant operational timings are MONDAY: 12:00 PM to 01:00 AM, TUESDAY: 12:00 PM to 01:00 AM, WEDNESDAY: 12:00 PM to 01:00 AM, THURSDAY: 12:00 PM to 01:00 AM, FRIDAY: 12:00 PM to 01:00 AM, SATURDAY: 12:00 PM to 01:00 AM, SUNDAY: 12:00 PM to 01:00 AM"
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Does Farzi Cafe serve buffet?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": " No, Farzi Cafe does not serve buffet."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Does Farzi Cafe restaurant have a bar or serve alcohol?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Yes, Farzi Cafe serves alcohol."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Is there a parking facility at Farzi Cafe?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Yes, the parking facility is available at Farzi Cafe."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Does Farzi Cafe accept bill payment via PayEazy?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "No, Farzi Cafe is not a PayEazy-enabled restaurant."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "How can I save EXTRA with PayEazy at Farzi Cafe?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Book a table at Farzi Cafe. Get your bill with the pre-applied EazyDiner deal. Pay your bill via PayEazy & save EXTRA"
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Does Farzi Cafe restaurant play live music?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Yes, Farzi Cafe plays live music."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "What are current deals at Farzi Cafe?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "There is no deal at Farzi Cafe on EazyDiner. Browse through EazyDiner to avail dining discounts upto 50% OFF."
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "remarketing_tag_params": {
+          "dynx_itemid": 337292,
+          "dynx_itemid2": "Farzi Cafe",
+          "dynx_pagetype": "restaurantdetail"
+        },
+        "amp_meta_tag": false,
+        "android_deeplink": "android-app://com.easydiner/eazydiner/action?url=https://www.eazydiner.com/bengaluru/farzi-cafe-vittal-mallya-road-337292",
+        "is_noindex": false
+      }
+    }
+  }
+}

@@ -1,0 +1,1038 @@
+{
+  "meta": {
+    "restaurant": {
+      "slug": "hoot",
+      "name": "Hoot",
+      "area": "Koramangala",
+      "districtSlugs": [
+        "hoot-craftwork-2-0-1-sarjapur-road-bangalore"
+      ]
+    },
+    "found": true,
+    "offerSummary": [
+      "HOT COFFEE SELECTIONS",
+      "Power up your day with our all-time favourite black coffee `162 (30ml | 5.81kcal)",
+      "Cafe Coffee Day",
+      "cafe-coffee-day-sarakki-5th-phase-jp-nagar",
+      "aggregatedDiscountInfoV3",
+      "₹125 OFF",
+      "discountTag",
+      "FLAT DEAL",
+      "₹75 OFF",
+      "aggregatedDiscountInfo",
+      "aggregatedDiscountInfoV2",
+      "firstOffsetRequest"
+    ]
+  },
+  "raw": {
+    "statusCode": 0,
+    "data": {
+      "statusMessage": "done successfully",
+      "cards": [
+        {
+          "card": {
+            "card": {
+              "@type": "type.googleapis.com/swiggy.gandalf.widgets.v2.Navigation",
+              "tab": [
+                {
+                  "id": "RESTAURANT",
+                  "title": "Restaurants",
+                  "analytics": {
+                    "screenName": "explore",
+                    "context": "{\"tid\":\"undefined\",\"query\":\"Hoot\"}",
+                    "objectValue": "RESTAURANT",
+                    "clickObjectName": "click-tab"
+                  },
+                  "selectedBgColor": "#1B1E24",
+                  "unselectedBgColor": "#FFFFFF",
+                  "selectedTextColor": "#BFFFFFFF",
+                  "unselectedTextColor": "#9902060C",
+                  "selectedBorderColor": "#1B1E24",
+                  "unselectedBorderColor": "#E2E2E7"
+                },
+                {
+                  "id": "DISH",
+                  "title": "Dishes",
+                  "selected": true,
+                  "analytics": {
+                    "screenName": "explore",
+                    "context": "{\"tid\":\"undefined\",\"query\":\"Hoot\"}",
+                    "objectValue": "DISH",
+                    "clickObjectName": "click-tab"
+                  },
+                  "selectedBgColor": "#1B1E24",
+                  "unselectedBgColor": "#FFFFFF",
+                  "selectedTextColor": "#BFFFFFFF",
+                  "unselectedTextColor": "#9902060C",
+                  "selectedBorderColor": "#1B1E24",
+                  "unselectedBorderColor": "#E2E2E7"
+                }
+              ],
+              "meta": {
+                "orderable": "false",
+                "correctedQuery": "hot",
+                "suggestionType": "HIGH_CONFIDENCE",
+                "queryIntent": "DISH"
+              }
+            }
+          }
+        },
+        {
+          "groupedCard": {
+            "cardGroupMap": {
+              "DISH": {
+                "cards": [
+                  {
+                    "card": {
+                      "card": {
+                        "@type": "type.googleapis.com/swiggy.gandalf.widgets.v2.SearchFilterSortWidget",
+                        "sortConfigs": [
+                          {
+                            "key": "NONE",
+                            "title": "Relevance",
+                            "selected": true,
+                            "analytics": {
+                              "screenName": "explore",
+                              "context": "{\"tid\":\"undefined\",\"grid\":\"47211b4f-3330-4c5c-826a-b5cd0274d52c\",\"queryUniqueId\":\"undefined\",\"query\":\"Hoot\",\"page\":\"SEARCH_LISTING_DISH\"}",
+                              "objectValue": "NONE",
+                              "impressionObjectName": "impression-sort-attribute",
+                              "clickObjectName": "click-sort-attribute"
+                            }
+                          },
+                          {
+                            "key": "RATINGS_DESC",
+                            "title": "Rating (High to Low)",
+                            "analytics": {
+                              "screenName": "explore",
+                              "context": "{\"tid\":\"undefined\",\"grid\":\"47211b4f-3330-4c5c-826a-b5cd0274d52c\",\"queryUniqueId\":\"undefined\",\"query\":\"Hoot\",\"page\":\"SEARCH_LISTING_DISH\"}",
+                              "objectValue": "RATINGS_DESC",
+                              "impressionObjectName": "impression-sort-attribute",
+                              "clickObjectName": "click-sort-attribute"
+                            }
+                          },
+                          {
+                            "key": "SLA_ASC",
+                            "title": "Delivery Time",
+                            "analytics": {
+                              "screenName": "explore",
+                              "context": "{\"tid\":\"undefined\",\"grid\":\"47211b4f-3330-4c5c-826a-b5cd0274d52c\",\"queryUniqueId\":\"undefined\",\"query\":\"Hoot\",\"page\":\"SEARCH_LISTING_DISH\"}",
+                              "objectValue": "SLA_ASC",
+                              "impressionObjectName": "impression-sort-attribute",
+                              "clickObjectName": "click-sort-attribute"
+                            }
+                          }
+                        ],
+                        "sortAnalytics": {
+                          "screenName": "explore",
+                          "context": "{\"tid\":\"undefined\",\"grid\":\"47211b4f-3330-4c5c-826a-b5cd0274d52c\",\"queryUniqueId\":\"undefined\",\"query\":\"Hoot\",\"page\":\"SEARCH_LISTING_DISH\"}",
+                          "impressionObjectName": "impression-sort-widget",
+                          "clickObjectName": "click-sort-widget"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "card": {
+                      "card": {
+                        "@type": "type.googleapis.com/swiggy.presentation.food.v2.Dish",
+                        "info": {
+                          "id": "63468726",
+                          "name": "Espresso Shot",
+                          "category": "HOT COFFEE SELECTIONS",
+                          "description": "Power up your day with our all-time favourite black coffee `162 (30ml | 5.81kcal)",
+                          "imageId": "FOOD_CATALOG/IMAGES/CMS/2025/10/6/26145183-ef9b-4678-867e-3b4c967a77e3_2298f3ae-f35d-4a31-b18e-04249536f49c.jpg",
+                          "inStock": 1,
+                          "isVeg": 1,
+                          "price": 17900,
+                          "variants": {},
+                          "variantsV2": {},
+                          "maxAddons": -1,
+                          "maxFreeAddons": -1,
+                          "ribbon": {},
+                          "itemBadge": {},
+                          "badgesV2": {},
+                          "ratings": {
+                            "aggregatedRating": {
+                              "rating": "3.2",
+                              "ratingCount": "7 ratings",
+                              "ratingCountV2": "7"
+                            },
+                            "ratingsPresentationConfig": {
+                              "bgGradient": {
+                                "colours": [
+                                  "#D9EFEC",
+                                  "#00FFFFFF"
+                                ],
+                                "gradientDirection": "GRADIENT_DIRECTION_LEFT_TO_RIGHT"
+                              },
+                              "ratingIconColor": "rating_medium",
+                              "ratingTextColor": "rating_medium",
+                              "ratingCountTextColor": "rating_medium",
+                              "ratingFontName": "FONT_NAME_V2_OVERLINE_NEUTRAL_BOLD",
+                              "ratingCountFontName": "FONT_NAME_V2_OVERLINE_NEUTRAL_BOLD"
+                            }
+                          },
+                          "parentId": "543",
+                          "priceComparisonComms": {},
+                          "instrumentationMetaMap": {
+                            "swiggy_final_price": "0",
+                            "swiggy_listing_price": "17900"
+                          }
+                        },
+                        "analytics": {
+                          "screenName": "explore",
+                          "context": "{\"tid\":\"undefined\",\"grid\":\"47211b4f-3330-4c5c-826a-b5cd0274d52c\",\"queryUniqueId\":\"undefined\",\"query\":\"Hoot\",\"adTrackingId\":\"cid=2e1f6a9d-59fd-442a-9f65-214a76e6c574~p=0~adgrpid=2e1f6a9d-59fd-442a-9f65-214a76e6c574#ag1~mp=SWIGGY_IN~bl=FOOD~aet=RESTAURANT~aeid=7059~plpr=SEARCH#RESTAURANT_WITH_ITEMS~st=hoot~eid=7b7f6ee2-a0f1-4dd8-8239-bc78b8bf9f55~srvts=1778980626616\"}",
+                          "objectValue": "7059~63468726",
+                          "impressionObjectName": "impression-high-priority-item-card",
+                          "clickObjectName": "click-high-priority-item"
+                        },
+                        "restaurant": {
+                          "info": {
+                            "id": "7059",
+                            "name": "Cafe Coffee Day",
+                            "city": "1",
+                            "slugs": {
+                              "restaurant": "cafe-coffee-day-sarakki-5th-phase-jp-nagar",
+                              "city": "bangalore"
+                            },
+                            "cloudinaryImageId": "RX_THUMBNAIL/IMAGES/VENDOR/2025/8/21/17cb0353-961d-4996-9170-af3f1fa5e002_7059.JPG",
+                            "address": "Site No. 300, Ground Floor, Vijay Alignment Center, Outer Ring Road, JP Nagar, Bangalore, Karnataka",
+                            "locality": "JP Nagar",
+                            "areaName": "Jayanagar",
+                            "costForTwo": "40000",
+                            "costForTwoMessage": "₹400 FOR TWO",
+                            "cuisines": [
+                              "Beverages",
+                              "Cafe",
+                              "Snacks",
+                              "Desserts",
+                              "Burgers",
+                              "Ice Cream",
+                              "Bakery",
+                              "Fast Food"
+                            ],
+                            "avgRating": 4.2,
+                            "feeDetails": {},
+                            "parentId": "1",
+                            "avgRatingString": "4.2",
+                            "totalRatingsString": "5.6K+",
+                            "promoted": true,
+                            "adTrackingId": "cid=2e1f6a9d-59fd-442a-9f65-214a76e6c574~p=0~adgrpid=2e1f6a9d-59fd-442a-9f65-214a76e6c574#ag1~mp=SWIGGY_IN~bl=FOOD~aet=RESTAURANT~aeid=7059~plpr=SEARCH#RESTAURANT_WITH_ITEMS~st=hoot~eid=7b7f6ee2-a0f1-4dd8-8239-bc78b8bf9f55~srvts=1778980626616",
+                            "sla": {
+                              "deliveryTime": 45,
+                              "minDeliveryTime": 40,
+                              "maxDeliveryTime": 45,
+                              "lastMileTravel": 9.2,
+                              "serviceability": "SERVICEABLE",
+                              "rainMode": "RAIN_MODE_NONE",
+                              "slaString": "40-45 MINS",
+                              "lastMileTravelString": "9.2 km",
+                              "iconType": "ICON_TYPE_EMPTY"
+                            },
+                            "availability": {
+                              "opened": true,
+                              "restaurantClosedMeta": {}
+                            },
+                            "badges": {},
+                            "aggregatedDiscountInfoV3": {
+                              "header": "₹125 OFF",
+                              "subHeader": "ABOVE ₹499",
+                              "discountTag": "FLAT DEAL"
+                            },
+                            "ratingSlab": "RATING_SLAB_5",
+                            "orderabilityCommunication": {
+                              "title": {},
+                              "subTitle": {},
+                              "message": {},
+                              "customIcon": {},
+                              "commsStyling": {}
+                            },
+                            "cartOrderabilityNudgeBanner": {
+                              "parameters": {},
+                              "presentation": {}
+                            },
+                            "externalRatings": {
+                              "aggregatedRating": {
+                                "rating": "4.1",
+                                "ratingCount": "2.2K+"
+                              },
+                              "source": "GOOGLE",
+                              "sourceIconImageId": "v1704440323/google_ratings/rating_google_tag"
+                            },
+                            "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY",
+                            "featuredSectionInfo": {},
+                            "campaignId": "2e1f6a9d-59fd-442a-9f65-214a76e6c574"
+                          },
+                          "analytics": {
+                            "screenName": "explore",
+                            "context": "{\"tid\":\"undefined\",\"grid\":\"47211b4f-3330-4c5c-826a-b5cd0274d52c\",\"queryUniqueId\":\"undefined\",\"query\":\"Hoot\",\"adTrackingId\":\"cid=2e1f6a9d-59fd-442a-9f65-214a76e6c574~p=0~adgrpid=2e1f6a9d-59fd-442a-9f65-214a76e6c574#ag1~mp=SWIGGY_IN~bl=FOOD~aet=RESTAURANT~aeid=7059~plpr=SEARCH#RESTAURANT_WITH_ITEMS~st=hoot~eid=7b7f6ee2-a0f1-4dd8-8239-bc78b8bf9f55~srvts=1778980626616\"}",
+                            "objectValue": "7059",
+                            "impressionObjectName": "impression-dish-search-full-menu-ad",
+                            "clickObjectName": "click-dish-search-full-menu-ad"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "card": {
+                      "card": {
+                        "@type": "type.googleapis.com/swiggy.presentation.food.v2.Dish",
+                        "info": {
+                          "id": "83041937",
+                          "name": "Tooty Fruit",
+                          "category": "Ice Cream Milk Shake",
+                          "description": "A delectable and refreshing milkshake bursting with fruity goodness and served chilled.",
+                          "inStock": 1,
+                          "isVeg": 1,
+                          "price": 8000,
+                          "variants": {},
+                          "variantsV2": {},
+                          "maxAddons": -1,
+                          "maxFreeAddons": -1,
+                          "ribbon": {},
+                          "itemBadge": {},
+                          "badgesV2": {},
+                          "ratings": {
+                            "aggregatedRating": {}
+                          },
+                          "parentId": "108489291",
+                          "priceComparisonComms": {},
+                          "instrumentationMetaMap": {
+                            "swiggy_listing_price": "8000",
+                            "swiggy_final_price": "0"
+                          }
+                        },
+                        "analytics": {
+                          "screenName": "explore",
+                          "context": "{\"tid\":\"undefined\",\"grid\":\"47211b4f-3330-4c5c-826a-b5cd0274d52c\",\"queryUniqueId\":\"undefined\",\"query\":\"Hoot\"}",
+                          "objectValue": "83041937",
+                          "clickObjectName": "click-item"
+                        },
+                        "restaurant": {
+                          "info": {
+                            "id": "474587",
+                            "name": "Udupi Aatithya",
+                            "city": "1",
+                            "slugs": {
+                              "restaurant": "udupi-aatithya-basavanagudi-basavanagudi",
+                              "city": "bangalore"
+                            },
+                            "cloudinaryImageId": "RX_THUMBNAIL/IMAGES/VENDOR/2025/4/14/7f7a5277-511c-4c86-9606-d83f8f6b5e25_474587 (1).jpg",
+                            "address": "103, 5th Main Rd, Chikkanna Garden, Basavanagudi, Bengaluru, Karnataka 560004, India",
+                            "locality": "Basavanagudi",
+                            "areaName": "Basavanagudi",
+                            "costForTwo": "50000",
+                            "costForTwoMessage": "₹500 FOR TWO",
+                            "cuisines": [
+                              "South Indian",
+                              "Beverages"
+                            ],
+                            "avgRating": 4.4,
+                            "feeDetails": {},
+                            "parentId": "218990",
+                            "avgRatingString": "4.4",
+                            "totalRatingsString": "1.4K+",
+                            "sla": {
+                              "deliveryTime": 39,
+                              "minDeliveryTime": 35,
+                              "maxDeliveryTime": 40,
+                              "lastMileTravel": 4,
+                              "serviceability": "SERVICEABLE",
+                              "rainMode": "RAIN_MODE_NONE",
+                              "slaString": "35-40 MINS",
+                              "lastMileTravelString": "4.0 km",
+                              "iconType": "ICON_TYPE_EMPTY"
+                            },
+                            "availability": {
+                              "nextCloseMessage": "Closes soon",
+                              "opened": true,
+                              "restaurantClosedMeta": {}
+                            },
+                            "badges": {
+                              "imageBadges": [
+                                {
+                                  "imageId": "v1695133679/badges/Pure_Veg111.png",
+                                  "description": "pureveg"
+                                }
+                              ]
+                            },
+                            "aggregatedDiscountInfoV3": {
+                              "header": "ITEMS",
+                              "subHeader": "AT ₹149",
+                              "logoCtx": {
+                                "text": "BENEFITS"
+                              }
+                            },
+                            "ratingSlab": "RATING_SLAB_5",
+                            "orderabilityCommunication": {
+                              "title": {},
+                              "subTitle": {},
+                              "message": {},
+                              "customIcon": {},
+                              "commsStyling": {}
+                            },
+                            "cartOrderabilityNudgeBanner": {
+                              "parameters": {},
+                              "presentation": {}
+                            },
+                            "externalRatings": {
+                              "aggregatedRating": {
+                                "rating": "4.2",
+                                "ratingCount": "4.3K+"
+                              },
+                              "source": "GOOGLE",
+                              "sourceIconImageId": "v1704440323/google_ratings/rating_google_tag"
+                            },
+                            "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY",
+                            "featuredSectionInfo": {}
+                          },
+                          "analytics": {
+                            "screenName": "explore",
+                            "context": "{\"tid\":\"undefined\",\"grid\":\"47211b4f-3330-4c5c-826a-b5cd0274d52c\",\"queryUniqueId\":\"undefined\",\"query\":\"Hoot\"}",
+                            "objectValue": "474587~83041937",
+                            "impressionObjectName": "impression-restaurant",
+                            "clickObjectName": "click-dish-search-full-menu"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "card": {
+                      "card": {
+                        "@type": "type.googleapis.com/swiggy.presentation.food.v2.Dish",
+                        "info": {
+                          "id": "110726783",
+                          "name": "Healthy Heart Immunity Bowl (backpain Relief)",
+                          "category": "Backpain",
+                          "description": "[Veg Preparation] 50 Calories | 0.5g Protein | 0.32g Total Fat | 12g Carbs (per 100g) - The Healthy Heart Immunity Bowl, featuring orange, pineapple, pomegranate, and kiwi, supports reduced back pain by providing anti-inflammatory nutrients and enhancing overall well-being.",
+                          "imageId": "dc43e93eaaa852cb30ff079a86fc8e2e",
+                          "inStock": 1,
+                          "isVeg": 1,
+                          "price": 34900,
+                          "variants": {},
+                          "variantsV2": {
+                            "variantGroups": [
+                              {
+                                "groupId": "51363850",
+                                "name": "Quantity",
+                                "variations": [
+                                  {
+                                    "name": "Trial (200gm)",
+                                    "price": 34900,
+                                    "default": 1,
+                                    "id": "160854044",
+                                    "inStock": 1,
+                                    "isVeg": 1,
+                                    "isEnabled": 1
+                                  },
+                                  {
+                                    "name": "Medium (300gm)",
+                                    "price": 53900,
+                                    "id": "160854042",
+                                    "inStock": 1,
+                                    "isVeg": 1,
+                                    "isEnabled": 1
+                                  },
+                                  {
+                                    "name": "Large (600gm)",
+                                    "price": 103900,
+                                    "id": "160854043",
+                                    "inStock": 1,
+                                    "isVeg": 1,
+                                    "isEnabled": 1
+                                  }
+                                ]
+                              }
+                            ],
+                            "pricingModels": [
+                              {
+                                "variations": [
+                                  {
+                                    "groupId": "51363850",
+                                    "variationId": "160854044"
+                                  }
+                                ],
+                                "price": 34900,
+                                "addonCombinations": [
+                                  {
+                                    "groupId": "188637948",
+                                    "addonId": "130113093"
+                                  },
+                                  {
+                                    "groupId": "188637948",
+                                    "addonId": "130113090"
+                                  },
+                                  {
+                                    "groupId": "188637948",
+                                    "addonId": "130113091"
+                                  },
+                                  {
+                                    "groupId": "188637948",
+                                    "addonId": "130113087"
+                                  },
+                                  {
+                                    "groupId": "188637948",
+                                    "addonId": "130113088"
+                                  },
+                                  {
+                                    "groupId": "188637948",
+                                    "addonId": "130113094"
+                                  }
+                                ]
+                              },
+                              {
+                                "variations": [
+                                  {
+                                    "groupId": "51363850",
+                                    "variationId": "160854042"
+                                  }
+                                ],
+                                "price": 53900,
+                                "addonCombinations": [
+                                  {
+                                    "groupId": "188637948",
+                                    "addonId": "130113093"
+                                  },
+                                  {
+                                    "groupId": "188637948",
+                                    "addonId": "130113090"
+                                  },
+                                  {
+                                    "groupId": "188637948",
+                                    "addonId": "130113091"
+                                  },
+                                  {
+                                    "groupId": "188637948",
+                                    "addonId": "130113087"
+                                  },
+                                  {
+                                    "groupId": "188637948",
+                                    "addonId": "130113088"
+                                  },
+                                  {
+                                    "groupId": "188637948",
+                                    "addonId": "130113094"
+                                  }
+                                ]
+                              },
+                              {
+                                "variations": [
+                                  {
+                                    "groupId": "51363850",
+                                    "variationId": "160854043"
+                                  }
+                                ],
+                                "price": 103900,
+                                "addonCombinations": [
+                                  {
+                                    "groupId": "188637948",
+                                    "addonId": "130113093"
+                                  },
+                                  {
+                                    "groupId": "188637948",
+                                    "addonId": "130113090"
+                                  },
+                                  {
+                                    "groupId": "188637948",
+                                    "addonId": "130113091"
+                                  },
+                                  {
+                                    "groupId": "188637948",
+                                    "addonId": "130113087"
+                                  },
+                                  {
+                                    "groupId": "188637948",
+                                    "addonId": "130113088"
+                                  },
+                                  {
+                                    "groupId": "188637948",
+                                    "addonId": "130113094"
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          "maxAddons": -1,
+                          "maxFreeAddons": -1,
+                          "addons": [
+                            {
+                              "groupId": "188637948",
+                              "groupName": "Add Superfood [dryfruits]",
+                              "choices": [
+                                {
+                                  "id": "130113087",
+                                  "name": "Cashew [whole]",
+                                  "price": 3900,
+                                  "inStock": 1,
+                                  "isVeg": 1,
+                                  "isEnabled": 1
+                                },
+                                {
+                                  "id": "130113090",
+                                  "name": "Sunflower Seeds",
+                                  "price": 900,
+                                  "inStock": 1,
+                                  "isVeg": 1,
+                                  "isEnabled": 1
+                                },
+                                {
+                                  "id": "130113088",
+                                  "name": "Walnut Kernels",
+                                  "price": 6900,
+                                  "inStock": 1,
+                                  "isVeg": 1,
+                                  "isEnabled": 1
+                                },
+                                {
+                                  "id": "130113093",
+                                  "name": "Black Raisins",
+                                  "price": 1900,
+                                  "inStock": 1,
+                                  "isVeg": 1,
+                                  "isEnabled": 1
+                                },
+                                {
+                                  "id": "130113094",
+                                  "name": "Pista Kernels",
+                                  "price": 8900,
+                                  "inStock": 1,
+                                  "isVeg": 1,
+                                  "isEnabled": 1
+                                },
+                                {
+                                  "id": "130113091",
+                                  "name": "Almond [soaked]",
+                                  "price": 3900,
+                                  "isVeg": 1,
+                                  "isEnabled": 1
+                                }
+                              ],
+                              "maxAddons": 3,
+                              "maxFreeAddons": -1
+                            }
+                          ],
+                          "defaultPrice": 34900,
+                          "ribbon": {},
+                          "itemBadge": {},
+                          "badgesV2": {},
+                          "ratings": {
+                            "aggregatedRating": {}
+                          },
+                          "parentId": "97012748",
+                          "priceComparisonComms": {},
+                          "instrumentationMetaMap": {
+                            "swiggy_listing_price": "34900",
+                            "swiggy_final_price": "0"
+                          }
+                        },
+                        "analytics": {
+                          "screenName": "explore",
+                          "context": "{\"tid\":\"undefined\",\"grid\":\"47211b4f-3330-4c5c-826a-b5cd0274d52c\",\"queryUniqueId\":\"undefined\",\"query\":\"Hoot\",\"adTrackingId\":\"cid=1303e5f0-c62e-41f9-bd4d-a872876d9611~p=1~adgrpid=1303e5f0-c62e-41f9-bd4d-a872876d9611#ag1~mp=SWIGGY_IN~bl=FOOD~aet=RESTAURANT~aeid=670865~plpr=SEARCH#RESTAURANT_WITH_ITEMS~st=hoot~eid=9d80c538-b9ee-4a71-a505-29bc7ad8f7b4~srvts=1778980626616\"}",
+                          "objectValue": "670865~110726783",
+                          "impressionObjectName": "impression-high-priority-item-card",
+                          "clickObjectName": "click-high-priority-item"
+                        },
+                        "restaurant": {
+                          "info": {
+                            "id": "670865",
+                            "name": "Juice Therapy - Juices, Salads & Fruit Bowls",
+                            "city": "1",
+                            "slugs": {
+                              "restaurant": "juice-therapy-btm-btm",
+                              "city": "bangalore"
+                            },
+                            "cloudinaryImageId": "RX_THUMBNAIL/IMAGES/VENDOR/2024/12/4/1373cea4-b483-421b-a488-f0f0a18db8de_670865.jpg",
+                            "address": "NO SUGAR PLEASE, '' SMLNMS HOMES'' NO 12/3, OLD NO 12, NEW NO 003,GROUND FLOOR, 5TH CROSS, CHIKKA ADUGODI, NEW EXTENSION, TAVAREKERE MAIN ROAD, BANGALORE BANGALORE, BTM Layout, B.B.M.P South, Karnataka-560029",
+                            "locality": "BTM Layout",
+                            "areaName": "BTM",
+                            "costForTwo": "19900",
+                            "costForTwoMessage": "₹199 FOR TWO",
+                            "cuisines": [
+                              "Healthy Food",
+                              "Juices",
+                              "Salads"
+                            ],
+                            "avgRating": 4.3,
+                            "feeDetails": {},
+                            "parentId": "587457",
+                            "avgRatingString": "4.3",
+                            "totalRatingsString": "146",
+                            "promoted": true,
+                            "adTrackingId": "cid=1303e5f0-c62e-41f9-bd4d-a872876d9611~p=1~adgrpid=1303e5f0-c62e-41f9-bd4d-a872876d9611#ag1~mp=SWIGGY_IN~bl=FOOD~aet=RESTAURANT~aeid=670865~plpr=SEARCH#RESTAURANT_WITH_ITEMS~st=hoot~eid=9d80c538-b9ee-4a71-a505-29bc7ad8f7b4~srvts=1778980626616",
+                            "sla": {
+                              "deliveryTime": 37,
+                              "minDeliveryTime": 35,
+                              "maxDeliveryTime": 40,
+                              "lastMileTravel": 7.3,
+                              "serviceability": "SERVICEABLE",
+                              "rainMode": "RAIN_MODE_NONE",
+                              "slaString": "35-40 MINS",
+                              "lastMileTravelString": "7.3 km",
+                              "iconType": "ICON_TYPE_EMPTY"
+                            },
+                            "availability": {
+                              "nextCloseMessage": "Closes soon",
+                              "opened": true,
+                              "restaurantClosedMeta": {}
+                            },
+                            "badges": {
+                              "imageBadges": [
+                                {
+                                  "imageId": "Health%20Hub/RX%20BADGE/BADGE2.png",
+                                  "description": "EatRight"
+                                }
+                              ]
+                            },
+                            "aggregatedDiscountInfoV3": {
+                              "header": "₹75 OFF",
+                              "subHeader": "ABOVE ₹399",
+                              "discountTag": "FLAT DEAL",
+                              "logoCtx": {
+                                "text": "BENEFITS"
+                              }
+                            },
+                            "ratingSlab": "RATING_SLAB_5",
+                            "orderabilityCommunication": {
+                              "title": {},
+                              "subTitle": {},
+                              "message": {},
+                              "customIcon": {},
+                              "commsStyling": {}
+                            },
+                            "cartOrderabilityNudgeBanner": {
+                              "parameters": {},
+                              "presentation": {}
+                            },
+                            "externalRatings": {
+                              "aggregatedRating": {
+                                "rating": "--"
+                              }
+                            },
+                            "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY",
+                            "featuredSectionInfo": {},
+                            "campaignId": "1303e5f0-c62e-41f9-bd4d-a872876d9611"
+                          },
+                          "analytics": {
+                            "screenName": "explore",
+                            "context": "{\"tid\":\"undefined\",\"grid\":\"47211b4f-3330-4c5c-826a-b5cd0274d52c\",\"queryUniqueId\":\"undefined\",\"query\":\"Hoot\",\"adTrackingId\":\"cid=1303e5f0-c62e-41f9-bd4d-a872876d9611~p=1~adgrpid=1303e5f0-c62e-41f9-bd4d-a872876d9611#ag1~mp=SWIGGY_IN~bl=FOOD~aet=RESTAURANT~aeid=670865~plpr=SEARCH#RESTAURANT_WITH_ITEMS~st=hoot~eid=9d80c538-b9ee-4a71-a505-29bc7ad8f7b4~srvts=1778980626616\"}",
+                            "objectValue": "670865",
+                            "impressionObjectName": "impression-dish-search-full-menu-ad",
+                            "clickObjectName": "click-dish-search-full-menu-ad"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "card": {
+                      "card": {
+                        "@type": "type.googleapis.com/swiggy.presentation.food.v2.Dish",
+                        "info": {
+                          "id": "39491188",
+                          "name": "Red Root",
+                          "category": "Fresh Juice",
+                          "description": "Combination of watermelon and beetroot.",
+                          "imageId": "403b7c57960afcc75a20f8b05a7ae6a2",
+                          "inStock": 1,
+                          "isVeg": 1,
+                          "price": 11900,
+                          "variants": {},
+                          "variantsV2": {},
+                          "maxAddons": -1,
+                          "maxFreeAddons": -1,
+                          "addons": [
+                            {
+                              "groupId": "132185352",
+                              "groupName": "Quickbite",
+                              "choices": [
+                                {
+                                  "id": "111470946",
+                                  "name": "Chicken Finger (5pcs)",
+                                  "price": 7900,
+                                  "inStock": 1,
+                                  "isEnabled": 1
+                                },
+                                {
+                                  "id": "111470941",
+                                  "name": "Salted Fries (s)",
+                                  "price": 4900,
+                                  "inStock": 1,
+                                  "isVeg": 1,
+                                  "isEnabled": 1
+                                },
+                                {
+                                  "id": "111470945",
+                                  "name": "Periperi Fries (s)",
+                                  "price": 5900,
+                                  "inStock": 1,
+                                  "isVeg": 1,
+                                  "isEnabled": 1
+                                },
+                                {
+                                  "id": "111470948",
+                                  "name": "Chicken Nugget (5pcs)",
+                                  "price": 7900,
+                                  "inStock": 1,
+                                  "isEnabled": 1
+                                }
+                              ],
+                              "maxAddons": 4,
+                              "maxFreeAddons": -1
+                            }
+                          ],
+                          "ribbon": {},
+                          "itemBadge": {},
+                          "badgesV2": {},
+                          "ratings": {
+                            "aggregatedRating": {
+                              "rating": "3.8",
+                              "ratingCount": "40 ratings",
+                              "ratingCountV2": "40"
+                            },
+                            "ratingsPresentationConfig": {
+                              "bgGradient": {
+                                "colours": [
+                                  "#D9EFEC",
+                                  "#00FFFFFF"
+                                ],
+                                "gradientDirection": "GRADIENT_DIRECTION_LEFT_TO_RIGHT"
+                              },
+                              "ratingIconColor": "rating_medium",
+                              "ratingTextColor": "rating_medium",
+                              "ratingCountTextColor": "rating_medium",
+                              "ratingFontName": "FONT_NAME_V2_OVERLINE_NEUTRAL_BOLD",
+                              "ratingCountFontName": "FONT_NAME_V2_OVERLINE_NEUTRAL_BOLD"
+                            }
+                          },
+                          "parentId": "16131821",
+                          "priceComparisonComms": {},
+                          "instrumentationMetaMap": {
+                            "swiggy_listing_price": "11900",
+                            "swiggy_final_price": "0"
+                          }
+                        },
+                        "analytics": {
+                          "screenName": "explore",
+                          "context": "{\"tid\":\"undefined\",\"grid\":\"47211b4f-3330-4c5c-826a-b5cd0274d52c\",\"queryUniqueId\":\"undefined\",\"query\":\"Hoot\"}",
+                          "objectValue": "39491188",
+                          "clickObjectName": "click-item"
+                        },
+                        "restaurant": {
+                          "info": {
+                            "id": "176212",
+                            "name": "Temperature",
+                            "city": "1",
+                            "slugs": {
+                              "restaurant": "temperature-btm",
+                              "city": "bangalore"
+                            },
+                            "cloudinaryImageId": "pumkvlptxkneyfdtisf5",
+                            "address": "NO 7, 16TH MAIN ROAD, OPPOSITE TO IAS  PARK, BTM 2ND STAGE, BANGALORE,  KARNATAKA, INDIA, B.B.M.P South,  Karnataka 560076",
+                            "locality": "BTM Layout",
+                            "areaName": "BTM Layout",
+                            "costForTwo": "20000",
+                            "costForTwoMessage": "₹200 FOR TWO",
+                            "cuisines": [
+                              "Desserts",
+                              "Chaat",
+                              "Juices",
+                              "Beverages",
+                              "Snacks"
+                            ],
+                            "avgRating": 4.3,
+                            "feeDetails": {},
+                            "parentId": "203067",
+                            "avgRatingString": "4.3",
+                            "totalRatingsString": "5.9K+",
+                            "sla": {
+                              "deliveryTime": 43,
+                              "minDeliveryTime": 40,
+                              "maxDeliveryTime": 45,
+                              "lastMileTravel": 9.3,
+                              "serviceability": "SERVICEABLE",
+                              "rainMode": "RAIN_MODE_NONE",
+                              "slaString": "40-45 MINS",
+                              "lastMileTravelString": "9.3 km",
+                              "iconType": "ICON_TYPE_EMPTY"
+                            },
+                            "availability": {
+                              "opened": true,
+                              "restaurantClosedMeta": {}
+                            },
+                            "badges": {},
+                            "aggregatedDiscountInfoV3": {
+                              "header": "ITEMS",
+                              "subHeader": "AT ₹39",
+                              "logoCtx": {
+                                "text": "BENEFITS"
+                              }
+                            },
+                            "ratingSlab": "RATING_SLAB_5",
+                            "orderabilityCommunication": {
+                              "title": {},
+                              "subTitle": {},
+                              "message": {},
+                              "customIcon": {},
+                              "commsStyling": {}
+                            },
+                            "cartOrderabilityNudgeBanner": {
+                              "parameters": {},
+                              "presentation": {}
+                            },
+                            "externalRatings": {
+                              "aggregatedRating": {
+                                "rating": "2.8",
+                                "ratingCount": "72"
+                              },
+                              "source": "GOOGLE",
+                              "sourceIconImageId": "v1704440323/google_ratings/rating_google_tag"
+                            },
+                            "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY",
+                            "featuredSectionInfo": {}
+                          },
+                          "analytics": {
+                            "screenName": "explore",
+                            "context": "{\"tid\":\"undefined\",\"grid\":\"47211b4f-3330-4c5c-826a-b5cd0274d52c\",\"queryUniqueId\":\"undefined\",\"query\":\"Hoot\"}",
+                            "objectValue": "176212~39491188",
+                            "impressionObjectName": "impression-restaurant",
+                            "clickObjectName": "click-dish-search-full-menu"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "card": {
+                      "card": {
+                        "@type": "type.googleapis.com/swiggy.presentation.food.v2.Dish",
+                        "info": {
+                          "id": "132862429",
+                          "name": "Detox Shorts",
+                          "category": "Healthy Shorts",
+                          "description": "Pineapple, Lemon & Mint",
+                          "inStock": 1,
+                          "isVeg": 1,
+                          "price": 14800,
+                          "variants": {},
+                          "variantsV2": {},
+                          "maxAddons": -1,
+                          "maxFreeAddons": -1,
+                          "ribbon": {},
+                          "itemBadge": {},
+                          "badgesV2": {},
+                          "ratings": {
+                            "aggregatedRating": {}
+                          },
+                          "parentId": "77547680",
+                          "priceComparisonComms": {},
+                          "instrumentationMetaMap": {
+                            "swiggy_listing_price": "14800",
+                            "swiggy_final_price": "0"
+                          }
+                        },
+                        "analytics": {
+                          "screenName": "explore",
+                          "context": "{\"tid\":\"undefined\",\"grid\":\"47211b4f-3330-4c5c-826a-b5cd0274d52c\",\"queryUniqueId\":\"undefined\",\"query\":\"Hoot\"}",
+                          "objectValue": "132862429",
+                          "clickObjectName": "click-item"
+                        },
+                        "restaurant": {
+                          "info": {
+                            "id": "816634",
+                            "name": "Kanchan's Cafe",
+                            "city": "1",
+                            "slugs": {
+                              "restaurant": "kanchan's-cafe-indiranagar-indiranagar",
+                              "city": "bangalore"
+                            },
+                            "cloudinaryImageId": "18dd4490596019c8428d1a8f7dd20106",
+                            "address": "NO 52, PID NO 74-6-52, HAL 2ND STAGE,  KODIHALLI, BANGALORE, B.B.M.P East,  Karnataka-560008",
+                            "locality": "Indiranagar",
+                            "areaName": "Indiranagar",
+                            "costForTwo": "30000",
+                            "costForTwoMessage": "₹300 FOR TWO",
+                            "cuisines": [
+                              "South Indian"
+                            ],
+                            "avgRating": 4.3,
+                            "feeDetails": {},
+                            "parentId": "486574",
+                            "avgRatingString": "4.3",
+                            "totalRatingsString": "177",
+                            "sla": {
+                              "deliveryTime": 40,
+                              "minDeliveryTime": 35,
+                              "maxDeliveryTime": 40,
+                              "lastMileTravel": 7.2,
+                              "serviceability": "SERVICEABLE",
+                              "rainMode": "RAIN_MODE_NONE",
+                              "slaString": "35-40 MINS",
+                              "lastMileTravelString": "7.2 km",
+                              "iconType": "ICON_TYPE_EMPTY"
+                            },
+                            "availability": {
+                              "nextCloseMessage": "Closes soon",
+                              "opened": true,
+                              "restaurantClosedMeta": {}
+                            },
+                            "aggregatedDiscountInfo": {
+                              "visible": true
+                            },
+                            "badges": {
+                              "imageBadges": [
+                                {
+                                  "imageId": "v1695133679/badges/Pure_Veg111.png",
+                                  "description": "pureveg"
+                                }
+                              ]
+                            },
+                            "aggregatedDiscountInfoV2": {
+                              "visible": true
+                            },
+                            "ratingSlab": "RATING_SLAB_5",
+                            "orderabilityCommunication": {
+                              "title": {},
+                              "subTitle": {},
+                              "message": {},
+                              "customIcon": {},
+                              "commsStyling": {}
+                            },
+                            "cartOrderabilityNudgeBanner": {
+                              "parameters": {},
+                              "presentation": {}
+                            },
+                            "externalRatings": {
+                              "aggregatedRating": {
+                                "rating": "--"
+                              }
+                            },
+                            "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY",
+                            "featuredSectionInfo": {}
+                          },
+                          "analytics": {
+                            "screenName": "explore",
+                            "context": "{\"tid\":\"undefined\",\"grid\":\"47211b4f-3330-4c5c-826a-b5cd0274d52c\",\"queryUniqueId\":\"undefined\",\"query\":\"Hoot\"}",
+                            "objectValue": "816634~132862429",
+                            "impressionObjectName": "impression-restaurant",
+                            "clickObjectName": "click-dish-search-full-menu"
+                          }
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      ],
+      "firstOffsetRequest": true
+    },
+    "tid": "096534e1-dfb6-49c5-bc51-a1eb3855a179",
+    "sid": "re6306887ef-0e6a-43b4-a5a5-c6269cbb2",
+    "deviceId": "53557922-8351-e298-600c-3a61140dc7b2",
+    "csrfToken": "9BIkWAbHGiw7-NJDbvC_cVOqW-LohZTGP1Qp8cK4"
+  }
+}

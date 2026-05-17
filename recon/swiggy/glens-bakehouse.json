@@ -1,0 +1,226 @@
+{
+  "meta": {
+    "restaurant": {
+      "slug": "glens-bakehouse",
+      "name": "Glen's Bakehouse",
+      "area": "Koramangala",
+      "districtSlugs": [
+        "glen-s-bakehouse-bannerghatta-road-bangalore",
+        "glen-s-bakehouse-hsr-bangalore",
+        "glen-s-bakehouse-kalyan-nagar-bangalore",
+        "glen-s-bakehouse-koramangala-6th-block-bangalore",
+        "glen-s-bakehouse-lavelle-road-bangalore",
+        "glen-s-bakehouse-sahakara-nagar-bangalore",
+        "glen-s-bakehouse-sanjay-nagar-bangalore",
+        "glen-s-bakehouse-whitefield-bangalore",
+        "glens-bakehouse-1-jayanagar-bangalore",
+        "glens-bakehouse-1-rajarajeshwari-nagar-bangalore",
+        "glens-bakehouse-basaveshwara-nagar-bangalore",
+        "glens-bakehouse-hennur-hennur-bangalore",
+        "glens-bakehouse-indiranagar-bangalore",
+        "glens-bakehouse-sarjapur-road-bangalore"
+      ],
+      "eazyDinerSlug": "glens-bakehouse-indiranagar-331919"
+    },
+    "found": true,
+    "offerSummary": [
+      "aggregatedDiscountInfo",
+      "aggregatedDiscountInfoV2",
+      "showEoOffer",
+      "firstOffsetRequest"
+    ]
+  },
+  "raw": {
+    "statusCode": 0,
+    "data": {
+      "statusMessage": "done successfully",
+      "cards": [
+        {
+          "card": {
+            "card": {
+              "@type": "type.googleapis.com/swiggy.gandalf.widgets.v2.Navigation",
+              "tab": [
+                {
+                  "id": "RESTAURANT",
+                  "title": "Restaurants",
+                  "selected": true,
+                  "analytics": {
+                    "screenName": "explore",
+                    "context": "{\"tid\":\"undefined\",\"query\":\"Glen's Bakehouse\"}",
+                    "objectValue": "RESTAURANT",
+                    "clickObjectName": "click-tab"
+                  },
+                  "selectedBgColor": "#1B1E24",
+                  "unselectedBgColor": "#FFFFFF",
+                  "selectedTextColor": "#BFFFFFFF",
+                  "unselectedTextColor": "#9902060C",
+                  "selectedBorderColor": "#1B1E24",
+                  "unselectedBorderColor": "#E2E2E7"
+                },
+                {
+                  "id": "DISH",
+                  "title": "Dishes",
+                  "analytics": {
+                    "screenName": "explore",
+                    "context": "{\"tid\":\"undefined\",\"query\":\"Glen's Bakehouse\"}",
+                    "objectValue": "DISH",
+                    "clickObjectName": "click-tab"
+                  },
+                  "selectedBgColor": "#1B1E24",
+                  "unselectedBgColor": "#FFFFFF",
+                  "selectedTextColor": "#BFFFFFFF",
+                  "unselectedTextColor": "#9902060C",
+                  "selectedBorderColor": "#1B1E24",
+                  "unselectedBorderColor": "#E2E2E7"
+                }
+              ],
+              "meta": {
+                "correctedQuery": "",
+                "suggestionType": "",
+                "queryIntent": "RESTAURANT",
+                "orderable": "false"
+              }
+            }
+          }
+        },
+        {
+          "groupedCard": {
+            "cardGroupMap": {
+              "RESTAURANT": {
+                "cards": [
+                  {
+                    "card": {
+                      "card": {
+                        "@type": "type.googleapis.com/swiggy.presentation.food.v2.Restaurant",
+                        "info": {
+                          "id": "17376",
+                          "name": "Glen's Bakehouse",
+                          "city": "1",
+                          "slugs": {
+                            "restaurant": "glens-bake-house-lavelle-road-central-bangalore",
+                            "city": "bangalore"
+                          },
+                          "cloudinaryImageId": "m6jahioyu7zrodei5pcq",
+                          "address": "24/1 Lavelle Road, Bangalore 560 001",
+                          "locality": "Lavelle Road",
+                          "areaName": "Ashok Nagar",
+                          "costForTwo": "50000",
+                          "costForTwoMessage": "₹500 FOR TWO",
+                          "cuisines": [
+                            "Desserts",
+                            "Bakery",
+                            "Beverages",
+                            "Continental",
+                            "Italian"
+                          ],
+                          "avgRating": 4.6,
+                          "feeDetails": {},
+                          "parentId": "3220",
+                          "avgRatingString": "4.6",
+                          "totalRatingsString": "26K+",
+                          "sla": {
+                            "deliveryTime": 164,
+                            "minDeliveryTime": 162,
+                            "maxDeliveryTime": 172,
+                            "lastMileTravel": 0.5,
+                            "serviceability": "SERVICEABLE",
+                            "rainMode": "RAIN_MODE_NONE",
+                            "slaString": "162-172 MINS",
+                            "lastMileTravelString": "0.5 km",
+                            "iconType": "ICON_TYPE_EMPTY"
+                          },
+                          "availability": {
+                            "nextOpenTimeMessage": "Opens next at 9 am, today",
+                            "restaurantClosedMeta": {
+                              "title": "CLOSED",
+                              "subtitle": "FOR NOW"
+                            }
+                          },
+                          "aggregatedDiscountInfo": {
+                            "visible": true
+                          },
+                          "badges": {
+                            "imageBadges": [
+                              {
+                                "imageId": "newg.png",
+                                "description": "Gourmet"
+                              }
+                            ]
+                          },
+                          "unorderableMessage": "Opens next at 9 am, today",
+                          "aggregatedDiscountInfoV2": {
+                            "visible": true
+                          },
+                          "ratingSlab": "RATING_SLAB_5",
+                          "availabilityServiceabilityMessage": "Currently closed for delivery. Opens next at 9 am, today",
+                          "orderabilityCommunication": {
+                            "title": {
+                              "text": "CURRENTLY"
+                            },
+                            "subTitle": {
+                              "text": "CLOSED"
+                            },
+                            "message": {
+                              "text": "Opens today at 9:00 AM",
+                              "textColour": "primary"
+                            },
+                            "customIcon": {
+                              "bgGradientColorStart": "#EB8322",
+                              "bgGradientColorEnd": "#EE5803"
+                            },
+                            "commsStyling": {}
+                          },
+                          "cartOrderabilityNudgeBanner": {
+                            "parameters": {},
+                            "presentation": {}
+                          },
+                          "externalRatings": {
+                            "aggregatedRating": {
+                              "rating": "4.4",
+                              "ratingCount": "11K+"
+                            },
+                            "source": "GOOGLE",
+                            "sourceIconImageId": "v1704440323/google_ratings/rating_google_tag"
+                          },
+                          "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY",
+                          "featuredSectionInfo": {},
+                          "showEoOffer": true,
+                          "priceComparisonComms": {}
+                        },
+                        "analytics": {
+                          "screenName": "explore",
+                          "context": "{\"tid\":\"undefined\",\"grid\":\"de1f7a30-3ece-4e8d-9bb7-4f308957bfbd\",\"queryUniqueId\":\"undefined\",\"query\":\"Glen's Bakehouse\"}",
+                          "objectValue": "17376",
+                          "impressionObjectName": "impression-restaurant",
+                          "clickObjectName": "click-restaurant"
+                        },
+                        "ctaWithParams": {
+                          "link": "swiggy://menu",
+                          "type": "DEEPLINK",
+                          "params": {
+                            "restaurant_id": "17376",
+                            "query": "Glen's Bakehouse",
+                            "sourceSessionId": "re61ff4393b-2e19-43fa-9297-d2bd177f4",
+                            "source": "SEARCH",
+                            "isSld": "false",
+                            "sourceRequestId": "00000000000000000000000000000000",
+                            "qrEnabled": "false"
+                          }
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      ],
+      "firstOffsetRequest": true
+    },
+    "tid": "5cdadcef-5825-4d13-99be-34f3b80b6d1b",
+    "sid": "re61ff4393b-2e19-43fa-9297-d2bd177f4",
+    "deviceId": "863a47f6-4b9c-ad19-1e6b-320ab461b72e",
+    "csrfToken": "mjwGEzy13aMY-WEFSoSgRpS578RXc9ZxBlWfZjq4"
+  }
+}

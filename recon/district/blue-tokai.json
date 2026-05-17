@@ -1,0 +1,55 @@
+{
+  "meta": {
+    "restaurant": {
+      "slug": "blue-tokai",
+      "name": "Blue Tokai Coffee",
+      "area": "Indiranagar",
+      "districtSlugs": [
+        "blue-tokai-coffee-roasters-1-hsr-bangalore",
+        "blue-tokai-coffee-roasters-2-hsr-bangalore",
+        "blue-tokai-coffee-roasters-aecs-layout-bangalore",
+        "blue-tokai-coffee-roasters-bellandur-bangalore",
+        "blue-tokai-coffee-roasters-domlur-bangalore",
+        "blue-tokai-coffee-roasters-electronic-city-bangalore",
+        "blue-tokai-coffee-roasters-infantry-road-bangalore",
+        "blue-tokai-coffee-roasters-itpl-main-road-whitefield-bangalore",
+        "blue-tokai-coffee-roasters-jayanagar-bangalore",
+        "blue-tokai-coffee-roasters-jp-nagar-bangalore",
+        "blue-tokai-coffee-roasters-kalyan-nagar-bangalore",
+        "blue-tokai-coffee-roasters-kanakapura-road-bangalore",
+        "blue-tokai-coffee-roasters-koramangala-5th-block-bangalore",
+        "blue-tokai-coffee-roasters-koramangala-8th-block-bangalore",
+        "blue-tokai-coffee-roasters-kr-puram-bangalore",
+        "blue-tokai-coffee-roasters-lavelle-road-bangalore",
+        "blue-tokai-coffee-roasters-mahadevapura-bangalore",
+        "blue-tokai-coffee-roasters-malleshwaram-bangalore",
+        "blue-tokai-coffee-roasters-marathahalli-bangalore",
+        "blue-tokai-coffee-roasters-rajarajeshwari-nagar-bangalore",
+        "blue-tokai-coffee-roasters-sadashiv-nagar-bangalore",
+        "blue-tokai-coffee-roasters-sahakara-nagar-bangalore",
+        "blue-tokai-coffee-roasters-whitefield-bangalore",
+        "blue-tokai-coffee-roasters-yeshwantpur-bangalore"
+      ],
+      "eazyDinerSlug": "blue-tokai-infantry-road-central-bengaluru-683567"
+    },
+    "found": true,
+    "offerSummary": [
+      "[bank] Flat ₹150 OFF using Google Pay",
+      "[bank] Get 10% OFF up to ₹500 using YES BANK Credit Cards",
+      "[bank] 12% OFF up to ₹1000 on Taj Credit Card",
+      "[bank] 15% OFF up to ₹500 on Ananta Credit Card",
+      "[bank] 12% OFF up to ₹1000 on HSBC Prive Credit Cards",
+      "[bank] 20% OFF up to ₹1500 on Kotak Bank Solitaire Debit Card",
+      "[bank] Get 15% OFF up to ₹750",
+      "[bank] 10% OFF up to ₹600 on Kotak Bank Privy Neon Debit Card",
+      "[bank] 10% OFF for up to ₹3000 using RBL Bank NOVA Credit Card",
+      "[bank] Flat ₹300 OFF using SBI VISA Debit Cards",
+      "[bank] 20% OFF for up to ₹150 using Cred Indusind Credit Card",
+      "[bank] 15% OFF up to ₹1500 on Amex Corporate Credit Cards"
+    ]
+  },
+  "raw": {
+    "rscLength": 52858,
+    "pageUrl": "https://www.district.in/dining/bangalore/blue-tokai-coffee-roasters-1-hsr-bangalore"
+  }
+}

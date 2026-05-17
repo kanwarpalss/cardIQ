@@ -1,0 +1,13 @@
+{
+  "meta": {
+    "restaurant": {
+      "slug": "vidyarthi-bhavan",
+      "name": "Vidyarthi Bhavan",
+      "area": "Gandhi Bazaar"
+    },
+    "found": false,
+    "error": "Search HTTP 404",
+    "offerSummary": []
+  },
+  "raw": null
+}

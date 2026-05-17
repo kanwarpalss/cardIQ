@@ -1,0 +1,27 @@
+{
+  "meta": {
+    "restaurant": {
+      "slug": "meghana-foods",
+      "name": "Meghana Foods",
+      "area": "Koramangala",
+      "districtSlugs": [
+        "meghana-foods-banashankari-bangalore",
+        "meghana-foods-hosur-road-bangalore",
+        "meghana-foods-indiranagar",
+        "meghana-foods-jayanagar",
+        "meghana-foods-koramangala-5th-block",
+        "meghana-foods-marathahalli-bangalore",
+        "meghana-foods-residency-road",
+        "meghana-foods-sarjapur-road-bangalore",
+        "meghana-foods-whitefield-bangalore"
+      ],
+      "eazyDinerSlug": "meghana-foods-residency-road-334874"
+    },
+    "found": true,
+    "offerSummary": []
+  },
+  "raw": {
+    "rscLength": 21269,
+    "pageUrl": "https://www.district.in/dining/bangalore/meghana-foods-banashankari-bangalore"
+  }
+}

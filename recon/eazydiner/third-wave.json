@@ -1,0 +1,546 @@
+{
+  "meta": {
+    "restaurant": {
+      "slug": "third-wave",
+      "name": "Third Wave Coffee",
+      "area": "Indiranagar",
+      "districtSlugs": [
+        "third-wave-coffee-1-bellandur-bangalore",
+        "third-wave-coffee-1-brigade-road-bangalore",
+        "third-wave-coffee-1-btm-bangalore",
+        "third-wave-coffee-1-devanahalli",
+        "third-wave-coffee-1-hebbal-bangalore",
+        "third-wave-coffee-1-hsr-bangalore",
+        "third-wave-coffee-1-indiranagar-bangalore",
+        "third-wave-coffee-1-jp-nagar-bangalore",
+        "third-wave-coffee-1-lavelle-road-bangalore",
+        "third-wave-coffee-1-varthur-main-road-whitefield-bangalore",
+        "third-wave-coffee-2-bellandur-bangalore",
+        "third-wave-coffee-2-btm-bangalore",
+        "third-wave-coffee-2-varthur-main-road-whitefield-bangalore",
+        "third-wave-coffee-3-hsr-bangalore",
+        "third-wave-coffee-3-varthur-main-road-whitefield-bangalore",
+        "third-wave-coffee-5-bellandur-bangalore",
+        "third-wave-coffee-anekal-bangalore",
+        "third-wave-coffee-arekere-bangalore",
+        "third-wave-coffee-banashankari-bangalore",
+        "third-wave-coffee-basaveshwara-nagar-bangalore",
+        "third-wave-coffee-bellandur-bangalore",
+        "third-wave-coffee-bommanahalli-bangalore",
+        "third-wave-coffee-brigade-road-bangalore",
+        "third-wave-coffee-brookefield-bangalore",
+        "third-wave-coffee-choodasandra-bangalore",
+        "third-wave-coffee-church-street-bangalore",
+        "third-wave-coffee-cunningham-road-bangalore",
+        "third-wave-coffee-devanahalli",
+        "third-wave-coffee-frazer-town-bangalore",
+        "third-wave-coffee-hebbal-bangalore",
+        "third-wave-coffee-hsr-bangalore",
+        "third-wave-coffee-indiranagar-bangalore",
+        "third-wave-coffee-itpl-main-road-whitefield-bangalore",
+        "third-wave-coffee-jayanagar-bangalore",
+        "third-wave-coffee-jp-nagar-bangalore",
+        "third-wave-coffee-kadubeesanahalli-bangalore",
+        "third-wave-coffee-kalyan-nagar-bangalore",
+        "third-wave-coffee-kanakapura-road-bangalore",
+        "third-wave-coffee-koramangala-4th-block-bangalore",
+        "third-wave-coffee-koramangala-8th-block-bangalore",
+        "third-wave-coffee-lavelle-road-bangalore",
+        "third-wave-coffee-malleshwaram-bangalore",
+        "third-wave-coffee-marathahalli-bangalore",
+        "third-wave-coffee-nagawara-bangalore",
+        "third-wave-coffee-rajajinagar-bangalore",
+        "third-wave-coffee-sadashiv-nagar-bangalore",
+        "third-wave-coffee-sanjay-nagar-bangalore",
+        "third-wave-coffee-sarjapur-road-bangalore",
+        "third-wave-coffee-varthur-main-road-whitefield-bangalore",
+        "third-wave-coffee-vijay-nagar-bangalore",
+        "third-wave-coffee-whitefield-bangalore"
+      ],
+      "eazyDinerSlug": "third-wave-coffee-roasters-koramangala-south-bengaluru-640094"
+    },
+    "found": true,
+    "offerSummary": []
+  },
+  "raw": {
+    "data": {
+      "id": 640094,
+      "url": "https://www.eazydiner.com/bengaluru/third-wave-coffee-roasters-koramangala-south-bengaluru-640094",
+      "code": "bengaluru/third-wave-coffee-roasters-koramangala-south-bengaluru-640094",
+      "default_image": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/home/restaurant-default-image.png",
+      "favourite_count": "604",
+      "primeTag": "",
+      "name": "Third Wave Coffee",
+      "images": [
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/640094/restaurant020161007153857.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/reviewimages/640094/ab67152b7b1c4a63e428594db4da67bbfa943b93.20201109183927.jpg?width=818&height=450&mode=fit"
+      ],
+      "cost_for_two": "₹ 850 for two approx.",
+      "currency": "₹",
+      "location": {
+        "address": "984, 80 Feet Main Road, 4th Block, Koramangala, Bengaluru",
+        "locality": "Koramangala, South Bengaluru",
+        "code": "koramangala",
+        "latitude": 12.934762,
+        "longitude": 77.629597,
+        "region_code": "South Bengaluru",
+        "area_name": "Koramangala",
+        "city_code": "bengaluru",
+        "city_id": 3,
+        "country_id": 1,
+        "group_id": 1575,
+        "name": "Koramangala, South Bengaluru",
+        "city_name": "Bengaluru"
+      },
+      "phone": "7861004444",
+      "cuisines": "Coffee",
+      "timings": {
+        "today": [
+          "08:00 AM - 03:00 AM"
+        ],
+        "week": {
+          "Monday": [
+            "08:00 AM - 03:00 AM"
+          ],
+          "Tuesday": [
+            "08:00 AM - 03:00 AM"
+          ],
+          "Wednesday": [
+            "08:00 AM - 03:00 AM"
+          ],
+          "Thursday": [
+            "08:00 AM - 03:00 AM"
+          ],
+          "Friday": [
+            "08:00 AM - 03:00 AM"
+          ],
+          "Saturday": [
+            "08:00 AM - 03:00 AM"
+          ],
+          "Sunday": [
+            "08:00 AM - 03:00 AM"
+          ]
+        }
+      },
+      "user_reviews": {
+        "avg_rating": 4.1,
+        "count": 15
+      },
+      "critic_review": "",
+      "webview_menu_url": null,
+      "accepts_eazypay": false,
+      "is_favorite": false,
+      "menu_last_updated": null,
+      "is_qsr": false,
+      "faq": [
+        {
+          "@type": "Question",
+          "name": "What cuisines are served at Third Wave Coffee?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The main cuisine served at Third Wave Coffee is Coffee."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the cost for two at Third Wave Coffee?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The cost of two at Third Wave Coffee is ₹ 850."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Third Wave Coffee is pure vegetarian restaurant?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "   Third Wave Coffee serves both veg and non veg food."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What are the operational timings of Third Wave Coffee?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Third Wave Coffee restaurant operational timings are MONDAY: 08:00 AM to 03:00 AM, TUESDAY: 08:00 AM to 03:00 AM, WEDNESDAY: 08:00 AM to 03:00 AM, THURSDAY: 08:00 AM to 03:00 AM, FRIDAY: 08:00 AM to 03:00 AM, SATURDAY: 08:00 AM to 03:00 AM, SUNDAY: 08:00 AM to 03:00 AM"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does Third Wave Coffee serve buffet?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": " No, Third Wave Coffee does not serve buffet."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does Third Wave Coffee restaurant have a bar or serve alcohol?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": " No, Third Wave Coffee does not serve alcohol."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is there a parking facility at Third Wave Coffee?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": " No, a parking facility is not available at Third Wave Coffee."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does Third Wave Coffee accept bill payment via PayEazy?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No, Third Wave Coffee is not a PayEazy-enabled restaurant."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How can I save EXTRA with PayEazy at Third Wave Coffee?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Book a table at Third Wave Coffee. Get your bill with the pre-applied EazyDiner deal. Pay your bill via PayEazy & save EXTRA"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does Third Wave Coffee restaurant play live music?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": " No, Third Wave Coffee doesn't play live music."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What are current deals at Third Wave Coffee?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "There is no deal at Third Wave Coffee on EazyDiner. Browse through EazyDiner to avail dining discounts upto 50% OFF."
+          }
+        }
+      ],
+      "category": "Cafe/Bakery",
+      "restaurant_type": "free standing",
+      "chain": "No",
+      "wallet_config": {
+        "type": "percentage",
+        "percentage": 25,
+        "min_transaction_amount": 0,
+        "text": "25% of the total amount can be paid from wallet balance in a single transaction ."
+      },
+      "reservation_status": false,
+      "deal_data": {
+        "default_deal_type": "deal_types[]=postpaid",
+        "title": "More Deals",
+        "period": 30,
+        "freeze_time": 0,
+        "other_deals": null
+      },
+      "foodie_awards": [],
+      "buffet_deals": [],
+      "error": {
+        "heading": "Discover amazing restaurants nearby",
+        "message": "Choose from higher ranked restaurants which were booked by many users this week.",
+        "date": "",
+        "time": "",
+        "icon": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant_detail/shop_1.png",
+        "action": "No Action",
+        "notBookableAction": "https://www.eazydiner.com/restaurants?location=koramangala",
+        "notBookableText": "Explore Nearby Restaurants"
+      },
+      "hasPrimeDeal": false,
+      "primeIcon": "",
+      "restaurant_subtype": "Table",
+      "hygiene_rating": "",
+      "has_dynamic_buffet": false,
+      "bottomsheet_notification": "",
+      "force_direct_booking": true,
+      "new_rdv_layout": false,
+      "rdv_offer_data": {
+        "default_deal_type": "deal_types=postpaid",
+        "freeze_time": 0,
+        "period": 30
+      },
+      "link_only_payeazy": "",
+      "sample_discount_calculator": "",
+      "qbf": {
+        "qbf_gif": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/banner/qbf/qbf_final_single_nov_23.gif",
+        "success_confirmed_gif": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/banner/qbf/success_confirm_qbf_2.gif"
+      },
+      "webEngageData": {
+        "features": [],
+        "cost_for_two": 850,
+        "offer_title": " + 25%"
+      },
+      "chain_id": null
+    },
+    "meta": {
+      "tab_data": [
+        {
+          "title": "offers",
+          "is_active": true
+        },
+        {
+          "title": "menu",
+          "is_active": false
+        },
+        {
+          "title": "photos",
+          "is_active": false
+        },
+        {
+          "title": "about",
+          "is_active": false
+        }
+      ],
+      "meta_title": "Explore Third Wave Coffee in Koramangala, South Bengaluru",
+      "meta_description": "Get all the details for Third Wave Coffee, Koramangala, South Bengaluru. Check out reviews, photos, menu highlights, contact info, and much more on EazyDiner.",
+      "breadcrumbs": [
+        {
+          "title": "Home",
+          "url": "/"
+        },
+        {
+          "title": "Bengaluru",
+          "url": "/bengaluru"
+        },
+        {
+          "title": " Top Restaurants in Bengaluru",
+          "url": "/bengaluru/restaurants"
+        },
+        {
+          "title": "South Bengaluru",
+          "url": "/bengaluru/restaurants/south-bengaluru"
+        },
+        {
+          "title": "Koramangala",
+          "url": "/bengaluru/restaurants/koramangala"
+        },
+        {
+          "title": "Third Wave Coffee",
+          "url": "/bengaluru/third-wave-coffee-roasters-koramangala-south-bengaluru-640094"
+        }
+      ],
+      "jsonSchema": {
+        "title": "Explore Third Wave Coffee in Koramangala, South Bengaluru",
+        "description": "Get all the details for Third Wave Coffee, Koramangala, South Bengaluru. Check out reviews, photos, menu highlights, contact info, and much more on EazyDiner.",
+        "custom_deeplink": {
+          "ios": "eazydiner://action?url=https://www.eazydiner.com/bengaluru/third-wave-coffee-roasters-koramangala-south-bengaluru-640094",
+          "android": "eazydiner://action?url=https://www.eazydiner.com/bengaluru/third-wave-coffee-roasters-koramangala-south-bengaluru-640094?"
+        },
+        "og_data": {
+          "title": "Third Wave Coffee, Koramangala, South Bengaluru",
+          "description": "EazyDiner",
+          "image_url": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/640094/restaurant020161007153857.jpg?width=750&height=436&mode=fit",
+          "brand": "EazyDiner",
+          "availability": "discontinued",
+          "condition": "new",
+          "amount": 850,
+          "currency": "Inr",
+          "retailer_item_id": 640094
+        },
+        "json_schema": {
+          "@context": "http://schema.org",
+          "@graph": [
+            {
+              "@type": "Restaurant",
+              "@id": "https://www.eazydiner.com/bengaluru/third-wave-coffee-roasters-koramangala-south-bengaluru-640094",
+              "name": "Third Wave Coffee",
+              "url": "https://www.eazydiner.com/bengaluru/third-wave-coffee-roasters-koramangala-south-bengaluru-640094",
+              "hasMenu": "https://www.eazydiner.com/bengaluru/third-wave-coffee-roasters-koramangala-south-bengaluru-640094/menu",
+              "image": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/640094/restaurant020161007153857.jpg?width=750&height=436&mode=fit",
+              "servesCuisine": "Coffee",
+              "priceRange": "₹ 850 for two approx. ",
+              "telephone": "7861004444",
+              "geo": {
+                "@type": "GeoCoordinates",
+                "latitude": "12.93476200",
+                "longitude": "77.62959700"
+              },
+              "acceptsReservations": false,
+              "openingHoursSpecification": [
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Monday"
+                  ],
+                  "opens": "08:00:00",
+                  "closes": "03:00:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Tuesday"
+                  ],
+                  "opens": "08:00:00",
+                  "closes": "03:00:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Wednesday"
+                  ],
+                  "opens": "08:00:00",
+                  "closes": "03:00:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Thursday"
+                  ],
+                  "opens": "08:00:00",
+                  "closes": "03:00:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Friday"
+                  ],
+                  "opens": "08:00:00",
+                  "closes": "03:00:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Saturday"
+                  ],
+                  "opens": "08:00:00",
+                  "closes": "03:00:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Sunday"
+                  ],
+                  "opens": "08:00:00",
+                  "closes": "03:00:00"
+                }
+              ],
+              "currenciesAccepted": "INR",
+              "paymentAccepted": "Cash, Cards and Digital Payments Accepted",
+              "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "984, 80 Feet Main Road, 4th Block, Koramangala, Bengaluru",
+                "addressLocality": "Koramangala, South Bengaluru",
+                "addressRegion": "Bengaluru",
+                "postalCode": "560034",
+                "addressCountry": "IN"
+              },
+              "aggregateRating": {
+                "@type": "AggregateRating",
+                "ratingValue": 4,
+                "ratingCount": 15,
+                "bestRating": "5",
+                "worstRating": "0"
+              }
+            },
+            {
+              "@type": "FAQPage",
+              "mainEntity": [
+                {
+                  "@type": "Question",
+                  "name": "What cuisines are served at Third Wave Coffee?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "The main cuisine served at Third Wave Coffee is Coffee."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "What is the cost for two at Third Wave Coffee?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "The cost of two at Third Wave Coffee is ₹ 850."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Third Wave Coffee is pure vegetarian restaurant?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "   Third Wave Coffee serves both veg and non veg food."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "What are the operational timings of Third Wave Coffee?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Third Wave Coffee restaurant operational timings are MONDAY: 08:00 AM to 03:00 AM, TUESDAY: 08:00 AM to 03:00 AM, WEDNESDAY: 08:00 AM to 03:00 AM, THURSDAY: 08:00 AM to 03:00 AM, FRIDAY: 08:00 AM to 03:00 AM, SATURDAY: 08:00 AM to 03:00 AM, SUNDAY: 08:00 AM to 03:00 AM"
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Does Third Wave Coffee serve buffet?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": " No, Third Wave Coffee does not serve buffet."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Does Third Wave Coffee restaurant have a bar or serve alcohol?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": " No, Third Wave Coffee does not serve alcohol."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Is there a parking facility at Third Wave Coffee?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": " No, a parking facility is not available at Third Wave Coffee."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Does Third Wave Coffee accept bill payment via PayEazy?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "No, Third Wave Coffee is not a PayEazy-enabled restaurant."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "How can I save EXTRA with PayEazy at Third Wave Coffee?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Book a table at Third Wave Coffee. Get your bill with the pre-applied EazyDiner deal. Pay your bill via PayEazy & save EXTRA"
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Does Third Wave Coffee restaurant play live music?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": " No, Third Wave Coffee doesn't play live music."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "What are current deals at Third Wave Coffee?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "There is no deal at Third Wave Coffee on EazyDiner. Browse through EazyDiner to avail dining discounts upto 50% OFF."
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "remarketing_tag_params": {
+          "dynx_itemid": 640094,
+          "dynx_itemid2": "Third Wave Coffee",
+          "dynx_pagetype": "restaurantdetail"
+        },
+        "amp_meta_tag": false,
+        "android_deeplink": "android-app://com.easydiner/eazydiner/action?url=https://www.eazydiner.com/bengaluru/third-wave-coffee-roasters-koramangala-south-bengaluru-640094",
+        "is_noindex": false
+      }
+    }
+  }
+}

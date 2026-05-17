@@ -1,0 +1,449 @@
+{
+  "meta": {
+    "restaurant": {
+      "slug": "nagarjuna",
+      "name": "Nagarjuna",
+      "area": "Residency Road",
+      "districtSlugs": [
+        "nagarjuna-since-1984-btm-bangalore",
+        "nagarjuna-since-1984-indiranagar-bangalore",
+        "nagarjuna-since-1984-koramangala-5th-block-bangalore",
+        "nagarjuna-since-1984-marathahalli-bangalore",
+        "nagarjuna-since-1984-residency-road-bangalore",
+        "nagarjuna-since-1984-sarjapur-road-bangalore",
+        "nagarjuna-since-1984-whitefield-bangalore"
+      ],
+      "eazyDinerSlug": "nagarjuna-residency-road-334689"
+    },
+    "found": true,
+    "offerSummary": [
+      "aggregatedDiscountInfo",
+      "aggregatedDiscountInfoV2",
+      "showEoOffer",
+      "firstOffsetRequest"
+    ]
+  },
+  "raw": {
+    "statusCode": 0,
+    "data": {
+      "statusMessage": "done successfully",
+      "cards": [
+        {
+          "card": {
+            "card": {
+              "@type": "type.googleapis.com/swiggy.gandalf.widgets.v2.Navigation",
+              "tab": [
+                {
+                  "id": "RESTAURANT",
+                  "title": "Restaurants",
+                  "selected": true,
+                  "analytics": {
+                    "screenName": "explore",
+                    "context": "{\"tid\":\"undefined\",\"query\":\"Nagarjuna\"}",
+                    "objectValue": "RESTAURANT",
+                    "clickObjectName": "click-tab"
+                  },
+                  "selectedBgColor": "#1B1E24",
+                  "unselectedBgColor": "#FFFFFF",
+                  "selectedTextColor": "#BFFFFFFF",
+                  "unselectedTextColor": "#9902060C",
+                  "selectedBorderColor": "#1B1E24",
+                  "unselectedBorderColor": "#E2E2E7"
+                },
+                {
+                  "id": "DISH",
+                  "title": "Dishes",
+                  "analytics": {
+                    "screenName": "explore",
+                    "context": "{\"tid\":\"undefined\",\"query\":\"Nagarjuna\"}",
+                    "objectValue": "DISH",
+                    "clickObjectName": "click-tab"
+                  },
+                  "selectedBgColor": "#1B1E24",
+                  "unselectedBgColor": "#FFFFFF",
+                  "selectedTextColor": "#BFFFFFFF",
+                  "unselectedTextColor": "#9902060C",
+                  "selectedBorderColor": "#1B1E24",
+                  "unselectedBorderColor": "#E2E2E7"
+                }
+              ],
+              "meta": {
+                "orderable": "true",
+                "correctedQuery": "",
+                "suggestionType": "",
+                "queryIntent": "RESTAURANT"
+              }
+            }
+          }
+        },
+        {
+          "groupedCard": {
+            "cardGroupMap": {
+              "RESTAURANT": {
+                "cards": [
+                  {
+                    "card": {
+                      "card": {
+                        "@type": "type.googleapis.com/swiggy.presentation.food.v2.Restaurant",
+                        "info": {
+                          "id": "1050",
+                          "name": "Nagarjuna Chimney",
+                          "city": "1",
+                          "slugs": {
+                            "restaurant": "nagarjuna-chimney-3rd-block-jayanagar",
+                            "city": "bangalore"
+                          },
+                          "cloudinaryImageId": "hirj3b66f3uphbdinhev",
+                          "address": "21/22, 22Nd Cross, 3Rd Block, Jayanagar",
+                          "locality": "Jayanagar",
+                          "areaName": "Jayanagar",
+                          "costForTwo": "80000",
+                          "costForTwoMessage": "₹800 FOR TWO",
+                          "cuisines": [
+                            "Seafood",
+                            "Andhra",
+                            "Biryani",
+                            "South Indian",
+                            "Desserts",
+                            "Beverages"
+                          ],
+                          "avgRating": 4.5,
+                          "feeDetails": {},
+                          "parentId": "143166",
+                          "avgRatingString": "4.5",
+                          "totalRatingsString": "34K+",
+                          "sla": {
+                            "deliveryTime": 321,
+                            "minDeliveryTime": 317,
+                            "maxDeliveryTime": 322,
+                            "lastMileTravel": 5.7,
+                            "serviceability": "SERVICEABLE",
+                            "rainMode": "RAIN_MODE_NONE",
+                            "slaString": "317-322 MINS",
+                            "lastMileTravelString": "5.7 km",
+                            "iconType": "ICON_TYPE_EMPTY"
+                          },
+                          "availability": {
+                            "nextOpenTimeMessage": "Opens next at 11:30 am, today",
+                            "restaurantClosedMeta": {
+                              "title": "CLOSED",
+                              "subtitle": "FOR NOW"
+                            }
+                          },
+                          "aggregatedDiscountInfo": {
+                            "visible": true
+                          },
+                          "badges": {},
+                          "unorderableMessage": "Opens next at 11:30 am, today",
+                          "aggregatedDiscountInfoV2": {
+                            "visible": true
+                          },
+                          "ratingSlab": "RATING_SLAB_5",
+                          "availabilityServiceabilityMessage": "Currently closed for delivery. Opens next at 11:30 am, today",
+                          "orderabilityCommunication": {
+                            "title": {
+                              "text": "CURRENTLY"
+                            },
+                            "subTitle": {
+                              "text": "CLOSED"
+                            },
+                            "message": {
+                              "text": "Opens today at 11:30 AM",
+                              "textColour": "primary"
+                            },
+                            "customIcon": {
+                              "bgGradientColorStart": "#EB8322",
+                              "bgGradientColorEnd": "#EE5803"
+                            },
+                            "commsStyling": {}
+                          },
+                          "cartOrderabilityNudgeBanner": {
+                            "parameters": {},
+                            "presentation": {}
+                          },
+                          "externalRatings": {
+                            "aggregatedRating": {
+                              "rating": "3.8",
+                              "ratingCount": "12K+"
+                            },
+                            "source": "GOOGLE",
+                            "sourceIconImageId": "v1704440323/google_ratings/rating_google_tag"
+                          },
+                          "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY",
+                          "featuredSectionInfo": {
+                            "sectionTitle": "More"
+                          },
+                          "showEoOffer": true,
+                          "priceComparisonComms": {}
+                        },
+                        "analytics": {
+                          "screenName": "explore",
+                          "context": "{\"tid\":\"undefined\",\"grid\":\"034e5202-e5a0-4a6b-9c41-57d039abbadd\",\"queryUniqueId\":\"undefined\",\"query\":\"Nagarjuna\"}",
+                          "objectValue": "1050",
+                          "impressionObjectName": "impression-restaurant",
+                          "clickObjectName": "click-restaurant"
+                        },
+                        "ctaWithParams": {
+                          "link": "swiggy://menu",
+                          "type": "DEEPLINK",
+                          "params": {
+                            "restaurant_id": "1050",
+                            "query": "Nagarjuna",
+                            "sourceSessionId": "re6a686044b-d4f0-4778-8cec-5e23a2f19",
+                            "source": "SEARCH",
+                            "isSld": "false",
+                            "sourceRequestId": "00000000000000000000000000000000",
+                            "qrEnabled": "false"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "card": {
+                      "card": {
+                        "@type": "type.googleapis.com/swiggy.presentation.food.v2.Restaurant",
+                        "info": {
+                          "id": "41100",
+                          "name": "Nagarjuna - Since 1984",
+                          "city": "1",
+                          "slugs": {
+                            "restaurant": "nagarjuna-residency-road-central-bangalore",
+                            "city": "bangalore"
+                          },
+                          "cloudinaryImageId": "RX_THUMBNAIL/IMAGES/VENDOR/2025/12/5/6aa9d686-3455-4c35-a06e-e759ddf54e52_41100.jpg",
+                          "address": "#44 1, Residency Road, Bangalore 560025",
+                          "locality": "Residency Road",
+                          "areaName": "Ashok Nagar",
+                          "costForTwo": "60000",
+                          "costForTwoMessage": "₹600 FOR TWO",
+                          "cuisines": [
+                            "Andhra",
+                            "South Indian",
+                            "Biryani",
+                            "Beverages",
+                            "Desserts"
+                          ],
+                          "avgRating": 4.6,
+                          "feeDetails": {},
+                          "parentId": "509973",
+                          "avgRatingString": "4.6",
+                          "totalRatingsString": "50K+",
+                          "sla": {
+                            "deliveryTime": 40,
+                            "minDeliveryTime": 35,
+                            "maxDeliveryTime": 40,
+                            "lastMileTravel": 2.1,
+                            "serviceability": "SERVICEABLE",
+                            "rainMode": "RAIN_MODE_NONE",
+                            "slaString": "35-40 MINS",
+                            "lastMileTravelString": "2.1 km",
+                            "iconType": "ICON_TYPE_EMPTY"
+                          },
+                          "availability": {
+                            "nextOpenTimeMessage": "Opens next at 11:30 am, today",
+                            "restaurantClosedMeta": {
+                              "title": "CLOSED",
+                              "subtitle": "FOR NOW"
+                            }
+                          },
+                          "aggregatedDiscountInfo": {
+                            "visible": true
+                          },
+                          "badges": {
+                            "imageBadges": [
+                              {
+                                "imageId": "brand_cards/Badges%202026/35_Best%20in%20Andhra%20Food2026.png",
+                                "description": "Best in Andhra Food"
+                              }
+                            ]
+                          },
+                          "unorderableMessage": "Opens next at 11:30 am, today",
+                          "aggregatedDiscountInfoV2": {
+                            "visible": true
+                          },
+                          "ratingSlab": "RATING_SLAB_5",
+                          "availabilityServiceabilityMessage": "Currently closed for delivery. Opens next at 11:30 am, today",
+                          "orderabilityCommunication": {
+                            "title": {
+                              "text": "CURRENTLY"
+                            },
+                            "subTitle": {
+                              "text": "CLOSED"
+                            },
+                            "message": {
+                              "text": "Opens today at 11:30 AM",
+                              "textColour": "primary"
+                            },
+                            "customIcon": {
+                              "bgGradientColorStart": "#EB8322",
+                              "bgGradientColorEnd": "#EE5803"
+                            },
+                            "commsStyling": {}
+                          },
+                          "cartOrderabilityNudgeBanner": {
+                            "parameters": {},
+                            "presentation": {}
+                          },
+                          "externalRatings": {
+                            "aggregatedRating": {
+                              "rating": "4.2",
+                              "ratingCount": "22K+"
+                            },
+                            "source": "GOOGLE",
+                            "sourceIconImageId": "v1704440323/google_ratings/rating_google_tag"
+                          },
+                          "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY",
+                          "featuredSectionInfo": {
+                            "sectionTitle": "More"
+                          },
+                          "showEoOffer": true,
+                          "priceComparisonComms": {}
+                        },
+                        "analytics": {
+                          "screenName": "explore",
+                          "context": "{\"tid\":\"undefined\",\"grid\":\"034e5202-e5a0-4a6b-9c41-57d039abbadd\",\"queryUniqueId\":\"undefined\",\"query\":\"Nagarjuna\"}",
+                          "objectValue": "41100",
+                          "impressionObjectName": "impression-restaurant",
+                          "clickObjectName": "click-restaurant"
+                        },
+                        "ctaWithParams": {
+                          "link": "swiggy://menu",
+                          "type": "DEEPLINK",
+                          "params": {
+                            "sourceSessionId": "re6a686044b-d4f0-4778-8cec-5e23a2f19",
+                            "source": "SEARCH",
+                            "isSld": "false",
+                            "sourceRequestId": "00000000000000000000000000000000",
+                            "qrEnabled": "false",
+                            "restaurant_id": "41100",
+                            "query": "Nagarjuna"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "card": {
+                      "card": {
+                        "@type": "type.googleapis.com/swiggy.presentation.food.v2.Restaurant",
+                        "info": {
+                          "id": "1375173",
+                          "name": "Nagarjuna Biryani",
+                          "city": "1",
+                          "slugs": {
+                            "restaurant": "nagarjuna-biryani-central-bangalore-central-bangalore",
+                            "city": "bangalore"
+                          },
+                          "cloudinaryImageId": "RX_THUMBNAIL/IMAGES/VENDOR/2026/5/9/aa789489-fb0a-4da0-91fa-094316029c2a_1375173.jpg",
+                          "address": "Bearing no. 22 Chick Bazar Chandni Chowk near Shivajinagar bus stand Bengaluru 560051 ,Lingarajapura,Bangalore North,Bangalore Urban,Karnataka-565001",
+                          "locality": "Central Bangalore",
+                          "areaName": "Central Bangalore",
+                          "costForTwo": "20000",
+                          "costForTwoMessage": "₹200 FOR TWO",
+                          "cuisines": [
+                            "Biryani",
+                            "Indian",
+                            "North Indian",
+                            "Meat"
+                          ],
+                          "feeDetails": {},
+                          "parentId": "783386",
+                          "avgRatingString": "NEW",
+                          "sla": {
+                            "deliveryTime": 29,
+                            "minDeliveryTime": 25,
+                            "maxDeliveryTime": 30,
+                            "lastMileTravel": 2.4,
+                            "serviceability": "SERVICEABLE",
+                            "rainMode": "RAIN_MODE_NONE",
+                            "slaString": "25-30 MINS",
+                            "lastMileTravelString": "2.4 km",
+                            "iconType": "ICON_TYPE_EMPTY"
+                          },
+                          "availability": {
+                            "nextOpenTimeMessage": "Opens next at 12 noon, today",
+                            "restaurantClosedMeta": {
+                              "title": "CLOSED",
+                              "subtitle": "FOR NOW"
+                            }
+                          },
+                          "aggregatedDiscountInfo": {
+                            "visible": true
+                          },
+                          "badges": {},
+                          "unorderableMessage": "Opens next at 12 noon, today",
+                          "aggregatedDiscountInfoV2": {
+                            "visible": true
+                          },
+                          "availabilityServiceabilityMessage": "Currently closed for delivery. Opens next at 12 noon, today",
+                          "orderabilityCommunication": {
+                            "title": {
+                              "text": "CURRENTLY"
+                            },
+                            "subTitle": {
+                              "text": "CLOSED"
+                            },
+                            "message": {
+                              "text": "Opens today at 12:00 PM",
+                              "textColour": "primary"
+                            },
+                            "customIcon": {
+                              "bgGradientColorStart": "#EB8322",
+                              "bgGradientColorEnd": "#EE5803"
+                            },
+                            "commsStyling": {}
+                          },
+                          "cartOrderabilityNudgeBanner": {
+                            "parameters": {},
+                            "presentation": {}
+                          },
+                          "externalRatings": {
+                            "aggregatedRating": {
+                              "rating": "--"
+                            }
+                          },
+                          "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY",
+                          "featuredSectionInfo": {
+                            "sectionTitle": "More"
+                          },
+                          "showEoOffer": true,
+                          "priceComparisonComms": {}
+                        },
+                        "analytics": {
+                          "screenName": "explore",
+                          "context": "{\"tid\":\"undefined\",\"grid\":\"034e5202-e5a0-4a6b-9c41-57d039abbadd\",\"queryUniqueId\":\"undefined\",\"query\":\"Nagarjuna\"}",
+                          "objectValue": "1375173",
+                          "impressionObjectName": "impression-restaurant",
+                          "clickObjectName": "click-restaurant"
+                        },
+                        "ctaWithParams": {
+                          "link": "swiggy://menu",
+                          "type": "DEEPLINK",
+                          "params": {
+                            "sourceSessionId": "re6a686044b-d4f0-4778-8cec-5e23a2f19",
+                            "source": "SEARCH",
+                            "isSld": "false",
+                            "sourceRequestId": "00000000000000000000000000000000",
+                            "qrEnabled": "false",
+                            "restaurant_id": "1375173",
+                            "query": "Nagarjuna"
+                          }
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      ],
+      "firstOffsetRequest": true
+    },
+    "tid": "736caac9-745f-4471-8abd-9df09ed66413",
+    "sid": "re6a686044b-d4f0-4778-8cec-5e23a2f19",
+    "deviceId": "e34e2ee7-9ef1-d6e8-2138-3dd35fda41e9",
+    "csrfToken": "mIbqBFWlWnJD--RF2_IbVIOnXAjsjw0dn4hD_zzA"
+  }
+}

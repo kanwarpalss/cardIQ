@@ -1,0 +1,34 @@
+{
+  "meta": {
+    "restaurant": {
+      "slug": "black-pearl",
+      "name": "The Black Pearl",
+      "area": "Indiranagar",
+      "districtSlugs": [
+        "the-black-pearl-1-rajajinagar-bangalore",
+        "the-black-pearl-indiranagar-bangalore",
+        "the-black-pearl-kadubeesanahalli-bangalore"
+      ]
+    },
+    "found": true,
+    "offerSummary": [
+      "[prebook] FLAT 20% OFF",
+      "[bank] Flat ₹150 OFF using Google Pay",
+      "[bank] 25% OFF for up to ₹5000 using RBL Bank LUMIÈRE Credit Card",
+      "[bank] 10% OFF for up to ₹3000 using RBL Bank NOVA Credit Card",
+      "[bank] Flat ₹350 OFF on Credit Cards",
+      "[bank] 20% OFF up to ₹750 on Kotak 811 Infinity Metal Debit Card",
+      "[bank] 20% OFF for up to ₹150 using Cred Indusind Credit Card",
+      "[bank] Flat ₹300 OFF using SBI VISA Debit Cards",
+      "[bank] 10% OFF up to ₹600 on Kotak Bank Privy Neon Debit Card",
+      "[bank] 10% OFF up to ₹200 on TIDE Cards",
+      "[bank] 10% OFF up to ₹1000 on Kotak Bank Privy Platinum Debit Card",
+      "[bank] 12% OFF up to ₹1000 on Taj Credit Card",
+      "[bank] Get 10% OFF up to ₹500 using YES BANK Credit Cards"
+    ]
+  },
+  "raw": {
+    "rscLength": 52855,
+    "pageUrl": "https://www.district.in/dining/bangalore/the-black-pearl-1-rajajinagar-bangalore"
+  }
+}

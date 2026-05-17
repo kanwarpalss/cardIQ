@@ -1,0 +1,27 @@
+{
+  "meta": {
+    "restaurant": {
+      "slug": "truffles",
+      "name": "Truffles",
+      "area": "Koramangala",
+      "districtSlugs": [
+        "truffles-1-jp-nagar-bangalore",
+        "truffles-2-st-marks-road",
+        "truffles-indiranagar",
+        "truffles-jakkur-bangalore",
+        "truffles-kalyan-nagar",
+        "truffles-koramangala-1st-block-bangalore",
+        "truffles-koramangala-5th-block",
+        "truffles-new-bel-road",
+        "truffles-st-marks-road"
+      ],
+      "eazyDinerSlug": "truffles-st-marks-road-334765"
+    },
+    "found": true,
+    "offerSummary": []
+  },
+  "raw": {
+    "rscLength": 33071,
+    "pageUrl": "https://www.district.in/dining/bangalore/truffles-1-jp-nagar-bangalore"
+  }
+}

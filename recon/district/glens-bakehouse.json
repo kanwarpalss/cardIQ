@@ -1,0 +1,116 @@
+{
+  "meta": {
+    "restaurant": {
+      "slug": "glens-bakehouse",
+      "name": "Glen's Bakehouse",
+      "area": "Koramangala",
+      "districtSlugs": [
+        "glen-s-bakehouse-bannerghatta-road-bangalore",
+        "glen-s-bakehouse-hsr-bangalore",
+        "glen-s-bakehouse-kalyan-nagar-bangalore",
+        "glen-s-bakehouse-koramangala-6th-block-bangalore",
+        "glen-s-bakehouse-lavelle-road-bangalore",
+        "glen-s-bakehouse-sahakara-nagar-bangalore",
+        "glen-s-bakehouse-sanjay-nagar-bangalore",
+        "glen-s-bakehouse-whitefield-bangalore",
+        "glens-bakehouse-1-jayanagar-bangalore",
+        "glens-bakehouse-1-rajarajeshwari-nagar-bangalore",
+        "glens-bakehouse-basaveshwara-nagar-bangalore",
+        "glens-bakehouse-hennur-hennur-bangalore",
+        "glens-bakehouse-indiranagar-bangalore",
+        "glens-bakehouse-sarjapur-road-bangalore"
+      ],
+      "eazyDinerSlug": "glens-bakehouse-indiranagar-331919"
+    },
+    "found": true,
+    "offerSummary": [
+      "[bank] Flat ₹150 OFF using Google Pay",
+      "[bank] 10% OFF up to ₹500 on Credit Cards",
+      "[bank] Flat ₹350 OFF on Credit Cards",
+      "[bank] 20% OFF up to ₹1000 on IDFC Private Debit Cards",
+      "[bank] 10% OFF up to ₹600 on Kotak Bank Privy Neon Debit Card",
+      "[bank] Flat ₹400 OFF using PNB Luxura Visa Credit Card",
+      "[bank] 12% OFF up to ₹500 on IDFC Select Debit Cards",
+      "[bank] 25% OFF for up to ₹5000 using RBL Bank LUMIÈRE Credit Card",
+      "[bank] Flat ₹300 OFF using SBI VISA Debit Cards",
+      "[bank] 15% OFF up to ₹1500 on Amex Corporate Credit Cards",
+      "[bank] 10% OFF for up to ₹3000 using RBL Bank NOVA Credit Card",
+      "[bank] 15% OFF up to ₹1000 on Credit Cards",
+      "[bank] 20% OFF for up to ₹150 using Cred Indusind Credit Card",
+      "[bank] 20% OFF up to ₹750 on Kotak 811 Infinity Metal Debit Card",
+      "[bank] 10% OFF up to ₹200 on TIDE Cards",
+      "[bank] 15% OFF up to ₹500 on Ananta Credit Card",
+      "[bank] Get 10% OFF up to ₹500 using YES BANK Credit Cards",
+      "[bank] 10% OFF up to ₹1200 on Kotak Bank Privy Black Debit Card",
+      "[bank] 12% OFF up to ₹1000 on HSBC Prive Credit Cards",
+      "[bank] 20% OFF up to ₹1500 on Kotak Bank Solitaire Debit Card",
+      "[bank] Flat ₹500 OFF on Credit Cards",
+      "[bank] 12% OFF up to ₹1000 on Taj Credit Card",
+      "[bank] 10% OFF up to ₹1000 on Kotak Bank Privy Platinum Debit Card",
+      "[bank] Get 15% OFF up to ₹750",
+      "[bank] 10% OFF for up to ₹1000 on Premier Credit Cards",
+      "[bank] 10% OFF up to ₹1000 on HSBC TravelOne Credit Card",
+      "[bank] 15% OFF up to ₹750 on IDFC Wealth Debit Cards"
+    ]
+  },
+  "raw": {
+    "locations": [
+      {
+        "slug": "glen-s-bakehouse-bannerghatta-road-bangalore",
+        "offerCount": 12
+      },
+      {
+        "slug": "glen-s-bakehouse-hsr-bangalore",
+        "offerCount": 12
+      },
+      {
+        "slug": "glen-s-bakehouse-kalyan-nagar-bangalore",
+        "offerCount": 12
+      },
+      {
+        "slug": "glen-s-bakehouse-koramangala-6th-block-bangalore",
+        "offerCount": 12
+      },
+      {
+        "slug": "glen-s-bakehouse-lavelle-road-bangalore",
+        "offerCount": 12
+      },
+      {
+        "slug": "glen-s-bakehouse-sahakara-nagar-bangalore",
+        "offerCount": 12
+      },
+      {
+        "slug": "glen-s-bakehouse-sanjay-nagar-bangalore",
+        "offerCount": 12
+      },
+      {
+        "slug": "glen-s-bakehouse-whitefield-bangalore",
+        "offerCount": 12
+      },
+      {
+        "slug": "glens-bakehouse-1-jayanagar-bangalore",
+        "offerCount": 12
+      },
+      {
+        "slug": "glens-bakehouse-1-rajarajeshwari-nagar-bangalore",
+        "offerCount": 12
+      },
+      {
+        "slug": "glens-bakehouse-basaveshwara-nagar-bangalore",
+        "offerCount": 12
+      },
+      {
+        "slug": "glens-bakehouse-hennur-hennur-bangalore",
+        "offerCount": 12
+      },
+      {
+        "slug": "glens-bakehouse-indiranagar-bangalore",
+        "offerCount": 12
+      },
+      {
+        "slug": "glens-bakehouse-sarjapur-road-bangalore",
+        "offerCount": 12
+      }
+    ]
+  }
+}

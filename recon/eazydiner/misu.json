@@ -1,0 +1,20 @@
+{
+  "meta": {
+    "restaurant": {
+      "slug": "misu",
+      "name": "Misu",
+      "area": "Indiranagar",
+      "districtSlugs": [
+        "misu-1-race-course-road-bangalore",
+        "misu-ashok-nagar-bangalore",
+        "misu-hebbal-bangalore",
+        "misu-indiranagar-bangalore",
+        "misu-kumaraswamy-layout-bangalore"
+      ]
+    },
+    "found": false,
+    "error": "not in EazyDiner sitemap — slug not mapped",
+    "offerSummary": []
+  },
+  "raw": null
+}

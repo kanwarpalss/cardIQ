@@ -1,0 +1,652 @@
+{
+  "meta": {
+    "restaurant": {
+      "slug": "barbeque-nation",
+      "name": "Barbeque Nation",
+      "area": "Indiranagar",
+      "districtSlugs": [
+        "barbeque-nation-indiranagar"
+      ],
+      "eazyDinerSlug": "barbeque-nation-ascendas-park-square-whitefield-335312"
+    },
+    "found": true,
+    "offerSummary": [
+      "[payeazy] Pay now & get EXTRA 25% OFF upto ₹1000",
+      "[discount] ₹525 off on ₹2100 bill (PayEazy)",
+      "[buffet] 7 buffet deal(s) available"
+    ]
+  },
+  "raw": {
+    "data": {
+      "id": 335312,
+      "url": "https://www.eazydiner.com/bengaluru/barbeque-nation-ascendas-park-square-whitefield-335312",
+      "code": "bengaluru/barbeque-nation-ascendas-park-square-whitefield-335312",
+      "default_image": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/home/restaurant-default-image.png",
+      "favourite_count": "727",
+      "primeTag": "",
+      "name": "Barbeque Nation",
+      "images": [
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/335312/restaurant020250530025806.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/335312/restaurant120250530025806.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/335312/restaurant220250530025806.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/335312/restaurant320250530025806.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/335312/restaurant420250530025806.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/335312/restaurant520250530025806.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/335312/restaurant020250530025823.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/335312/restaurant120250530025823.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/335312/restaurant220250530025823.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/335312/restaurant320250530025823.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/335312/restaurant420250530025823.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/reviewimages/335312/6747707ecb78f3dd62b99ef55c86d22bdc033b28.20210320060119.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/reviewimages/335312/063c959d7c4fd33445670d4e4298fb025afe36c2.jpg?width=818&height=450&mode=fit"
+      ],
+      "cost_for_two": "₹ 2100 for two approx.",
+      "currency": "₹",
+      "location": {
+        "address": "1st Floor, Ascendas Park Square Mall, ITPL, Whitefield Main Rd, Bengaluru, Karnataka",
+        "locality": "Ascendas Park Square, Whitefield",
+        "code": "ascendas-park-square-whitefield",
+        "latitude": 12.98730413,
+        "longitude": 77.73594798,
+        "region_code": "East Bengaluru",
+        "area_name": "Whitefield",
+        "city_code": "bengaluru",
+        "city_id": 3,
+        "country_id": 1,
+        "group_id": 615,
+        "name": "Ascendas Park Square, Whitefield",
+        "city_name": "Bengaluru"
+      },
+      "phone": "7861004444",
+      "cuisines": "Multicuisine, Barbeque",
+      "timings": {
+        "today": [
+          "11:00 AM - 11:00 PM"
+        ],
+        "week": {
+          "Monday": [
+            "11:00 AM - 11:00 PM"
+          ],
+          "Tuesday": [
+            "11:00 AM - 11:00 PM"
+          ],
+          "Wednesday": [
+            "11:00 AM - 11:00 PM"
+          ],
+          "Thursday": [
+            "11:00 AM - 11:00 PM"
+          ],
+          "Friday": [
+            "11:00 AM - 11:00 PM"
+          ],
+          "Saturday": [
+            "11:00 AM - 11:00 PM"
+          ],
+          "Sunday": [
+            "11:00 AM - 11:00 PM"
+          ]
+        }
+      },
+      "user_reviews": {
+        "avg_rating": 4.4,
+        "count": 674
+      },
+      "critic_review": "",
+      "webview_menu_url": null,
+      "accepts_eazypay": true,
+      "eazypay_details": {
+        "text": "Pay now & get EXTRA 25% OFF upto ₹1000",
+        "summary_text": "Pay your bill on the app to get EXTRA 25% OFF upto ₹1000",
+        "booking_confirmation_text": "Remember to pay restaurant bill via PayEazy to get additional discount *",
+        "image": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/payeazy/logo/payeazy_tag.png",
+        "url": "https://www.eazydiner.com//ed-payeazy?restaurant_id=bengaluru/barbeque-nation-ascendas-park-square-whitefield-335312"
+      },
+      "is_favorite": false,
+      "menu_last_updated": "Last updated few months ago",
+      "is_qsr": false,
+      "faq": [
+        {
+          "@type": "Question",
+          "name": "What cuisines are served at Barbeque Nation?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The main cuisine served at Barbeque Nation are Multicuisine, Barbeque."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the cost for two at Barbeque Nation?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The cost of two at Barbeque Nation is ₹ 2100. You can save EXTRA over and above the restaurant deal applied by paying your restaurant bill on the EazyDiner app via PayEazy.."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Barbeque Nation is pure vegetarian restaurant?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "   Barbeque Nation serves both veg and non veg food."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What are the operational timings of Barbeque Nation?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Barbeque Nation restaurant operational timings are MONDAY: 11:00 AM to 11:00 PM, TUESDAY: 11:00 AM to 11:00 PM, WEDNESDAY: 11:00 AM to 11:00 PM, THURSDAY: 11:00 AM to 11:00 PM, FRIDAY: 11:00 AM to 11:00 PM, SATURDAY: 11:00 AM to 11:00 PM, SUNDAY: 11:00 AM to 11:00 PM"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does Barbeque Nation serve buffet?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, Barbeque Nation serves buffet."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does Barbeque Nation restaurant have a bar or serve alcohol?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": " No, Barbeque Nation does not serve alcohol."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is there a parking facility at Barbeque Nation?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": " No, a parking facility is not available at Barbeque Nation."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does Barbeque Nation accept bill payment via PayEazy?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, Barbeque Nation is a PayEazy-enabled restaurant & accepts card payments via EazyDiner. You can pay the restaurant bill using debit/credit cards."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How can I save EXTRA with PayEazy at Barbeque Nation?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Book a table at Barbeque Nation. Get your bill with the pre-applied EazyDiner deal. Pay your bill via PayEazy & save EXTRA"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does Barbeque Nation restaurant play live music?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": " No, Barbeque Nation doesn't play live music."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What are current deals at Barbeque Nation?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "There is no deal at Barbeque Nation on EazyDiner. Browse through EazyDiner to avail dining discounts upto 50% OFF."
+          }
+        }
+      ],
+      "category": "Casual Dining",
+      "restaurant_type": "free standing",
+      "chain": "Yes",
+      "wallet_config": {
+        "type": "percentage",
+        "percentage": 25,
+        "min_transaction_amount": 0,
+        "text": "25% of the total amount can be paid from wallet balance in a single transaction ."
+      },
+      "reservation_status": true,
+      "deal_data": {
+        "default_deal_type": "deal_types[]=postpaid",
+        "title": "More Deals",
+        "period": 30,
+        "freeze_time": 30,
+        "other_deals": [
+          {
+            "icon": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant_detail/qsr.png",
+            "title": "Discount Coupon Deals",
+            "freeze_time": 30,
+            "code": "deal_types[]=qsr",
+            "period": 30,
+            "subtitle": "Pay now & redeem at the restaurant.",
+            "action_type": null
+          }
+        ]
+      },
+      "foodie_awards": [],
+      "buffet_deals": [
+        {
+          "id": 13535,
+          "meal": "Lunch",
+          "type": "Adult : NON-VEG",
+          "price_excluding_tax": 999,
+          "price_including_tax": 999,
+          "extra_info": "",
+          "additional_info": null,
+          "extra_title": null,
+          "buffet_time": "12:00 PM - 06:00 PM",
+          "buffet_days": "SUNDAY",
+          "meal_type": "Non-veg",
+          "inclusion": ""
+        },
+        {
+          "id": 49387,
+          "meal": "Lunch",
+          "type": "Adult : VEG",
+          "price_excluding_tax": 899,
+          "price_including_tax": 899,
+          "extra_info": "",
+          "additional_info": null,
+          "extra_title": null,
+          "buffet_time": "12:00 PM - 06:00 PM",
+          "buffet_days": "SUNDAY",
+          "meal_type": "Veg",
+          "inclusion": ""
+        },
+        {
+          "id": 93865,
+          "meal": "Lunch",
+          "type": "Kid (6-9 years) : VEG",
+          "price_excluding_tax": 499,
+          "price_including_tax": 499,
+          "extra_info": "",
+          "additional_info": null,
+          "extra_title": null,
+          "buffet_time": "12:00 PM - 06:00 PM",
+          "buffet_days": "SUNDAY",
+          "meal_type": "Veg",
+          "inclusion": ""
+        },
+        {
+          "id": 93772,
+          "meal": "Dinner",
+          "type": "Adult : NON-VEG",
+          "price_excluding_tax": 999,
+          "price_including_tax": 999,
+          "extra_info": "",
+          "additional_info": null,
+          "extra_title": null,
+          "buffet_time": "06:00 PM - 08:59 PM",
+          "buffet_days": "SUNDAY",
+          "meal_type": "Non-veg",
+          "inclusion": ""
+        },
+        {
+          "id": 74885,
+          "meal": "Dinner",
+          "type": "Adult : VEG",
+          "price_excluding_tax": 899,
+          "price_including_tax": 899,
+          "extra_info": "",
+          "additional_info": null,
+          "extra_title": null,
+          "buffet_time": "06:00 PM - 08:59 PM",
+          "buffet_days": "SUNDAY",
+          "meal_type": "Veg",
+          "inclusion": ""
+        },
+        {
+          "id": 35586,
+          "meal": "Dinner",
+          "type": "Kid (6-9 years) : VEG",
+          "price_excluding_tax": 499,
+          "price_including_tax": 499,
+          "extra_info": "",
+          "additional_info": null,
+          "extra_title": null,
+          "buffet_time": "06:00 PM - 11:59 PM",
+          "buffet_days": "SUNDAY",
+          "meal_type": "Veg",
+          "inclusion": ""
+        },
+        {
+          "id": 76468,
+          "meal": "Dinner",
+          "type": "Adult : NON-VEG",
+          "price_excluding_tax": 899,
+          "price_including_tax": 899,
+          "extra_info": "",
+          "additional_info": null,
+          "extra_title": null,
+          "buffet_time": "09:00 PM - 11:00 PM",
+          "buffet_days": "SUNDAY",
+          "meal_type": "Non-veg",
+          "inclusion": ""
+        }
+      ],
+      "hasPrimeDeal": false,
+      "primeIcon": "",
+      "restaurant_subtype": "Both",
+      "hygiene_rating": {
+        "icon": "https://d4t7t8y8xqo0t.cloudfront.net/app/https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant_detail/rest_header_payeazy.png"
+      },
+      "has_dynamic_buffet": true,
+      "bottomsheet_notification": "",
+      "force_direct_booking": true,
+      "new_rdv_layout": true,
+      "rdv_offer_data": {
+        "default_deal_type": "deal_types=postpaid",
+        "freeze_time": 30,
+        "period": 30
+      },
+      "link_only_payeazy": "",
+      "sample_discount_calculator": {
+        "heading": "<font color='#000000'><strong>Sample Bill</strong></font> <small>(Approx Discount)</small>",
+        "total_bill": 2100,
+        "restaurant_offer": 0,
+        "payment_offer": 525
+      },
+      "qbf": {
+        "qbf_gif": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/banner/qbf/qbf_final_single_nov_23.gif",
+        "success_confirmed_gif": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/banner/qbf/success_confirm_qbf_2.gif"
+      },
+      "webEngageData": {
+        "features": [
+          {
+            "name": "Buffet",
+            "code": "buffet",
+            "icon": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/features/87/buffet3x.png"
+          }
+        ],
+        "cost_for_two": 2100,
+        "offer_title": " + 25%"
+      },
+      "chain_id": 1496
+    },
+    "meta": {
+      "tab_data": [
+        {
+          "title": "offers",
+          "is_active": true
+        },
+        {
+          "title": "menu",
+          "is_active": false
+        },
+        {
+          "title": "photos",
+          "is_active": false
+        },
+        {
+          "title": "about",
+          "is_active": false
+        }
+      ],
+      "meta_title": "Get 25% Off upto ₹1000 at Barbeque Nation, Ascendas Park Square, Whitefield, Bengaluru - EazyDiner",
+      "meta_description": "Barbeque Nation Bengaluru: Barbeque Nation, Ascendas Park Square, Whitefield; View Menu, Reviews, Contact, Location, Photos, Deals for Barbeque Nation Restaurant Near You.",
+      "breadcrumbs": [
+        {
+          "title": "Home",
+          "url": "/"
+        },
+        {
+          "title": "Bengaluru",
+          "url": "/bengaluru"
+        },
+        {
+          "title": " Top Restaurants in Bengaluru",
+          "url": "/bengaluru/restaurants"
+        },
+        {
+          "title": "East Bengaluru",
+          "url": "/bengaluru/restaurants/east-bengaluru"
+        },
+        {
+          "title": "Whitefield",
+          "url": "/bengaluru/restaurants/whitefield"
+        },
+        {
+          "title": "Ascendas Park Square, Whitefield",
+          "url": "/bengaluru/restaurants/ascendas-park-square-whitefield"
+        },
+        {
+          "title": "Barbeque Nation",
+          "url": "/bengaluru/barbeque-nation-ascendas-park-square-whitefield-335312"
+        }
+      ],
+      "jsonSchema": {
+        "title": "Get 25% Off upto ₹1000 at Barbeque Nation, Ascendas Park Square, Whitefield, Bengaluru - EazyDiner",
+        "description": "Barbeque Nation Bengaluru: Barbeque Nation, Ascendas Park Square, Whitefield; View Menu, Reviews, Contact, Location, Photos, Deals for Barbeque Nation Restaurant Near You.",
+        "custom_deeplink": {
+          "ios": "eazydiner://action?url=https://www.eazydiner.com/bengaluru/barbeque-nation-ascendas-park-square-whitefield-335312",
+          "android": "eazydiner://action?url=https://www.eazydiner.com/bengaluru/barbeque-nation-ascendas-park-square-whitefield-335312?"
+        },
+        "og_data": {
+          "title": "Barbeque Nation, Ascendas Park Square, Whitefield",
+          "description": "EazyDiner",
+          "image_url": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/335312/restaurant020250530025806.jpg?width=750&height=436&mode=fit",
+          "brand": "EazyDiner",
+          "availability": "available for order",
+          "condition": "new",
+          "amount": 2100,
+          "currency": "Inr",
+          "retailer_item_id": 335312
+        },
+        "json_schema": {
+          "@context": "http://schema.org",
+          "@graph": [
+            {
+              "@type": "Restaurant",
+              "@id": "https://www.eazydiner.com/bengaluru/barbeque-nation-ascendas-park-square-whitefield-335312",
+              "name": "Barbeque Nation",
+              "url": "https://www.eazydiner.com/bengaluru/barbeque-nation-ascendas-park-square-whitefield-335312",
+              "hasMenu": "https://www.eazydiner.com/bengaluru/barbeque-nation-ascendas-park-square-whitefield-335312/menu",
+              "image": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/335312/restaurant020250530025806.jpg?width=750&height=436&mode=fit",
+              "servesCuisine": "Multicuisine,Barbeque",
+              "priceRange": "₹ 2100 for two approx. ",
+              "telephone": null,
+              "geo": {
+                "@type": "GeoCoordinates",
+                "latitude": "12.98730413",
+                "longitude": "77.73594798"
+              },
+              "acceptsReservations": true,
+              "openingHoursSpecification": [
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Monday"
+                  ],
+                  "opens": "11:00:00",
+                  "closes": "23:00:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Tuesday"
+                  ],
+                  "opens": "11:00:00",
+                  "closes": "23:00:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Wednesday"
+                  ],
+                  "opens": "11:00:00",
+                  "closes": "23:00:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Thursday"
+                  ],
+                  "opens": "11:00:00",
+                  "closes": "23:00:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Friday"
+                  ],
+                  "opens": "11:00:00",
+                  "closes": "23:00:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Saturday"
+                  ],
+                  "opens": "11:00:00",
+                  "closes": "23:00:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Sunday"
+                  ],
+                  "opens": "11:00:00",
+                  "closes": "23:00:00"
+                }
+              ],
+              "currenciesAccepted": "INR",
+              "paymentAccepted": "Cash, Cards and Digital Payments Accepted",
+              "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "1st Floor, Ascendas Park Square Mall, ITPL, Whitefield Main Rd, Bengaluru, Karnataka",
+                "addressLocality": "Ascendas Park Square, Whitefield",
+                "addressRegion": "Bengaluru",
+                "postalCode": "560066",
+                "addressCountry": "IN"
+              },
+              "potentialAction": {
+                "@type": "ReserveAction",
+                "target": {
+                  "@type": "EntryPoint",
+                  "urlTemplate": "https://www.eazydiner.com/bengaluru/barbeque-nation-ascendas-park-square-whitefield-335312",
+                  "inLanguage": "en-US",
+                  "actionPlatform": [
+                    "http://schema.org/MobileWebPlatform",
+                    "http://schema.org/DesktopWebPlatform",
+                    "http://schema.org/IOSPlatform",
+                    "http://schema.org/AndroidPlatform"
+                  ]
+                },
+                "result": {
+                  "@type": "FoodEstablishmentReservation",
+                  "name": "Reserve Table"
+                }
+              },
+              "aggregateRating": {
+                "@type": "AggregateRating",
+                "ratingValue": 4.3,
+                "ratingCount": 674,
+                "bestRating": "5",
+                "worstRating": "0"
+              }
+            },
+            {
+              "@type": "FAQPage",
+              "mainEntity": [
+                {
+                  "@type": "Question",
+                  "name": "What cuisines are served at Barbeque Nation?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "The main cuisine served at Barbeque Nation are Multicuisine, Barbeque."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "What is the cost for two at Barbeque Nation?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "The cost of two at Barbeque Nation is ₹ 2100. You can save EXTRA over and above the restaurant deal applied by paying your restaurant bill on the EazyDiner app via PayEazy.."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Barbeque Nation is pure vegetarian restaurant?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "   Barbeque Nation serves both veg and non veg food."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "What are the operational timings of Barbeque Nation?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Barbeque Nation restaurant operational timings are MONDAY: 11:00 AM to 11:00 PM, TUESDAY: 11:00 AM to 11:00 PM, WEDNESDAY: 11:00 AM to 11:00 PM, THURSDAY: 11:00 AM to 11:00 PM, FRIDAY: 11:00 AM to 11:00 PM, SATURDAY: 11:00 AM to 11:00 PM, SUNDAY: 11:00 AM to 11:00 PM"
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Does Barbeque Nation serve buffet?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Yes, Barbeque Nation serves buffet."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Does Barbeque Nation restaurant have a bar or serve alcohol?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": " No, Barbeque Nation does not serve alcohol."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Is there a parking facility at Barbeque Nation?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": " No, a parking facility is not available at Barbeque Nation."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Does Barbeque Nation accept bill payment via PayEazy?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Yes, Barbeque Nation is a PayEazy-enabled restaurant & accepts card payments via EazyDiner. You can pay the restaurant bill using debit/credit cards."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "How can I save EXTRA with PayEazy at Barbeque Nation?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Book a table at Barbeque Nation. Get your bill with the pre-applied EazyDiner deal. Pay your bill via PayEazy & save EXTRA"
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Does Barbeque Nation restaurant play live music?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": " No, Barbeque Nation doesn't play live music."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "What are current deals at Barbeque Nation?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "There is no deal at Barbeque Nation on EazyDiner. Browse through EazyDiner to avail dining discounts upto 50% OFF."
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "remarketing_tag_params": {
+          "dynx_itemid": 335312,
+          "dynx_itemid2": "Barbeque Nation",
+          "dynx_pagetype": "restaurantdetail"
+        },
+        "amp_meta_tag": false,
+        "android_deeplink": "android-app://com.easydiner/eazydiner/action?url=https://www.eazydiner.com/bengaluru/barbeque-nation-ascendas-park-square-whitefield-335312",
+        "is_noindex": false
+      }
+    }
+  }
+}

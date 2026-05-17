@@ -1,0 +1,509 @@
+{
+  "meta": {
+    "restaurant": {
+      "slug": "glens-bakehouse",
+      "name": "Glen's Bakehouse",
+      "area": "Koramangala",
+      "districtSlugs": [
+        "glen-s-bakehouse-bannerghatta-road-bangalore",
+        "glen-s-bakehouse-hsr-bangalore",
+        "glen-s-bakehouse-kalyan-nagar-bangalore",
+        "glen-s-bakehouse-koramangala-6th-block-bangalore",
+        "glen-s-bakehouse-lavelle-road-bangalore",
+        "glen-s-bakehouse-sahakara-nagar-bangalore",
+        "glen-s-bakehouse-sanjay-nagar-bangalore",
+        "glen-s-bakehouse-whitefield-bangalore",
+        "glens-bakehouse-1-jayanagar-bangalore",
+        "glens-bakehouse-1-rajarajeshwari-nagar-bangalore",
+        "glens-bakehouse-basaveshwara-nagar-bangalore",
+        "glens-bakehouse-hennur-hennur-bangalore",
+        "glens-bakehouse-indiranagar-bangalore",
+        "glens-bakehouse-sarjapur-road-bangalore"
+      ],
+      "eazyDinerSlug": "glens-bakehouse-indiranagar-331919"
+    },
+    "found": true,
+    "offerSummary": []
+  },
+  "raw": {
+    "data": {
+      "id": 331919,
+      "url": "https://www.eazydiner.com/bengaluru/glens-bakehouse-indiranagar-331919",
+      "code": "bengaluru/glens-bakehouse-indiranagar-331919",
+      "default_image": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/home/restaurant-default-image.png",
+      "favourite_count": "627",
+      "primeTag": "",
+      "name": "Glens Bakehouse",
+      "images": [
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/331919/4033_Template+New+s426.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/reviewimages/331919/248cf64531046a86cc73244af87094f609f8615d.20220803184701.jpg?width=818&height=450&mode=fit"
+      ],
+      "cost_for_two": "₹ 800 for two approx.",
+      "currency": "₹",
+      "location": {
+        "address": "297, 100 Feet Road, Indiranagar, Bengaluru",
+        "locality": "Indiranagar, East Bengaluru",
+        "code": "indiranagar",
+        "latitude": 12.97929955,
+        "longitude": 77.64070129,
+        "region_code": "East Bengaluru",
+        "area_name": "Indiranagar",
+        "city_code": "bengaluru",
+        "city_id": 3,
+        "country_id": 1,
+        "group_id": 1564,
+        "name": "Indiranagar, East Bengaluru",
+        "city_name": "Bengaluru"
+      },
+      "phone": "+918041228773",
+      "cuisines": "Cafe",
+      "timings": {
+        "today": [
+          "10:30 AM - 10:30 PM"
+        ],
+        "week": {
+          "Monday": [
+            "10:30 AM - 10:30 PM"
+          ],
+          "Tuesday": [
+            "10:30 AM - 10:30 PM"
+          ],
+          "Wednesday": [
+            "10:30 AM - 10:30 PM"
+          ],
+          "Thursday": [
+            "10:30 AM - 10:30 PM"
+          ],
+          "Friday": [
+            "10:30 AM - 10:30 PM"
+          ],
+          "Saturday": [
+            "10:30 AM - 10:30 PM"
+          ],
+          "Sunday": [
+            "10:30 AM - 10:30 PM"
+          ]
+        }
+      },
+      "user_reviews": {
+        "avg_rating": 4.5,
+        "count": 16
+      },
+      "critic_review": "",
+      "webview_menu_url": null,
+      "accepts_eazypay": false,
+      "is_favorite": false,
+      "menu_last_updated": "Last updated few months ago",
+      "is_qsr": false,
+      "faq": [
+        {
+          "@type": "Question",
+          "name": "What cuisines are served at Glens Bakehouse?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The main cuisine served at Glens Bakehouse is Cafe."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the cost for two at Glens Bakehouse?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The cost of two at Glens Bakehouse is ₹ 800."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Glens Bakehouse is pure vegetarian restaurant?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "   Glens Bakehouse serves both veg and non veg food."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What are the operational timings of Glens Bakehouse?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Glens Bakehouse restaurant operational timings are MONDAY: 10:30 AM to 10:30 PM, TUESDAY: 10:30 AM to 10:30 PM, WEDNESDAY: 10:30 AM to 10:30 PM, THURSDAY: 10:30 AM to 10:30 PM, FRIDAY: 10:30 AM to 10:30 PM, SATURDAY: 10:30 AM to 10:30 PM, SUNDAY: 10:30 AM to 10:30 PM"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does Glens Bakehouse serve buffet?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": " No, Glens Bakehouse does not serve buffet."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does Glens Bakehouse restaurant have a bar or serve alcohol?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": " No, Glens Bakehouse does not serve alcohol."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is there a parking facility at Glens Bakehouse?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": " No, a parking facility is not available at Glens Bakehouse."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does Glens Bakehouse accept bill payment via PayEazy?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No, Glens Bakehouse is not a PayEazy-enabled restaurant."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How can I save EXTRA with PayEazy at Glens Bakehouse?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Book a table at Glens Bakehouse. Get your bill with the pre-applied EazyDiner deal. Pay your bill via PayEazy & save EXTRA"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does Glens Bakehouse restaurant play live music?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": " No, Glens Bakehouse doesn't play live music."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What are current deals at Glens Bakehouse?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "There is no deal at Glens Bakehouse on EazyDiner. Browse through EazyDiner to avail dining discounts upto 50% OFF."
+          }
+        }
+      ],
+      "category": "Cafe/Bakery",
+      "restaurant_type": "free standing",
+      "chain": "No",
+      "wallet_config": {
+        "type": "percentage",
+        "percentage": 25,
+        "min_transaction_amount": 0,
+        "text": "25% of the total amount can be paid from wallet balance in a single transaction ."
+      },
+      "reservation_status": false,
+      "deal_data": {
+        "default_deal_type": "deal_types[]=postpaid",
+        "title": "More Deals",
+        "period": 30,
+        "freeze_time": 0,
+        "other_deals": null
+      },
+      "foodie_awards": [],
+      "buffet_deals": [],
+      "error": {
+        "heading": "Discover amazing restaurants nearby",
+        "message": "Choose from higher ranked restaurants which were booked by many users this week.",
+        "date": "",
+        "time": "",
+        "icon": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant_detail/shop_1.png",
+        "action": "No Action",
+        "notBookableAction": "https://www.eazydiner.com/restaurants?location=indiranagar",
+        "notBookableText": "Explore Nearby Restaurants"
+      },
+      "hasPrimeDeal": false,
+      "primeIcon": "",
+      "restaurant_subtype": "Table",
+      "hygiene_rating": "",
+      "has_dynamic_buffet": false,
+      "bottomsheet_notification": "",
+      "force_direct_booking": true,
+      "new_rdv_layout": false,
+      "rdv_offer_data": {
+        "default_deal_type": "deal_types=postpaid",
+        "freeze_time": 0,
+        "period": 30
+      },
+      "link_only_payeazy": "",
+      "sample_discount_calculator": "",
+      "qbf": {
+        "qbf_gif": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/banner/qbf/qbf_final_single_nov_23.gif",
+        "success_confirmed_gif": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/banner/qbf/success_confirm_qbf_2.gif"
+      },
+      "webEngageData": {
+        "features": [],
+        "cost_for_two": 800,
+        "offer_title": " + 25%"
+      },
+      "chain_id": null
+    },
+    "meta": {
+      "tab_data": [
+        {
+          "title": "offers",
+          "is_active": true
+        },
+        {
+          "title": "menu",
+          "is_active": false
+        },
+        {
+          "title": "photos",
+          "is_active": false
+        },
+        {
+          "title": "about",
+          "is_active": false
+        }
+      ],
+      "meta_title": "Explore Glens Bakehouse in Indiranagar, East Bengaluru",
+      "meta_description": "Get all the details for Glens Bakehouse, Indiranagar, East Bengaluru. Check out reviews, photos, menu highlights, contact info, and much more on EazyDiner.",
+      "breadcrumbs": [
+        {
+          "title": "Home",
+          "url": "/"
+        },
+        {
+          "title": "Bengaluru",
+          "url": "/bengaluru"
+        },
+        {
+          "title": " Top Restaurants in Bengaluru",
+          "url": "/bengaluru/restaurants"
+        },
+        {
+          "title": "East Bengaluru",
+          "url": "/bengaluru/restaurants/east-bengaluru"
+        },
+        {
+          "title": "Indiranagar",
+          "url": "/bengaluru/restaurants/indiranagar"
+        },
+        {
+          "title": "Glens Bakehouse",
+          "url": "/bengaluru/glens-bakehouse-indiranagar-331919"
+        }
+      ],
+      "jsonSchema": {
+        "title": "Explore Glens Bakehouse in Indiranagar, East Bengaluru",
+        "description": "Get all the details for Glens Bakehouse, Indiranagar, East Bengaluru. Check out reviews, photos, menu highlights, contact info, and much more on EazyDiner.",
+        "custom_deeplink": {
+          "ios": "eazydiner://action?url=https://www.eazydiner.com/bengaluru/glens-bakehouse-indiranagar-331919",
+          "android": "eazydiner://action?url=https://www.eazydiner.com/bengaluru/glens-bakehouse-indiranagar-331919?"
+        },
+        "og_data": {
+          "title": "Glens Bakehouse, Indiranagar, East Bengaluru",
+          "description": "EazyDiner",
+          "image_url": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/331919/4033_Template New s426.jpg?width=750&height=436&mode=fit",
+          "brand": "EazyDiner",
+          "availability": "discontinued",
+          "condition": "new",
+          "amount": 800,
+          "currency": "Inr",
+          "retailer_item_id": 331919
+        },
+        "json_schema": {
+          "@context": "http://schema.org",
+          "@graph": [
+            {
+              "@type": "Restaurant",
+              "@id": "https://www.eazydiner.com/bengaluru/glens-bakehouse-indiranagar-331919",
+              "name": "Glens Bakehouse",
+              "url": "https://www.eazydiner.com/bengaluru/glens-bakehouse-indiranagar-331919",
+              "hasMenu": "https://www.eazydiner.com/bengaluru/glens-bakehouse-indiranagar-331919/menu",
+              "image": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/331919/4033_Template New s426.jpg?width=750&height=436&mode=fit",
+              "servesCuisine": "Cafe",
+              "priceRange": "₹ 800 for two approx. ",
+              "telephone": "+918041228773",
+              "geo": {
+                "@type": "GeoCoordinates",
+                "latitude": "12.97929955",
+                "longitude": "77.64070129"
+              },
+              "acceptsReservations": false,
+              "openingHoursSpecification": [
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Monday"
+                  ],
+                  "opens": "10:30:00",
+                  "closes": "22:30:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Tuesday"
+                  ],
+                  "opens": "10:30:00",
+                  "closes": "22:30:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Wednesday"
+                  ],
+                  "opens": "10:30:00",
+                  "closes": "22:30:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Thursday"
+                  ],
+                  "opens": "10:30:00",
+                  "closes": "22:30:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Friday"
+                  ],
+                  "opens": "10:30:00",
+                  "closes": "22:30:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Saturday"
+                  ],
+                  "opens": "10:30:00",
+                  "closes": "22:30:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Sunday"
+                  ],
+                  "opens": "10:30:00",
+                  "closes": "22:30:00"
+                }
+              ],
+              "currenciesAccepted": "INR",
+              "paymentAccepted": "Cash, Cards and Digital Payments Accepted",
+              "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "297, 100 Feet Road, Indiranagar, Bengaluru",
+                "addressLocality": "Indiranagar, East Bengaluru",
+                "addressRegion": "Bengaluru",
+                "postalCode": null,
+                "addressCountry": "IN"
+              },
+              "aggregateRating": {
+                "@type": "AggregateRating",
+                "ratingValue": 4.5,
+                "ratingCount": 16,
+                "bestRating": "5",
+                "worstRating": "0"
+              }
+            },
+            {
+              "@type": "FAQPage",
+              "mainEntity": [
+                {
+                  "@type": "Question",
+                  "name": "What cuisines are served at Glens Bakehouse?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "The main cuisine served at Glens Bakehouse is Cafe."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "What is the cost for two at Glens Bakehouse?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "The cost of two at Glens Bakehouse is ₹ 800."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Glens Bakehouse is pure vegetarian restaurant?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "   Glens Bakehouse serves both veg and non veg food."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "What are the operational timings of Glens Bakehouse?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Glens Bakehouse restaurant operational timings are MONDAY: 10:30 AM to 10:30 PM, TUESDAY: 10:30 AM to 10:30 PM, WEDNESDAY: 10:30 AM to 10:30 PM, THURSDAY: 10:30 AM to 10:30 PM, FRIDAY: 10:30 AM to 10:30 PM, SATURDAY: 10:30 AM to 10:30 PM, SUNDAY: 10:30 AM to 10:30 PM"
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Does Glens Bakehouse serve buffet?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": " No, Glens Bakehouse does not serve buffet."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Does Glens Bakehouse restaurant have a bar or serve alcohol?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": " No, Glens Bakehouse does not serve alcohol."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Is there a parking facility at Glens Bakehouse?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": " No, a parking facility is not available at Glens Bakehouse."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Does Glens Bakehouse accept bill payment via PayEazy?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "No, Glens Bakehouse is not a PayEazy-enabled restaurant."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "How can I save EXTRA with PayEazy at Glens Bakehouse?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Book a table at Glens Bakehouse. Get your bill with the pre-applied EazyDiner deal. Pay your bill via PayEazy & save EXTRA"
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Does Glens Bakehouse restaurant play live music?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": " No, Glens Bakehouse doesn't play live music."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "What are current deals at Glens Bakehouse?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "There is no deal at Glens Bakehouse on EazyDiner. Browse through EazyDiner to avail dining discounts upto 50% OFF."
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "remarketing_tag_params": {
+          "dynx_itemid": 331919,
+          "dynx_itemid2": "Glens Bakehouse",
+          "dynx_pagetype": "restaurantdetail"
+        },
+        "amp_meta_tag": false,
+        "android_deeplink": "android-app://com.easydiner/eazydiner/action?url=https://www.eazydiner.com/bengaluru/glens-bakehouse-indiranagar-331919",
+        "is_noindex": false
+      }
+    }
+  }
+}

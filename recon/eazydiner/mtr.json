@@ -1,0 +1,511 @@
+{
+  "meta": {
+    "restaurant": {
+      "slug": "mtr",
+      "name": "MTR",
+      "area": "Lalbagh",
+      "districtSlugs": [
+        "mavalli-tiffin-room-mtr-basavanagudi-bangalore",
+        "mavalli-tiffin-room-mtr-jakkur-bangalore",
+        "mtr-since-1924-1-kalyan-nagar-bangalore",
+        "mtr-since-1924-hsr-bangalore",
+        "mtr-since-1924-indiranagar-bangalore",
+        "mtr-since-1924-jp-nagar-bangalore",
+        "mtr-since-1924-kalyan-nagar-bangalore",
+        "mtr-since-1924-kanakapura-road-bangalore",
+        "mtr-since-1924-majestic-bangalore",
+        "mtr-since-1924-st-marks-road-bangalore"
+      ],
+      "eazyDinerSlug": "mtr-1924-st-marks-road-334798"
+    },
+    "found": true,
+    "offerSummary": []
+  },
+  "raw": {
+    "data": {
+      "id": 334798,
+      "url": "https://www.eazydiner.com/bengaluru/mtr-1924-st-marks-road-334798",
+      "code": "bengaluru/mtr-1924-st-marks-road-334798",
+      "default_image": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/home/restaurant-default-image.png",
+      "favourite_count": "609",
+      "primeTag": "",
+      "name": "MTR 1924",
+      "images": [
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/group/1540/0.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/group/1540/0.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/group/1540/0.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/group/1540/0.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/group/1540/0.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/group/1540/0.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/group/1540/0.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/group/1540/0.jpg?width=818&height=450&mode=fit"
+      ],
+      "cost_for_two": "₹ 450 for two approx.",
+      "currency": "₹",
+      "location": {
+        "address": "29, (Div. 61), White House, St. Marks Road, Bengaluru",
+        "locality": "St. Marks Road, Central Bengaluru",
+        "code": "st.-marks-road",
+        "latitude": 12.97239971,
+        "longitude": 77.60099792,
+        "region_code": "Central Bengaluru",
+        "area_name": "St. Marks Road",
+        "city_code": "bengaluru",
+        "city_id": 3,
+        "country_id": 1,
+        "group_id": 1081,
+        "name": "St. Marks Road, Central Bengaluru",
+        "city_name": "Bengaluru"
+      },
+      "phone": "+918022118083",
+      "cuisines": "South Indian",
+      "timings": {
+        "today": [
+          "07:00 AM - 08:30 PM"
+        ],
+        "week": {
+          "Monday": [
+            "07:00 AM - 08:30 PM"
+          ],
+          "Tuesday": [
+            "07:00 AM - 08:30 PM"
+          ],
+          "Wednesday": [
+            "07:00 AM - 08:30 PM"
+          ],
+          "Thursday": [
+            "07:00 AM - 08:30 PM"
+          ],
+          "Friday": [
+            "07:00 AM - 08:30 PM"
+          ],
+          "Saturday": [
+            "07:00 AM - 08:30 PM"
+          ],
+          "Sunday": [
+            "07:00 AM - 08:30 PM"
+          ]
+        }
+      },
+      "user_reviews": {
+        "avg_rating": 4.4,
+        "count": 5
+      },
+      "critic_review": "",
+      "webview_menu_url": null,
+      "accepts_eazypay": false,
+      "is_favorite": false,
+      "menu_last_updated": null,
+      "is_qsr": false,
+      "faq": [
+        {
+          "@type": "Question",
+          "name": "What cuisines are served at MTR 1924?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The main cuisine served at MTR 1924 is South Indian."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the cost for two at MTR 1924?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The cost of two at MTR 1924 is ₹ 450."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "MTR 1924 is pure vegetarian restaurant?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "   MTR 1924 serves both veg and non veg food."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What are the operational timings of MTR 1924?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "MTR 1924 restaurant operational timings are MONDAY: 07:00 AM to 08:30 PM, TUESDAY: 07:00 AM to 08:30 PM, WEDNESDAY: 07:00 AM to 08:30 PM, THURSDAY: 07:00 AM to 08:30 PM, FRIDAY: 07:00 AM to 08:30 PM, SATURDAY: 07:00 AM to 08:30 PM, SUNDAY: 07:00 AM to 08:30 PM"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does MTR 1924 serve buffet?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": " No, MTR 1924 does not serve buffet."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does MTR 1924 restaurant have a bar or serve alcohol?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": " No, MTR 1924 does not serve alcohol."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is there a parking facility at MTR 1924?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": " No, a parking facility is not available at MTR 1924."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does MTR 1924 accept bill payment via PayEazy?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No, MTR 1924 is not a PayEazy-enabled restaurant."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How can I save EXTRA with PayEazy at MTR 1924?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Book a table at MTR 1924. Get your bill with the pre-applied EazyDiner deal. Pay your bill via PayEazy & save EXTRA"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does MTR 1924 restaurant play live music?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": " No, MTR 1924 doesn't play live music."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What are current deals at MTR 1924?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "There is no deal at MTR 1924 on EazyDiner. Browse through EazyDiner to avail dining discounts upto 50% OFF."
+          }
+        }
+      ],
+      "category": "Casual Dining",
+      "restaurant_type": "free standing",
+      "chain": "Yes",
+      "wallet_config": {
+        "type": "percentage",
+        "percentage": 25,
+        "min_transaction_amount": 0,
+        "text": "25% of the total amount can be paid from wallet balance in a single transaction ."
+      },
+      "reservation_status": false,
+      "deal_data": {
+        "default_deal_type": "deal_types[]=postpaid",
+        "title": "More Deals",
+        "period": 30,
+        "freeze_time": 0,
+        "other_deals": null
+      },
+      "foodie_awards": [],
+      "buffet_deals": [],
+      "error": {
+        "heading": "Discover amazing restaurants nearby",
+        "message": "Choose from higher ranked restaurants which were booked by many users this week.",
+        "date": "",
+        "time": "",
+        "icon": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant_detail/shop_1.png",
+        "action": "No Action",
+        "notBookableAction": "https://www.eazydiner.com/restaurants?location=st.-marks-road",
+        "notBookableText": "Explore Nearby Restaurants"
+      },
+      "hasPrimeDeal": false,
+      "primeIcon": "",
+      "restaurant_subtype": "Table",
+      "hygiene_rating": "",
+      "has_dynamic_buffet": false,
+      "bottomsheet_notification": "",
+      "force_direct_booking": true,
+      "new_rdv_layout": false,
+      "rdv_offer_data": {
+        "default_deal_type": "deal_types=postpaid",
+        "freeze_time": 0,
+        "period": 30
+      },
+      "link_only_payeazy": "",
+      "sample_discount_calculator": "",
+      "qbf": {
+        "qbf_gif": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/banner/qbf/qbf_final_single_nov_23.gif",
+        "success_confirmed_gif": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/banner/qbf/success_confirm_qbf_2.gif"
+      },
+      "webEngageData": {
+        "features": [],
+        "cost_for_two": 450,
+        "offer_title": " + 25%"
+      },
+      "chain_id": 1540
+    },
+    "meta": {
+      "tab_data": [
+        {
+          "title": "offers",
+          "is_active": true
+        },
+        {
+          "title": "menu",
+          "is_active": false
+        },
+        {
+          "title": "photos",
+          "is_active": false
+        },
+        {
+          "title": "about",
+          "is_active": false
+        }
+      ],
+      "meta_title": "Explore MTR 1924 in St. Marks Road, Central Bengaluru",
+      "meta_description": "Get all the details for MTR 1924, St. Marks Road, Central Bengaluru. Check out reviews, photos, menu highlights, contact info, and much more on EazyDiner.",
+      "breadcrumbs": [
+        {
+          "title": "Home",
+          "url": "/"
+        },
+        {
+          "title": "Bengaluru",
+          "url": "/bengaluru"
+        },
+        {
+          "title": " Top Restaurants in Bengaluru",
+          "url": "/bengaluru/restaurants"
+        },
+        {
+          "title": "Central Bengaluru",
+          "url": "/bengaluru/restaurants/central-bengaluru"
+        },
+        {
+          "title": "St. Marks Road",
+          "url": "/bengaluru/restaurants/st.-marks-road"
+        },
+        {
+          "title": "MTR 1924",
+          "url": "/bengaluru/mtr-1924-st-marks-road-334798"
+        }
+      ],
+      "jsonSchema": {
+        "title": "Explore MTR 1924 in St. Marks Road, Central Bengaluru",
+        "description": "Get all the details for MTR 1924, St. Marks Road, Central Bengaluru. Check out reviews, photos, menu highlights, contact info, and much more on EazyDiner.",
+        "custom_deeplink": {
+          "ios": "eazydiner://action?url=https://www.eazydiner.com/bengaluru/mtr-1924-st-marks-road-334798",
+          "android": "eazydiner://action?url=https://www.eazydiner.com/bengaluru/mtr-1924-st-marks-road-334798?"
+        },
+        "og_data": {
+          "title": "MTR 1924, St. Marks Road, Central Bengaluru",
+          "description": "EazyDiner",
+          "image_url": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/group/1540/0.jpg?width=750&height=436&mode=fit",
+          "brand": "EazyDiner",
+          "availability": "discontinued",
+          "condition": "new",
+          "amount": 450,
+          "currency": "Inr",
+          "retailer_item_id": 334798
+        },
+        "json_schema": {
+          "@context": "http://schema.org",
+          "@graph": [
+            {
+              "@type": "Restaurant",
+              "@id": "https://www.eazydiner.com/bengaluru/mtr-1924-st-marks-road-334798",
+              "name": "MTR 1924",
+              "url": "https://www.eazydiner.com/bengaluru/mtr-1924-st-marks-road-334798",
+              "hasMenu": "https://www.eazydiner.com/bengaluru/mtr-1924-st-marks-road-334798/menu",
+              "image": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/group/1540/0.jpg?width=750&height=436&mode=fit",
+              "servesCuisine": "South Indian",
+              "priceRange": "₹ 450 for two approx. ",
+              "telephone": "+918022118083",
+              "geo": {
+                "@type": "GeoCoordinates",
+                "latitude": "12.97239971",
+                "longitude": "77.60099792"
+              },
+              "acceptsReservations": false,
+              "openingHoursSpecification": [
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Monday"
+                  ],
+                  "opens": "07:00:00",
+                  "closes": "20:30:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Tuesday"
+                  ],
+                  "opens": "07:00:00",
+                  "closes": "20:30:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Wednesday"
+                  ],
+                  "opens": "07:00:00",
+                  "closes": "20:30:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Thursday"
+                  ],
+                  "opens": "07:00:00",
+                  "closes": "20:30:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Friday"
+                  ],
+                  "opens": "07:00:00",
+                  "closes": "20:30:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Saturday"
+                  ],
+                  "opens": "07:00:00",
+                  "closes": "20:30:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Sunday"
+                  ],
+                  "opens": "07:00:00",
+                  "closes": "20:30:00"
+                }
+              ],
+              "currenciesAccepted": "INR",
+              "paymentAccepted": "Cash, Cards and Digital Payments Accepted",
+              "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "29, (Div. 61), White House, St. Marks Road, Bengaluru",
+                "addressLocality": "St. Marks Road, Central Bengaluru",
+                "addressRegion": "Bengaluru",
+                "postalCode": null,
+                "addressCountry": "IN"
+              },
+              "aggregateRating": {
+                "@type": "AggregateRating",
+                "ratingValue": 4.4,
+                "ratingCount": 5,
+                "bestRating": "5",
+                "worstRating": "0"
+              }
+            },
+            {
+              "@type": "FAQPage",
+              "mainEntity": [
+                {
+                  "@type": "Question",
+                  "name": "What cuisines are served at MTR 1924?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "The main cuisine served at MTR 1924 is South Indian."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "What is the cost for two at MTR 1924?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "The cost of two at MTR 1924 is ₹ 450."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "MTR 1924 is pure vegetarian restaurant?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "   MTR 1924 serves both veg and non veg food."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "What are the operational timings of MTR 1924?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "MTR 1924 restaurant operational timings are MONDAY: 07:00 AM to 08:30 PM, TUESDAY: 07:00 AM to 08:30 PM, WEDNESDAY: 07:00 AM to 08:30 PM, THURSDAY: 07:00 AM to 08:30 PM, FRIDAY: 07:00 AM to 08:30 PM, SATURDAY: 07:00 AM to 08:30 PM, SUNDAY: 07:00 AM to 08:30 PM"
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Does MTR 1924 serve buffet?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": " No, MTR 1924 does not serve buffet."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Does MTR 1924 restaurant have a bar or serve alcohol?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": " No, MTR 1924 does not serve alcohol."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Is there a parking facility at MTR 1924?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": " No, a parking facility is not available at MTR 1924."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Does MTR 1924 accept bill payment via PayEazy?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "No, MTR 1924 is not a PayEazy-enabled restaurant."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "How can I save EXTRA with PayEazy at MTR 1924?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Book a table at MTR 1924. Get your bill with the pre-applied EazyDiner deal. Pay your bill via PayEazy & save EXTRA"
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Does MTR 1924 restaurant play live music?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": " No, MTR 1924 doesn't play live music."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "What are current deals at MTR 1924?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "There is no deal at MTR 1924 on EazyDiner. Browse through EazyDiner to avail dining discounts upto 50% OFF."
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "remarketing_tag_params": {
+          "dynx_itemid": 334798,
+          "dynx_itemid2": "MTR 1924",
+          "dynx_pagetype": "restaurantdetail"
+        },
+        "amp_meta_tag": false,
+        "android_deeplink": "android-app://com.easydiner/eazydiner/action?url=https://www.eazydiner.com/bengaluru/mtr-1924-st-marks-road-334798",
+        "is_noindex": false
+      }
+    }
+  }
+}

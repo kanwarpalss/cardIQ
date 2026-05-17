@@ -1,0 +1,28 @@
+{
+  "meta": {
+    "restaurant": {
+      "slug": "toit",
+      "name": "Toit Brewpub",
+      "area": "Indiranagar",
+      "districtSlugs": [
+        "toit-indiranagar",
+        "toit-mahadevapura-mahadevapura-bangalore"
+      ],
+      "eazyDinerSlug": "toit-indiranagar-330151"
+    },
+    "found": true,
+    "offerSummary": []
+  },
+  "raw": {
+    "locations": [
+      {
+        "slug": "toit-indiranagar",
+        "offerCount": 0
+      },
+      {
+        "slug": "toit-mahadevapura-mahadevapura-bangalore",
+        "offerCount": 0
+      }
+    ]
+  }
+}

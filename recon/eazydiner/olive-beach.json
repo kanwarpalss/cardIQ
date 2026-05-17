@@ -1,0 +1,680 @@
+{
+  "meta": {
+    "restaurant": {
+      "slug": "olive-beach",
+      "name": "Olive Beach",
+      "area": "Sankey Road",
+      "districtSlugs": [
+        "olive-beach-richmond-road-bangalore"
+      ],
+      "eazyDinerSlug": "olive-beach-richmond-road-330137"
+    },
+    "found": true,
+    "offerSummary": [
+      "[buffet] 1 buffet deal(s) available"
+    ]
+  },
+  "raw": {
+    "data": {
+      "id": 330137,
+      "url": "https://www.eazydiner.com/bengaluru/olive-beach-richmond-road-330137",
+      "code": "bengaluru/olive-beach-richmond-road-330137",
+      "default_image": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/home/restaurant-default-image.png",
+      "favourite_count": "744",
+      "primeTag": "",
+      "name": "Olive Beach",
+      "images": [
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/330137/restaurant1720250401035833.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/330137/restaurant020250401035833.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/330137/restaurant120250401035833.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/330137/restaurant220250401035833.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/330137/restaurant320250401035833.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/330137/restaurant420250401035833.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/330137/restaurant520250401035833.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/330137/restaurant620250401035833.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/330137/restaurant720250401035833.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/330137/restaurant820250401035833.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/330137/restaurant920250401035833.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/330137/restaurant1020250401035833.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/330137/restaurant1120250401035833.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/330137/restaurant1220250401035833.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/330137/restaurant1320250401035833.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/330137/restaurant1420250401035833.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/330137/restaurant1520250401035833.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/330137/restaurant1620250401035833.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/330137/restaurant1820250401035833.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/reviewimages/330137/2d33737b77ab803d22612c3f3b08fbbad60f8ca1.20210918161846.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/reviewimages/330137/bd551cb6068e0786ea30fa769e5feba600d0170e.jpg?width=818&height=450&mode=fit"
+      ],
+      "cost_for_two": "₹ 2000 for two approx.",
+      "currency": "₹",
+      "location": {
+        "address": "16, Wood Street, Ashok Nagar, Richmond Road, Bengaluru",
+        "locality": "Richmond Road, Central Bengaluru",
+        "code": "richmond-road",
+        "latitude": 12.966892,
+        "longitude": 77.6080844,
+        "region_code": "Central Bengaluru",
+        "area_name": "Richmond Road",
+        "city_code": "bengaluru",
+        "city_id": 3,
+        "country_id": 1,
+        "group_id": 1545,
+        "name": "Richmond Road, Central Bengaluru",
+        "city_name": "Bengaluru"
+      },
+      "phone": "+919945565483",
+      "cuisines": "Mediterranean",
+      "timings": {
+        "today": [
+          "12:00 PM - 04:00 PM",
+          "07:00 PM - 01:00 AM"
+        ],
+        "week": {
+          "Monday": [
+            "12:00 PM - 04:00 PM",
+            "07:00 PM - 11:59 PM"
+          ],
+          "Tuesday": [
+            "12:00 PM - 04:00 PM",
+            "07:00 PM - 11:59 PM"
+          ],
+          "Wednesday": [
+            "12:00 PM - 04:00 PM",
+            "07:00 PM - 11:59 PM"
+          ],
+          "Thursday": [
+            "12:00 PM - 04:00 PM",
+            "07:00 PM - 11:59 PM"
+          ],
+          "Friday": [
+            "12:00 PM - 04:00 PM",
+            "07:00 PM - 01:00 AM"
+          ],
+          "Saturday": [
+            "12:00 PM - 04:00 PM",
+            "07:00 PM - 01:00 AM"
+          ],
+          "Sunday": [
+            "12:00 PM - 04:00 PM",
+            "07:00 PM - 01:00 AM"
+          ]
+        }
+      },
+      "user_reviews": {
+        "avg_rating": 4.3,
+        "count": 90
+      },
+      "critic_review": "",
+      "webview_menu_url": null,
+      "accepts_eazypay": false,
+      "is_favorite": false,
+      "menu_last_updated": "Last updated few months ago",
+      "is_qsr": false,
+      "faq": [
+        {
+          "@type": "Question",
+          "name": "What cuisines are served at Olive Beach?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The main cuisine served at Olive Beach is Mediterranean."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the cost for two at Olive Beach?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The cost of two at Olive Beach is ₹ 2000."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Olive Beach is pure vegetarian restaurant?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "   Olive Beach serves both veg and non veg food."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What are the operational timings of Olive Beach?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Olive Beach restaurant operational timings are MONDAY: 12:00 PM to 04:00 PM, MONDAY: 07:00 PM to 11:59 PM, TUESDAY: 12:00 PM to 04:00 PM, TUESDAY: 07:00 PM to 11:59 PM, WEDNESDAY: 12:00 PM to 04:00 PM, WEDNESDAY: 07:00 PM to 11:59 PM, THURSDAY: 12:00 PM to 04:00 PM, THURSDAY: 07:00 PM to 11:59 PM, FRIDAY: 12:00 PM to 04:00 PM, FRIDAY: 07:00 PM to 01:00 AM, SATURDAY: 12:00 PM to 04:00 PM, SATURDAY: 07:00 PM to 01:00 AM, SUNDAY: 12:00 PM to 04:00 PM, SUNDAY: 07:00 PM to 01:00 AM"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does Olive Beach serve buffet?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": " No, Olive Beach does not serve buffet."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does Olive Beach restaurant have a bar or serve alcohol?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, Olive Beach serves alcohol."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is there a parking facility at Olive Beach?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, the parking facility is available at Olive Beach."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does Olive Beach accept bill payment via PayEazy?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No, Olive Beach is not a PayEazy-enabled restaurant."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How can I save EXTRA with PayEazy at Olive Beach?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Book a table at Olive Beach. Get your bill with the pre-applied EazyDiner deal. Pay your bill via PayEazy & save EXTRA"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does Olive Beach restaurant play live music?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": " No, Olive Beach doesn't play live music."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What are current deals at Olive Beach?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "There is no deal at Olive Beach on EazyDiner. Browse through EazyDiner to avail dining discounts upto 50% OFF."
+          }
+        }
+      ],
+      "category": "Casual Dining",
+      "restaurant_type": "free standing",
+      "chain": "No",
+      "wallet_config": {
+        "type": "percentage",
+        "percentage": 25,
+        "min_transaction_amount": 0,
+        "text": "25% of the total amount can be paid from wallet balance in a single transaction ."
+      },
+      "reservation_status": false,
+      "deal_data": {
+        "default_deal_type": "deal_types[]=postpaid",
+        "title": "More Deals",
+        "period": 30,
+        "freeze_time": 30,
+        "other_deals": null
+      },
+      "foodie_awards": [
+        {
+          "name": "Eazydiner Foodie Awards 2023",
+          "image": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/home/FAcertificate2023.png",
+          "category": "Best Mediterranean Restaurant",
+          "type": "People's Choice"
+        },
+        {
+          "name": "Eazydiner Foodie Awards 2017",
+          "image": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/home/FAcertificate2017.png",
+          "category": "Best Mediterranean Restaurant as a Standalone",
+          "type": "People's Choice"
+        }
+      ],
+      "buffet_deals": [
+        {
+          "id": 112,
+          "meal": "brunch",
+          "type": "",
+          "price_excluding_tax": 3200,
+          "price_including_tax": 3600,
+          "extra_info": null,
+          "additional_info": null,
+          "extra_title": null,
+          "buffet_time": "12:00 PM - 03:00 PM",
+          "buffet_days": "SUN",
+          "meal_type": "",
+          "inclusion": ""
+        }
+      ],
+      "error": {
+        "heading": "Discover amazing restaurants nearby",
+        "message": "Choose from higher ranked restaurants which were booked by many users this week.",
+        "date": "",
+        "time": "",
+        "icon": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant_detail/shop_1.png",
+        "action": "No Action",
+        "notBookableAction": "https://www.eazydiner.com/restaurants?location=richmond-road",
+        "notBookableText": "Explore Nearby Restaurants"
+      },
+      "hasPrimeDeal": false,
+      "primeIcon": "",
+      "restaurant_subtype": "Table",
+      "hygiene_rating": "",
+      "has_dynamic_buffet": false,
+      "bottomsheet_notification": "",
+      "force_direct_booking": true,
+      "new_rdv_layout": false,
+      "rdv_offer_data": {
+        "default_deal_type": "deal_types=postpaid",
+        "freeze_time": 30,
+        "period": 30
+      },
+      "link_only_payeazy": "",
+      "sample_discount_calculator": "",
+      "qbf": {
+        "qbf_gif": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/banner/qbf/qbf_final_single_nov_23.gif",
+        "success_confirmed_gif": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/banner/qbf/success_confirm_qbf_2.gif"
+      },
+      "webEngageData": {
+        "features": [
+          {
+            "name": "Home Delivery",
+            "code": "home-delivery",
+            "icon": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/features/53/home-delivery3x.png"
+          },
+          {
+            "name": "Alcohol Served",
+            "code": "alcohol-served",
+            "icon": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/features/54/alcohol-served3x.png"
+          },
+          {
+            "name": "Valet Parking",
+            "code": "valet-parking",
+            "icon": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/features/63/valet-parking3x.png"
+          },
+          {
+            "name": "Wheelchair Accessible",
+            "code": "wheelchair-accessible",
+            "icon": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/features/68/wheelchair-accessible3x.png"
+          },
+          {
+            "name": "Formal Attire",
+            "code": "formal-attire",
+            "icon": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/features/70/formal-attire-3x.png"
+          },
+          {
+            "name": "Romantic",
+            "code": "romantic",
+            "icon": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/features/80/romantic-3x.png"
+          },
+          {
+            "name": "Sunday Brunches",
+            "code": "sunday-brunches",
+            "icon": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/features/83/sunday-brunches3x.png"
+          },
+          {
+            "name": "Cafe",
+            "code": "cafe",
+            "icon": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/features/84/cafe-3x.png"
+          },
+          {
+            "name": "Dessert",
+            "code": "dessert",
+            "icon": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/features/86/dessert3x.png"
+          },
+          {
+            "name": "Seafood",
+            "code": "seafood",
+            "icon": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/features/94/seafood3x.png"
+          },
+          {
+            "name": "Happy Hours",
+            "code": "happy-hours",
+            "icon": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/features/98/happy-hours3x.png"
+          },
+          {
+            "name": "Great Breakfasts",
+            "code": "great-breakfasts",
+            "icon": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/features/99/great-breakfasts3x.png"
+          },
+          {
+            "name": "Mall Parking",
+            "code": "mall-parking",
+            "icon": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/features/109/mall-parking3x.png"
+          },
+          {
+            "name": "Bar",
+            "code": "bar",
+            "icon": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/features/110/bars-3x.png"
+          }
+        ],
+        "cost_for_two": 2000,
+        "offer_title": " + 25%"
+      },
+      "chain_id": null
+    },
+    "meta": {
+      "tab_data": [
+        {
+          "title": "offers",
+          "is_active": true
+        },
+        {
+          "title": "menu",
+          "is_active": false
+        },
+        {
+          "title": "photos",
+          "is_active": false
+        },
+        {
+          "title": "about",
+          "is_active": false
+        }
+      ],
+      "meta_title": "Explore Olive Beach in Richmond Road, Central Bengaluru",
+      "meta_description": "Get all the details for Olive Beach, Richmond Road, Central Bengaluru. Check out reviews, photos, menu highlights, contact info, and much more on EazyDiner.",
+      "breadcrumbs": [
+        {
+          "title": "Home",
+          "url": "/"
+        },
+        {
+          "title": "Bengaluru",
+          "url": "/bengaluru"
+        },
+        {
+          "title": " Top Restaurants in Bengaluru",
+          "url": "/bengaluru/restaurants"
+        },
+        {
+          "title": "Central Bengaluru",
+          "url": "/bengaluru/restaurants/central-bengaluru"
+        },
+        {
+          "title": "Richmond Road",
+          "url": "/bengaluru/restaurants/richmond-road"
+        },
+        {
+          "title": "Olive Beach",
+          "url": "/bengaluru/olive-beach-richmond-road-330137"
+        }
+      ],
+      "jsonSchema": {
+        "title": "Explore Olive Beach in Richmond Road, Central Bengaluru",
+        "description": "Get all the details for Olive Beach, Richmond Road, Central Bengaluru. Check out reviews, photos, menu highlights, contact info, and much more on EazyDiner.",
+        "custom_deeplink": {
+          "ios": "eazydiner://action?url=https://www.eazydiner.com/bengaluru/olive-beach-richmond-road-330137",
+          "android": "eazydiner://action?url=https://www.eazydiner.com/bengaluru/olive-beach-richmond-road-330137?"
+        },
+        "og_data": {
+          "title": "Olive Beach, Richmond Road, Central Bengaluru",
+          "description": "EazyDiner",
+          "image_url": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/330137/restaurant1720250401035833.jpg?width=750&height=436&mode=fit",
+          "brand": "EazyDiner",
+          "availability": "discontinued",
+          "condition": "new",
+          "amount": 2000,
+          "currency": "Inr",
+          "retailer_item_id": 330137
+        },
+        "json_schema": {
+          "@context": "http://schema.org",
+          "@graph": [
+            {
+              "@type": "Restaurant",
+              "@id": "https://www.eazydiner.com/bengaluru/olive-beach-richmond-road-330137",
+              "name": "Olive Beach",
+              "url": "https://www.eazydiner.com/bengaluru/olive-beach-richmond-road-330137",
+              "hasMenu": "https://www.eazydiner.com/bengaluru/olive-beach-richmond-road-330137/menu",
+              "image": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/330137/restaurant1720250401035833.jpg?width=750&height=436&mode=fit",
+              "servesCuisine": "Mediterranean",
+              "priceRange": "₹ 2000 for two approx. ",
+              "telephone": "+918041128400",
+              "geo": {
+                "@type": "GeoCoordinates",
+                "latitude": "12.96689200",
+                "longitude": "77.60808440"
+              },
+              "acceptsReservations": false,
+              "openingHoursSpecification": [
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Monday"
+                  ],
+                  "opens": "12:00:00",
+                  "closes": "16:00:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Monday"
+                  ],
+                  "opens": "19:00:00",
+                  "closes": "23:59:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Tuesday"
+                  ],
+                  "opens": "12:00:00",
+                  "closes": "16:00:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Tuesday"
+                  ],
+                  "opens": "19:00:00",
+                  "closes": "23:59:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Wednesday"
+                  ],
+                  "opens": "12:00:00",
+                  "closes": "16:00:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Wednesday"
+                  ],
+                  "opens": "19:00:00",
+                  "closes": "23:59:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Thursday"
+                  ],
+                  "opens": "12:00:00",
+                  "closes": "16:00:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Thursday"
+                  ],
+                  "opens": "19:00:00",
+                  "closes": "23:59:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Friday"
+                  ],
+                  "opens": "12:00:00",
+                  "closes": "16:00:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Friday"
+                  ],
+                  "opens": "19:00:00",
+                  "closes": "01:00:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Saturday"
+                  ],
+                  "opens": "12:00:00",
+                  "closes": "16:00:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Saturday"
+                  ],
+                  "opens": "19:00:00",
+                  "closes": "01:00:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Sunday"
+                  ],
+                  "opens": "12:00:00",
+                  "closes": "16:00:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Sunday"
+                  ],
+                  "opens": "19:00:00",
+                  "closes": "01:00:00"
+                }
+              ],
+              "currenciesAccepted": "INR",
+              "paymentAccepted": "Cash, Cards and Digital Payments Accepted",
+              "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "16, Wood Street, Ashok Nagar, Richmond Road, Bengaluru",
+                "addressLocality": "Richmond Road, Central Bengaluru",
+                "addressRegion": "Bengaluru",
+                "postalCode": "560025",
+                "addressCountry": "IN"
+              },
+              "aggregateRating": {
+                "@type": "AggregateRating",
+                "ratingValue": 4.3,
+                "ratingCount": 90,
+                "bestRating": "5",
+                "worstRating": "0"
+              }
+            },
+            {
+              "@type": "FAQPage",
+              "mainEntity": [
+                {
+                  "@type": "Question",
+                  "name": "What cuisines are served at Olive Beach?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "The main cuisine served at Olive Beach is Mediterranean."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "What is the cost for two at Olive Beach?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "The cost of two at Olive Beach is ₹ 2000."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Olive Beach is pure vegetarian restaurant?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "   Olive Beach serves both veg and non veg food."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "What are the operational timings of Olive Beach?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Olive Beach restaurant operational timings are MONDAY: 12:00 PM to 04:00 PM, MONDAY: 07:00 PM to 11:59 PM, TUESDAY: 12:00 PM to 04:00 PM, TUESDAY: 07:00 PM to 11:59 PM, WEDNESDAY: 12:00 PM to 04:00 PM, WEDNESDAY: 07:00 PM to 11:59 PM, THURSDAY: 12:00 PM to 04:00 PM, THURSDAY: 07:00 PM to 11:59 PM, FRIDAY: 12:00 PM to 04:00 PM, FRIDAY: 07:00 PM to 01:00 AM, SATURDAY: 12:00 PM to 04:00 PM, SATURDAY: 07:00 PM to 01:00 AM, SUNDAY: 12:00 PM to 04:00 PM, SUNDAY: 07:00 PM to 01:00 AM"
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Does Olive Beach serve buffet?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": " No, Olive Beach does not serve buffet."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Does Olive Beach restaurant have a bar or serve alcohol?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Yes, Olive Beach serves alcohol."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Is there a parking facility at Olive Beach?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Yes, the parking facility is available at Olive Beach."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Does Olive Beach accept bill payment via PayEazy?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "No, Olive Beach is not a PayEazy-enabled restaurant."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "How can I save EXTRA with PayEazy at Olive Beach?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Book a table at Olive Beach. Get your bill with the pre-applied EazyDiner deal. Pay your bill via PayEazy & save EXTRA"
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Does Olive Beach restaurant play live music?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": " No, Olive Beach doesn't play live music."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "What are current deals at Olive Beach?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "There is no deal at Olive Beach on EazyDiner. Browse through EazyDiner to avail dining discounts upto 50% OFF."
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "remarketing_tag_params": {
+          "dynx_itemid": 330137,
+          "dynx_itemid2": "Olive Beach",
+          "dynx_pagetype": "restaurantdetail"
+        },
+        "amp_meta_tag": false,
+        "android_deeplink": "android-app://com.easydiner/eazydiner/action?url=https://www.eazydiner.com/bengaluru/olive-beach-richmond-road-330137",
+        "is_noindex": false
+      }
+    }
+  }
+}

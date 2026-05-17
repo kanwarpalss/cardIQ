@@ -11,3 +11,9 @@ next-env.d.ts
 # Supabase CLI
 supabase/.temp/
 supabase/.branches/
+
+# Claude Code local settings (personal, not for teammates)
+.claude/settings.local.json
+
+# Obsidian vault settings (personal, not for teammates)
+.obsidian/

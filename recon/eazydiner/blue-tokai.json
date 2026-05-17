@@ -1,0 +1,541 @@
+{
+  "meta": {
+    "restaurant": {
+      "slug": "blue-tokai",
+      "name": "Blue Tokai Coffee",
+      "area": "Indiranagar",
+      "districtSlugs": [
+        "blue-tokai-coffee-roasters-1-hsr-bangalore",
+        "blue-tokai-coffee-roasters-2-hsr-bangalore",
+        "blue-tokai-coffee-roasters-aecs-layout-bangalore",
+        "blue-tokai-coffee-roasters-bellandur-bangalore",
+        "blue-tokai-coffee-roasters-domlur-bangalore",
+        "blue-tokai-coffee-roasters-electronic-city-bangalore",
+        "blue-tokai-coffee-roasters-infantry-road-bangalore",
+        "blue-tokai-coffee-roasters-itpl-main-road-whitefield-bangalore",
+        "blue-tokai-coffee-roasters-jayanagar-bangalore",
+        "blue-tokai-coffee-roasters-jp-nagar-bangalore",
+        "blue-tokai-coffee-roasters-kalyan-nagar-bangalore",
+        "blue-tokai-coffee-roasters-kanakapura-road-bangalore",
+        "blue-tokai-coffee-roasters-koramangala-5th-block-bangalore",
+        "blue-tokai-coffee-roasters-koramangala-8th-block-bangalore",
+        "blue-tokai-coffee-roasters-kr-puram-bangalore",
+        "blue-tokai-coffee-roasters-lavelle-road-bangalore",
+        "blue-tokai-coffee-roasters-mahadevapura-bangalore",
+        "blue-tokai-coffee-roasters-malleshwaram-bangalore",
+        "blue-tokai-coffee-roasters-marathahalli-bangalore",
+        "blue-tokai-coffee-roasters-rajarajeshwari-nagar-bangalore",
+        "blue-tokai-coffee-roasters-sadashiv-nagar-bangalore",
+        "blue-tokai-coffee-roasters-sahakara-nagar-bangalore",
+        "blue-tokai-coffee-roasters-whitefield-bangalore",
+        "blue-tokai-coffee-roasters-yeshwantpur-bangalore"
+      ],
+      "eazyDinerSlug": "blue-tokai-infantry-road-central-bengaluru-683567"
+    },
+    "found": true,
+    "offerSummary": []
+  },
+  "raw": {
+    "data": {
+      "id": 683567,
+      "url": "https://www.eazydiner.com/bengaluru/blue-tokai-infantry-road-central-bengaluru-683567",
+      "code": "bengaluru/blue-tokai-infantry-road-central-bengaluru-683567",
+      "default_image": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/home/restaurant-default-image.png",
+      "favourite_count": "619",
+      "primeTag": "",
+      "name": "Blue Tokai Coffee Roasters",
+      "images": [
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/group/5874/menu020230802035130.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/group/5874/menu020230427113733.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/reviewimages/683567/84bdfc631bc3b2e7c2a934344d9831103d2aed4c.20221201064303.jpg?width=818&height=450&mode=fit"
+      ],
+      "cost_for_two": "₹ 800 for two approx.",
+      "currency": "₹",
+      "location": {
+        "address": "Ground Floor, Prestige central, 36 Infantry Road,Bengaluru, Karnataka ",
+        "locality": "Infantry Road, Central Bengaluru",
+        "code": "infantry-road",
+        "latitude": 12.981102,
+        "longitude": 77.603338,
+        "region_code": "Central Bengaluru",
+        "area_name": "Infantry Road",
+        "city_code": "bengaluru",
+        "city_id": 3,
+        "country_id": 1,
+        "group_id": 1551,
+        "name": "Infantry Road, Central Bengaluru",
+        "city_name": "Bengaluru"
+      },
+      "phone": "7861004444",
+      "cuisines": "Cafe",
+      "timings": {
+        "today": [
+          "10:00 AM - 09:00 PM"
+        ],
+        "week": {
+          "Monday": [
+            "10:00 AM - 09:00 PM"
+          ],
+          "Tuesday": [
+            "10:00 AM - 09:00 PM"
+          ],
+          "Wednesday": [
+            "10:00 AM - 09:00 PM"
+          ],
+          "Thursday": [
+            "10:00 AM - 09:00 PM"
+          ],
+          "Friday": [
+            "10:00 AM - 09:00 PM"
+          ],
+          "Saturday": [
+            "10:00 AM - 09:00 PM"
+          ],
+          "Sunday": [
+            "10:00 AM - 09:00 PM"
+          ]
+        }
+      },
+      "user_reviews": {
+        "avg_rating": 5,
+        "count": 2
+      },
+      "critic_review": "",
+      "webview_menu_url": null,
+      "accepts_eazypay": false,
+      "is_favorite": false,
+      "menu_last_updated": "Last updated few months ago",
+      "is_qsr": false,
+      "faq": [
+        {
+          "@type": "Question",
+          "name": "What cuisines are served at Blue Tokai Coffee Roasters?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The main cuisine served at Blue Tokai Coffee Roasters is Cafe."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the cost for two at Blue Tokai Coffee Roasters?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The cost of two at Blue Tokai Coffee Roasters is ₹ 800."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Blue Tokai Coffee Roasters is pure vegetarian restaurant?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "   Blue Tokai Coffee Roasters serves both veg and non veg food."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What are the operational timings of Blue Tokai Coffee Roasters?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Blue Tokai Coffee Roasters restaurant operational timings are MONDAY: 10:00 AM to 09:00 PM, TUESDAY: 10:00 AM to 09:00 PM, WEDNESDAY: 10:00 AM to 09:00 PM, THURSDAY: 10:00 AM to 09:00 PM, FRIDAY: 10:00 AM to 09:00 PM, SATURDAY: 10:00 AM to 09:00 PM, SUNDAY: 10:00 AM to 09:00 PM"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does Blue Tokai Coffee Roasters serve buffet?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": " No, Blue Tokai Coffee Roasters does not serve buffet."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does Blue Tokai Coffee Roasters restaurant have a bar or serve alcohol?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": " No, Blue Tokai Coffee Roasters does not serve alcohol."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is there a parking facility at Blue Tokai Coffee Roasters?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": " No, a parking facility is not available at Blue Tokai Coffee Roasters."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does Blue Tokai Coffee Roasters accept bill payment via PayEazy?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No, Blue Tokai Coffee Roasters is not a PayEazy-enabled restaurant."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How can I save EXTRA with PayEazy at Blue Tokai Coffee Roasters?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Book a table at Blue Tokai Coffee Roasters. Get your bill with the pre-applied EazyDiner deal. Pay your bill via PayEazy & save EXTRA"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does Blue Tokai Coffee Roasters restaurant play live music?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": " No, Blue Tokai Coffee Roasters doesn't play live music."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What are current deals at Blue Tokai Coffee Roasters?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "There is no deal at Blue Tokai Coffee Roasters on EazyDiner. Browse through EazyDiner to avail dining discounts upto 50% OFF."
+          }
+        }
+      ],
+      "category": "Cafe/Bakery",
+      "restaurant_type": "free standing",
+      "chain": "Yes",
+      "wallet_config": {
+        "type": "percentage",
+        "percentage": 25,
+        "min_transaction_amount": 0,
+        "text": "25% of the total amount can be paid from wallet balance in a single transaction ."
+      },
+      "reservation_status": false,
+      "deal_data": {
+        "default_deal_type": "deal_types[]=postpaid",
+        "title": "More Deals",
+        "period": 30,
+        "freeze_time": 30,
+        "other_deals": null
+      },
+      "foodie_awards": [],
+      "buffet_deals": [],
+      "error": {
+        "heading": "Discover amazing restaurants nearby",
+        "message": "Choose from higher ranked restaurants which were booked by many users this week.",
+        "date": "",
+        "time": "",
+        "icon": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant_detail/shop_1.png",
+        "action": "No Action",
+        "notBookableAction": "https://www.eazydiner.com/restaurants?location=infantry-road",
+        "notBookableText": "Explore Nearby Restaurants"
+      },
+      "hasPrimeDeal": false,
+      "primeIcon": "",
+      "restaurant_subtype": "Table",
+      "hygiene_rating": "",
+      "has_dynamic_buffet": false,
+      "bottomsheet_notification": "",
+      "force_direct_booking": true,
+      "new_rdv_layout": false,
+      "rdv_offer_data": {
+        "default_deal_type": "deal_types=postpaid",
+        "freeze_time": 30,
+        "period": 30
+      },
+      "link_only_payeazy": "",
+      "sample_discount_calculator": "",
+      "qbf": {
+        "qbf_gif": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/banner/qbf/qbf_final_single_nov_23.gif",
+        "success_confirmed_gif": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/banner/qbf/success_confirm_qbf_2.gif"
+      },
+      "webEngageData": {
+        "features": [
+          {
+            "name": "Home Delivery",
+            "code": "home-delivery",
+            "icon": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/features/53/home-delivery3x.png"
+          },
+          {
+            "name": "Take-away",
+            "code": "take-away",
+            "icon": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/features/60/take-away3x.png"
+          },
+          {
+            "name": "Dessert",
+            "code": "dessert",
+            "icon": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/features/86/dessert3x.png"
+          },
+          {
+            "name": "Great Breakfasts",
+            "code": "great-breakfasts",
+            "icon": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/features/99/great-breakfasts3x.png"
+          }
+        ],
+        "cost_for_two": 800,
+        "offer_title": " + 25%"
+      },
+      "chain_id": 5874
+    },
+    "meta": {
+      "tab_data": [
+        {
+          "title": "offers",
+          "is_active": true
+        },
+        {
+          "title": "menu",
+          "is_active": false
+        },
+        {
+          "title": "photos",
+          "is_active": false
+        },
+        {
+          "title": "about",
+          "is_active": false
+        }
+      ],
+      "meta_title": "Explore Blue Tokai Coffee Roasters in Infantry Road, Central Bengaluru",
+      "meta_description": "Get all the details for Blue Tokai Coffee Roasters, Infantry Road, Central Bengaluru. Check out reviews, photos, menu highlights, contact info, and much more on EazyDiner.",
+      "breadcrumbs": [
+        {
+          "title": "Home",
+          "url": "/"
+        },
+        {
+          "title": "Bengaluru",
+          "url": "/bengaluru"
+        },
+        {
+          "title": " Top Restaurants in Bengaluru",
+          "url": "/bengaluru/restaurants"
+        },
+        {
+          "title": "Central Bengaluru",
+          "url": "/bengaluru/restaurants/central-bengaluru"
+        },
+        {
+          "title": "Infantry Road",
+          "url": "/bengaluru/restaurants/infantry-road"
+        },
+        {
+          "title": "Blue Tokai Coffee Roasters",
+          "url": "/bengaluru/blue-tokai-infantry-road-central-bengaluru-683567"
+        }
+      ],
+      "jsonSchema": {
+        "title": "Explore Blue Tokai Coffee Roasters in Infantry Road, Central Bengaluru",
+        "description": "Get all the details for Blue Tokai Coffee Roasters, Infantry Road, Central Bengaluru. Check out reviews, photos, menu highlights, contact info, and much more on EazyDiner.",
+        "custom_deeplink": {
+          "ios": "eazydiner://action?url=https://www.eazydiner.com/bengaluru/blue-tokai-infantry-road-central-bengaluru-683567",
+          "android": "eazydiner://action?url=https://www.eazydiner.com/bengaluru/blue-tokai-infantry-road-central-bengaluru-683567?"
+        },
+        "og_data": {
+          "title": "Blue Tokai Coffee Roasters, Infantry Road, Central Bengaluru",
+          "description": "EazyDiner",
+          "image_url": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/group/5874/menu020230802035130.jpg?width=750&height=436&mode=fit",
+          "brand": "EazyDiner",
+          "availability": "discontinued",
+          "condition": "new",
+          "amount": 800,
+          "currency": "Inr",
+          "retailer_item_id": 683567
+        },
+        "json_schema": {
+          "@context": "http://schema.org",
+          "@graph": [
+            {
+              "@type": "Restaurant",
+              "@id": "https://www.eazydiner.com/bengaluru/blue-tokai-infantry-road-central-bengaluru-683567",
+              "name": "Blue Tokai Coffee Roasters",
+              "url": "https://www.eazydiner.com/bengaluru/blue-tokai-infantry-road-central-bengaluru-683567",
+              "hasMenu": "https://www.eazydiner.com/bengaluru/blue-tokai-infantry-road-central-bengaluru-683567/menu",
+              "image": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/group/5874/menu020230802035130.jpg?width=750&height=436&mode=fit",
+              "servesCuisine": "Cafe",
+              "priceRange": "₹ 800 for two approx. ",
+              "telephone": "7861004444",
+              "geo": {
+                "@type": "GeoCoordinates",
+                "latitude": "12.98110200",
+                "longitude": "77.60333800"
+              },
+              "acceptsReservations": false,
+              "openingHoursSpecification": [
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Monday"
+                  ],
+                  "opens": "10:00:00",
+                  "closes": "21:00:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Tuesday"
+                  ],
+                  "opens": "10:00:00",
+                  "closes": "21:00:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Wednesday"
+                  ],
+                  "opens": "10:00:00",
+                  "closes": "21:00:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Thursday"
+                  ],
+                  "opens": "10:00:00",
+                  "closes": "21:00:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Friday"
+                  ],
+                  "opens": "10:00:00",
+                  "closes": "21:00:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Saturday"
+                  ],
+                  "opens": "10:00:00",
+                  "closes": "21:00:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Sunday"
+                  ],
+                  "opens": "10:00:00",
+                  "closes": "21:00:00"
+                }
+              ],
+              "currenciesAccepted": "INR",
+              "paymentAccepted": "Cash, Cards and Digital Payments Accepted",
+              "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "Ground Floor, Prestige central, 36 Infantry Road,Bengaluru, Karnataka ",
+                "addressLocality": "Infantry Road, Central Bengaluru",
+                "addressRegion": "Bengaluru",
+                "postalCode": "560001",
+                "addressCountry": "IN"
+              },
+              "aggregateRating": {
+                "@type": "AggregateRating",
+                "ratingValue": 5,
+                "ratingCount": 2,
+                "bestRating": "5",
+                "worstRating": "0"
+              }
+            },
+            {
+              "@type": "FAQPage",
+              "mainEntity": [
+                {
+                  "@type": "Question",
+                  "name": "What cuisines are served at Blue Tokai Coffee Roasters?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "The main cuisine served at Blue Tokai Coffee Roasters is Cafe."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "What is the cost for two at Blue Tokai Coffee Roasters?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "The cost of two at Blue Tokai Coffee Roasters is ₹ 800."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Blue Tokai Coffee Roasters is pure vegetarian restaurant?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "   Blue Tokai Coffee Roasters serves both veg and non veg food."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "What are the operational timings of Blue Tokai Coffee Roasters?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Blue Tokai Coffee Roasters restaurant operational timings are MONDAY: 10:00 AM to 09:00 PM, TUESDAY: 10:00 AM to 09:00 PM, WEDNESDAY: 10:00 AM to 09:00 PM, THURSDAY: 10:00 AM to 09:00 PM, FRIDAY: 10:00 AM to 09:00 PM, SATURDAY: 10:00 AM to 09:00 PM, SUNDAY: 10:00 AM to 09:00 PM"
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Does Blue Tokai Coffee Roasters serve buffet?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": " No, Blue Tokai Coffee Roasters does not serve buffet."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Does Blue Tokai Coffee Roasters restaurant have a bar or serve alcohol?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": " No, Blue Tokai Coffee Roasters does not serve alcohol."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Is there a parking facility at Blue Tokai Coffee Roasters?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": " No, a parking facility is not available at Blue Tokai Coffee Roasters."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Does Blue Tokai Coffee Roasters accept bill payment via PayEazy?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "No, Blue Tokai Coffee Roasters is not a PayEazy-enabled restaurant."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "How can I save EXTRA with PayEazy at Blue Tokai Coffee Roasters?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Book a table at Blue Tokai Coffee Roasters. Get your bill with the pre-applied EazyDiner deal. Pay your bill via PayEazy & save EXTRA"
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Does Blue Tokai Coffee Roasters restaurant play live music?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": " No, Blue Tokai Coffee Roasters doesn't play live music."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "What are current deals at Blue Tokai Coffee Roasters?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "There is no deal at Blue Tokai Coffee Roasters on EazyDiner. Browse through EazyDiner to avail dining discounts upto 50% OFF."
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "remarketing_tag_params": {
+          "dynx_itemid": 683567,
+          "dynx_itemid2": "Blue Tokai Coffee Roasters",
+          "dynx_pagetype": "restaurantdetail"
+        },
+        "amp_meta_tag": false,
+        "android_deeplink": "android-app://com.easydiner/eazydiner/action?url=https://www.eazydiner.com/bengaluru/blue-tokai-infantry-road-central-bengaluru-683567",
+        "is_noindex": false
+      }
+    }
+  }
+}

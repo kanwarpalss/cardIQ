@@ -1,0 +1,575 @@
+{
+  "meta": {
+    "restaurant": {
+      "slug": "tiger-trail",
+      "name": "Tiger Trail",
+      "area": "Jayamahal",
+      "districtSlugs": [
+        "tiger-trail-regenta-place-shivajinagar-bangalore"
+      ],
+      "eazyDinerSlug": "tiger-trail-ramada-bangalore-shivajinagar-330037"
+    },
+    "found": true,
+    "offerSummary": [
+      "[payeazy] Pay now & get EXTRA 25% OFF upto ₹1000",
+      "[discount] ₹300 off on ₹2000 bill (restaurant offer)",
+      "[discount] ₹425 off on ₹2000 bill (PayEazy)",
+      "[buffet] 1 buffet deal(s) available"
+    ]
+  },
+  "raw": {
+    "data": {
+      "id": 330037,
+      "url": "https://www.eazydiner.com/bengaluru/tiger-trail-ramada-bangalore-shivajinagar-330037",
+      "code": "bengaluru/tiger-trail-ramada-bangalore-shivajinagar-330037",
+      "default_image": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/home/restaurant-default-image.png",
+      "favourite_count": "748",
+      "primeTag": "Prime",
+      "name": "Tiger Trail",
+      "images": [
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/330037/restaurant320170517044331.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/330037/restaurant120170517044331.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/330037/restaurant020170517044331.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/330037/restaurant220170517044331.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/330037/restaurant420170517044331.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/reviewimages/330037/cb245d5969f733c924304a547b2d242915a8b2e4.20210116094724.jpg?width=818&height=450&mode=fit"
+      ],
+      "cost_for_two": "₹ 2000 for two approx.",
+      "currency": "₹",
+      "location": {
+        "address": "Ramada Bangalore, 11, Park Road, Near Indian Express Circle, Bengaluru",
+        "locality": "Regenta Place Cunningham, Bengaluru",
+        "code": "ramada-hotel",
+        "latitude": 12.957354,
+        "longitude": 77.644012,
+        "region_code": "Central Bengaluru",
+        "area_name": "Shivajinagar",
+        "city_code": "bengaluru",
+        "city_id": 3,
+        "country_id": 1,
+        "group_id": 2584,
+        "name": "Regenta Place Cunningham, Bengaluru",
+        "city_name": "Bengaluru"
+      },
+      "phone": "7861004444",
+      "cuisines": "Indian",
+      "timings": {
+        "today": [
+          "11:30 AM - 11:59 PM"
+        ],
+        "week": {
+          "Monday": [
+            "11:30 AM - 11:59 PM"
+          ],
+          "Tuesday": [
+            "11:30 AM - 11:59 PM"
+          ],
+          "Wednesday": [
+            "11:30 AM - 11:59 PM"
+          ],
+          "Thursday": [
+            "11:30 AM - 11:59 PM"
+          ],
+          "Friday": [
+            "11:30 AM - 11:59 PM"
+          ],
+          "Saturday": [
+            "11:30 AM - 11:59 PM"
+          ],
+          "Sunday": [
+            "11:30 AM - 11:59 PM"
+          ]
+        }
+      },
+      "user_reviews": {
+        "avg_rating": 4.1,
+        "count": 134
+      },
+      "critic_review": "",
+      "webview_menu_url": null,
+      "accepts_eazypay": true,
+      "eazypay_details": {
+        "text": "Pay now & get EXTRA 25% OFF upto ₹1000",
+        "summary_text": "Pay your bill on the app to get EXTRA 25% OFF upto ₹1000",
+        "booking_confirmation_text": "Remember to pay restaurant bill via PayEazy to get additional discount *",
+        "image": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/payeazy/logo/payeazy_tag.png",
+        "url": "https://www.eazydiner.com//ed-payeazy?restaurant_id=bengaluru/tiger-trail-ramada-bangalore-shivajinagar-330037"
+      },
+      "is_favorite": false,
+      "menu_last_updated": "Last updated few months ago",
+      "is_qsr": false,
+      "faq": [
+        {
+          "@type": "Question",
+          "name": "What cuisines are served at Tiger Trail?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The main cuisine served at Tiger Trail is Indian."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the cost for two at Tiger Trail?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The cost of two at Tiger Trail is ₹ 2000. You can save EXTRA over and above the restaurant deal applied by paying your restaurant bill on the EazyDiner app via PayEazy.."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Tiger Trail is pure vegetarian restaurant?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "   Tiger Trail serves both veg and non veg food."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What are the operational timings of Tiger Trail?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Tiger Trail restaurant operational timings are MONDAY: 11:30 AM to 11:59 PM, TUESDAY: 11:30 AM to 11:59 PM, WEDNESDAY: 11:30 AM to 11:59 PM, THURSDAY: 11:30 AM to 11:59 PM, FRIDAY: 11:30 AM to 11:59 PM, SATURDAY: 11:30 AM to 11:59 PM, SUNDAY: 11:30 AM to 11:59 PM"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does Tiger Trail serve buffet?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": " No, Tiger Trail does not serve buffet."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does Tiger Trail restaurant have a bar or serve alcohol?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, Tiger Trail serves alcohol."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is there a parking facility at Tiger Trail?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": " No, a parking facility is not available at Tiger Trail."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does Tiger Trail accept bill payment via PayEazy?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, Tiger Trail is a PayEazy-enabled restaurant & accepts card payments via EazyDiner. You can pay the restaurant bill using debit/credit cards."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How can I save EXTRA with PayEazy at Tiger Trail?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Book a table at Tiger Trail. Get your bill with the pre-applied EazyDiner deal. Pay your bill via PayEazy & save EXTRA"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does Tiger Trail restaurant play live music?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": " No, Tiger Trail doesn't play live music."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What are current deals at Tiger Trail?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Get exclusive 25% OFF at Tiger Trail on EazyDiner. Browse through EazyDiner to avail dining discounts upto 50% OFF."
+          }
+        }
+      ],
+      "category": "Luxury Dining",
+      "restaurant_type": "hotel",
+      "chain": "No",
+      "wallet_config": {
+        "type": "percentage",
+        "percentage": 25,
+        "min_transaction_amount": 0,
+        "text": "25% of the total amount can be paid from wallet balance in a single transaction ."
+      },
+      "reservation_status": true,
+      "deal_data": {
+        "default_deal_type": "deal_types[]=postpaid",
+        "title": "More Deals",
+        "period": 30,
+        "freeze_time": 30,
+        "other_deals": null
+      },
+      "foodie_awards": [],
+      "buffet_deals": [
+        {
+          "id": 84479,
+          "meal": "lunch",
+          "type": "veg",
+          "price_excluding_tax": 650,
+          "price_including_tax": 767,
+          "extra_info": "Welcome drink on Arrival, 1+1 veg non veg starter, 1 veg soup, 3 veg salad, 2 non veg main Course, 1 Lentils, 1 flavour rice, Indian Bread, Steamed Rice, Rasam, Accompaniment, 3 dessert including ice cream",
+          "additional_info": null,
+          "extra_title": null,
+          "buffet_time": "07:30 PM - 10:30 PM",
+          "buffet_days": "MON,TUE,WED,THU,FRI",
+          "meal_type": "Veg",
+          "inclusion": "",
+          "original_price": 650
+        }
+      ],
+      "tag_image": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/subscriptions/prime/primeexclusivenew.png",
+      "hasPrimeDeal": true,
+      "primeIcon": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/home/icons/Details-3x.png",
+      "restaurant_subtype": "Table",
+      "hygiene_rating": {
+        "icon": "https://d4t7t8y8xqo0t.cloudfront.net/app/https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant_detail/rest_header_payeazy.png"
+      },
+      "has_dynamic_buffet": false,
+      "bottomsheet_notification": "",
+      "force_direct_booking": true,
+      "new_rdv_layout": true,
+      "rdv_offer_data": {
+        "default_deal_type": "deal_types=postpaid",
+        "freeze_time": 30,
+        "period": 30
+      },
+      "link_only_payeazy": "",
+      "sample_discount_calculator": {
+        "heading": "<font color='#000000'><strong>Sample Bill</strong></font> <small>(Approx Discount)</small>",
+        "total_bill": 2000,
+        "restaurant_offer": 300,
+        "payment_offer": 425
+      },
+      "qbf": {
+        "qbf_gif": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/banner/qbf/qbf_final_single_nov_23.gif",
+        "success_confirmed_gif": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/banner/qbf/success_confirm_qbf_2.gif"
+      },
+      "webEngageData": {
+        "features": [
+          {
+            "name": "Home Delivery",
+            "code": "home-delivery",
+            "icon": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/features/53/home-delivery3x.png"
+          },
+          {
+            "name": "Alcohol Served",
+            "code": "alcohol-served",
+            "icon": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/features/54/alcohol-served3x.png"
+          },
+          {
+            "name": "Take-away",
+            "code": "take-away",
+            "icon": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/features/60/take-away3x.png"
+          },
+          {
+            "name": "DJ",
+            "code": "dj",
+            "icon": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/features/90/dj3x.png"
+          },
+          {
+            "name": "Bar",
+            "code": "bar",
+            "icon": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/features/110/bars-3x.png"
+          }
+        ],
+        "cost_for_two": 2000,
+        "offer_title": " + 25%"
+      },
+      "chain_id": null
+    },
+    "meta": {
+      "tab_data": [
+        {
+          "title": "offers",
+          "is_active": true
+        },
+        {
+          "title": "menu",
+          "is_active": false
+        },
+        {
+          "title": "photos",
+          "is_active": false
+        },
+        {
+          "title": "about",
+          "is_active": false
+        }
+      ],
+      "meta_title": "Tiger Trail in Regenta Place Cunningham, Bengaluru | Get Upto 50% Off",
+      "meta_description": "Tiger Trail,Regenta Place Cunningham, Bengaluru. View reviews, menu, contact, location, and more. Book through EazyDiner for FREE and get up to 50% off on your bill. PayEazy Discount: Up to '.₹1000.' OFF - 25% discount.",
+      "breadcrumbs": [
+        {
+          "title": "Home",
+          "url": "/"
+        },
+        {
+          "title": "Bengaluru",
+          "url": "/bengaluru"
+        },
+        {
+          "title": " Top Restaurants in Bengaluru",
+          "url": "/bengaluru/restaurants"
+        },
+        {
+          "title": "Central Bengaluru",
+          "url": "/bengaluru/restaurants/central-bengaluru"
+        },
+        {
+          "title": "Shivajinagar",
+          "url": "/bengaluru/restaurants/shivajinagar"
+        },
+        {
+          "title": "Regenta Place Cunningham, Bengaluru",
+          "url": "/bengaluru/restaurants/ramada-hotel"
+        },
+        {
+          "title": "Tiger Trail",
+          "url": "/bengaluru/tiger-trail-ramada-bangalore-shivajinagar-330037"
+        }
+      ],
+      "jsonSchema": {
+        "title": "Tiger Trail in Regenta Place Cunningham, Bengaluru | Get Upto 50% Off",
+        "description": "Tiger Trail,Regenta Place Cunningham, Bengaluru. View reviews, menu, contact, location, and more. Book through EazyDiner for FREE and get up to 50% off on your bill. PayEazy Discount: Up to '.₹1000.' OFF - 25% discount.",
+        "custom_deeplink": {
+          "ios": "eazydiner://action?url=https://www.eazydiner.com/bengaluru/tiger-trail-ramada-bangalore-shivajinagar-330037",
+          "android": "eazydiner://action?url=https://www.eazydiner.com/bengaluru/tiger-trail-ramada-bangalore-shivajinagar-330037?"
+        },
+        "og_data": {
+          "title": "Tiger Trail, Regenta Place Cunningham, Bengaluru",
+          "description": "25% Off On Entire Bill. To Claim: Book and Pay on the App  + Get Extra 15 Eazy Point On Pay Via App",
+          "image_url": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/330037/restaurant320170517044331.jpg?width=750&height=436&mode=fit",
+          "brand": "EazyDiner",
+          "availability": "available for order",
+          "condition": "new",
+          "amount": 2000,
+          "currency": "Inr",
+          "retailer_item_id": 330037
+        },
+        "json_schema": {
+          "@context": "http://schema.org",
+          "@graph": [
+            {
+              "@type": "Restaurant",
+              "@id": "https://www.eazydiner.com/bengaluru/tiger-trail-ramada-bangalore-shivajinagar-330037",
+              "name": "Tiger Trail",
+              "url": "https://www.eazydiner.com/bengaluru/tiger-trail-ramada-bangalore-shivajinagar-330037",
+              "hasMenu": "https://www.eazydiner.com/bengaluru/tiger-trail-ramada-bangalore-shivajinagar-330037/menu",
+              "image": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/330037/restaurant320170517044331.jpg?width=750&height=436&mode=fit",
+              "servesCuisine": "Indian",
+              "priceRange": "₹ 2000 for two approx. ",
+              "telephone": "+918022865566,+918040019555",
+              "geo": {
+                "@type": "GeoCoordinates",
+                "latitude": "12.95735400",
+                "longitude": "77.64401200"
+              },
+              "acceptsReservations": true,
+              "openingHoursSpecification": [
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Monday"
+                  ],
+                  "opens": "11:30:00",
+                  "closes": "23:59:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Tuesday"
+                  ],
+                  "opens": "11:30:00",
+                  "closes": "23:59:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Wednesday"
+                  ],
+                  "opens": "11:30:00",
+                  "closes": "23:59:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Thursday"
+                  ],
+                  "opens": "11:30:00",
+                  "closes": "23:59:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Friday"
+                  ],
+                  "opens": "11:30:00",
+                  "closes": "23:59:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Saturday"
+                  ],
+                  "opens": "11:30:00",
+                  "closes": "23:59:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Sunday"
+                  ],
+                  "opens": "11:30:00",
+                  "closes": "23:59:00"
+                }
+              ],
+              "currenciesAccepted": "INR",
+              "paymentAccepted": "Cash, Cards and Digital Payments Accepted",
+              "sameAs": "http://www.ramadabangalore.com/",
+              "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "Ramada Bangalore, 11, Park Road, Near Indian Express Circle, Bengaluru",
+                "addressLocality": "Regenta Place Cunningham, Bengaluru",
+                "addressRegion": "Bengaluru",
+                "postalCode": "560051",
+                "addressCountry": "IN"
+              },
+              "potentialAction": {
+                "@type": "ReserveAction",
+                "target": {
+                  "@type": "EntryPoint",
+                  "urlTemplate": "https://www.eazydiner.com/bengaluru/tiger-trail-ramada-bangalore-shivajinagar-330037",
+                  "inLanguage": "en-US",
+                  "actionPlatform": [
+                    "http://schema.org/MobileWebPlatform",
+                    "http://schema.org/DesktopWebPlatform",
+                    "http://schema.org/IOSPlatform",
+                    "http://schema.org/AndroidPlatform"
+                  ]
+                },
+                "result": {
+                  "@type": "FoodEstablishmentReservation",
+                  "name": "Reserve Table"
+                }
+              },
+              "aggregateRating": {
+                "@type": "AggregateRating",
+                "ratingValue": 4.1,
+                "ratingCount": 134,
+                "bestRating": "5",
+                "worstRating": "0"
+              }
+            },
+            {
+              "@type": "FAQPage",
+              "mainEntity": [
+                {
+                  "@type": "Question",
+                  "name": "What cuisines are served at Tiger Trail?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "The main cuisine served at Tiger Trail is Indian."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "What is the cost for two at Tiger Trail?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "The cost of two at Tiger Trail is ₹ 2000. You can save EXTRA over and above the restaurant deal applied by paying your restaurant bill on the EazyDiner app via PayEazy.."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Tiger Trail is pure vegetarian restaurant?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "   Tiger Trail serves both veg and non veg food."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "What are the operational timings of Tiger Trail?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Tiger Trail restaurant operational timings are MONDAY: 11:30 AM to 11:59 PM, TUESDAY: 11:30 AM to 11:59 PM, WEDNESDAY: 11:30 AM to 11:59 PM, THURSDAY: 11:30 AM to 11:59 PM, FRIDAY: 11:30 AM to 11:59 PM, SATURDAY: 11:30 AM to 11:59 PM, SUNDAY: 11:30 AM to 11:59 PM"
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Does Tiger Trail serve buffet?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": " No, Tiger Trail does not serve buffet."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Does Tiger Trail restaurant have a bar or serve alcohol?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Yes, Tiger Trail serves alcohol."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Is there a parking facility at Tiger Trail?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": " No, a parking facility is not available at Tiger Trail."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Does Tiger Trail accept bill payment via PayEazy?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Yes, Tiger Trail is a PayEazy-enabled restaurant & accepts card payments via EazyDiner. You can pay the restaurant bill using debit/credit cards."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "How can I save EXTRA with PayEazy at Tiger Trail?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Book a table at Tiger Trail. Get your bill with the pre-applied EazyDiner deal. Pay your bill via PayEazy & save EXTRA"
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Does Tiger Trail restaurant play live music?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": " No, Tiger Trail doesn't play live music."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "What are current deals at Tiger Trail?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Get exclusive 25% OFF at Tiger Trail on EazyDiner. Browse through EazyDiner to avail dining discounts upto 50% OFF."
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "remarketing_tag_params": {
+          "dynx_itemid": 330037,
+          "dynx_itemid2": "Tiger Trail",
+          "dynx_pagetype": "restaurantdetail"
+        },
+        "amp_meta_tag": false,
+        "android_deeplink": "android-app://com.easydiner/eazydiner/action?url=https://www.eazydiner.com/bengaluru/tiger-trail-ramada-bangalore-shivajinagar-330037",
+        "is_noindex": false
+      }
+    }
+  }
+}

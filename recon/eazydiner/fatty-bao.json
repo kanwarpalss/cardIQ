@@ -1,0 +1,546 @@
+{
+  "meta": {
+    "restaurant": {
+      "slug": "fatty-bao",
+      "name": "The Fatty Bao",
+      "area": "Indiranagar",
+      "districtSlugs": [
+        "the-fatty-bao-indiranagar-bangalore",
+        "the-fatty-bao-lavelle-road-bangalore"
+      ],
+      "eazyDinerSlug": "the-fatty-bao-lavelle-road-central-bengaluru-682670"
+    },
+    "found": true,
+    "offerSummary": []
+  },
+  "raw": {
+    "data": {
+      "id": 682670,
+      "url": "https://www.eazydiner.com/bengaluru/the-fatty-bao-lavelle-road-central-bengaluru-682670",
+      "code": "bengaluru/the-fatty-bao-lavelle-road-central-bengaluru-682670",
+      "default_image": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/home/restaurant-default-image.png",
+      "favourite_count": "663",
+      "primeTag": "",
+      "name": "The Fatty Bao",
+      "images": [
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/682670/restaurant020220209104021.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/682670/restaurant020220209103934.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/682670/restaurant020220209103957.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/682670/restaurant020220209104035.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/682670/restaurant020220209142007.jpeg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/reviewimages/682670/a51f402505ced3c1e209e651d961abf948decab7.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/reviewimages/682670/45f0ccf28431e214f8f3a4325cd49c585c89ddbb.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/reviewimages/682670/9af6c005aff391fd04cc87831edfd91d9bf6cc97.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/reviewimages/682670/8d4e744ca4d0e8f2b8ac1a5bd18d9fe5564c2486.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/reviewimages/682670/ead88e9f6e066d4e222801a14516af1246792164.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/reviewimages/682670/6b5c73f98d20ed0475e75a82a7fc287ec7ffa0f2.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/reviewimages/682670/9dd3540b74b70c595897d034f75424abc15c87e4.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/reviewimages/682670/2a2cb6f5625da59a9d512be9d61b97cee929f719.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/reviewimages/682670/1cbd0ee7141a99e3327c3fd983655ac27bca796e.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/reviewimages/682670/c787be86973e5c58a2a362bccc30d5495d78819c.jpg?width=818&height=450&mode=fit"
+      ],
+      "cost_for_two": "₹ 1000 for two approx.",
+      "currency": "₹",
+      "location": {
+        "address": "25/4, 1st floor, Lavelle Road, Bengaluru",
+        "locality": "Lavelle Road, Central Bengaluru",
+        "code": "lavelle-road",
+        "latitude": 12.97069989,
+        "longitude": 77.59756668,
+        "region_code": "Central Bengaluru",
+        "area_name": "Lavelle Road",
+        "city_code": "bengaluru",
+        "city_id": 3,
+        "country_id": 1,
+        "group_id": 1548,
+        "name": "Lavelle Road, Central Bengaluru",
+        "city_name": "Bengaluru"
+      },
+      "phone": "7861004444",
+      "cuisines": "Asian",
+      "timings": {
+        "today": [
+          "12:00 PM - 11:00 PM"
+        ],
+        "week": {
+          "Monday": [
+            "12:00 PM - 11:00 PM"
+          ],
+          "Tuesday": [
+            "12:00 PM - 11:00 PM"
+          ],
+          "Wednesday": [
+            "12:00 PM - 11:00 PM"
+          ],
+          "Thursday": [
+            "12:00 PM - 11:00 PM"
+          ],
+          "Friday": [
+            "12:00 PM - 11:30 PM"
+          ],
+          "Saturday": [
+            "12:00 PM - 11:30 PM"
+          ],
+          "Sunday": [
+            "12:00 PM - 11:00 PM"
+          ]
+        }
+      },
+      "user_reviews": {
+        "avg_rating": 4.4,
+        "count": 33
+      },
+      "critic_review": "",
+      "webview_menu_url": null,
+      "accepts_eazypay": false,
+      "is_favorite": false,
+      "menu_last_updated": "Last updated few months ago",
+      "is_qsr": false,
+      "faq": [
+        {
+          "@type": "Question",
+          "name": "What cuisines are served at The Fatty Bao?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The main cuisine served at The Fatty Bao is Asian."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the cost for two at The Fatty Bao?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The cost of two at The Fatty Bao is ₹ 1000."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "The Fatty Bao is pure vegetarian restaurant?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "   The Fatty Bao serves both veg and non veg food."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What are the operational timings of The Fatty Bao?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The Fatty Bao restaurant operational timings are MONDAY: 12:00 PM to 11:00 PM, TUESDAY: 12:00 PM to 11:00 PM, WEDNESDAY: 12:00 PM to 11:00 PM, THURSDAY: 12:00 PM to 11:00 PM, FRIDAY: 12:00 PM to 11:30 PM, SATURDAY: 12:00 PM to 11:30 PM, SUNDAY: 12:00 PM to 11:00 PM"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does The Fatty Bao serve buffet?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": " No, The Fatty Bao does not serve buffet."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does The Fatty Bao restaurant have a bar or serve alcohol?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, The Fatty Bao serves alcohol."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is there a parking facility at The Fatty Bao?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, the parking facility is available at The Fatty Bao."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does The Fatty Bao accept bill payment via PayEazy?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No, The Fatty Bao is not a PayEazy-enabled restaurant."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How can I save EXTRA with PayEazy at The Fatty Bao?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Book a table at The Fatty Bao. Get your bill with the pre-applied EazyDiner deal. Pay your bill via PayEazy & save EXTRA"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does The Fatty Bao restaurant play live music?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": " No, The Fatty Bao doesn't play live music."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What are current deals at The Fatty Bao?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "There is no deal at The Fatty Bao on EazyDiner. Browse through EazyDiner to avail dining discounts upto 50% OFF."
+          }
+        }
+      ],
+      "category": "Casual Dining",
+      "restaurant_type": "free standing",
+      "chain": "Yes",
+      "wallet_config": {
+        "type": "percentage",
+        "percentage": 25,
+        "min_transaction_amount": 0,
+        "text": "25% of the total amount can be paid from wallet balance in a single transaction ."
+      },
+      "reservation_status": false,
+      "deal_data": {
+        "default_deal_type": "deal_types[]=postpaid",
+        "title": "More Deals",
+        "period": 30,
+        "freeze_time": 30,
+        "other_deals": null
+      },
+      "foodie_awards": [],
+      "buffet_deals": [],
+      "error": {
+        "heading": "Discover amazing restaurants nearby",
+        "message": "Choose from higher ranked restaurants which were booked by many users this week.",
+        "date": "",
+        "time": "",
+        "icon": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant_detail/shop_1.png",
+        "action": "No Action",
+        "notBookableAction": "https://www.eazydiner.com/restaurants?location=lavelle-road",
+        "notBookableText": "Explore Nearby Restaurants"
+      },
+      "hasPrimeDeal": false,
+      "primeIcon": "",
+      "restaurant_subtype": "Table",
+      "hygiene_rating": "",
+      "has_dynamic_buffet": false,
+      "bottomsheet_notification": "",
+      "force_direct_booking": true,
+      "new_rdv_layout": false,
+      "rdv_offer_data": {
+        "default_deal_type": "deal_types=postpaid",
+        "freeze_time": 30,
+        "period": 30
+      },
+      "link_only_payeazy": "",
+      "sample_discount_calculator": "",
+      "qbf": {
+        "qbf_gif": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/banner/qbf/qbf_final_single_nov_23.gif",
+        "success_confirmed_gif": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/banner/qbf/success_confirm_qbf_2.gif"
+      },
+      "webEngageData": {
+        "features": [
+          {
+            "name": "Alcohol Served",
+            "code": "alcohol-served",
+            "icon": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/features/54/alcohol-served3x.png"
+          },
+          {
+            "name": "Smoking area",
+            "code": "smoking-area",
+            "icon": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/features/56/smoking-area3x.png"
+          },
+          {
+            "name": "Air Condition",
+            "code": "air-condition",
+            "icon": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/features/58/air-condition3x.png"
+          },
+          {
+            "name": "Take-away",
+            "code": "take-away",
+            "icon": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/features/60/take-away3x.png"
+          },
+          {
+            "name": "Outdoor Seating",
+            "code": "outdoor-seating",
+            "icon": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/features/61/outdoor-seating3x.png"
+          },
+          {
+            "name": "Valet Parking",
+            "code": "valet-parking",
+            "icon": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/features/63/valet-parking3x.png"
+          },
+          {
+            "name": "Kids Allowed",
+            "code": "kids-allowed",
+            "icon": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/features/72/kids-allowed3x.png"
+          }
+        ],
+        "cost_for_two": 1000,
+        "offer_title": " + 25%"
+      },
+      "chain_id": 6550
+    },
+    "meta": {
+      "tab_data": [
+        {
+          "title": "offers",
+          "is_active": true
+        },
+        {
+          "title": "menu",
+          "is_active": false
+        },
+        {
+          "title": "photos",
+          "is_active": false
+        },
+        {
+          "title": "about",
+          "is_active": false
+        }
+      ],
+      "meta_title": "Explore The Fatty Bao in Lavelle Road, Central Bengaluru",
+      "meta_description": "Get all the details for The Fatty Bao, Lavelle Road, Central Bengaluru. Check out reviews, photos, menu highlights, contact info, and much more on EazyDiner.",
+      "breadcrumbs": [
+        {
+          "title": "Home",
+          "url": "/"
+        },
+        {
+          "title": "Bengaluru",
+          "url": "/bengaluru"
+        },
+        {
+          "title": " Top Restaurants in Bengaluru",
+          "url": "/bengaluru/restaurants"
+        },
+        {
+          "title": "Central Bengaluru",
+          "url": "/bengaluru/restaurants/central-bengaluru"
+        },
+        {
+          "title": "Lavelle Road",
+          "url": "/bengaluru/restaurants/lavelle-road"
+        },
+        {
+          "title": "The Fatty Bao",
+          "url": "/bengaluru/the-fatty-bao-lavelle-road-central-bengaluru-682670"
+        }
+      ],
+      "jsonSchema": {
+        "title": "Explore The Fatty Bao in Lavelle Road, Central Bengaluru",
+        "description": "Get all the details for The Fatty Bao, Lavelle Road, Central Bengaluru. Check out reviews, photos, menu highlights, contact info, and much more on EazyDiner.",
+        "custom_deeplink": {
+          "ios": "eazydiner://action?url=https://www.eazydiner.com/bengaluru/the-fatty-bao-lavelle-road-central-bengaluru-682670",
+          "android": "eazydiner://action?url=https://www.eazydiner.com/bengaluru/the-fatty-bao-lavelle-road-central-bengaluru-682670?"
+        },
+        "og_data": {
+          "title": "The Fatty Bao, Lavelle Road, Central Bengaluru",
+          "description": "EazyDiner",
+          "image_url": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/682670/restaurant020220209104021.jpg?width=750&height=436&mode=fit",
+          "brand": "EazyDiner",
+          "availability": "discontinued",
+          "condition": "new",
+          "amount": 1000,
+          "currency": "Inr",
+          "retailer_item_id": 682670
+        },
+        "json_schema": {
+          "@context": "http://schema.org",
+          "@graph": [
+            {
+              "@type": "Restaurant",
+              "@id": "https://www.eazydiner.com/bengaluru/the-fatty-bao-lavelle-road-central-bengaluru-682670",
+              "name": "The Fatty Bao",
+              "url": "https://www.eazydiner.com/bengaluru/the-fatty-bao-lavelle-road-central-bengaluru-682670",
+              "hasMenu": "https://www.eazydiner.com/bengaluru/the-fatty-bao-lavelle-road-central-bengaluru-682670/menu",
+              "image": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/682670/restaurant020220209104021.jpg?width=750&height=436&mode=fit",
+              "servesCuisine": "Asian",
+              "priceRange": "₹ 1000 for two approx. ",
+              "telephone": "7861004444",
+              "geo": {
+                "@type": "GeoCoordinates",
+                "latitude": "12.97069989",
+                "longitude": "77.59756668"
+              },
+              "acceptsReservations": false,
+              "openingHoursSpecification": [
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Monday"
+                  ],
+                  "opens": "12:00:00",
+                  "closes": "23:00:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Tuesday"
+                  ],
+                  "opens": "12:00:00",
+                  "closes": "23:00:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Wednesday"
+                  ],
+                  "opens": "12:00:00",
+                  "closes": "23:00:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Thursday"
+                  ],
+                  "opens": "12:00:00",
+                  "closes": "23:00:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Friday"
+                  ],
+                  "opens": "12:00:00",
+                  "closes": "23:30:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Saturday"
+                  ],
+                  "opens": "12:00:00",
+                  "closes": "23:30:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Sunday"
+                  ],
+                  "opens": "12:00:00",
+                  "closes": "23:00:00"
+                }
+              ],
+              "currenciesAccepted": "INR",
+              "paymentAccepted": "Cash, Cards and Digital Payments Accepted",
+              "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "25/4, 1st floor, Lavelle Road, Bengaluru",
+                "addressLocality": "Lavelle Road, Central Bengaluru",
+                "addressRegion": "Bengaluru",
+                "postalCode": "560001",
+                "addressCountry": "IN"
+              },
+              "aggregateRating": {
+                "@type": "AggregateRating",
+                "ratingValue": 4.3,
+                "ratingCount": 33,
+                "bestRating": "5",
+                "worstRating": "0"
+              }
+            },
+            {
+              "@type": "FAQPage",
+              "mainEntity": [
+                {
+                  "@type": "Question",
+                  "name": "What cuisines are served at The Fatty Bao?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "The main cuisine served at The Fatty Bao is Asian."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "What is the cost for two at The Fatty Bao?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "The cost of two at The Fatty Bao is ₹ 1000."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "The Fatty Bao is pure vegetarian restaurant?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "   The Fatty Bao serves both veg and non veg food."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "What are the operational timings of The Fatty Bao?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "The Fatty Bao restaurant operational timings are MONDAY: 12:00 PM to 11:00 PM, TUESDAY: 12:00 PM to 11:00 PM, WEDNESDAY: 12:00 PM to 11:00 PM, THURSDAY: 12:00 PM to 11:00 PM, FRIDAY: 12:00 PM to 11:30 PM, SATURDAY: 12:00 PM to 11:30 PM, SUNDAY: 12:00 PM to 11:00 PM"
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Does The Fatty Bao serve buffet?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": " No, The Fatty Bao does not serve buffet."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Does The Fatty Bao restaurant have a bar or serve alcohol?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Yes, The Fatty Bao serves alcohol."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Is there a parking facility at The Fatty Bao?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Yes, the parking facility is available at The Fatty Bao."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Does The Fatty Bao accept bill payment via PayEazy?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "No, The Fatty Bao is not a PayEazy-enabled restaurant."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "How can I save EXTRA with PayEazy at The Fatty Bao?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Book a table at The Fatty Bao. Get your bill with the pre-applied EazyDiner deal. Pay your bill via PayEazy & save EXTRA"
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Does The Fatty Bao restaurant play live music?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": " No, The Fatty Bao doesn't play live music."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "What are current deals at The Fatty Bao?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "There is no deal at The Fatty Bao on EazyDiner. Browse through EazyDiner to avail dining discounts upto 50% OFF."
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "remarketing_tag_params": {
+          "dynx_itemid": 682670,
+          "dynx_itemid2": "The Fatty Bao",
+          "dynx_pagetype": "restaurantdetail"
+        },
+        "amp_meta_tag": false,
+        "android_deeplink": "android-app://com.easydiner/eazydiner/action?url=https://www.eazydiner.com/bengaluru/the-fatty-bao-lavelle-road-central-bengaluru-682670",
+        "is_noindex": false
+      }
+    }
+  }
+}

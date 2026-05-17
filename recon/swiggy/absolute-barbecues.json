@@ -1,0 +1,2266 @@
+{
+  "meta": {
+    "restaurant": {
+      "slug": "absolute-barbecues",
+      "name": "Absolute Barbecues",
+      "area": "Koramangala",
+      "districtSlugs": [
+        "abs-absolute-barbecues-koramangala-5th-block-bangalore"
+      ],
+      "eazyDinerSlug": "abs-absolute-barbecues-whitefield-east-bengaluru-662250"
+    },
+    "found": true,
+    "offerSummary": [
+      "aggregatedDiscountInfoV3",
+      "showEoOffer",
+      "aggregatedDiscountInfo",
+      "aggregatedDiscountInfoV2"
+    ]
+  },
+  "raw": {
+    "statusCode": 0,
+    "data": {
+      "statusMessage": "done successfully",
+      "cards": [
+        {
+          "card": {
+            "card": {
+              "@type": "type.googleapis.com/swiggy.gandalf.widgets.v2.Navigation",
+              "tab": [
+                {
+                  "id": "RESTAURANT",
+                  "title": "Restaurants",
+                  "selected": true,
+                  "analytics": {
+                    "screenName": "explore",
+                    "context": "{\"tid\":\"undefined\",\"query\":\"Absolute Barbecues\"}",
+                    "objectValue": "RESTAURANT",
+                    "clickObjectName": "click-tab"
+                  },
+                  "selectedBgColor": "#1B1E24",
+                  "unselectedBgColor": "#FFFFFF",
+                  "selectedTextColor": "#BFFFFFFF",
+                  "unselectedTextColor": "#9902060C",
+                  "selectedBorderColor": "#1B1E24",
+                  "unselectedBorderColor": "#E2E2E7"
+                },
+                {
+                  "id": "DISH",
+                  "title": "Dishes",
+                  "analytics": {
+                    "screenName": "explore",
+                    "context": "{\"tid\":\"undefined\",\"query\":\"Absolute Barbecues\"}",
+                    "objectValue": "DISH",
+                    "clickObjectName": "click-tab"
+                  },
+                  "selectedBgColor": "#1B1E24",
+                  "unselectedBgColor": "#FFFFFF",
+                  "selectedTextColor": "#BFFFFFFF",
+                  "unselectedTextColor": "#9902060C",
+                  "selectedBorderColor": "#1B1E24",
+                  "unselectedBorderColor": "#E2E2E7"
+                }
+              ],
+              "meta": {
+                "orderable": "true",
+                "correctedQuery": "",
+                "suggestionType": "",
+                "queryIntent": "RESTAURANT"
+              }
+            }
+          }
+        },
+        {
+          "groupedCard": {
+            "cardGroupMap": {
+              "RESTAURANT": {
+                "cards": [
+                  {
+                    "card": {
+                      "card": {
+                        "@type": "type.googleapis.com/swiggy.presentation.food.v2.Restaurant",
+                        "info": {
+                          "id": "733092",
+                          "name": "Caterspoint",
+                          "city": "1",
+                          "slugs": {
+                            "restaurant": "caterspoint-hsr-hsr",
+                            "city": "bangalore"
+                          },
+                          "cloudinaryImageId": "RX_THUMBNAIL/IMAGES/VENDOR/2026/4/24/a05192d2-1044-482c-b4bd-b0afb1b60c42_733092.jpg",
+                          "address": "Indira Chambers, 63/1, First Floor, Above HDFC Bank, Hosur Road, Madiwala, Bangalore 560068",
+                          "locality": "Hosur Road",
+                          "areaName": "HSR",
+                          "costForTwo": "50000",
+                          "costForTwoMessage": "₹500 FOR TWO",
+                          "cuisines": [
+                            "Salads",
+                            "Healthy food",
+                            "Snacks",
+                            "pastas",
+                            "Lebanese",
+                            "Mexican",
+                            "Desserts",
+                            "Beverages"
+                          ],
+                          "avgRating": 4.3,
+                          "feeDetails": {},
+                          "parentId": "11011",
+                          "avgRatingString": "4.3",
+                          "totalRatingsString": "3.3K+",
+                          "promoted": true,
+                          "adTrackingId": "cid=3090f9bb-a9ce-4644-a38a-60a97d0a24a6~p=0~adgrpid=3090f9bb-a9ce-4644-a38a-60a97d0a24a6#ag1~mp=SWIGGY_IN~bl=FOOD~aet=RESTAURANT~aeid=733092~plpr=SEARCH#RESTAURANT~st=absolute barbecues~eid=5258adb8-4b3f-42fd-a181-cf3a27b032f4~srvts=1778980670071",
+                          "sla": {
+                            "deliveryTime": 51,
+                            "minDeliveryTime": 50,
+                            "maxDeliveryTime": 60,
+                            "lastMileTravel": 7.3,
+                            "serviceability": "SERVICEABLE",
+                            "rainMode": "RAIN_MODE_NONE",
+                            "slaString": "50-60 MINS",
+                            "lastMileTravelString": "7.3 km",
+                            "iconType": "ICON_TYPE_EMPTY"
+                          },
+                          "availability": {
+                            "nextCloseMessage": "Closes soon",
+                            "opened": true,
+                            "restaurantClosedMeta": {}
+                          },
+                          "badges": {
+                            "imageBadges": [
+                              {
+                                "imageId": "Health%20Hub/RX%20BADGE/BADGE2.png",
+                                "description": "EatRight"
+                              },
+                              {
+                                "imageId": "newg.png",
+                                "description": "Gourmet"
+                              }
+                            ]
+                          },
+                          "aggregatedDiscountInfoV3": {
+                            "header": "ITEMS",
+                            "subHeader": "AT ₹99",
+                            "logoCtx": {
+                              "text": "BENEFITS"
+                            }
+                          },
+                          "ratingSlab": "RATING_SLAB_5",
+                          "orderabilityCommunication": {
+                            "title": {},
+                            "subTitle": {},
+                            "message": {},
+                            "customIcon": {},
+                            "commsStyling": {}
+                          },
+                          "cartOrderabilityNudgeBanner": {
+                            "parameters": {},
+                            "presentation": {}
+                          },
+                          "externalRatings": {
+                            "aggregatedRating": {
+                              "rating": "--"
+                            }
+                          },
+                          "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY",
+                          "featuredSectionInfo": {
+                            "sectionTitle": "More"
+                          },
+                          "campaignId": "3090f9bb-a9ce-4644-a38a-60a97d0a24a6",
+                          "showEoOffer": true,
+                          "priceComparisonComms": {}
+                        },
+                        "analytics": {
+                          "screenName": "explore",
+                          "context": "{\"tid\":\"undefined\",\"grid\":\"53f79e79-2fdd-4377-91af-3136e7527805\",\"queryUniqueId\":\"undefined\",\"query\":\"Absolute Barbecues\",\"adTrackingId\":\"cid=3090f9bb-a9ce-4644-a38a-60a97d0a24a6~p=0~adgrpid=3090f9bb-a9ce-4644-a38a-60a97d0a24a6#ag1~mp=SWIGGY_IN~bl=FOOD~aet=RESTAURANT~aeid=733092~plpr=SEARCH#RESTAURANT~st=absolute barbecues~eid=5258adb8-4b3f-42fd-a181-cf3a27b032f4~srvts=1778980670071\"}",
+                          "objectValue": "733092",
+                          "impressionObjectName": "impression-restaurant-ad",
+                          "clickObjectName": "click-restaurant-ad"
+                        },
+                        "ctaWithParams": {
+                          "link": "swiggy://menu",
+                          "type": "DEEPLINK",
+                          "params": {
+                            "isSld": "false",
+                            "sourceRequestId": "00000000000000000000000000000000",
+                            "qrEnabled": "false",
+                            "restaurant_id": "733092",
+                            "query": "Absolute Barbecues",
+                            "sourceSessionId": "re6f3a5e28c-6286-49f2-b4b1-3c368cd1f",
+                            "source": "SEARCH"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "card": {
+                      "card": {
+                        "@type": "type.googleapis.com/swiggy.presentation.food.v2.Restaurant",
+                        "info": {
+                          "id": "35186",
+                          "name": "Savoury Restaurant",
+                          "city": "1",
+                          "slugs": {
+                            "restaurant": "savoury-restaurant-btm-btm",
+                            "city": "bangalore"
+                          },
+                          "cloudinaryImageId": "RX_THUMBNAIL/IMAGES/VENDOR/2025/10/28/c05556ae-9c2a-485c-a39d-2a8d1e25f4ac_35186.jpg",
+                          "address": "Shop Np. 86, Hosur Road, Zuzuvadi, Madiwala, 1st Stage, BTM Layout 1, Bangalore, Karnataka",
+                          "locality": "Madiwala",
+                          "areaName": "Madiwala",
+                          "costForTwo": "45000",
+                          "costForTwoMessage": "₹450 FOR TWO",
+                          "cuisines": [
+                            "North Indian",
+                            "South Indian",
+                            "Biryani",
+                            "Kerala"
+                          ],
+                          "avgRating": 4.2,
+                          "feeDetails": {},
+                          "parentId": "179209",
+                          "avgRatingString": "4.2",
+                          "totalRatingsString": "31K+",
+                          "sla": {
+                            "deliveryTime": 40,
+                            "minDeliveryTime": 40,
+                            "maxDeliveryTime": 45,
+                            "lastMileTravel": 6.8,
+                            "serviceability": "SERVICEABLE",
+                            "rainMode": "RAIN_MODE_NONE",
+                            "slaString": "40-45 MINS",
+                            "lastMileTravelString": "6.8 km",
+                            "iconType": "ICON_TYPE_EMPTY"
+                          },
+                          "availability": {
+                            "nextCloseMessage": "Closes soon",
+                            "opened": true,
+                            "restaurantClosedMeta": {}
+                          },
+                          "badges": {},
+                          "aggregatedDiscountInfoV3": {
+                            "header": "ITEMS",
+                            "subHeader": "AT ₹29",
+                            "logoCtx": {
+                              "text": "BENEFITS"
+                            }
+                          },
+                          "ratingSlab": "RATING_SLAB_5",
+                          "orderabilityCommunication": {
+                            "title": {},
+                            "subTitle": {},
+                            "message": {},
+                            "customIcon": {},
+                            "commsStyling": {}
+                          },
+                          "cartOrderabilityNudgeBanner": {
+                            "parameters": {},
+                            "presentation": {}
+                          },
+                          "externalRatings": {
+                            "aggregatedRating": {
+                              "rating": "3.7",
+                              "ratingCount": "1.5K+"
+                            },
+                            "source": "GOOGLE",
+                            "sourceIconImageId": "v1704440323/google_ratings/rating_google_tag"
+                          },
+                          "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY",
+                          "featuredSectionInfo": {
+                            "sectionTitle": "More"
+                          },
+                          "showEoOffer": true,
+                          "priceComparisonComms": {}
+                        },
+                        "analytics": {
+                          "screenName": "explore",
+                          "context": "{\"tid\":\"undefined\",\"grid\":\"53f79e79-2fdd-4377-91af-3136e7527805\",\"queryUniqueId\":\"undefined\",\"query\":\"Absolute Barbecues\"}",
+                          "objectValue": "35186",
+                          "impressionObjectName": "impression-restaurant",
+                          "clickObjectName": "click-restaurant"
+                        },
+                        "ctaWithParams": {
+                          "link": "swiggy://menu",
+                          "type": "DEEPLINK",
+                          "params": {
+                            "isSld": "false",
+                            "sourceRequestId": "00000000000000000000000000000000",
+                            "qrEnabled": "false",
+                            "restaurant_id": "35186",
+                            "query": "Absolute Barbecues",
+                            "sourceSessionId": "re6f3a5e28c-6286-49f2-b4b1-3c368cd1f",
+                            "source": "SEARCH"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "card": {
+                      "card": {
+                        "@type": "type.googleapis.com/swiggy.presentation.food.v2.Restaurant",
+                        "info": {
+                          "id": "528133",
+                          "name": "AB's - Absolute Barbecues",
+                          "city": "1",
+                          "slugs": {
+                            "restaurant": "ab's--absolute-barbecues-koramangala-koramangala",
+                            "city": "bangalore"
+                          },
+                          "cloudinaryImageId": "ijsx68fb8kb1ncoongyw",
+                          "address": "Vijay Jatti Building, 104, 1st Main Rd, Khb Colony, 5Th Block, Koramangala, Bengaluru, Karnataka 560095",
+                          "locality": "Koramangala",
+                          "areaName": "Koramangala",
+                          "costForTwo": "50000",
+                          "costForTwoMessage": "₹500 FOR TWO",
+                          "cuisines": [
+                            "North Indian",
+                            "Barbecue",
+                            "Kebabs",
+                            "Biryani"
+                          ],
+                          "avgRating": 4,
+                          "feeDetails": {},
+                          "parentId": "387759",
+                          "avgRatingString": "4.0",
+                          "totalRatingsString": "712",
+                          "sla": {
+                            "deliveryTime": 358,
+                            "minDeliveryTime": 356,
+                            "maxDeliveryTime": 361,
+                            "lastMileTravel": 6.3,
+                            "serviceability": "SERVICEABLE",
+                            "rainMode": "RAIN_MODE_NONE",
+                            "slaString": "356-361 MINS",
+                            "lastMileTravelString": "6.3 km",
+                            "iconType": "ICON_TYPE_EMPTY"
+                          },
+                          "availability": {
+                            "nextOpenTimeMessage": "Opens next at 11:59 am, today",
+                            "restaurantClosedMeta": {
+                              "title": "CLOSED",
+                              "subtitle": "FOR NOW"
+                            }
+                          },
+                          "aggregatedDiscountInfo": {
+                            "visible": true
+                          },
+                          "badges": {},
+                          "unorderableMessage": "Opens next at 11:59 am, today",
+                          "aggregatedDiscountInfoV2": {
+                            "visible": true
+                          },
+                          "ratingSlab": "RATING_SLAB_4",
+                          "availabilityServiceabilityMessage": "Currently closed for delivery. Opens next at 11:59 am, today",
+                          "orderabilityCommunication": {
+                            "title": {
+                              "text": "CURRENTLY"
+                            },
+                            "subTitle": {
+                              "text": "CLOSED"
+                            },
+                            "message": {
+                              "text": "Opens today at 11:59 AM",
+                              "textColour": "primary"
+                            },
+                            "customIcon": {
+                              "bgGradientColorStart": "#EB8322",
+                              "bgGradientColorEnd": "#EE5803"
+                            },
+                            "commsStyling": {}
+                          },
+                          "cartOrderabilityNudgeBanner": {
+                            "parameters": {},
+                            "presentation": {}
+                          },
+                          "externalRatings": {
+                            "aggregatedRating": {
+                              "rating": "4.2",
+                              "ratingCount": "3.5K+"
+                            },
+                            "source": "GOOGLE",
+                            "sourceIconImageId": "v1704440323/google_ratings/rating_google_tag"
+                          },
+                          "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY",
+                          "featuredSectionInfo": {
+                            "sectionTitle": "More"
+                          },
+                          "showEoOffer": true,
+                          "priceComparisonComms": {}
+                        },
+                        "analytics": {
+                          "screenName": "explore",
+                          "context": "{\"tid\":\"undefined\",\"grid\":\"53f79e79-2fdd-4377-91af-3136e7527805\",\"queryUniqueId\":\"undefined\",\"query\":\"Absolute Barbecues\"}",
+                          "objectValue": "528133",
+                          "impressionObjectName": "impression-restaurant",
+                          "clickObjectName": "click-restaurant"
+                        },
+                        "ctaWithParams": {
+                          "link": "swiggy://menu",
+                          "type": "DEEPLINK",
+                          "params": {
+                            "query": "Absolute Barbecues",
+                            "sourceSessionId": "re6f3a5e28c-6286-49f2-b4b1-3c368cd1f",
+                            "source": "SEARCH",
+                            "isSld": "false",
+                            "sourceRequestId": "00000000000000000000000000000000",
+                            "qrEnabled": "false",
+                            "restaurant_id": "528133"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "card": {
+                      "card": {
+                        "@type": "type.googleapis.com/swiggy.presentation.food.v2.Restaurant",
+                        "info": {
+                          "id": "784610",
+                          "name": "Absolute Shawarma",
+                          "city": "1",
+                          "slugs": {
+                            "restaurant": "absolute-shawarma-koramangala-koramangala",
+                            "city": "bangalore"
+                          },
+                          "cloudinaryImageId": "RX_THUMBNAIL/IMAGES/VENDOR/2025/2/25/0836716a-c526-4b9a-a5f8-bf220943de5f_784610.jpg",
+                          "address": "Shop No 3, DRC Post, 1st Cross Road, Tavarekere Main Road, Behind the Forum Mall, Buvannapa Layout, Kaveri Layout, Bangalore, BTM Layout, B.B.M.P South, Karnataka - 560029",
+                          "locality": "Kaveri Layout",
+                          "areaName": "BTM",
+                          "costForTwo": "30000",
+                          "costForTwoMessage": "₹300 FOR TWO",
+                          "cuisines": [
+                            "shawarma",
+                            "Roll",
+                            "Beverages",
+                            "Fast Food"
+                          ],
+                          "avgRating": 3.7,
+                          "feeDetails": {},
+                          "parentId": "10528",
+                          "avgRatingString": "3.7",
+                          "totalRatingsString": "179",
+                          "sla": {
+                            "deliveryTime": 41,
+                            "minDeliveryTime": 40,
+                            "maxDeliveryTime": 45,
+                            "lastMileTravel": 6.7,
+                            "serviceability": "SERVICEABLE",
+                            "rainMode": "RAIN_MODE_NONE",
+                            "slaString": "40-45 MINS",
+                            "lastMileTravelString": "6.7 km",
+                            "iconType": "ICON_TYPE_EMPTY"
+                          },
+                          "availability": {
+                            "nextOpenTimeMessage": "Opens next at 4 pm, today",
+                            "restaurantClosedMeta": {
+                              "title": "CLOSED",
+                              "subtitle": "FOR NOW"
+                            }
+                          },
+                          "aggregatedDiscountInfo": {
+                            "visible": true
+                          },
+                          "badges": {},
+                          "unorderableMessage": "Opens next at 4 pm, today",
+                          "aggregatedDiscountInfoV2": {
+                            "visible": true
+                          },
+                          "ratingSlab": "RATING_SLAB_4",
+                          "availabilityServiceabilityMessage": "Currently closed for delivery. Opens next at 4 pm, today",
+                          "orderabilityCommunication": {
+                            "title": {
+                              "text": "CURRENTLY"
+                            },
+                            "subTitle": {
+                              "text": "CLOSED"
+                            },
+                            "message": {
+                              "text": "Opens today at 4:00 PM",
+                              "textColour": "primary"
+                            },
+                            "customIcon": {
+                              "bgGradientColorStart": "#EB8322",
+                              "bgGradientColorEnd": "#EE5803"
+                            },
+                            "commsStyling": {}
+                          },
+                          "cartOrderabilityNudgeBanner": {
+                            "parameters": {},
+                            "presentation": {}
+                          },
+                          "externalRatings": {
+                            "aggregatedRating": {
+                              "rating": "--"
+                            }
+                          },
+                          "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY",
+                          "featuredSectionInfo": {
+                            "sectionTitle": "More"
+                          },
+                          "showEoOffer": true,
+                          "priceComparisonComms": {}
+                        },
+                        "analytics": {
+                          "screenName": "explore",
+                          "context": "{\"tid\":\"undefined\",\"grid\":\"53f79e79-2fdd-4377-91af-3136e7527805\",\"queryUniqueId\":\"undefined\",\"query\":\"Absolute Barbecues\"}",
+                          "objectValue": "784610",
+                          "impressionObjectName": "impression-restaurant",
+                          "clickObjectName": "click-restaurant"
+                        },
+                        "ctaWithParams": {
+                          "link": "swiggy://menu",
+                          "type": "DEEPLINK",
+                          "params": {
+                            "qrEnabled": "false",
+                            "restaurant_id": "784610",
+                            "query": "Absolute Barbecues",
+                            "sourceSessionId": "re6f3a5e28c-6286-49f2-b4b1-3c368cd1f",
+                            "source": "SEARCH",
+                            "isSld": "false",
+                            "sourceRequestId": "00000000000000000000000000000000"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "card": {
+                      "card": {
+                        "@type": "type.googleapis.com/swiggy.presentation.food.v2.Restaurant",
+                        "info": {
+                          "id": "251099",
+                          "name": "Absolute Chinese Restaurant",
+                          "city": "1",
+                          "slugs": {
+                            "restaurant": "absolute-chinese-restaurant-malleshpalya-indiranagar-indiranagar",
+                            "city": "bangalore"
+                          },
+                          "cloudinaryImageId": "kin2pw5acqjrn7qrzbrq",
+                          "address": "Shop No 7,121/3,7th Cross,5th Main, Mahayogi Vemana Rd, Behind Chaitanya techno School, Maruthi Nagar, Malleshpalya, Bengaluru, Karnataka 560075",
+                          "locality": "Kaggadasapura",
+                          "areaName": "Kaggadasapura",
+                          "costForTwo": "25000",
+                          "costForTwoMessage": "₹250 FOR TWO",
+                          "cuisines": [
+                            "Chinese"
+                          ],
+                          "avgRating": 4.4,
+                          "feeDetails": {},
+                          "parentId": "26768",
+                          "avgRatingString": "4.4",
+                          "totalRatingsString": "3.3K+",
+                          "sla": {
+                            "deliveryTime": 340,
+                            "minDeliveryTime": 337,
+                            "maxDeliveryTime": 347,
+                            "lastMileTravel": 12,
+                            "serviceability": "SERVICEABLE",
+                            "rainMode": "RAIN_MODE_NONE",
+                            "slaString": "337-347 MINS",
+                            "lastMileTravelString": "12.0 km",
+                            "iconType": "ICON_TYPE_EMPTY"
+                          },
+                          "availability": {
+                            "nextOpenTimeMessage": "Opens next at 11:30 am, today",
+                            "restaurantClosedMeta": {
+                              "title": "CLOSED",
+                              "subtitle": "FOR NOW"
+                            }
+                          },
+                          "aggregatedDiscountInfo": {
+                            "visible": true
+                          },
+                          "badges": {},
+                          "sld": true,
+                          "unorderableMessage": "Opens next at 11:30 am, today",
+                          "aggregatedDiscountInfoV2": {
+                            "visible": true
+                          },
+                          "ratingSlab": "RATING_SLAB_5",
+                          "availabilityServiceabilityMessage": "Currently closed for delivery. Opens next at 11:30 am, today",
+                          "orderabilityCommunication": {
+                            "title": {
+                              "text": "CURRENTLY"
+                            },
+                            "subTitle": {
+                              "text": "CLOSED"
+                            },
+                            "message": {
+                              "text": "Opens today at 11:30 AM",
+                              "textColour": "primary"
+                            },
+                            "customIcon": {
+                              "bgGradientColorStart": "#EB8322",
+                              "bgGradientColorEnd": "#EE5803"
+                            },
+                            "commsStyling": {}
+                          },
+                          "cartOrderabilityNudgeBanner": {
+                            "parameters": {},
+                            "presentation": {}
+                          },
+                          "externalRatings": {
+                            "aggregatedRating": {
+                              "rating": "4.0",
+                              "ratingCount": "73"
+                            },
+                            "source": "GOOGLE",
+                            "sourceIconImageId": "v1704440323/google_ratings/rating_google_tag"
+                          },
+                          "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY",
+                          "featuredSectionInfo": {
+                            "sectionTitle": "More"
+                          },
+                          "showEoOffer": true,
+                          "priceComparisonComms": {}
+                        },
+                        "analytics": {
+                          "screenName": "explore",
+                          "context": "{\"tid\":\"undefined\",\"grid\":\"53f79e79-2fdd-4377-91af-3136e7527805\",\"queryUniqueId\":\"undefined\",\"query\":\"Absolute Barbecues\"}",
+                          "objectValue": "251099",
+                          "impressionObjectName": "impression-restaurant-sld",
+                          "clickObjectName": "click-restaurant-sld"
+                        },
+                        "ctaWithParams": {
+                          "link": "swiggy://menu",
+                          "type": "DEEPLINK",
+                          "params": {
+                            "query": "Absolute Barbecues",
+                            "sourceSessionId": "re6f3a5e28c-6286-49f2-b4b1-3c368cd1f",
+                            "source": "SEARCH",
+                            "isSld": "true",
+                            "sourceRequestId": "00000000000000000000000000000000",
+                            "qrEnabled": "false",
+                            "restaurant_id": "251099"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "card": {
+                      "card": {
+                        "@type": "type.googleapis.com/swiggy.presentation.food.v2.Restaurant",
+                        "info": {
+                          "id": "1001162",
+                          "name": "Absolute Shawarma",
+                          "city": "1",
+                          "slugs": {
+                            "restaurant": "absolute-shawarma-arekere-arekere-4",
+                            "city": "bangalore"
+                          },
+                          "cloudinaryImageId": "RX_THUMBNAIL/IMAGES/VENDOR/2025/2/25/4b59311e-72ec-413c-a84f-147e9ef2a433_1001162.jpg",
+                          "address": "Shop No : 205 , Floor :  , NILAYA , ",
+                          "locality": "Arekere",
+                          "areaName": "Arekere",
+                          "costForTwo": "30000",
+                          "costForTwoMessage": "₹300 FOR TWO",
+                          "cuisines": [
+                            "shawarma",
+                            "Arabian",
+                            "Snacks",
+                            "Burger",
+                            "Continental"
+                          ],
+                          "avgRating": 4.2,
+                          "feeDetails": {},
+                          "parentId": "511517",
+                          "avgRatingString": "4.2",
+                          "totalRatingsString": "126",
+                          "sla": {
+                            "deliveryTime": 50,
+                            "minDeliveryTime": 45,
+                            "maxDeliveryTime": 50,
+                            "lastMileTravel": 13.9,
+                            "serviceability": "SERVICEABLE",
+                            "rainMode": "RAIN_MODE_NONE",
+                            "slaString": "45-50 MINS",
+                            "lastMileTravelString": "13.9 km",
+                            "iconType": "ICON_TYPE_EMPTY"
+                          },
+                          "availability": {
+                            "nextOpenTimeMessage": "Opens next at 1 pm, today",
+                            "restaurantClosedMeta": {
+                              "title": "CLOSED",
+                              "subtitle": "FOR NOW"
+                            }
+                          },
+                          "aggregatedDiscountInfo": {
+                            "visible": true
+                          },
+                          "badges": {},
+                          "sld": true,
+                          "unorderableMessage": "Opens next at 1 pm, today",
+                          "aggregatedDiscountInfoV2": {
+                            "visible": true
+                          },
+                          "ratingSlab": "RATING_SLAB_5",
+                          "availabilityServiceabilityMessage": "Currently closed for delivery. Opens next at 1 pm, today",
+                          "orderabilityCommunication": {
+                            "title": {
+                              "text": "CURRENTLY"
+                            },
+                            "subTitle": {
+                              "text": "CLOSED"
+                            },
+                            "message": {
+                              "text": "Opens today at 1:00 PM",
+                              "textColour": "primary"
+                            },
+                            "customIcon": {
+                              "bgGradientColorStart": "#EB8322",
+                              "bgGradientColorEnd": "#EE5803"
+                            },
+                            "commsStyling": {}
+                          },
+                          "cartOrderabilityNudgeBanner": {
+                            "parameters": {},
+                            "presentation": {}
+                          },
+                          "externalRatings": {
+                            "aggregatedRating": {
+                              "rating": "--"
+                            }
+                          },
+                          "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY",
+                          "featuredSectionInfo": {
+                            "sectionTitle": "More"
+                          },
+                          "showEoOffer": true,
+                          "priceComparisonComms": {}
+                        },
+                        "analytics": {
+                          "screenName": "explore",
+                          "context": "{\"tid\":\"undefined\",\"grid\":\"53f79e79-2fdd-4377-91af-3136e7527805\",\"queryUniqueId\":\"undefined\",\"query\":\"Absolute Barbecues\"}",
+                          "objectValue": "1001162",
+                          "impressionObjectName": "impression-restaurant-sld",
+                          "clickObjectName": "click-restaurant-sld"
+                        },
+                        "ctaWithParams": {
+                          "link": "swiggy://menu",
+                          "type": "DEEPLINK",
+                          "params": {
+                            "query": "Absolute Barbecues",
+                            "sourceSessionId": "re6f3a5e28c-6286-49f2-b4b1-3c368cd1f",
+                            "source": "SEARCH",
+                            "isSld": "true",
+                            "sourceRequestId": "00000000000000000000000000000000",
+                            "qrEnabled": "false",
+                            "restaurant_id": "1001162"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "card": {
+                      "card": {
+                        "@type": "type.googleapis.com/swiggy.presentation.food.v2.Restaurant",
+                        "info": {
+                          "id": "1329432",
+                          "name": "Kelvin Scale Absolute Ice Cream",
+                          "city": "1",
+                          "slugs": {
+                            "restaurant": "kelvin-scale-absolute-ice-cream-basaveshwaranagar-basaveshwaranagar",
+                            "city": "bangalore"
+                          },
+                          "cloudinaryImageId": "RX_THUMBNAIL/IMAGES/VENDOR/2025/11/27/24070116-6449-47a2-89db-eadfc4183b1c_1273472.jpg",
+                          "address": "Shop No : 132 , Floor : Ground , H N Plaza , H N PLAZA, 3 Stage, 2nd Block, 3rd Stage, Basaveshwara Nagar, Bengaluru, Karnataka, India",
+                          "locality": "Basaveshwaranagar",
+                          "areaName": "Basaveshwaranagar",
+                          "costForTwo": "159700",
+                          "costForTwoMessage": "₹1597 FOR TWO",
+                          "cuisines": [
+                            "Ice Cream",
+                            "Waffle",
+                            "Ice Cream Cakes",
+                            "Biryani",
+                            "South Indian",
+                            "Indian"
+                          ],
+                          "avgRating": 4.7,
+                          "feeDetails": {},
+                          "parentId": "704988",
+                          "avgRatingString": "4.7",
+                          "totalRatingsString": "3",
+                          "sla": {
+                            "deliveryTime": 40,
+                            "minDeliveryTime": 35,
+                            "maxDeliveryTime": 40,
+                            "lastMileTravel": 6.7,
+                            "serviceability": "SERVICEABLE_WITH_BANNER",
+                            "rainMode": "RAIN_MODE_NONE",
+                            "slaString": "35-40 MINS",
+                            "lastMileTravelString": "6.7 km",
+                            "iconType": "ICON_TYPE_EMPTY"
+                          },
+                          "availability": {
+                            "nextOpenTimeMessage": "Opens next at 11 am, today",
+                            "restaurantClosedMeta": {
+                              "title": "CLOSED",
+                              "subtitle": "FOR NOW"
+                            }
+                          },
+                          "aggregatedDiscountInfo": {
+                            "visible": true
+                          },
+                          "badges": {},
+                          "unorderableMessage": "Opens next at 11 am, today",
+                          "aggregatedDiscountInfoV2": {
+                            "visible": true
+                          },
+                          "ratingSlab": "RATING_SLAB_5",
+                          "availabilityServiceabilityMessage": "Currently closed for delivery. Opens next at 11 am, today",
+                          "orderabilityCommunication": {
+                            "title": {
+                              "text": "CURRENTLY"
+                            },
+                            "subTitle": {
+                              "text": "CLOSED"
+                            },
+                            "message": {
+                              "text": "Opens today at 11:00 AM",
+                              "textColour": "primary"
+                            },
+                            "customIcon": {
+                              "bgGradientColorStart": "#EB8322",
+                              "bgGradientColorEnd": "#EE5803"
+                            },
+                            "commsStyling": {}
+                          },
+                          "cartOrderabilityNudgeBanner": {
+                            "parameters": {},
+                            "presentation": {}
+                          },
+                          "externalRatings": {
+                            "aggregatedRating": {
+                              "rating": "--"
+                            }
+                          },
+                          "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY",
+                          "featuredSectionInfo": {
+                            "sectionTitle": "More"
+                          },
+                          "showEoOffer": true,
+                          "priceComparisonComms": {}
+                        },
+                        "analytics": {
+                          "screenName": "explore",
+                          "context": "{\"tid\":\"undefined\",\"grid\":\"53f79e79-2fdd-4377-91af-3136e7527805\",\"queryUniqueId\":\"undefined\",\"query\":\"Absolute Barbecues\"}",
+                          "objectValue": "1329432",
+                          "impressionObjectName": "impression-restaurant",
+                          "clickObjectName": "click-restaurant"
+                        },
+                        "ctaWithParams": {
+                          "link": "swiggy://menu",
+                          "type": "DEEPLINK",
+                          "params": {
+                            "restaurant_id": "1329432",
+                            "query": "Absolute Barbecues",
+                            "sourceSessionId": "re6f3a5e28c-6286-49f2-b4b1-3c368cd1f",
+                            "source": "SEARCH",
+                            "isSld": "false",
+                            "sourceRequestId": "00000000000000000000000000000000",
+                            "qrEnabled": "false"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "card": {
+                      "card": {
+                        "@type": "type.googleapis.com/swiggy.presentation.food.v2.Restaurant",
+                        "info": {
+                          "id": "689359",
+                          "name": "Dock Frost'd -Ice Cream & Milkshakes",
+                          "city": "1",
+                          "slugs": {
+                            "restaurant": "dock-frost’d-vijayanagar-vijayanagar",
+                            "city": "bangalore"
+                          },
+                          "cloudinaryImageId": "0a40a94e7dc690e1ce93fa8959ad5dc0",
+                          "address": "SF 08, GLOBAL MALLS-MYSORE ROAD,  PANTHARPALLYA, KENGERI HOBLI, MYSORE  ROAD, BANGALORE., R R Nagara , B.B.M.P  West, Karnataka-560039",
+                          "locality": "R R Nagara",
+                          "areaName": "Vijayanagar",
+                          "costForTwo": "20000",
+                          "costForTwoMessage": "₹200 FOR TWO",
+                          "cuisines": [
+                            "Ice Cream",
+                            "Desserts",
+                            "Beverages"
+                          ],
+                          "avgRating": 4.6,
+                          "feeDetails": {},
+                          "parentId": "10164",
+                          "avgRatingString": "4.6",
+                          "totalRatingsString": "154",
+                          "sla": {
+                            "deliveryTime": 47,
+                            "minDeliveryTime": 45,
+                            "maxDeliveryTime": 50,
+                            "lastMileTravel": 10,
+                            "serviceability": "SERVICEABLE",
+                            "rainMode": "RAIN_MODE_NONE",
+                            "slaString": "45-50 MINS",
+                            "lastMileTravelString": "10.0 km",
+                            "iconType": "ICON_TYPE_EMPTY"
+                          },
+                          "availability": {
+                            "nextOpenTimeMessage": "Opens next at 11 am, today",
+                            "restaurantClosedMeta": {
+                              "title": "CLOSED",
+                              "subtitle": "FOR NOW"
+                            }
+                          },
+                          "aggregatedDiscountInfo": {
+                            "visible": true
+                          },
+                          "badges": {},
+                          "unorderableMessage": "Opens next at 11 am, today",
+                          "aggregatedDiscountInfoV2": {
+                            "visible": true
+                          },
+                          "ratingSlab": "RATING_SLAB_5",
+                          "availabilityServiceabilityMessage": "Currently closed for delivery. Opens next at 11 am, today",
+                          "orderabilityCommunication": {
+                            "title": {
+                              "text": "CURRENTLY"
+                            },
+                            "subTitle": {
+                              "text": "CLOSED"
+                            },
+                            "message": {
+                              "text": "Opens today at 11:00 AM",
+                              "textColour": "primary"
+                            },
+                            "customIcon": {
+                              "bgGradientColorStart": "#EB8322",
+                              "bgGradientColorEnd": "#EE5803"
+                            },
+                            "commsStyling": {}
+                          },
+                          "cartOrderabilityNudgeBanner": {
+                            "parameters": {},
+                            "presentation": {}
+                          },
+                          "externalRatings": {
+                            "aggregatedRating": {
+                              "rating": "--"
+                            }
+                          },
+                          "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY",
+                          "featuredSectionInfo": {
+                            "sectionTitle": "More"
+                          },
+                          "showEoOffer": true,
+                          "priceComparisonComms": {}
+                        },
+                        "analytics": {
+                          "screenName": "explore",
+                          "context": "{\"tid\":\"undefined\",\"grid\":\"53f79e79-2fdd-4377-91af-3136e7527805\",\"queryUniqueId\":\"undefined\",\"query\":\"Absolute Barbecues\"}",
+                          "objectValue": "689359",
+                          "impressionObjectName": "impression-restaurant",
+                          "clickObjectName": "click-restaurant"
+                        },
+                        "ctaWithParams": {
+                          "link": "swiggy://menu",
+                          "type": "DEEPLINK",
+                          "params": {
+                            "restaurant_id": "689359",
+                            "query": "Absolute Barbecues",
+                            "sourceSessionId": "re6f3a5e28c-6286-49f2-b4b1-3c368cd1f",
+                            "source": "SEARCH",
+                            "isSld": "false",
+                            "sourceRequestId": "00000000000000000000000000000000",
+                            "qrEnabled": "false"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "card": {
+                      "card": {
+                        "@type": "type.googleapis.com/swiggy.presentation.food.v2.Restaurant",
+                        "info": {
+                          "id": "35188",
+                          "name": "Savoury Seashell Restaurant",
+                          "city": "1",
+                          "slugs": {
+                            "restaurant": "savoury-sea-shell-restaurant-bannerghatta-road-btm",
+                            "city": "bangalore"
+                          },
+                          "cloudinaryImageId": "RX_THUMBNAIL/IMAGES/VENDOR/2025/10/28/9c0fb9c9-8b9e-47f7-981b-d61965df7361_35188.jpg",
+                          "address": "Shop No. 10, Bhavani Layout, Bannerghatta Road, S.G. Palya, Bangalore, Karnataka",
+                          "locality": "Bhavani Layout",
+                          "areaName": "Bannerghatta Road",
+                          "costForTwo": "45000",
+                          "costForTwoMessage": "₹450 FOR TWO",
+                          "cuisines": [
+                            "Arabian",
+                            "Indian",
+                            "Chinese",
+                            "Tandoor",
+                            "Biryani",
+                            "Seafood",
+                            "Kerala"
+                          ],
+                          "avgRating": 4.2,
+                          "feeDetails": {},
+                          "parentId": "472353",
+                          "avgRatingString": "4.2",
+                          "totalRatingsString": "23K+",
+                          "sla": {
+                            "deliveryTime": 42,
+                            "minDeliveryTime": 40,
+                            "maxDeliveryTime": 45,
+                            "lastMileTravel": 6.8,
+                            "serviceability": "SERVICEABLE",
+                            "rainMode": "RAIN_MODE_NONE",
+                            "slaString": "40-45 MINS",
+                            "lastMileTravelString": "6.8 km",
+                            "iconType": "ICON_TYPE_EMPTY"
+                          },
+                          "availability": {
+                            "nextOpenTimeMessage": "Opens next at 11:57 am, today",
+                            "restaurantClosedMeta": {
+                              "title": "CLOSED",
+                              "subtitle": "FOR NOW"
+                            }
+                          },
+                          "aggregatedDiscountInfo": {
+                            "visible": true
+                          },
+                          "badges": {},
+                          "unorderableMessage": "Opens next at 11:57 am, today",
+                          "aggregatedDiscountInfoV2": {
+                            "visible": true
+                          },
+                          "ratingSlab": "RATING_SLAB_5",
+                          "availabilityServiceabilityMessage": "Currently closed for delivery. Opens next at 11:57 am, today",
+                          "orderabilityCommunication": {
+                            "title": {
+                              "text": "CURRENTLY"
+                            },
+                            "subTitle": {
+                              "text": "CLOSED"
+                            },
+                            "message": {
+                              "text": "Opens today at 11:57 AM",
+                              "textColour": "primary"
+                            },
+                            "customIcon": {
+                              "bgGradientColorStart": "#EB8322",
+                              "bgGradientColorEnd": "#EE5803"
+                            },
+                            "commsStyling": {}
+                          },
+                          "cartOrderabilityNudgeBanner": {
+                            "parameters": {},
+                            "presentation": {}
+                          },
+                          "externalRatings": {
+                            "aggregatedRating": {
+                              "rating": "3.9",
+                              "ratingCount": "9.4K+"
+                            },
+                            "source": "GOOGLE",
+                            "sourceIconImageId": "v1704440323/google_ratings/rating_google_tag"
+                          },
+                          "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY",
+                          "featuredSectionInfo": {
+                            "sectionTitle": "More"
+                          },
+                          "showEoOffer": true,
+                          "priceComparisonComms": {}
+                        },
+                        "analytics": {
+                          "screenName": "explore",
+                          "context": "{\"tid\":\"undefined\",\"grid\":\"53f79e79-2fdd-4377-91af-3136e7527805\",\"queryUniqueId\":\"undefined\",\"query\":\"Absolute Barbecues\"}",
+                          "objectValue": "35188",
+                          "impressionObjectName": "impression-restaurant",
+                          "clickObjectName": "click-restaurant"
+                        },
+                        "ctaWithParams": {
+                          "link": "swiggy://menu",
+                          "type": "DEEPLINK",
+                          "params": {
+                            "query": "Absolute Barbecues",
+                            "sourceSessionId": "re6f3a5e28c-6286-49f2-b4b1-3c368cd1f",
+                            "source": "SEARCH",
+                            "isSld": "false",
+                            "sourceRequestId": "00000000000000000000000000000000",
+                            "qrEnabled": "false",
+                            "restaurant_id": "35188"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "card": {
+                      "card": {
+                        "@type": "type.googleapis.com/swiggy.presentation.food.v2.Restaurant",
+                        "info": {
+                          "id": "252332",
+                          "name": "Al-Bek",
+                          "city": "1",
+                          "slugs": {
+                            "restaurant": "al-bek-malleshwaram-malleshwaram",
+                            "city": "bangalore"
+                          },
+                          "cloudinaryImageId": "rqxv3ubecvh5xr3zgjjc",
+                          "address": "527, Shiva Comforts 1st Cross, Sampige Road Malleshwaram, Bangalore- 560003",
+                          "locality": "Malleshwaram",
+                          "areaName": "Malleshwaram",
+                          "costForTwo": "50000",
+                          "costForTwoMessage": "₹500 FOR TWO",
+                          "cuisines": [
+                            "Arabian",
+                            "Tandoor",
+                            "Biryani"
+                          ],
+                          "avgRating": 4.3,
+                          "feeDetails": {},
+                          "parentId": "9911",
+                          "avgRatingString": "4.3",
+                          "totalRatingsString": "11K+",
+                          "sla": {
+                            "deliveryTime": 373,
+                            "minDeliveryTime": 371,
+                            "maxDeliveryTime": 376,
+                            "lastMileTravel": 5,
+                            "serviceability": "SERVICEABLE",
+                            "rainMode": "RAIN_MODE_NONE",
+                            "slaString": "371-376 MINS",
+                            "lastMileTravelString": "5.0 km",
+                            "iconType": "ICON_TYPE_EMPTY"
+                          },
+                          "availability": {
+                            "nextOpenTimeMessage": "Opens next at 12:19 pm, today",
+                            "restaurantClosedMeta": {
+                              "title": "CLOSED",
+                              "subtitle": "FOR NOW"
+                            }
+                          },
+                          "aggregatedDiscountInfo": {
+                            "visible": true
+                          },
+                          "badges": {},
+                          "unorderableMessage": "Opens next at 12:19 pm, today",
+                          "aggregatedDiscountInfoV2": {
+                            "visible": true
+                          },
+                          "ratingSlab": "RATING_SLAB_5",
+                          "availabilityServiceabilityMessage": "Currently closed for delivery. Opens next at 12:19 pm, today",
+                          "orderabilityCommunication": {
+                            "title": {
+                              "text": "CURRENTLY"
+                            },
+                            "subTitle": {
+                              "text": "CLOSED"
+                            },
+                            "message": {
+                              "text": "Opens today at 12:19 PM",
+                              "textColour": "primary"
+                            },
+                            "customIcon": {
+                              "bgGradientColorStart": "#EB8322",
+                              "bgGradientColorEnd": "#EE5803"
+                            },
+                            "commsStyling": {}
+                          },
+                          "cartOrderabilityNudgeBanner": {
+                            "parameters": {},
+                            "presentation": {}
+                          },
+                          "externalRatings": {
+                            "aggregatedRating": {
+                              "rating": "3.9",
+                              "ratingCount": "16K+"
+                            },
+                            "source": "GOOGLE",
+                            "sourceIconImageId": "v1704440323/google_ratings/rating_google_tag"
+                          },
+                          "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY",
+                          "featuredSectionInfo": {
+                            "sectionTitle": "More"
+                          },
+                          "showEoOffer": true,
+                          "priceComparisonComms": {}
+                        },
+                        "analytics": {
+                          "screenName": "explore",
+                          "context": "{\"tid\":\"undefined\",\"grid\":\"53f79e79-2fdd-4377-91af-3136e7527805\",\"queryUniqueId\":\"undefined\",\"query\":\"Absolute Barbecues\"}",
+                          "objectValue": "252332",
+                          "impressionObjectName": "impression-restaurant",
+                          "clickObjectName": "click-restaurant"
+                        },
+                        "ctaWithParams": {
+                          "link": "swiggy://menu",
+                          "type": "DEEPLINK",
+                          "params": {
+                            "isSld": "false",
+                            "sourceRequestId": "00000000000000000000000000000000",
+                            "qrEnabled": "false",
+                            "restaurant_id": "252332",
+                            "query": "Absolute Barbecues",
+                            "sourceSessionId": "re6f3a5e28c-6286-49f2-b4b1-3c368cd1f",
+                            "source": "SEARCH"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "card": {
+                      "card": {
+                        "@type": "type.googleapis.com/swiggy.presentation.food.v2.Restaurant",
+                        "info": {
+                          "id": "98761",
+                          "name": "Jus'Trufs Cafe And Chocolate",
+                          "city": "1",
+                          "slugs": {
+                            "restaurant": "jus39trufs-chocolatiers-company-pvtltd-jakkur",
+                            "city": "bangalore"
+                          },
+                          "cloudinaryImageId": "gsje3biudsdd1lhiyx30",
+                          "address": "Shop No. 9, Jakkur Road, Jakkuru Layout, Jakkur, Bangalore, Karnataka",
+                          "locality": "Jakkur",
+                          "areaName": "Jakkur",
+                          "costForTwo": "80000",
+                          "costForTwoMessage": "₹800 FOR TWO",
+                          "cuisines": [
+                            "Continental",
+                            "American",
+                            "Desserts",
+                            "Italian",
+                            "Beverages",
+                            "Thai",
+                            "Pizzas"
+                          ],
+                          "avgRating": 4.4,
+                          "feeDetails": {},
+                          "parentId": "669323",
+                          "avgRatingString": "4.4",
+                          "totalRatingsString": "2.1K+",
+                          "sla": {
+                            "deliveryTime": 193,
+                            "minDeliveryTime": 192,
+                            "maxDeliveryTime": 202,
+                            "lastMileTravel": 14.2,
+                            "serviceability": "SERVICEABLE",
+                            "rainMode": "RAIN_MODE_NONE",
+                            "slaString": "192-202 MINS",
+                            "lastMileTravelString": "14.2 km",
+                            "iconType": "ICON_TYPE_EMPTY"
+                          },
+                          "availability": {
+                            "nextOpenTimeMessage": "Opens next at 9 am, today",
+                            "restaurantClosedMeta": {
+                              "title": "CLOSED",
+                              "subtitle": "FOR NOW"
+                            }
+                          },
+                          "aggregatedDiscountInfo": {
+                            "visible": true
+                          },
+                          "badges": {},
+                          "sld": true,
+                          "unorderableMessage": "Opens next at 9 am, today",
+                          "aggregatedDiscountInfoV2": {
+                            "visible": true
+                          },
+                          "ratingSlab": "RATING_SLAB_5",
+                          "availabilityServiceabilityMessage": "Currently closed for delivery. Opens next at 9 am, today",
+                          "orderabilityCommunication": {
+                            "title": {
+                              "text": "CURRENTLY"
+                            },
+                            "subTitle": {
+                              "text": "CLOSED"
+                            },
+                            "message": {
+                              "text": "Opens today at 9:00 AM",
+                              "textColour": "primary"
+                            },
+                            "customIcon": {
+                              "bgGradientColorStart": "#EB8322",
+                              "bgGradientColorEnd": "#EE5803"
+                            },
+                            "commsStyling": {}
+                          },
+                          "cartOrderabilityNudgeBanner": {
+                            "parameters": {},
+                            "presentation": {}
+                          },
+                          "externalRatings": {
+                            "aggregatedRating": {
+                              "rating": "4.1",
+                              "ratingCount": "3.5K+"
+                            },
+                            "source": "GOOGLE",
+                            "sourceIconImageId": "v1704440323/google_ratings/rating_google_tag"
+                          },
+                          "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY",
+                          "featuredSectionInfo": {
+                            "sectionTitle": "More"
+                          },
+                          "showEoOffer": true,
+                          "priceComparisonComms": {}
+                        },
+                        "analytics": {
+                          "screenName": "explore",
+                          "context": "{\"tid\":\"undefined\",\"grid\":\"53f79e79-2fdd-4377-91af-3136e7527805\",\"queryUniqueId\":\"undefined\",\"query\":\"Absolute Barbecues\"}",
+                          "objectValue": "98761",
+                          "impressionObjectName": "impression-restaurant-sld",
+                          "clickObjectName": "click-restaurant-sld"
+                        },
+                        "ctaWithParams": {
+                          "link": "swiggy://menu",
+                          "type": "DEEPLINK",
+                          "params": {
+                            "restaurant_id": "98761",
+                            "query": "Absolute Barbecues",
+                            "sourceSessionId": "re6f3a5e28c-6286-49f2-b4b1-3c368cd1f",
+                            "source": "SEARCH",
+                            "isSld": "true",
+                            "sourceRequestId": "00000000000000000000000000000000",
+                            "qrEnabled": "false"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "card": {
+                      "card": {
+                        "@type": "type.googleapis.com/swiggy.presentation.food.v2.Restaurant",
+                        "info": {
+                          "id": "762728",
+                          "name": "GOPIZZA",
+                          "city": "1",
+                          "slugs": {
+                            "restaurant": "gopizza-jayanagar-jayanagar-2",
+                            "city": "bangalore"
+                          },
+                          "cloudinaryImageId": "RX_THUMBNAIL/IMAGES/VENDOR/2025/11/10/fe20143a-044a-4f1f-b26c-9c0ac7af4451_762728.JPG",
+                          "address": "Plot No. 16 Old No. 54/2, Ground Floor, Teachers Colony, Jaraganahalli Village, Jayanagar, B.B.M.P South, Bangalore, Karnataka",
+                          "locality": "Jayanagar",
+                          "areaName": "Jayanagar",
+                          "costForTwo": "50000",
+                          "costForTwoMessage": "₹500 FOR TWO",
+                          "cuisines": [
+                            "Pizzas",
+                            "Italian",
+                            "Korean",
+                            "Snacks",
+                            "Desserts",
+                            "Beverages"
+                          ],
+                          "avgRating": 4,
+                          "feeDetails": {},
+                          "parentId": "21732",
+                          "avgRatingString": "4.0",
+                          "totalRatingsString": "929",
+                          "sla": {
+                            "deliveryTime": 53,
+                            "minDeliveryTime": 50,
+                            "maxDeliveryTime": 60,
+                            "lastMileTravel": 8.7,
+                            "serviceability": "SERVICEABLE",
+                            "rainMode": "RAIN_MODE_NONE",
+                            "slaString": "50-60 MINS",
+                            "lastMileTravelString": "8.7 km",
+                            "iconType": "ICON_TYPE_EMPTY"
+                          },
+                          "availability": {
+                            "nextOpenTimeMessage": "Opens next at 11:15 am, today",
+                            "restaurantClosedMeta": {
+                              "title": "CLOSED",
+                              "subtitle": "FOR NOW"
+                            }
+                          },
+                          "aggregatedDiscountInfo": {
+                            "visible": true
+                          },
+                          "badges": {},
+                          "unorderableMessage": "Opens next at 11:15 am, today",
+                          "aggregatedDiscountInfoV2": {
+                            "visible": true
+                          },
+                          "ratingSlab": "RATING_SLAB_4",
+                          "availabilityServiceabilityMessage": "Currently closed for delivery. Opens next at 11:15 am, today",
+                          "orderabilityCommunication": {
+                            "title": {
+                              "text": "CURRENTLY"
+                            },
+                            "subTitle": {
+                              "text": "CLOSED"
+                            },
+                            "message": {
+                              "text": "Opens today at 11:15 AM",
+                              "textColour": "primary"
+                            },
+                            "customIcon": {
+                              "bgGradientColorStart": "#EB8322",
+                              "bgGradientColorEnd": "#EE5803"
+                            },
+                            "commsStyling": {}
+                          },
+                          "cartOrderabilityNudgeBanner": {
+                            "parameters": {},
+                            "presentation": {}
+                          },
+                          "externalRatings": {
+                            "aggregatedRating": {
+                              "rating": "4.7",
+                              "ratingCount": "119"
+                            },
+                            "source": "GOOGLE",
+                            "sourceIconImageId": "v1704440323/google_ratings/rating_google_tag"
+                          },
+                          "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY",
+                          "featuredSectionInfo": {
+                            "sectionTitle": "More"
+                          },
+                          "showEoOffer": true,
+                          "priceComparisonComms": {}
+                        },
+                        "analytics": {
+                          "screenName": "explore",
+                          "context": "{\"tid\":\"undefined\",\"grid\":\"53f79e79-2fdd-4377-91af-3136e7527805\",\"queryUniqueId\":\"undefined\",\"query\":\"Absolute Barbecues\"}",
+                          "objectValue": "762728",
+                          "impressionObjectName": "impression-restaurant",
+                          "clickObjectName": "click-restaurant"
+                        },
+                        "ctaWithParams": {
+                          "link": "swiggy://menu",
+                          "type": "DEEPLINK",
+                          "params": {
+                            "qrEnabled": "false",
+                            "restaurant_id": "762728",
+                            "query": "Absolute Barbecues",
+                            "sourceSessionId": "re6f3a5e28c-6286-49f2-b4b1-3c368cd1f",
+                            "source": "SEARCH",
+                            "isSld": "false",
+                            "sourceRequestId": "00000000000000000000000000000000"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "card": {
+                      "card": {
+                        "@type": "type.googleapis.com/swiggy.presentation.food.v2.Restaurant",
+                        "info": {
+                          "id": "44883",
+                          "name": "Cafe Grill",
+                          "city": "1",
+                          "slugs": {
+                            "restaurant": "cafe-grill-jeevan-bhima-nagar-indiranagar",
+                            "city": "bangalore"
+                          },
+                          "cloudinaryImageId": "garlcexjcexxerrr26hs",
+                          "address": "Shop#2, 10Th Main, Jeevan Bhima Nagar Main Road, Hal 3Rd Stage, Indira Nagar, Bangalore 75",
+                          "locality": "Jeevan Bhima Nagar",
+                          "areaName": "Indiranagar",
+                          "costForTwo": "30000",
+                          "costForTwoMessage": "₹300 FOR TWO",
+                          "cuisines": [
+                            "North Indian"
+                          ],
+                          "avgRating": 4.3,
+                          "feeDetails": {},
+                          "parentId": "11919",
+                          "avgRatingString": "4.3",
+                          "totalRatingsString": "24K+",
+                          "sla": {
+                            "deliveryTime": 357,
+                            "minDeliveryTime": 352,
+                            "maxDeliveryTime": 357,
+                            "lastMileTravel": 7.3,
+                            "serviceability": "SERVICEABLE",
+                            "rainMode": "RAIN_MODE_NONE",
+                            "slaString": "352-357 MINS",
+                            "lastMileTravelString": "7.3 km",
+                            "iconType": "ICON_TYPE_EMPTY"
+                          },
+                          "availability": {
+                            "nextOpenTimeMessage": "Opens next at 12 noon, today",
+                            "restaurantClosedMeta": {
+                              "title": "CLOSED",
+                              "subtitle": "FOR NOW"
+                            }
+                          },
+                          "aggregatedDiscountInfo": {
+                            "visible": true
+                          },
+                          "badges": {},
+                          "unorderableMessage": "Opens next at 12 noon, today",
+                          "aggregatedDiscountInfoV2": {
+                            "visible": true
+                          },
+                          "ratingSlab": "RATING_SLAB_5",
+                          "availabilityServiceabilityMessage": "Currently closed for delivery. Opens next at 12 noon, today",
+                          "orderabilityCommunication": {
+                            "title": {
+                              "text": "CURRENTLY"
+                            },
+                            "subTitle": {
+                              "text": "CLOSED"
+                            },
+                            "message": {
+                              "text": "Opens today at 12:00 PM",
+                              "textColour": "primary"
+                            },
+                            "customIcon": {
+                              "bgGradientColorStart": "#EB8322",
+                              "bgGradientColorEnd": "#EE5803"
+                            },
+                            "commsStyling": {}
+                          },
+                          "cartOrderabilityNudgeBanner": {
+                            "parameters": {},
+                            "presentation": {}
+                          },
+                          "externalRatings": {
+                            "aggregatedRating": {
+                              "rating": "4.3",
+                              "ratingCount": "1.9K+"
+                            },
+                            "source": "GOOGLE",
+                            "sourceIconImageId": "v1704440323/google_ratings/rating_google_tag"
+                          },
+                          "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY",
+                          "featuredSectionInfo": {
+                            "sectionTitle": "More"
+                          },
+                          "showEoOffer": true,
+                          "priceComparisonComms": {}
+                        },
+                        "analytics": {
+                          "screenName": "explore",
+                          "context": "{\"tid\":\"undefined\",\"grid\":\"53f79e79-2fdd-4377-91af-3136e7527805\",\"queryUniqueId\":\"undefined\",\"query\":\"Absolute Barbecues\"}",
+                          "objectValue": "44883",
+                          "impressionObjectName": "impression-restaurant",
+                          "clickObjectName": "click-restaurant"
+                        },
+                        "ctaWithParams": {
+                          "link": "swiggy://menu",
+                          "type": "DEEPLINK",
+                          "params": {
+                            "sourceRequestId": "00000000000000000000000000000000",
+                            "qrEnabled": "false",
+                            "restaurant_id": "44883",
+                            "query": "Absolute Barbecues",
+                            "sourceSessionId": "re6f3a5e28c-6286-49f2-b4b1-3c368cd1f",
+                            "source": "SEARCH",
+                            "isSld": "false"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "card": {
+                      "card": {
+                        "@type": "type.googleapis.com/swiggy.presentation.food.v2.Restaurant",
+                        "info": {
+                          "id": "713558",
+                          "name": "Barbecue by Punjab Grill",
+                          "city": "1",
+                          "slugs": {
+                            "restaurant": "barbecue-by-punjab-grill-ashok-nagar-central-bangalore",
+                            "city": "bangalore"
+                          },
+                          "cloudinaryImageId": "RX_THUMBNAIL/IMAGES/VENDOR/2025/5/14/b9035917-e7e9-463b-a7b1-9d635d33d157_713558.jpg",
+                          "address": "Unit no 204 & 205, Rex mall No 16,Prestige Forum Rex walk, Rex theatre, Brigade road,Shantala Nagar, Ashok Nagar, Bengaluru, Karnataka 560001",
+                          "locality": "ashok nagar",
+                          "areaName": "FORUM REX WALK",
+                          "costForTwo": "90000",
+                          "costForTwoMessage": "₹900 FOR TWO",
+                          "cuisines": [
+                            "North Indian",
+                            "Kebabs",
+                            "Biryani",
+                            "Mughlai"
+                          ],
+                          "avgRating": 4.4,
+                          "feeDetails": {},
+                          "parentId": "382763",
+                          "avgRatingString": "4.4",
+                          "totalRatingsString": "181",
+                          "sla": {
+                            "deliveryTime": 293,
+                            "minDeliveryTime": 292,
+                            "maxDeliveryTime": 297,
+                            "lastMileTravel": 2.1,
+                            "serviceability": "SERVICEABLE",
+                            "rainMode": "RAIN_MODE_NONE",
+                            "slaString": "292-297 MINS",
+                            "lastMileTravelString": "2.1 km",
+                            "iconType": "ICON_TYPE_EMPTY"
+                          },
+                          "availability": {
+                            "nextOpenTimeMessage": "Opens next at 11 am, today",
+                            "restaurantClosedMeta": {
+                              "title": "CLOSED",
+                              "subtitle": "FOR NOW"
+                            }
+                          },
+                          "aggregatedDiscountInfo": {
+                            "visible": true
+                          },
+                          "badges": {
+                            "imageBadges": [
+                              {
+                                "imageId": "newg.png",
+                                "description": "Gourmet"
+                              }
+                            ]
+                          },
+                          "unorderableMessage": "Opens next at 11 am, today",
+                          "aggregatedDiscountInfoV2": {
+                            "visible": true
+                          },
+                          "ratingSlab": "RATING_SLAB_5",
+                          "availabilityServiceabilityMessage": "Currently closed for delivery. Opens next at 11 am, today",
+                          "orderabilityCommunication": {
+                            "title": {
+                              "text": "CURRENTLY"
+                            },
+                            "subTitle": {
+                              "text": "CLOSED"
+                            },
+                            "message": {
+                              "text": "Opens today at 11:00 AM",
+                              "textColour": "primary"
+                            },
+                            "customIcon": {
+                              "bgGradientColorStart": "#EB8322",
+                              "bgGradientColorEnd": "#EE5803"
+                            },
+                            "commsStyling": {}
+                          },
+                          "cartOrderabilityNudgeBanner": {
+                            "parameters": {},
+                            "presentation": {}
+                          },
+                          "externalRatings": {
+                            "aggregatedRating": {
+                              "rating": "--"
+                            }
+                          },
+                          "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY",
+                          "featuredSectionInfo": {
+                            "sectionTitle": "More"
+                          },
+                          "showEoOffer": true,
+                          "priceComparisonComms": {}
+                        },
+                        "analytics": {
+                          "screenName": "explore",
+                          "context": "{\"tid\":\"undefined\",\"grid\":\"53f79e79-2fdd-4377-91af-3136e7527805\",\"queryUniqueId\":\"undefined\",\"query\":\"Absolute Barbecues\"}",
+                          "objectValue": "713558",
+                          "impressionObjectName": "impression-restaurant",
+                          "clickObjectName": "click-restaurant"
+                        },
+                        "ctaWithParams": {
+                          "link": "swiggy://menu",
+                          "type": "DEEPLINK",
+                          "params": {
+                            "source": "SEARCH",
+                            "isSld": "false",
+                            "sourceRequestId": "00000000000000000000000000000000",
+                            "qrEnabled": "false",
+                            "restaurant_id": "713558",
+                            "query": "Absolute Barbecues",
+                            "sourceSessionId": "re6f3a5e28c-6286-49f2-b4b1-3c368cd1f"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "card": {
+                      "card": {
+                        "@type": "type.googleapis.com/swiggy.presentation.food.v2.Restaurant",
+                        "info": {
+                          "id": "20614",
+                          "name": "Absolute Chinese",
+                          "city": "1",
+                          "slugs": {
+                            "restaurant": "absolute-chinese-2nd-stage-rajajinagar",
+                            "city": "bangalore"
+                          },
+                          "cloudinaryImageId": "hsif475h4e4iy7odmtea",
+                          "address": "No 524, 1st Floor, 2Nd Stage, Rajajinagar, Behind E-Zone, Rajkumar Road, Near Orion Mall, Bangalore 560010",
+                          "locality": "Rajajinagar",
+                          "areaName": "Malleshwaram",
+                          "costForTwo": "20000",
+                          "costForTwoMessage": "₹200 FOR TWO",
+                          "cuisines": [
+                            "Chinese",
+                            "Thai",
+                            "Snacks"
+                          ],
+                          "avgRating": 4.1,
+                          "feeDetails": {},
+                          "parentId": "21603",
+                          "avgRatingString": "4.1",
+                          "totalRatingsString": "18K+",
+                          "sla": {
+                            "deliveryTime": 44,
+                            "minDeliveryTime": 40,
+                            "maxDeliveryTime": 45,
+                            "lastMileTravel": 8,
+                            "serviceability": "SERVICEABLE",
+                            "rainMode": "RAIN_MODE_NONE",
+                            "slaString": "40-45 MINS",
+                            "lastMileTravelString": "8.0 km",
+                            "iconType": "ICON_TYPE_EMPTY"
+                          },
+                          "availability": {
+                            "nextOpenTimeMessage": "Opens next at 11 am, today",
+                            "restaurantClosedMeta": {
+                              "title": "CLOSED",
+                              "subtitle": "FOR NOW"
+                            }
+                          },
+                          "aggregatedDiscountInfo": {
+                            "visible": true
+                          },
+                          "badges": {},
+                          "unorderableMessage": "Opens next at 11 am, today",
+                          "aggregatedDiscountInfoV2": {
+                            "visible": true
+                          },
+                          "ratingSlab": "RATING_SLAB_5",
+                          "availabilityServiceabilityMessage": "Currently closed for delivery. Opens next at 11 am, today",
+                          "orderabilityCommunication": {
+                            "title": {
+                              "text": "CURRENTLY"
+                            },
+                            "subTitle": {
+                              "text": "CLOSED"
+                            },
+                            "message": {
+                              "text": "Opens today at 11:00 AM",
+                              "textColour": "primary"
+                            },
+                            "customIcon": {
+                              "bgGradientColorStart": "#EB8322",
+                              "bgGradientColorEnd": "#EE5803"
+                            },
+                            "commsStyling": {}
+                          },
+                          "cartOrderabilityNudgeBanner": {
+                            "parameters": {},
+                            "presentation": {}
+                          },
+                          "externalRatings": {
+                            "aggregatedRating": {
+                              "rating": "4.2",
+                              "ratingCount": "350"
+                            },
+                            "source": "GOOGLE",
+                            "sourceIconImageId": "v1704440323/google_ratings/rating_google_tag"
+                          },
+                          "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY",
+                          "featuredSectionInfo": {
+                            "sectionTitle": "More"
+                          },
+                          "showEoOffer": true,
+                          "priceComparisonComms": {}
+                        },
+                        "analytics": {
+                          "screenName": "explore",
+                          "context": "{\"tid\":\"undefined\",\"grid\":\"53f79e79-2fdd-4377-91af-3136e7527805\",\"queryUniqueId\":\"undefined\",\"query\":\"Absolute Barbecues\"}",
+                          "objectValue": "20614",
+                          "impressionObjectName": "impression-restaurant",
+                          "clickObjectName": "click-restaurant"
+                        },
+                        "ctaWithParams": {
+                          "link": "swiggy://menu",
+                          "type": "DEEPLINK",
+                          "params": {
+                            "sourceSessionId": "re6f3a5e28c-6286-49f2-b4b1-3c368cd1f",
+                            "source": "SEARCH",
+                            "isSld": "false",
+                            "sourceRequestId": "00000000000000000000000000000000",
+                            "qrEnabled": "false",
+                            "restaurant_id": "20614",
+                            "query": "Absolute Barbecues"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "card": {
+                      "card": {
+                        "@type": "type.googleapis.com/swiggy.presentation.food.v2.Restaurant",
+                        "info": {
+                          "id": "998750",
+                          "name": "Absolute Biryaniz",
+                          "city": "1",
+                          "slugs": {
+                            "restaurant": "absolute-biryaniz-ramamurthy-nagar-ramamurthy-nagar",
+                            "city": "bangalore"
+                          },
+                          "cloudinaryImageId": "RX_THUMBNAIL/IMAGES/VENDOR/2024/11/27/a22d195f-a56e-47e6-be88-ff94e227b70c_998750.jpg",
+                          "address": "Shop No : 0 , Floor :  , VARASIDDHI VINAYAKA COMPLEX , ",
+                          "locality": "Ramamurthy nagar",
+                          "areaName": "Ramamurthy nagar",
+                          "costForTwo": "30000",
+                          "costForTwoMessage": "₹300 FOR TWO",
+                          "cuisines": [
+                            "Biryani",
+                            "Snacks"
+                          ],
+                          "feeDetails": {},
+                          "parentId": "582279",
+                          "avgRatingString": "--",
+                          "sla": {
+                            "deliveryTime": 62,
+                            "minDeliveryTime": 60,
+                            "maxDeliveryTime": 70,
+                            "lastMileTravel": 14.1,
+                            "serviceability": "SERVICEABLE",
+                            "rainMode": "RAIN_MODE_NONE",
+                            "slaString": "60-70 MINS",
+                            "lastMileTravelString": "14.1 km",
+                            "iconType": "ICON_TYPE_EMPTY"
+                          },
+                          "availability": {
+                            "nextOpenTimeMessage": "Opens next at 12 noon, today",
+                            "restaurantClosedMeta": {
+                              "title": "CLOSED",
+                              "subtitle": "FOR NOW"
+                            }
+                          },
+                          "aggregatedDiscountInfo": {
+                            "visible": true
+                          },
+                          "badges": {},
+                          "sld": true,
+                          "unorderableMessage": "Opens next at 12 noon, today",
+                          "aggregatedDiscountInfoV2": {
+                            "visible": true
+                          },
+                          "availabilityServiceabilityMessage": "Currently closed for delivery. Opens next at 12 noon, today",
+                          "orderabilityCommunication": {
+                            "title": {
+                              "text": "CURRENTLY"
+                            },
+                            "subTitle": {
+                              "text": "CLOSED"
+                            },
+                            "message": {
+                              "text": "Opens today at 12:00 PM",
+                              "textColour": "primary"
+                            },
+                            "customIcon": {
+                              "bgGradientColorStart": "#EB8322",
+                              "bgGradientColorEnd": "#EE5803"
+                            },
+                            "commsStyling": {}
+                          },
+                          "cartOrderabilityNudgeBanner": {
+                            "parameters": {},
+                            "presentation": {}
+                          },
+                          "externalRatings": {
+                            "aggregatedRating": {
+                              "rating": "--"
+                            }
+                          },
+                          "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY",
+                          "featuredSectionInfo": {
+                            "sectionTitle": "More"
+                          },
+                          "showEoOffer": true,
+                          "priceComparisonComms": {}
+                        },
+                        "analytics": {
+                          "screenName": "explore",
+                          "context": "{\"tid\":\"undefined\",\"grid\":\"53f79e79-2fdd-4377-91af-3136e7527805\",\"queryUniqueId\":\"undefined\",\"query\":\"Absolute Barbecues\"}",
+                          "objectValue": "998750",
+                          "impressionObjectName": "impression-restaurant-sld",
+                          "clickObjectName": "click-restaurant-sld"
+                        },
+                        "ctaWithParams": {
+                          "link": "swiggy://menu",
+                          "type": "DEEPLINK",
+                          "params": {
+                            "query": "Absolute Barbecues",
+                            "sourceSessionId": "re6f3a5e28c-6286-49f2-b4b1-3c368cd1f",
+                            "source": "SEARCH",
+                            "isSld": "true",
+                            "sourceRequestId": "00000000000000000000000000000000",
+                            "qrEnabled": "false",
+                            "restaurant_id": "998750"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "card": {
+                      "card": {
+                        "@type": "type.googleapis.com/swiggy.presentation.food.v2.Restaurant",
+                        "info": {
+                          "id": "834906",
+                          "name": "The Absolute Kitchen",
+                          "city": "1",
+                          "slugs": {
+                            "restaurant": "the-absolute-kitchen-vidyaranyapura-vidyaranyapura",
+                            "city": "bangalore"
+                          },
+                          "cloudinaryImageId": "2048d975a6b1cbcefeebe8e29b0067c1",
+                          "address": "Shop No : NO 41/14 , Floor : 1st Floor , Kusuma Buliding , Kodige halli main road, , Tindlu, Virupakshapura, Bengaluru, Karnataka 560097, India 560097",
+                          "locality": "Kodige Halli Main Road",
+                          "areaName": "Sahakar Nagar",
+                          "costForTwo": "30000",
+                          "costForTwoMessage": "₹300 FOR TWO",
+                          "cuisines": [
+                            "Chinese",
+                            "Momos",
+                            "Biryani",
+                            "Kebabs"
+                          ],
+                          "avgRating": 3.7,
+                          "feeDetails": {},
+                          "parentId": "495788",
+                          "avgRatingString": "3.7",
+                          "totalRatingsString": "9",
+                          "sla": {
+                            "deliveryTime": 52,
+                            "minDeliveryTime": 50,
+                            "maxDeliveryTime": 60,
+                            "lastMileTravel": 13.9,
+                            "serviceability": "SERVICEABLE",
+                            "rainMode": "RAIN_MODE_NONE",
+                            "slaString": "50-60 MINS",
+                            "lastMileTravelString": "13.9 km",
+                            "iconType": "ICON_TYPE_EMPTY"
+                          },
+                          "availability": {
+                            "nextOpenTimeMessage": "Opens next at 4 pm, today",
+                            "restaurantClosedMeta": {
+                              "title": "CLOSED",
+                              "subtitle": "FOR NOW"
+                            }
+                          },
+                          "aggregatedDiscountInfo": {
+                            "visible": true
+                          },
+                          "badges": {},
+                          "sld": true,
+                          "unorderableMessage": "Opens next at 4 pm, today",
+                          "aggregatedDiscountInfoV2": {
+                            "visible": true
+                          },
+                          "ratingSlab": "RATING_SLAB_4",
+                          "availabilityServiceabilityMessage": "Currently closed for delivery. Opens next at 4 pm, today",
+                          "orderabilityCommunication": {
+                            "title": {
+                              "text": "CURRENTLY"
+                            },
+                            "subTitle": {
+                              "text": "CLOSED"
+                            },
+                            "message": {
+                              "text": "Opens today at 4:00 PM",
+                              "textColour": "primary"
+                            },
+                            "customIcon": {
+                              "bgGradientColorStart": "#EB8322",
+                              "bgGradientColorEnd": "#EE5803"
+                            },
+                            "commsStyling": {}
+                          },
+                          "cartOrderabilityNudgeBanner": {
+                            "parameters": {},
+                            "presentation": {}
+                          },
+                          "externalRatings": {
+                            "aggregatedRating": {
+                              "rating": "--"
+                            }
+                          },
+                          "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY",
+                          "featuredSectionInfo": {
+                            "sectionTitle": "More"
+                          },
+                          "showEoOffer": true,
+                          "priceComparisonComms": {}
+                        },
+                        "analytics": {
+                          "screenName": "explore",
+                          "context": "{\"tid\":\"undefined\",\"grid\":\"53f79e79-2fdd-4377-91af-3136e7527805\",\"queryUniqueId\":\"undefined\",\"query\":\"Absolute Barbecues\"}",
+                          "objectValue": "834906",
+                          "impressionObjectName": "impression-restaurant-sld",
+                          "clickObjectName": "click-restaurant-sld"
+                        },
+                        "ctaWithParams": {
+                          "link": "swiggy://menu",
+                          "type": "DEEPLINK",
+                          "params": {
+                            "restaurant_id": "834906",
+                            "query": "Absolute Barbecues",
+                            "sourceSessionId": "re6f3a5e28c-6286-49f2-b4b1-3c368cd1f",
+                            "source": "SEARCH",
+                            "isSld": "true",
+                            "sourceRequestId": "00000000000000000000000000000000",
+                            "qrEnabled": "false"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "card": {
+                      "card": {
+                        "@type": "type.googleapis.com/swiggy.presentation.food.v2.Restaurant",
+                        "info": {
+                          "id": "983843",
+                          "name": "Absolute Biryaniz And Kebab",
+                          "city": "1",
+                          "slugs": {
+                            "restaurant": "absolute-biryaniz-and-kebab-indiranagar-indiranagar",
+                            "city": "bangalore"
+                          },
+                          "cloudinaryImageId": "RX_THUMBNAIL/IMAGES/VENDOR/2024/10/30/f9501f2c-9ca9-4279-a08c-e4fb77fc0569_983843.jpg",
+                          "address": "Shop No : 1 , Floor : 0 , Absolute Biryaniz And Kebab , ",
+                          "locality": "Indiranagar",
+                          "areaName": "Indiranagar",
+                          "costForTwo": "20000",
+                          "costForTwoMessage": "₹200 FOR TWO",
+                          "cuisines": [
+                            "South Indian",
+                            "Kebabs"
+                          ],
+                          "feeDetails": {},
+                          "parentId": "575049",
+                          "avgRatingString": "--",
+                          "sla": {
+                            "deliveryTime": 37,
+                            "minDeliveryTime": 35,
+                            "maxDeliveryTime": 40,
+                            "lastMileTravel": 4.4,
+                            "serviceability": "SERVICEABLE",
+                            "rainMode": "RAIN_MODE_NONE",
+                            "slaString": "35-40 MINS",
+                            "lastMileTravelString": "4.4 km",
+                            "iconType": "ICON_TYPE_EMPTY"
+                          },
+                          "availability": {
+                            "nextOpenTimeMessage": "Opens next at 1 pm, today",
+                            "restaurantClosedMeta": {
+                              "title": "CLOSED",
+                              "subtitle": "FOR NOW"
+                            }
+                          },
+                          "aggregatedDiscountInfo": {
+                            "visible": true
+                          },
+                          "badges": {},
+                          "unorderableMessage": "Opens next at 1 pm, today",
+                          "aggregatedDiscountInfoV2": {
+                            "visible": true
+                          },
+                          "availabilityServiceabilityMessage": "Currently closed for delivery. Opens next at 1 pm, today",
+                          "orderabilityCommunication": {
+                            "title": {
+                              "text": "CURRENTLY"
+                            },
+                            "subTitle": {
+                              "text": "CLOSED"
+                            },
+                            "message": {
+                              "text": "Opens today at 1:00 PM",
+                              "textColour": "primary"
+                            },
+                            "customIcon": {
+                              "bgGradientColorStart": "#EB8322",
+                              "bgGradientColorEnd": "#EE5803"
+                            },
+                            "commsStyling": {}
+                          },
+                          "cartOrderabilityNudgeBanner": {
+                            "parameters": {},
+                            "presentation": {}
+                          },
+                          "externalRatings": {
+                            "aggregatedRating": {
+                              "rating": "--"
+                            }
+                          },
+                          "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY",
+                          "featuredSectionInfo": {
+                            "sectionTitle": "More"
+                          },
+                          "showEoOffer": true,
+                          "priceComparisonComms": {}
+                        },
+                        "analytics": {
+                          "screenName": "explore",
+                          "context": "{\"tid\":\"undefined\",\"grid\":\"53f79e79-2fdd-4377-91af-3136e7527805\",\"queryUniqueId\":\"undefined\",\"query\":\"Absolute Barbecues\"}",
+                          "objectValue": "983843",
+                          "impressionObjectName": "impression-restaurant",
+                          "clickObjectName": "click-restaurant"
+                        },
+                        "ctaWithParams": {
+                          "link": "swiggy://menu",
+                          "type": "DEEPLINK",
+                          "params": {
+                            "restaurant_id": "983843",
+                            "query": "Absolute Barbecues",
+                            "sourceSessionId": "re6f3a5e28c-6286-49f2-b4b1-3c368cd1f",
+                            "source": "SEARCH",
+                            "isSld": "false",
+                            "sourceRequestId": "00000000000000000000000000000000",
+                            "qrEnabled": "false"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "card": {
+                      "card": {
+                        "@type": "type.googleapis.com/swiggy.presentation.food.v2.Restaurant",
+                        "info": {
+                          "id": "1355886",
+                          "name": "Sholay 'The House Of Costal and Barbecue'",
+                          "city": "1",
+                          "slugs": {
+                            "restaurant": "sholay-'the-house-of-costal-&-barbecue'-sahakar-nagar-sahakar-nagar",
+                            "city": "bangalore"
+                          },
+                          "cloudinaryImageId": "RX_THUMBNAIL/IMAGES/VENDOR/2026/3/27/cd326c91-cd0d-4857-8ab0-f5accb12c8fe_1355886.jpg",
+                          "address": "SHOLAY \"THE HOUSE OF COSTAL AND BARBECUE,15 AND 16TH 5TH CROSS ROAD,SAHAKAR NAGAR,BENGALOORU,KARNATAKA ,Bangalore North,Bangalore Urban,Karnataka-560092",
+                          "locality": "Sahakar Nagar",
+                          "areaName": "Sahakar Nagar",
+                          "costForTwo": "80000",
+                          "costForTwoMessage": "₹800 FOR TWO",
+                          "cuisines": [
+                            "Chinese",
+                            "Desserts",
+                            "Arabian",
+                            "Indian",
+                            "Beverages",
+                            "Juices",
+                            "Barbecue",
+                            "Salads"
+                          ],
+                          "feeDetails": {},
+                          "parentId": "771988",
+                          "avgRatingString": "NEW",
+                          "sla": {
+                            "deliveryTime": 49,
+                            "minDeliveryTime": 45,
+                            "maxDeliveryTime": 50,
+                            "lastMileTravel": 12.4,
+                            "serviceability": "SERVICEABLE",
+                            "rainMode": "RAIN_MODE_NONE",
+                            "slaString": "45-50 MINS",
+                            "lastMileTravelString": "12.4 km",
+                            "iconType": "ICON_TYPE_EMPTY"
+                          },
+                          "availability": {
+                            "nextOpenTimeMessage": "Opens next at 12 noon, today",
+                            "restaurantClosedMeta": {
+                              "title": "CLOSED",
+                              "subtitle": "FOR NOW"
+                            }
+                          },
+                          "aggregatedDiscountInfo": {
+                            "visible": true
+                          },
+                          "badges": {},
+                          "sld": true,
+                          "unorderableMessage": "Opens next at 12 noon, today",
+                          "aggregatedDiscountInfoV2": {
+                            "visible": true
+                          },
+                          "availabilityServiceabilityMessage": "Currently closed for delivery. Opens next at 12 noon, today",
+                          "orderabilityCommunication": {
+                            "title": {
+                              "text": "CURRENTLY"
+                            },
+                            "subTitle": {
+                              "text": "CLOSED"
+                            },
+                            "message": {
+                              "text": "Opens today at 12:00 PM",
+                              "textColour": "primary"
+                            },
+                            "customIcon": {
+                              "bgGradientColorStart": "#EB8322",
+                              "bgGradientColorEnd": "#EE5803"
+                            },
+                            "commsStyling": {}
+                          },
+                          "cartOrderabilityNudgeBanner": {
+                            "parameters": {},
+                            "presentation": {}
+                          },
+                          "externalRatings": {
+                            "aggregatedRating": {
+                              "rating": "4.8",
+                              "ratingCount": "138"
+                            },
+                            "source": "GOOGLE",
+                            "sourceIconImageId": "v1704440323/google_ratings/rating_google_tag"
+                          },
+                          "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY",
+                          "featuredSectionInfo": {
+                            "sectionTitle": "More"
+                          },
+                          "showEoOffer": true,
+                          "priceComparisonComms": {}
+                        },
+                        "analytics": {
+                          "screenName": "explore",
+                          "context": "{\"tid\":\"undefined\",\"grid\":\"53f79e79-2fdd-4377-91af-3136e7527805\",\"queryUniqueId\":\"undefined\",\"query\":\"Absolute Barbecues\"}",
+                          "objectValue": "1355886",
+                          "impressionObjectName": "impression-restaurant-sld",
+                          "clickObjectName": "click-restaurant-sld"
+                        },
+                        "ctaWithParams": {
+                          "link": "swiggy://menu",
+                          "type": "DEEPLINK",
+                          "params": {
+                            "query": "Absolute Barbecues",
+                            "sourceSessionId": "re6f3a5e28c-6286-49f2-b4b1-3c368cd1f",
+                            "source": "SEARCH",
+                            "isSld": "true",
+                            "sourceRequestId": "00000000000000000000000000000000",
+                            "qrEnabled": "false",
+                            "restaurant_id": "1355886"
+                          }
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      ],
+      "firstOffsetRequest": true
+    },
+    "tid": "8bed5f8a-4d93-404b-9854-19eeaeaa3f38",
+    "sid": "re6f3a5e28c-6286-49f2-b4b1-3c368cd1f",
+    "deviceId": "bfc2b91b-3147-f079-8f2a-b371c0af8537",
+    "csrfToken": "cZ3PUc8G0ki1-ocz4iQuBz_qxJsjlUQqpx7Ew28c"
+  }
+}

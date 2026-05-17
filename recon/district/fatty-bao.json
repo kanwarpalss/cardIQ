@@ -1,0 +1,20 @@
+{
+  "meta": {
+    "restaurant": {
+      "slug": "fatty-bao",
+      "name": "The Fatty Bao",
+      "area": "Indiranagar",
+      "districtSlugs": [
+        "the-fatty-bao-indiranagar-bangalore",
+        "the-fatty-bao-lavelle-road-bangalore"
+      ],
+      "eazyDinerSlug": "the-fatty-bao-lavelle-road-central-bengaluru-682670"
+    },
+    "found": true,
+    "offerSummary": []
+  },
+  "raw": {
+    "rscLength": 35943,
+    "pageUrl": "https://www.district.in/dining/bangalore/the-fatty-bao-indiranagar-bangalore"
+  }
+}

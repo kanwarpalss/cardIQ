@@ -16,6 +16,7 @@ interface Offer {
   max_discount: number | null;
   terms: string | null;
   offer_type: string | null;
+  booking_type: "prebooking" | "walkin" | "either" | null;
   snapshot_run_id: string;
   observed_at: string;
 }
@@ -45,13 +46,6 @@ interface Restaurant {
   best_discount_pct: number;
 }
 
-interface SessionState {
-  platform: Platform;
-  state: "active" | "expired" | "missing";
-  expires_at: string | null;
-  last_validated_at: string | null;
-}
-
 // ────────────────────────────────────────────────────────────────────
 // Platform display config — one source of truth for color + label
 // ────────────────────────────────────────────────────────────────────
@@ -64,6 +58,12 @@ const PLATFORM_META: Record<Platform, { label: string; color: string; bg: string
 
 const PLATFORMS: Platform[] = ["zomato", "swiggy", "eazydiner"];
 
+const BOOKING_TYPE_LABEL: Record<string, string> = {
+  prebooking: "Prebook",
+  walkin: "Walk-in",
+  either: "",
+};
+
 // ────────────────────────────────────────────────────────────────────
 // Component
 // ────────────────────────────────────────────────────────────────────
@@ -71,22 +71,15 @@ const PLATFORMS: Platform[] = ["zomato", "swiggy", "eazydiner"];
 export default function DiningTab() {
   const [query, setQuery] = useState("");
   const [restaurants, setRestaurants] = useState<Restaurant[] | null>(null);
-  const [sessions, setSessions] = useState<SessionState[] | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Debounced search
   useEffect(() => {
     const timer = setTimeout(() => {
       void searchRestaurants(query);
     }, 250);
     return () => clearTimeout(timer);
   }, [query]);
-
-  // Session status on mount
-  useEffect(() => {
-    void loadSessions();
-  }, []);
 
   async function searchRestaurants(q: string) {
     setLoading(true);
@@ -106,52 +99,14 @@ export default function DiningTab() {
     }
   }
 
-  async function loadSessions() {
-    try {
-      const res = await fetch("/api/dining/sessions/status");
-      if (!res.ok) return;
-      const data = await res.json();
-      setSessions(data.sessions ?? []);
-    } catch {
-      // Silent — banner just won't show.
-    }
-  }
-
-  const needsReauth = sessions?.filter((s) => s.state !== "active") ?? [];
-
   return (
     <div className="max-w-6xl mx-auto px-6 py-8 space-y-6">
-      {/* ── Re-auth banner ─────────────────────────────────────────── */}
-      {needsReauth.length > 0 && (
-        <ReauthBanner sessions={needsReauth} />
-      )}
-
       {/* ── Header ─────────────────────────────────────────────────── */}
-      <div className="flex items-baseline justify-between">
-        <div>
-          <h1 className="font-serif text-2xl text-mist">Dining</h1>
-          <p className="text-sm text-mist/50 mt-1">
-            Find restaurants across Zomato Dining Out, Swiggy Dineout, and EazyDiner — best offer wins.
-          </p>
-        </div>
-        {sessions && (
-          <div className="flex items-center gap-3 text-xs">
-            {PLATFORMS.map((p) => {
-              const s = sessions.find((x) => x.platform === p);
-              const ok = s?.state === "active";
-              return (
-                <div key={p} className="flex items-center gap-1.5">
-                  <span
-                    className="w-1.5 h-1.5 rounded-full"
-                    style={{ background: ok ? "#22c55e" : "#ef4444" }}
-                    aria-hidden
-                  />
-                  <span className="text-mist/40">{PLATFORM_META[p].label}</span>
-                </div>
-              );
-            })}
-          </div>
-        )}
+      <div>
+        <h1 className="font-serif text-2xl text-mist">Dining</h1>
+        <p className="text-sm text-mist/50 mt-1">
+          Find restaurants across Zomato Dining Out, Swiggy Dineout, and EazyDiner — best offer wins.
+        </p>
       </div>
 
       {/* ── Search box ─────────────────────────────────────────────── */}
@@ -200,37 +155,8 @@ export default function DiningTab() {
 }
 
 // ────────────────────────────────────────────────────────────────────
-// Sub-components (hoisted to module scope per L22)
+// Sub-components
 // ────────────────────────────────────────────────────────────────────
-
-function ReauthBanner({ sessions }: { sessions: SessionState[] }) {
-  const platformLabels = sessions.map((s) => PLATFORM_META[s.platform].label).join(", ");
-  const verb = sessions.length === 1 ? "needs" : "need";
-  const reasonText = sessions.length === 1 && sessions[0].state === "missing"
-    ? "hasn't been logged in yet"
-    : "re-authentication";
-
-  return (
-    <div className="rounded-xl border border-amber/40 bg-amber/5 px-4 py-3 flex items-start gap-3">
-      <svg className="w-4 h-4 mt-0.5 text-amber shrink-0" fill="none" viewBox="0 0 16 16"
-           stroke="currentColor" strokeWidth={1.8} aria-hidden>
-        <path d="M8 5v3M8 11h.01" strokeLinecap="round" />
-        <circle cx="8" cy="8" r="6.5" />
-      </svg>
-      <div className="text-sm">
-        <div className="text-mist">
-          <span className="font-medium text-amber">{platformLabels}</span>{" "}
-          {verb} {reasonText}.
-        </div>
-        <div className="text-mist/50 mt-1">
-          On your Mac mini: <code className="text-mist/70 bg-raised px-1.5 py-0.5 rounded text-xs">
-            npx tsx scripts/dining-login.ts &lt;platform&gt;
-          </code>
-        </div>
-      </div>
-    </div>
-  );
-}
 
 function RestaurantCard({ restaurant: r }: { restaurant: Restaurant }) {
   const bestPct = r.best_discount_pct;
@@ -286,8 +212,22 @@ function PlatformOfferCell({ platform, listing }: { platform: Platform; listing?
     );
   }
 
-  const topOffer = listing.offers[0];
-  const headline = topOffer?.headline ?? listing.headline_offer ?? "—";
+  // Split offers into prebook vs walk-in; fall back to showing top offer if unclassified.
+  const prebookOffers = listing.offers.filter((o) => o.booking_type === "prebooking");
+  const walkinOffers = listing.offers.filter((o) => o.booking_type === "walkin");
+  const otherOffers = listing.offers.filter((o) => !o.booking_type || o.booking_type === "either");
+
+  const sections: { label: string; offer: Offer }[] = [
+    ...prebookOffers.slice(0, 1).map((o) => ({ label: "Prebook", offer: o })),
+    ...walkinOffers.slice(0, 1).map((o) => ({ label: "Walk-in", offer: o })),
+    ...(prebookOffers.length === 0 && walkinOffers.length === 0
+      ? otherOffers.slice(0, 1).map((o) => ({ label: BOOKING_TYPE_LABEL[o.booking_type ?? ""] ?? "", offer: o }))
+      : []),
+  ];
+
+  const topHeadline = sections.length === 0
+    ? listing.headline_offer ?? "—"
+    : null;
 
   return (
     <a
@@ -297,22 +237,40 @@ function PlatformOfferCell({ platform, listing }: { platform: Platform; listing?
       className="rounded-lg border border-wire hover:border-rim transition-colors px-3 py-2 block group"
       style={{ background: meta.bg }}
     >
-      <div className="flex items-center justify-between gap-2">
-        <span className="text-xs font-medium" style={{ color: meta.color }}>
-          {meta.label}
-        </span>
-        {topOffer?.discount_pct != null && (
-          <span className="text-xs font-medium text-mist">
-            {topOffer.discount_pct}% off
-          </span>
-        )}
+      <div className="text-xs font-medium mb-1.5" style={{ color: meta.color }}>
+        {meta.label}
       </div>
-      <div className="text-xs text-mist/70 mt-1 truncate" title={headline}>
-        {headline}
-      </div>
-      {topOffer?.terms && (
-        <div className="text-2xs text-mist/40 mt-1 truncate" title={topOffer.terms}>
-          {topOffer.terms}
+
+      {sections.length > 0 ? (
+        <div className="space-y-1.5">
+          {sections.map(({ label, offer }) => (
+            <div key={offer.listing_id + label}>
+              {label && (
+                <div className="text-2xs text-mist/40 uppercase tracking-wide leading-none mb-0.5">
+                  {label}
+                </div>
+              )}
+              <div className="flex items-baseline justify-between gap-1">
+                <span className="text-xs text-mist/70 truncate" title={offer.headline}>
+                  {offer.headline}
+                </span>
+                {offer.discount_pct != null && (
+                  <span className="text-xs font-medium text-mist shrink-0">
+                    {offer.discount_pct}%
+                  </span>
+                )}
+              </div>
+              {offer.terms && (
+                <div className="text-2xs text-mist/40 truncate mt-0.5" title={offer.terms}>
+                  {offer.terms}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="text-xs text-mist/70 truncate" title={topHeadline ?? undefined}>
+          {topHeadline}
         </div>
       )}
     </a>
@@ -331,9 +289,7 @@ function EmptyState({ query }: { query: string }) {
   return (
     <div className="text-center py-12 text-mist/40 text-sm">
       <div>No restaurants scraped yet.</div>
-      <div className="mt-1 text-xs">
-        Run the scraper on the Mac mini, or wait for the weekly cron.
-      </div>
+      <div className="mt-1 text-xs">Run the scraper on the Mac, or wait for the weekly cron.</div>
     </div>
   );
 }

@@ -1,0 +1,32 @@
+{
+  "meta": {
+    "restaurant": {
+      "slug": "foxtrot",
+      "name": "Foxtrot",
+      "area": "Koramangala",
+      "districtSlugs": [
+        "foxtrot-marathahalli-bangalore"
+      ],
+      "eazyDinerSlug": "foxtrot-gastropub-marathahalli-east-bengaluru-652608"
+    },
+    "found": true,
+    "offerSummary": [
+      "[bank] Flat ₹150 OFF using Google Pay",
+      "[bank] Flat ₹500 OFF on Credit Cards",
+      "[bank] 25% OFF for up to ₹5000 using RBL Bank LUMIÈRE Credit Card",
+      "[bank] Get 15% OFF up to ₹750",
+      "[bank] Get 10% OFF up to ₹500 using YES BANK Credit Cards",
+      "[bank] 10% OFF up to ₹200 on TIDE Cards",
+      "[bank] Flat ₹400 OFF using PNB Luxura Visa Credit Card",
+      "[bank] 20% OFF for up to ₹150 using Cred Indusind Credit Card",
+      "[bank] 10% OFF up to ₹600 on Kotak Bank Privy Neon Debit Card",
+      "[bank] 15% OFF up to ₹1000 on Credit Cards",
+      "[bank] 15% OFF up to ₹500 on Ananta Credit Card",
+      "[bank] 20% OFF up to ₹1500 on Kotak Bank Solitaire Debit Card"
+    ]
+  },
+  "raw": {
+    "rscLength": 52188,
+    "pageUrl": "https://www.district.in/dining/bangalore/foxtrot-marathahalli-bangalore"
+  }
+}

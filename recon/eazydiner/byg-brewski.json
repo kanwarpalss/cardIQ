@@ -1,0 +1,607 @@
+{
+  "meta": {
+    "restaurant": {
+      "slug": "byg-brewski",
+      "name": "Byg Brewski",
+      "area": "Hennur",
+      "districtSlugs": [
+        "byg-brewski-brewing-company-hennur-bangalore",
+        "byg-brewski-brewing-company-sarjapur-road-bangalore",
+        "byg-brewski-brewing-company-yeshwantpur-bangalore"
+      ],
+      "eazyDinerSlug": "byg-brewski-brewing-company-hennur-north-bengaluru-656351"
+    },
+    "found": true,
+    "offerSummary": [
+      "[payeazy] Pay now & get EXTRA 25% OFF upto ₹1000",
+      "[discount] ₹500 off on ₹2000 bill (PayEazy)"
+    ]
+  },
+  "raw": {
+    "data": {
+      "id": 656351,
+      "url": "https://www.eazydiner.com/bengaluru/byg-brewski-brewing-company-hennur-north-bengaluru-656351",
+      "code": "bengaluru/byg-brewski-brewing-company-hennur-north-bengaluru-656351",
+      "default_image": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/home/restaurant-default-image.png",
+      "favourite_count": "1.65 k",
+      "primeTag": "",
+      "name": "Byg Brewski Brewing Company, Hennur",
+      "images": [
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/656351/restaurant020180904105537.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/656351/restaurant120180904105537.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/656351/restaurant220180904105537.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/656351/restaurant320180904105537.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/656351/restaurant420180904105537.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/656351/restaurant520180904105537.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/656351/restaurant620180904105537.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/reviewimages/656351/feb153bbc03628245650bdde95ed1963e9c755d4.20230525174306.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/reviewimages/656351/d72ed55c33c65dfcb3e95fe2a8a25bb506c818a8.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/reviewimages/656351/6853903c552eca62b49b62bacd55cd1a2fe3b5a1.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/reviewimages/656351/ad088a7736a37b91064c99daaf9bdf4aec1ba2eb.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/reviewimages/656351/3684bf4ff35dcd761b7c8dc3e587d6788b8570df.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/reviewimages/656351/9e6714ab25d76aac2db7874fe24790eb08f4f886.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/reviewimages/656351/434a2c7004edfd56393bcbbf940b5cc1ea73c960.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/reviewimages/656351/2da052916b77bc12ab743353724f1006ff94ab99.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/reviewimages/656351/63b94f5deb13e5ebabafb48bab1b034b329cbcb9.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/reviewimages/656351/43bdb00ab383441e8ad226d13567e3d0441e3d56.jpg?width=818&height=450&mode=fit"
+      ],
+      "cost_for_two": "₹ 2000 for two approx.",
+      "currency": "₹",
+      "location": {
+        "address": "Byrathi Village Sothern Asia Bible College, 22, Hennur Bagalur Rd, Bengaluru, Karnataka",
+        "locality": "Hennur, North Bengaluru",
+        "code": "hennur",
+        "latitude": 13.0708303,
+        "longitude": 77.6518661,
+        "region_code": "North Bengaluru",
+        "area_name": "Hennur",
+        "city_code": "bengaluru",
+        "city_id": 3,
+        "country_id": 1,
+        "group_id": 1104,
+        "name": "Hennur, North Bengaluru",
+        "city_name": "Bengaluru"
+      },
+      "phone": "7861004444",
+      "cuisines": "Multicuisine",
+      "timings": {
+        "today": [
+          "12:00 PM - 11:59 PM"
+        ],
+        "week": {
+          "Monday": [
+            "12:00 PM - 11:59 PM"
+          ],
+          "Tuesday": [
+            "12:00 PM - 11:59 PM"
+          ],
+          "Wednesday": [
+            "12:00 PM - 11:59 PM"
+          ],
+          "Thursday": [
+            "12:00 PM - 11:59 PM"
+          ],
+          "Friday": [
+            "12:00 PM - 11:59 PM"
+          ],
+          "Saturday": [
+            "12:00 PM - 11:59 PM"
+          ],
+          "Sunday": [
+            "12:00 PM - 11:59 PM"
+          ]
+        }
+      },
+      "user_reviews": {
+        "avg_rating": 4.4,
+        "count": 271
+      },
+      "critic_review": "",
+      "webview_menu_url": null,
+      "accepts_eazypay": true,
+      "eazypay_details": {
+        "text": "Pay now & get EXTRA 25% OFF upto ₹1000",
+        "summary_text": "Pay your bill on the app to get EXTRA 25% OFF upto ₹1000",
+        "booking_confirmation_text": "Remember to pay restaurant bill via PayEazy to get additional discount *",
+        "image": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/payeazy/logo/payeazy_tag.png",
+        "url": "https://www.eazydiner.com//ed-payeazy?restaurant_id=bengaluru/byg-brewski-brewing-company-hennur-north-bengaluru-656351"
+      },
+      "is_favorite": false,
+      "menu_last_updated": "Last updated few months ago",
+      "is_qsr": false,
+      "faq": [
+        {
+          "@type": "Question",
+          "name": "What cuisines are served at Byg Brewski Brewing Company, Hennur?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The main cuisine served at Byg Brewski Brewing Company, Hennur is Multicuisine."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the cost for two at Byg Brewski Brewing Company, Hennur?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The cost of two at Byg Brewski Brewing Company, Hennur is ₹ 2000. You can save EXTRA over and above the restaurant deal applied by paying your restaurant bill on the EazyDiner app via PayEazy.."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Byg Brewski Brewing Company, Hennur is pure vegetarian restaurant?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "   Byg Brewski Brewing Company, Hennur serves both veg and non veg food."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What are the operational timings of Byg Brewski Brewing Company, Hennur?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Byg Brewski Brewing Company, Hennur restaurant operational timings are MONDAY: 12:00 PM to 11:59 PM, TUESDAY: 12:00 PM to 11:59 PM, WEDNESDAY: 12:00 PM to 11:59 PM, THURSDAY: 12:00 PM to 11:59 PM, FRIDAY: 12:00 PM to 11:59 PM, SATURDAY: 12:00 PM to 11:59 PM, SUNDAY: 12:00 PM to 11:59 PM"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does Byg Brewski Brewing Company, Hennur serve buffet?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": " No, Byg Brewski Brewing Company, Hennur does not serve buffet."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does Byg Brewski Brewing Company, Hennur restaurant have a bar or serve alcohol?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, Byg Brewski Brewing Company, Hennur serves alcohol."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is there a parking facility at Byg Brewski Brewing Company, Hennur?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": " No, a parking facility is not available at Byg Brewski Brewing Company, Hennur."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does Byg Brewski Brewing Company, Hennur accept bill payment via PayEazy?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, Byg Brewski Brewing Company, Hennur is a PayEazy-enabled restaurant & accepts card payments via EazyDiner. You can pay the restaurant bill using debit/credit cards."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How can I save EXTRA with PayEazy at Byg Brewski Brewing Company, Hennur?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Book a table at Byg Brewski Brewing Company, Hennur. Get your bill with the pre-applied EazyDiner deal. Pay your bill via PayEazy & save EXTRA"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does Byg Brewski Brewing Company, Hennur restaurant play live music?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": " No, Byg Brewski Brewing Company, Hennur doesn't play live music."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What are current deals at Byg Brewski Brewing Company, Hennur?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "There is no deal at Byg Brewski Brewing Company, Hennur on EazyDiner. Browse through EazyDiner to avail dining discounts upto 50% OFF."
+          }
+        }
+      ],
+      "category": "Bar/Pub",
+      "restaurant_type": "free standing",
+      "chain": "No",
+      "wallet_config": {
+        "type": "percentage",
+        "percentage": 25,
+        "min_transaction_amount": 0,
+        "text": "25% of the total amount can be paid from wallet balance in a single transaction ."
+      },
+      "reservation_status": true,
+      "deal_data": {
+        "default_deal_type": "deal_types[]=postpaid",
+        "title": "More Deals",
+        "period": 30,
+        "freeze_time": 30,
+        "other_deals": null
+      },
+      "foodie_awards": [
+        {
+          "name": "Eazydiner Foodie Awards 2023",
+          "image": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/home/FAcertificate2023.png",
+          "category": "Best Microbrewery",
+          "type": "People's Choice"
+        },
+        {
+          "name": "Eazydiner Foodie Awards 2019",
+          "image": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/home/FAcertificate2019.png",
+          "category": "Best in Nightlife",
+          "type": "Vir's Choice"
+        }
+      ],
+      "buffet_deals": [],
+      "hasPrimeDeal": false,
+      "primeIcon": "",
+      "restaurant_subtype": "Table",
+      "hygiene_rating": {
+        "icon": "https://d4t7t8y8xqo0t.cloudfront.net/app/https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant_detail/rest_header_payeazy.png"
+      },
+      "has_dynamic_buffet": false,
+      "bottomsheet_notification": "",
+      "force_direct_booking": true,
+      "new_rdv_layout": true,
+      "rdv_offer_data": {
+        "default_deal_type": "deal_types=postpaid",
+        "freeze_time": 30,
+        "period": 30
+      },
+      "link_only_payeazy": "",
+      "sample_discount_calculator": {
+        "heading": "<font color='#000000'><strong>Sample Bill</strong></font> <small>(Approx Discount)</small>",
+        "total_bill": 2000,
+        "restaurant_offer": 0,
+        "payment_offer": 500
+      },
+      "qbf": {
+        "qbf_gif": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/banner/qbf/qbf_final_single_nov_23.gif",
+        "success_confirmed_gif": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/banner/qbf/success_confirm_qbf_2.gif"
+      },
+      "webEngageData": {
+        "features": [
+          {
+            "name": "Home Delivery",
+            "code": "home-delivery",
+            "icon": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/features/53/home-delivery3x.png"
+          },
+          {
+            "name": "Alcohol Served",
+            "code": "alcohol-served",
+            "icon": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/features/54/alcohol-served3x.png"
+          },
+          {
+            "name": "Smoking area",
+            "code": "smoking-area",
+            "icon": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/features/56/smoking-area3x.png"
+          },
+          {
+            "name": "Nightlife",
+            "code": "nightlife",
+            "icon": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/features/59/nightlife3x.png"
+          },
+          {
+            "name": "Take-away",
+            "code": "take-away",
+            "icon": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/features/60/take-away3x.png"
+          },
+          {
+            "name": "Outdoor Seating",
+            "code": "outdoor-seating",
+            "icon": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/features/61/outdoor-seating3x.png"
+          },
+          {
+            "name": "Microbrewery",
+            "code": "microbrewery",
+            "icon": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/features/64/microbrewery3x.png"
+          },
+          {
+            "name": "Kids Allowed",
+            "code": "kids-allowed",
+            "icon": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/features/72/kids-allowed3x.png"
+          },
+          {
+            "name": "Dessert",
+            "code": "dessert",
+            "icon": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/features/86/dessert3x.png"
+          },
+          {
+            "name": "Bars & pubs",
+            "code": "bars-pubs",
+            "icon": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/features/88/bars-pubs3x.png"
+          },
+          {
+            "name": "Bar",
+            "code": "bar",
+            "icon": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/features/110/bars-3x.png"
+          }
+        ],
+        "cost_for_two": 2000,
+        "offer_title": " + 25%"
+      },
+      "chain_id": null
+    },
+    "meta": {
+      "tab_data": [
+        {
+          "title": "offers",
+          "is_active": true
+        },
+        {
+          "title": "menu",
+          "is_active": false
+        },
+        {
+          "title": "photos",
+          "is_active": false
+        },
+        {
+          "title": "about",
+          "is_active": false
+        }
+      ],
+      "meta_title": "Book a Table at Byg Brewski Hennur, Bengaluru - EazyDiner",
+      "meta_description": "Head to Byg Brewski Brewing Company Hennur to enjoy a night full of amazing food and drinks. Don't forget to make a table reservation through EazyDiner.",
+      "breadcrumbs": [
+        {
+          "title": "Home",
+          "url": "/"
+        },
+        {
+          "title": "Bengaluru",
+          "url": "/bengaluru"
+        },
+        {
+          "title": " Top Restaurants in Bengaluru",
+          "url": "/bengaluru/restaurants"
+        },
+        {
+          "title": "North Bengaluru",
+          "url": "/bengaluru/restaurants/north-bengaluru"
+        },
+        {
+          "title": "Hennur",
+          "url": "/bengaluru/restaurants/hennur"
+        },
+        {
+          "title": "Byg Brewski Brewing Company, Hennur",
+          "url": "/bengaluru/byg-brewski-brewing-company-hennur-north-bengaluru-656351"
+        }
+      ],
+      "jsonSchema": {
+        "title": "Book a Table at Byg Brewski Hennur, Bengaluru - EazyDiner",
+        "description": "Head to Byg Brewski Brewing Company Hennur to enjoy a night full of amazing food and drinks. Don't forget to make a table reservation through EazyDiner.",
+        "custom_deeplink": {
+          "ios": "eazydiner://action?url=https://www.eazydiner.com/bengaluru/byg-brewski-brewing-company-hennur-north-bengaluru-656351",
+          "android": "eazydiner://action?url=https://www.eazydiner.com/bengaluru/byg-brewski-brewing-company-hennur-north-bengaluru-656351?"
+        },
+        "og_data": {
+          "title": "Byg Brewski Brewing Company, Hennur, Hennur, North Bengaluru",
+          "description": "EazyDiner",
+          "image_url": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/656351/restaurant020180904105537.jpg?width=750&height=436&mode=fit",
+          "brand": "EazyDiner",
+          "availability": "available for order",
+          "condition": "new",
+          "amount": 2000,
+          "currency": "Inr",
+          "retailer_item_id": 656351
+        },
+        "json_schema": {
+          "@context": "http://schema.org",
+          "@graph": [
+            {
+              "@type": "Restaurant",
+              "@id": "https://www.eazydiner.com/bengaluru/byg-brewski-brewing-company-hennur-north-bengaluru-656351",
+              "name": "Byg Brewski Brewing Company, Hennur",
+              "url": "https://www.eazydiner.com/bengaluru/byg-brewski-brewing-company-hennur-north-bengaluru-656351",
+              "hasMenu": "https://www.eazydiner.com/bengaluru/byg-brewski-brewing-company-hennur-north-bengaluru-656351/menu",
+              "image": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/656351/restaurant020180904105537.jpg?width=750&height=436&mode=fit",
+              "servesCuisine": "Multicuisine",
+              "priceRange": "₹ 2000 for two approx. ",
+              "telephone": null,
+              "geo": {
+                "@type": "GeoCoordinates",
+                "latitude": "13.07083030",
+                "longitude": "77.65186610"
+              },
+              "acceptsReservations": true,
+              "openingHoursSpecification": [
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Monday"
+                  ],
+                  "opens": "12:00:00",
+                  "closes": "23:59:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Tuesday"
+                  ],
+                  "opens": "12:00:00",
+                  "closes": "23:59:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Wednesday"
+                  ],
+                  "opens": "12:00:00",
+                  "closes": "23:59:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Thursday"
+                  ],
+                  "opens": "12:00:00",
+                  "closes": "23:59:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Friday"
+                  ],
+                  "opens": "12:00:00",
+                  "closes": "23:59:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Saturday"
+                  ],
+                  "opens": "12:00:00",
+                  "closes": "23:59:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Sunday"
+                  ],
+                  "opens": "12:00:00",
+                  "closes": "23:59:00"
+                }
+              ],
+              "currenciesAccepted": "INR",
+              "paymentAccepted": "Cash, Cards and Digital Payments Accepted",
+              "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "Byrathi Village Sothern Asia Bible College, 22, Hennur Bagalur Rd, Bengaluru, Karnataka",
+                "addressLocality": "Hennur, North Bengaluru",
+                "addressRegion": "Bengaluru",
+                "postalCode": "560077",
+                "addressCountry": "IN"
+              },
+              "potentialAction": {
+                "@type": "ReserveAction",
+                "target": {
+                  "@type": "EntryPoint",
+                  "urlTemplate": "https://www.eazydiner.com/bengaluru/byg-brewski-brewing-company-hennur-north-bengaluru-656351",
+                  "inLanguage": "en-US",
+                  "actionPlatform": [
+                    "http://schema.org/MobileWebPlatform",
+                    "http://schema.org/DesktopWebPlatform",
+                    "http://schema.org/IOSPlatform",
+                    "http://schema.org/AndroidPlatform"
+                  ]
+                },
+                "result": {
+                  "@type": "FoodEstablishmentReservation",
+                  "name": "Reserve Table"
+                }
+              },
+              "aggregateRating": {
+                "@type": "AggregateRating",
+                "ratingValue": 4.4,
+                "ratingCount": 271,
+                "bestRating": "5",
+                "worstRating": "0"
+              }
+            },
+            {
+              "@type": "FAQPage",
+              "mainEntity": [
+                {
+                  "@type": "Question",
+                  "name": "What cuisines are served at Byg Brewski Brewing Company, Hennur?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "The main cuisine served at Byg Brewski Brewing Company, Hennur is Multicuisine."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "What is the cost for two at Byg Brewski Brewing Company, Hennur?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "The cost of two at Byg Brewski Brewing Company, Hennur is ₹ 2000. You can save EXTRA over and above the restaurant deal applied by paying your restaurant bill on the EazyDiner app via PayEazy.."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Byg Brewski Brewing Company, Hennur is pure vegetarian restaurant?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "   Byg Brewski Brewing Company, Hennur serves both veg and non veg food."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "What are the operational timings of Byg Brewski Brewing Company, Hennur?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Byg Brewski Brewing Company, Hennur restaurant operational timings are MONDAY: 12:00 PM to 11:59 PM, TUESDAY: 12:00 PM to 11:59 PM, WEDNESDAY: 12:00 PM to 11:59 PM, THURSDAY: 12:00 PM to 11:59 PM, FRIDAY: 12:00 PM to 11:59 PM, SATURDAY: 12:00 PM to 11:59 PM, SUNDAY: 12:00 PM to 11:59 PM"
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Does Byg Brewski Brewing Company, Hennur serve buffet?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": " No, Byg Brewski Brewing Company, Hennur does not serve buffet."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Does Byg Brewski Brewing Company, Hennur restaurant have a bar or serve alcohol?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Yes, Byg Brewski Brewing Company, Hennur serves alcohol."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Is there a parking facility at Byg Brewski Brewing Company, Hennur?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": " No, a parking facility is not available at Byg Brewski Brewing Company, Hennur."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Does Byg Brewski Brewing Company, Hennur accept bill payment via PayEazy?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Yes, Byg Brewski Brewing Company, Hennur is a PayEazy-enabled restaurant & accepts card payments via EazyDiner. You can pay the restaurant bill using debit/credit cards."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "How can I save EXTRA with PayEazy at Byg Brewski Brewing Company, Hennur?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Book a table at Byg Brewski Brewing Company, Hennur. Get your bill with the pre-applied EazyDiner deal. Pay your bill via PayEazy & save EXTRA"
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Does Byg Brewski Brewing Company, Hennur restaurant play live music?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": " No, Byg Brewski Brewing Company, Hennur doesn't play live music."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "What are current deals at Byg Brewski Brewing Company, Hennur?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "There is no deal at Byg Brewski Brewing Company, Hennur on EazyDiner. Browse through EazyDiner to avail dining discounts upto 50% OFF."
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "remarketing_tag_params": {
+          "dynx_itemid": 656351,
+          "dynx_itemid2": "Byg Brewski Brewing Company, Hennur",
+          "dynx_pagetype": "restaurantdetail"
+        },
+        "amp_meta_tag": false,
+        "android_deeplink": "android-app://com.easydiner/eazydiner/action?url=https://www.eazydiner.com/bengaluru/byg-brewski-brewing-company-hennur-north-bengaluru-656351",
+        "is_noindex": false
+      }
+    }
+  }
+}

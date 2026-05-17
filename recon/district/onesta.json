@@ -1,0 +1,31 @@
+{
+  "meta": {
+    "restaurant": {
+      "slug": "onesta",
+      "name": "Onesta",
+      "area": "Koramangala",
+      "districtSlugs": [
+        "onesta-koramangala-5th-block-bangalore"
+      ]
+    },
+    "found": true,
+    "offerSummary": [
+      "[bank] Flat ₹150 OFF using Google Pay",
+      "[bank] Get 10% OFF up to ₹500 using YES BANK Credit Cards",
+      "[bank] 10% OFF up to ₹600 on Kotak Bank Privy Neon Debit Card",
+      "[bank] 12% OFF up to ₹1000 on Taj Credit Card",
+      "[bank] 20% OFF for up to ₹150 using Cred Indusind Credit Card",
+      "[bank] 15% OFF up to ₹1000 on Credit Cards",
+      "[bank] 12% OFF up to ₹500 on IDFC Select Debit Cards",
+      "[bank] 20% OFF up to ₹1000 on IDFC Private Debit Cards",
+      "[bank] Get 20% OFF up to ₹5,000 using Kotak Bank Solitaire Credit Cards",
+      "[bank] 20% OFF up to ₹1500 on Kotak Bank Solitaire Debit Card",
+      "[bank] Flat ₹350 OFF on Credit Cards",
+      "[bank] Flat ₹300 OFF using SBI VISA Debit Cards"
+    ]
+  },
+  "raw": {
+    "rscLength": 50949,
+    "pageUrl": "https://www.district.in/dining/bangalore/onesta-koramangala-5th-block-bangalore"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "meta": {
+    "restaurant": {
+      "slug": "vidyarthi-bhavan",
+      "name": "Vidyarthi Bhavan",
+      "area": "Gandhi Bazaar",
+      "districtSlugs": [
+        "vidyarthi-bhavan-since-1943-basavanagudi-bangalore"
+      ]
+    },
+    "found": true,
+    "offerSummary": []
+  },
+  "raw": {
+    "rscLength": 43591,
+    "pageUrl": "https://www.district.in/dining/bangalore/vidyarthi-bhavan-since-1943-basavanagudi-bangalore"
+  }
+}

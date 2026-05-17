@@ -1,0 +1,578 @@
+{
+  "meta": {
+    "restaurant": {
+      "slug": "smoke-house-deli",
+      "name": "Smoke House Deli",
+      "area": "Indiranagar",
+      "districtSlugs": [
+        "smoke-house-deli-indiranagar-bangalore"
+      ],
+      "eazyDinerSlug": "smoke-house-deli-lavelle-road-335752"
+    },
+    "found": true,
+    "offerSummary": [
+      "[payeazy] Pay now & get EXTRA 25% OFF upto ₹1000",
+      "[discount] ₹500 off on ₹2000 bill (PayEazy)"
+    ]
+  },
+  "raw": {
+    "data": {
+      "id": 335752,
+      "url": "https://www.eazydiner.com/bengaluru/smoke-house-deli-lavelle-road-335752",
+      "code": "bengaluru/smoke-house-deli-lavelle-road-335752",
+      "default_image": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/home/restaurant-default-image.png",
+      "favourite_count": "671",
+      "primeTag": "",
+      "name": "Smoke House Deli",
+      "images": [
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/335752/restaurant020251215093138.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/335752/restaurant120251215093138.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/335752/restaurant220251215093138.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/335752/restaurant320251215093138.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/335752/restaurant020251215093155.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/335752/restaurant120251215093155.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/335752/restaurant220251215093155.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/335752/restaurant320251215093155.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/335752/restaurant020251215093214.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/335752/restaurant120251215093214.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/335752/restaurant220251215093214.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/335752/restaurant320251215093214.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/335752/restaurant020251215093309.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/335752/restaurant120251215093309.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/335752/restaurant220251215093309.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/335752/restaurant320251215093309.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/335752/restaurant420251215093309.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/335752/restaurant520251215093309.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/335752/restaurant020251215093523.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/335752/restaurant120251215093523.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/335752/restaurant220251215093523.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/335752/restaurant320251215093523.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/335752/restaurant420251215093523.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/335752/restaurant520251215093523.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/335752/restaurant020251215093607.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/335752/restaurant120251215093607.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/335752/restaurant220251215093607.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/335752/restaurant320251215093607.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/335752/restaurant420251215093607.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/335752/restaurant520251215093607.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/335752/restaurant620251215093607.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/335752/restaurant020251215093648.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/335752/restaurant120251215093648.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/335752/restaurant220251215093648.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/335752/restaurant320251215093648.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/335752/restaurant420251215093648.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/335752/restaurant520251215093648.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/335752/restaurant620251215093648.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/335752/restaurant020251215093719.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/335752/restaurant120251215093719.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/335752/restaurant020251215093903.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/335752/restaurant120251215093903.jpg?width=818&height=450&mode=fit",
+        "https://dt4l9bx31tioh.cloudfront.net/eazymedia/reviewimages/335752/1f26debd712abde31076c6dea5b4f1028c6a51b8.20220416122012.jpg?width=818&height=450&mode=fit"
+      ],
+      "cost_for_two": "₹ 2000 for two approx.",
+      "currency": "₹",
+      "location": {
+        "address": "52 & 53, Lavelle Road, Shanihala Nagar, Bengaluru",
+        "locality": "Lavelle Road, Central Bengaluru",
+        "code": "lavelle-road",
+        "latitude": 12.9716067,
+        "longitude": 77.5984165,
+        "region_code": "Central Bengaluru",
+        "area_name": "Lavelle Road",
+        "city_code": "bengaluru",
+        "city_id": 3,
+        "country_id": 1,
+        "group_id": 1548,
+        "name": "Lavelle Road, Central Bengaluru",
+        "city_name": "Bengaluru"
+      },
+      "phone": "7861004444",
+      "cuisines": "European",
+      "timings": {
+        "today": [
+          "09:00 AM - 11:59 PM"
+        ],
+        "week": {
+          "Monday": [
+            "09:00 AM - 11:59 PM"
+          ],
+          "Tuesday": [
+            "09:00 AM - 11:59 PM"
+          ],
+          "Wednesday": [
+            "09:00 AM - 11:59 PM"
+          ],
+          "Thursday": [
+            "09:00 AM - 11:59 PM"
+          ],
+          "Friday": [
+            "09:00 AM - 11:59 PM"
+          ],
+          "Saturday": [
+            "09:00 AM - 11:59 PM"
+          ],
+          "Sunday": [
+            "09:00 AM - 11:59 PM"
+          ]
+        }
+      },
+      "user_reviews": {
+        "avg_rating": 4.4,
+        "count": 155
+      },
+      "critic_review": "",
+      "webview_menu_url": null,
+      "accepts_eazypay": true,
+      "eazypay_details": {
+        "text": "Pay now & get EXTRA 25% OFF upto ₹1000",
+        "summary_text": "Pay your bill on the app to get EXTRA 25% OFF upto ₹1000",
+        "booking_confirmation_text": "Remember to pay restaurant bill via PayEazy to get additional discount *",
+        "image": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/payeazy/logo/payeazy_tag.png",
+        "url": "https://www.eazydiner.com//ed-payeazy?restaurant_id=bengaluru/smoke-house-deli-lavelle-road-335752"
+      },
+      "is_favorite": false,
+      "menu_last_updated": "Last updated 3 months ago",
+      "is_qsr": false,
+      "faq": [
+        {
+          "@type": "Question",
+          "name": "What cuisines are served at Smoke House Deli?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The main cuisine served at Smoke House Deli is European."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the cost for two at Smoke House Deli?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The cost of two at Smoke House Deli is ₹ 2000. You can save EXTRA over and above the restaurant deal applied by paying your restaurant bill on the EazyDiner app via PayEazy.."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Smoke House Deli is pure vegetarian restaurant?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "   Smoke House Deli serves both veg and non veg food."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What are the operational timings of Smoke House Deli?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Smoke House Deli restaurant operational timings are MONDAY: 09:00 AM to 11:59 PM, TUESDAY: 09:00 AM to 11:59 PM, WEDNESDAY: 09:00 AM to 11:59 PM, THURSDAY: 09:00 AM to 11:59 PM, FRIDAY: 09:00 AM to 11:59 PM, SATURDAY: 09:00 AM to 11:59 PM, SUNDAY: 09:00 AM to 11:59 PM"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does Smoke House Deli serve buffet?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": " No, Smoke House Deli does not serve buffet."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does Smoke House Deli restaurant have a bar or serve alcohol?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, Smoke House Deli serves alcohol."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is there a parking facility at Smoke House Deli?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, the parking facility is available at Smoke House Deli."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does Smoke House Deli accept bill payment via PayEazy?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, Smoke House Deli is a PayEazy-enabled restaurant & accepts card payments via EazyDiner. You can pay the restaurant bill using debit/credit cards."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How can I save EXTRA with PayEazy at Smoke House Deli?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Book a table at Smoke House Deli. Get your bill with the pre-applied EazyDiner deal. Pay your bill via PayEazy & save EXTRA"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does Smoke House Deli restaurant play live music?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": " No, Smoke House Deli doesn't play live music."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What are current deals at Smoke House Deli?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "There is no deal at Smoke House Deli on EazyDiner. Browse through EazyDiner to avail dining discounts upto 50% OFF."
+          }
+        }
+      ],
+      "category": "Casual Dining",
+      "restaurant_type": "free standing",
+      "chain": "Yes",
+      "wallet_config": {
+        "type": "percentage",
+        "percentage": 25,
+        "min_transaction_amount": 0,
+        "text": "25% of the total amount can be paid from wallet balance in a single transaction ."
+      },
+      "reservation_status": true,
+      "deal_data": {
+        "default_deal_type": "deal_types[]=postpaid",
+        "title": "More Deals",
+        "period": 30,
+        "freeze_time": 60,
+        "other_deals": null
+      },
+      "foodie_awards": [],
+      "buffet_deals": [],
+      "hasPrimeDeal": false,
+      "primeIcon": "",
+      "restaurant_subtype": "Table",
+      "hygiene_rating": {
+        "icon": "https://d4t7t8y8xqo0t.cloudfront.net/app/https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant_detail/rest_header_payeazy.png"
+      },
+      "has_dynamic_buffet": false,
+      "bottomsheet_notification": "",
+      "force_direct_booking": true,
+      "new_rdv_layout": true,
+      "rdv_offer_data": {
+        "default_deal_type": "deal_types=postpaid",
+        "freeze_time": 60,
+        "period": 30
+      },
+      "link_only_payeazy": "",
+      "sample_discount_calculator": {
+        "heading": "<font color='#000000'><strong>Sample Bill</strong></font> <small>(Approx Discount)</small>",
+        "total_bill": 2000,
+        "restaurant_offer": 0,
+        "payment_offer": 500
+      },
+      "qbf": {
+        "qbf_gif": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/banner/qbf/qbf_final_single_nov_23.gif",
+        "success_confirmed_gif": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/banner/qbf/success_confirm_qbf_2.gif"
+      },
+      "webEngageData": {
+        "features": [
+          {
+            "name": "Alcohol Served",
+            "code": "alcohol-served",
+            "icon": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/features/54/alcohol-served3x.png"
+          },
+          {
+            "name": "Great Breakfasts",
+            "code": "great-breakfasts",
+            "icon": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/features/99/great-breakfasts3x.png"
+          },
+          {
+            "name": "Parking",
+            "code": "parking",
+            "icon": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/features/117/parking20221226161508.png"
+          }
+        ],
+        "cost_for_two": 2000,
+        "offer_title": " + 25%"
+      },
+      "chain_id": 1775
+    },
+    "meta": {
+      "tab_data": [
+        {
+          "title": "offers",
+          "is_active": true
+        },
+        {
+          "title": "menu",
+          "is_active": false
+        },
+        {
+          "title": "photos",
+          "is_active": false
+        },
+        {
+          "title": "about",
+          "is_active": false
+        }
+      ],
+      "meta_title": "Smoke House Deli in Lavelle Road, Central Bengaluru | Get Upto 50% Off",
+      "meta_description": "Smoke House Deli,Lavelle Road, Central Bengaluru. View reviews, menu, contact, location, and more. Book through EazyDiner for FREE and get up to 50% off on your bill. PayEazy Discount: Up to '.₹1000.' OFF - 25% discount.",
+      "breadcrumbs": [
+        {
+          "title": "Home",
+          "url": "/"
+        },
+        {
+          "title": "Bengaluru",
+          "url": "/bengaluru"
+        },
+        {
+          "title": " Top Restaurants in Bengaluru",
+          "url": "/bengaluru/restaurants"
+        },
+        {
+          "title": "Central Bengaluru",
+          "url": "/bengaluru/restaurants/central-bengaluru"
+        },
+        {
+          "title": "Lavelle Road",
+          "url": "/bengaluru/restaurants/lavelle-road"
+        },
+        {
+          "title": "Smoke House Deli",
+          "url": "/bengaluru/smoke-house-deli-lavelle-road-335752"
+        }
+      ],
+      "jsonSchema": {
+        "title": "Smoke House Deli in Lavelle Road, Central Bengaluru | Get Upto 50% Off",
+        "description": "Smoke House Deli,Lavelle Road, Central Bengaluru. View reviews, menu, contact, location, and more. Book through EazyDiner for FREE and get up to 50% off on your bill. PayEazy Discount: Up to '.₹1000.' OFF - 25% discount.",
+        "custom_deeplink": {
+          "ios": "eazydiner://action?url=https://www.eazydiner.com/bengaluru/smoke-house-deli-lavelle-road-335752",
+          "android": "eazydiner://action?url=https://www.eazydiner.com/bengaluru/smoke-house-deli-lavelle-road-335752?"
+        },
+        "og_data": {
+          "title": "Smoke House Deli, Lavelle Road, Central Bengaluru",
+          "description": "EazyDiner",
+          "image_url": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/335752/restaurant020251215093138.jpg?width=750&height=436&mode=fit",
+          "brand": "EazyDiner",
+          "availability": "available for order",
+          "condition": "new",
+          "amount": 2000,
+          "currency": "Inr",
+          "retailer_item_id": 335752
+        },
+        "json_schema": {
+          "@context": "http://schema.org",
+          "@graph": [
+            {
+              "@type": "Restaurant",
+              "@id": "https://www.eazydiner.com/bengaluru/smoke-house-deli-lavelle-road-335752",
+              "name": "Smoke House Deli",
+              "url": "https://www.eazydiner.com/bengaluru/smoke-house-deli-lavelle-road-335752",
+              "hasMenu": "https://www.eazydiner.com/bengaluru/smoke-house-deli-lavelle-road-335752/menu",
+              "image": "https://dt4l9bx31tioh.cloudfront.net/eazymedia/restaurant/335752/restaurant020251215093138.jpg?width=750&height=436&mode=fit",
+              "servesCuisine": "European",
+              "priceRange": "₹ 2000 for two approx. ",
+              "telephone": "+918040515151,+918041277989,+918041276272",
+              "geo": {
+                "@type": "GeoCoordinates",
+                "latitude": "12.97160670",
+                "longitude": "77.59841650"
+              },
+              "acceptsReservations": true,
+              "openingHoursSpecification": [
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Monday"
+                  ],
+                  "opens": "09:00:00",
+                  "closes": "23:59:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Tuesday"
+                  ],
+                  "opens": "09:00:00",
+                  "closes": "23:59:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Wednesday"
+                  ],
+                  "opens": "09:00:00",
+                  "closes": "23:59:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Thursday"
+                  ],
+                  "opens": "09:00:00",
+                  "closes": "23:59:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Friday"
+                  ],
+                  "opens": "09:00:00",
+                  "closes": "23:59:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Saturday"
+                  ],
+                  "opens": "09:00:00",
+                  "closes": "23:59:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "Sunday"
+                  ],
+                  "opens": "09:00:00",
+                  "closes": "23:59:00"
+                }
+              ],
+              "currenciesAccepted": "INR",
+              "paymentAccepted": "Cash, Cards and Digital Payments Accepted",
+              "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "52 & 53, Lavelle Road, Shanihala Nagar, Bengaluru",
+                "addressLocality": "Lavelle Road, Central Bengaluru",
+                "addressRegion": "Bengaluru",
+                "postalCode": "560008",
+                "addressCountry": "IN"
+              },
+              "potentialAction": {
+                "@type": "ReserveAction",
+                "target": {
+                  "@type": "EntryPoint",
+                  "urlTemplate": "https://www.eazydiner.com/bengaluru/smoke-house-deli-lavelle-road-335752",
+                  "inLanguage": "en-US",
+                  "actionPlatform": [
+                    "http://schema.org/MobileWebPlatform",
+                    "http://schema.org/DesktopWebPlatform",
+                    "http://schema.org/IOSPlatform",
+                    "http://schema.org/AndroidPlatform"
+                  ]
+                },
+                "result": {
+                  "@type": "FoodEstablishmentReservation",
+                  "name": "Reserve Table"
+                }
+              },
+              "aggregateRating": {
+                "@type": "AggregateRating",
+                "ratingValue": 4.4,
+                "ratingCount": 155,
+                "bestRating": "5",
+                "worstRating": "0"
+              }
+            },
+            {
+              "@type": "FAQPage",
+              "mainEntity": [
+                {
+                  "@type": "Question",
+                  "name": "What cuisines are served at Smoke House Deli?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "The main cuisine served at Smoke House Deli is European."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "What is the cost for two at Smoke House Deli?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "The cost of two at Smoke House Deli is ₹ 2000. You can save EXTRA over and above the restaurant deal applied by paying your restaurant bill on the EazyDiner app via PayEazy.."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Smoke House Deli is pure vegetarian restaurant?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "   Smoke House Deli serves both veg and non veg food."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "What are the operational timings of Smoke House Deli?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Smoke House Deli restaurant operational timings are MONDAY: 09:00 AM to 11:59 PM, TUESDAY: 09:00 AM to 11:59 PM, WEDNESDAY: 09:00 AM to 11:59 PM, THURSDAY: 09:00 AM to 11:59 PM, FRIDAY: 09:00 AM to 11:59 PM, SATURDAY: 09:00 AM to 11:59 PM, SUNDAY: 09:00 AM to 11:59 PM"
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Does Smoke House Deli serve buffet?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": " No, Smoke House Deli does not serve buffet."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Does Smoke House Deli restaurant have a bar or serve alcohol?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Yes, Smoke House Deli serves alcohol."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Is there a parking facility at Smoke House Deli?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Yes, the parking facility is available at Smoke House Deli."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Does Smoke House Deli accept bill payment via PayEazy?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Yes, Smoke House Deli is a PayEazy-enabled restaurant & accepts card payments via EazyDiner. You can pay the restaurant bill using debit/credit cards."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "How can I save EXTRA with PayEazy at Smoke House Deli?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Book a table at Smoke House Deli. Get your bill with the pre-applied EazyDiner deal. Pay your bill via PayEazy & save EXTRA"
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Does Smoke House Deli restaurant play live music?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": " No, Smoke House Deli doesn't play live music."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "What are current deals at Smoke House Deli?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "There is no deal at Smoke House Deli on EazyDiner. Browse through EazyDiner to avail dining discounts upto 50% OFF."
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "remarketing_tag_params": {
+          "dynx_itemid": 335752,
+          "dynx_itemid2": "Smoke House Deli",
+          "dynx_pagetype": "restaurantdetail"
+        },
+        "amp_meta_tag": false,
+        "android_deeplink": "android-app://com.easydiner/eazydiner/action?url=https://www.eazydiner.com/bengaluru/smoke-house-deli-lavelle-road-335752",
+        "is_noindex": false
+      }
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "meta": {
+    "restaurant": {
+      "slug": "olive-beach",
+      "name": "Olive Beach",
+      "area": "Sankey Road",
+      "districtSlugs": [
+        "olive-beach-richmond-road-bangalore"
+      ],
+      "eazyDinerSlug": "olive-beach-richmond-road-330137"
+    },
+    "found": true,
+    "offerSummary": []
+  },
+  "raw": {
+    "rscLength": 41648,
+    "pageUrl": "https://www.district.in/dining/bangalore/olive-beach-richmond-road-bangalore"
+  }
+}

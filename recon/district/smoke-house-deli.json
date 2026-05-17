@@ -1,0 +1,33 @@
+{
+  "meta": {
+    "restaurant": {
+      "slug": "smoke-house-deli",
+      "name": "Smoke House Deli",
+      "area": "Indiranagar",
+      "districtSlugs": [
+        "smoke-house-deli-indiranagar-bangalore"
+      ],
+      "eazyDinerSlug": "smoke-house-deli-lavelle-road-335752"
+    },
+    "found": true,
+    "offerSummary": [
+      "[prebook] FLAT 15% OFF",
+      "[bank] Flat ₹150 OFF using Google Pay",
+      "[bank] 20% OFF up to ₹1500 on Kotak Bank Solitaire Debit Card",
+      "[bank] 25% OFF for up to ₹5000 using RBL Bank LUMIÈRE Credit Card",
+      "[bank] Flat ₹300 OFF using SBI VISA Debit Cards",
+      "[bank] Get 15% OFF up to ₹750",
+      "[bank] Flat ₹400 OFF using PNB Luxura Visa Credit Card",
+      "[bank] 20% OFF up to ₹750 on Kotak 811 Infinity Metal Debit Card",
+      "[bank] 20% OFF for up to ₹150 using Cred Indusind Credit Card",
+      "[bank] 12% OFF up to ₹1000 on HSBC Prive Credit Cards",
+      "[bank] Flat ₹350 OFF on Credit Cards",
+      "[bank] 10% OFF up to ₹200 on TIDE Cards",
+      "[bank] 15% OFF up to ₹1500 on Amex Corporate Credit Cards"
+    ]
+  },
+  "raw": {
+    "rscLength": 64703,
+    "pageUrl": "https://www.district.in/dining/bangalore/smoke-house-deli-indiranagar-bangalore"
+  }
+}

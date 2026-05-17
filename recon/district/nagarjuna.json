@@ -1,0 +1,25 @@
+{
+  "meta": {
+    "restaurant": {
+      "slug": "nagarjuna",
+      "name": "Nagarjuna",
+      "area": "Residency Road",
+      "districtSlugs": [
+        "nagarjuna-since-1984-btm-bangalore",
+        "nagarjuna-since-1984-indiranagar-bangalore",
+        "nagarjuna-since-1984-koramangala-5th-block-bangalore",
+        "nagarjuna-since-1984-marathahalli-bangalore",
+        "nagarjuna-since-1984-residency-road-bangalore",
+        "nagarjuna-since-1984-sarjapur-road-bangalore",
+        "nagarjuna-since-1984-whitefield-bangalore"
+      ],
+      "eazyDinerSlug": "nagarjuna-residency-road-334689"
+    },
+    "found": true,
+    "offerSummary": []
+  },
+  "raw": {
+    "rscLength": 38594,
+    "pageUrl": "https://www.district.in/dining/bangalore/nagarjuna-since-1984-btm-bangalore"
+  }
+}

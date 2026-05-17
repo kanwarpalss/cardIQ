@@ -1,0 +1,2164 @@
+{
+  "meta": {
+    "restaurant": {
+      "slug": "third-wave",
+      "name": "Third Wave Coffee",
+      "area": "Indiranagar",
+      "districtSlugs": [
+        "third-wave-coffee-1-bellandur-bangalore",
+        "third-wave-coffee-1-brigade-road-bangalore",
+        "third-wave-coffee-1-btm-bangalore",
+        "third-wave-coffee-1-devanahalli",
+        "third-wave-coffee-1-hebbal-bangalore",
+        "third-wave-coffee-1-hsr-bangalore",
+        "third-wave-coffee-1-indiranagar-bangalore",
+        "third-wave-coffee-1-jp-nagar-bangalore",
+        "third-wave-coffee-1-lavelle-road-bangalore",
+        "third-wave-coffee-1-varthur-main-road-whitefield-bangalore",
+        "third-wave-coffee-2-bellandur-bangalore",
+        "third-wave-coffee-2-btm-bangalore",
+        "third-wave-coffee-2-varthur-main-road-whitefield-bangalore",
+        "third-wave-coffee-3-hsr-bangalore",
+        "third-wave-coffee-3-varthur-main-road-whitefield-bangalore",
+        "third-wave-coffee-5-bellandur-bangalore",
+        "third-wave-coffee-anekal-bangalore",
+        "third-wave-coffee-arekere-bangalore",
+        "third-wave-coffee-banashankari-bangalore",
+        "third-wave-coffee-basaveshwara-nagar-bangalore",
+        "third-wave-coffee-bellandur-bangalore",
+        "third-wave-coffee-bommanahalli-bangalore",
+        "third-wave-coffee-brigade-road-bangalore",
+        "third-wave-coffee-brookefield-bangalore",
+        "third-wave-coffee-choodasandra-bangalore",
+        "third-wave-coffee-church-street-bangalore",
+        "third-wave-coffee-cunningham-road-bangalore",
+        "third-wave-coffee-devanahalli",
+        "third-wave-coffee-frazer-town-bangalore",
+        "third-wave-coffee-hebbal-bangalore",
+        "third-wave-coffee-hsr-bangalore",
+        "third-wave-coffee-indiranagar-bangalore",
+        "third-wave-coffee-itpl-main-road-whitefield-bangalore",
+        "third-wave-coffee-jayanagar-bangalore",
+        "third-wave-coffee-jp-nagar-bangalore",
+        "third-wave-coffee-kadubeesanahalli-bangalore",
+        "third-wave-coffee-kalyan-nagar-bangalore",
+        "third-wave-coffee-kanakapura-road-bangalore",
+        "third-wave-coffee-koramangala-4th-block-bangalore",
+        "third-wave-coffee-koramangala-8th-block-bangalore",
+        "third-wave-coffee-lavelle-road-bangalore",
+        "third-wave-coffee-malleshwaram-bangalore",
+        "third-wave-coffee-marathahalli-bangalore",
+        "third-wave-coffee-nagawara-bangalore",
+        "third-wave-coffee-rajajinagar-bangalore",
+        "third-wave-coffee-sadashiv-nagar-bangalore",
+        "third-wave-coffee-sanjay-nagar-bangalore",
+        "third-wave-coffee-sarjapur-road-bangalore",
+        "third-wave-coffee-varthur-main-road-whitefield-bangalore",
+        "third-wave-coffee-vijay-nagar-bangalore",
+        "third-wave-coffee-whitefield-bangalore"
+      ],
+      "eazyDinerSlug": "third-wave-coffee-roasters-koramangala-south-bengaluru-640094"
+    },
+    "found": true,
+    "offerSummary": [
+      "Third Wave Coffee\\",
+      "Third Wave Coffee",
+      "third-wave-coffee-roaster-central-bangalore-central-bangalore",
+      "aggregatedDiscountInfo",
+      "aggregatedDiscountInfoV2",
+      "showEoOffer",
+      "Cafe Coffee Day",
+      "cafe-coffee-day-sarakki-5th-phase-jp-nagar",
+      "aggregatedDiscountInfoV3",
+      "₹125 OFF",
+      "discountTag",
+      "FLAT DEAL",
+      "Espressoulster Coffee",
+      "espressoulster-coffee-koramangala-koramangala",
+      "₹200 OFF"
+    ]
+  },
+  "raw": {
+    "statusCode": 0,
+    "data": {
+      "statusMessage": "done successfully",
+      "cards": [
+        {
+          "card": {
+            "card": {
+              "@type": "type.googleapis.com/swiggy.gandalf.widgets.v2.Navigation",
+              "tab": [
+                {
+                  "id": "RESTAURANT",
+                  "title": "Restaurants",
+                  "selected": true,
+                  "analytics": {
+                    "screenName": "explore",
+                    "context": "{\"tid\":\"undefined\",\"query\":\"Third Wave Coffee\"}",
+                    "objectValue": "RESTAURANT",
+                    "clickObjectName": "click-tab"
+                  },
+                  "selectedBgColor": "#1B1E24",
+                  "unselectedBgColor": "#FFFFFF",
+                  "selectedTextColor": "#BFFFFFFF",
+                  "unselectedTextColor": "#9902060C",
+                  "selectedBorderColor": "#1B1E24",
+                  "unselectedBorderColor": "#E2E2E7"
+                },
+                {
+                  "id": "DISH",
+                  "title": "Dishes",
+                  "analytics": {
+                    "screenName": "explore",
+                    "context": "{\"tid\":\"undefined\",\"query\":\"Third Wave Coffee\"}",
+                    "objectValue": "DISH",
+                    "clickObjectName": "click-tab"
+                  },
+                  "selectedBgColor": "#1B1E24",
+                  "unselectedBgColor": "#FFFFFF",
+                  "selectedTextColor": "#BFFFFFFF",
+                  "unselectedTextColor": "#9902060C",
+                  "selectedBorderColor": "#1B1E24",
+                  "unselectedBorderColor": "#E2E2E7"
+                }
+              ],
+              "meta": {
+                "correctedQuery": "",
+                "suggestionType": "",
+                "queryIntent": "RESTAURANT",
+                "orderable": "false"
+              }
+            }
+          }
+        },
+        {
+          "groupedCard": {
+            "cardGroupMap": {
+              "RESTAURANT": {
+                "cards": [
+                  {
+                    "card": {
+                      "card": {
+                        "@type": "type.googleapis.com/swiggy.presentation.food.v2.Restaurant",
+                        "info": {
+                          "id": "191822",
+                          "name": "Third Wave Coffee",
+                          "city": "1",
+                          "slugs": {
+                            "restaurant": "third-wave-coffee-roaster-central-bangalore-central-bangalore",
+                            "city": "bangalore"
+                          },
+                          "cloudinaryImageId": "RX_THUMBNAIL/IMAGES/VENDOR/2025/4/23/561346bd-f296-4960-a4d9-f8bab5b7fcde_191822.jpg",
+                          "address": "UB City, Vittal Mallya Road, KG Halli, D' Souza Layout, Ashok Nagar, Bengaluru, Karnataka, India",
+                          "locality": "Lavelle Road",
+                          "areaName": "Vittal Mallya Road",
+                          "costForTwo": "40000",
+                          "costForTwoMessage": "₹400 FOR TWO",
+                          "cuisines": [
+                            "Beverages",
+                            "Bakery",
+                            "Continental"
+                          ],
+                          "avgRating": 4.5,
+                          "feeDetails": {},
+                          "parentId": "274773",
+                          "avgRatingString": "4.5",
+                          "totalRatingsString": "1.0K+",
+                          "sla": {
+                            "serviceability": "NON_SERVICEABLE",
+                            "rainMode": "RAIN_MODE_DEFAULT",
+                            "iconType": "ICON_TYPE_EMPTY"
+                          },
+                          "availability": {
+                            "restaurantClosedMeta": {
+                              "title": "UNAVAILABLE",
+                              "subtitle": "AT YOUR LOCATION"
+                            }
+                          },
+                          "aggregatedDiscountInfo": {
+                            "visible": true
+                          },
+                          "badges": {},
+                          "unorderableMessage": "Does not deliver to selected location",
+                          "aggregatedDiscountInfoV2": {
+                            "visible": true
+                          },
+                          "ratingSlab": "RATING_SLAB_5",
+                          "availabilityServiceabilityMessage": "Does not deliver to your location",
+                          "orderabilityCommunication": {
+                            "title": {
+                              "text": "UNAVAILABLE"
+                            },
+                            "subTitle": {
+                              "text": "FOR DELIVERY"
+                            },
+                            "message": {
+                              "text": "Outside the outlet's delivery area",
+                              "textColour": "negative"
+                            },
+                            "customIcon": {
+                              "bgGradientColorStart": "#F64C41",
+                              "bgGradientColorEnd": "#E53554"
+                            },
+                            "commsStyling": {}
+                          },
+                          "cartOrderabilityNudgeBanner": {
+                            "parameters": {},
+                            "presentation": {}
+                          },
+                          "externalRatings": {
+                            "aggregatedRating": {
+                              "rating": "4.4",
+                              "ratingCount": "428"
+                            },
+                            "source": "GOOGLE",
+                            "sourceIconImageId": "v1704440323/google_ratings/rating_google_tag"
+                          },
+                          "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY",
+                          "featuredSectionInfo": {},
+                          "showEoOffer": true,
+                          "priceComparisonComms": {}
+                        },
+                        "analytics": {
+                          "screenName": "explore",
+                          "context": "{\"tid\":\"undefined\",\"grid\":\"60457487-0708-4eee-92f8-85efe9b63f7b\",\"queryUniqueId\":\"undefined\",\"query\":\"Third Wave Coffee\"}",
+                          "objectValue": "191822",
+                          "impressionObjectName": "impression-restaurant",
+                          "clickObjectName": "click-restaurant"
+                        },
+                        "ctaWithParams": {
+                          "text": "This Restaurant is no longer available for ordering",
+                          "type": "TEXT",
+                          "params": {
+                            "restaurant_id": "191822",
+                            "query": "Third Wave Coffee",
+                            "sourceSessionId": "re6d3703db1-a85a-40cf-8996-9bbc6902d",
+                            "source": "SEARCH",
+                            "isSld": "false",
+                            "sourceRequestId": "00000000000000000000000000000000",
+                            "qrEnabled": "false"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "card": {
+                      "card": {
+                        "@type": "type.googleapis.com/swiggy.presentation.food.v2.RestaurantCollection",
+                        "title": "More results like this",
+                        "restaurants": [
+                          {
+                            "info": {
+                              "id": "7059",
+                              "name": "Cafe Coffee Day",
+                              "city": "1",
+                              "slugs": {
+                                "restaurant": "cafe-coffee-day-sarakki-5th-phase-jp-nagar"
+                              },
+                              "cloudinaryImageId": "RX_THUMBNAIL/IMAGES/VENDOR/2025/8/21/17cb0353-961d-4996-9170-af3f1fa5e002_7059.JPG",
+                              "locality": "JP Nagar",
+                              "areaName": "Jayanagar",
+                              "costForTwo": "₹400 for two",
+                              "cuisines": [
+                                "Beverages",
+                                "Cafe",
+                                "Snacks",
+                                "Desserts",
+                                "Burgers",
+                                "Ice Cream",
+                                "Bakery",
+                                "Fast Food"
+                              ],
+                              "avgRating": 4.2,
+                              "feeDetails": {
+                                "restaurantId": "7059",
+                                "title": "Delivery Charge",
+                                "amount": "0"
+                              },
+                              "totalRatingsString": "5.6K+",
+                              "promoted": true,
+                              "adTrackingId": "cid=2e1f6a9d-59fd-442a-9f65-214a76e6c574~p=0~adgrpid=2e1f6a9d-59fd-442a-9f65-214a76e6c574#ag1~mp=SWIGGY_IN~bl=FOOD~aet=RESTAURANT~aeid=7059~plpr=COLLECTION~st=third wave coffee~eid=eb85efe3-82d6-490a-8fd7-c4d33086ce71~srvts=1778980660203~collid=56861",
+                              "sla": {
+                                "deliveryTime": 45,
+                                "minDeliveryTime": 40,
+                                "maxDeliveryTime": 45,
+                                "serviceability": "SERVICEABLE",
+                                "slaString": "40-45 MINS",
+                                "lastMileTravelString": "9.2 km",
+                                "iconType": "ICON_TYPE_EMPTY"
+                              },
+                              "availability": {
+                                "nextCloseTime": "2026-05-24 00:00:00",
+                                "opened": true
+                              },
+                              "badges": {},
+                              "aggregatedDiscountInfoV3": {
+                                "header": "₹125 OFF",
+                                "subHeader": "ABOVE ₹499",
+                                "discountTag": "FLAT DEAL"
+                              },
+                              "externalRatings": {
+                                "aggregatedRating": {
+                                  "rating": "4.1",
+                                  "ratingCount": "2.2K+"
+                                },
+                                "source": "GOOGLE",
+                                "sourceIconImageId": "v1704440323/google_ratings/rating_google_tag"
+                              },
+                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY",
+                              "campaignId": "2e1f6a9d-59fd-442a-9f65-214a76e6c574"
+                            },
+                            "analytics": {},
+                            "cta": {}
+                          },
+                          {
+                            "info": {
+                              "id": "664470",
+                              "name": "Espressoulster Coffee",
+                              "city": "1",
+                              "slugs": {
+                                "restaurant": "espressoulster-coffee-koramangala-koramangala"
+                              },
+                              "cloudinaryImageId": "9a43dce8d8913573976f4119c22bce00",
+                              "locality": "Koramangala",
+                              "areaName": "Koramangala",
+                              "costForTwo": "₹499 for two",
+                              "cuisines": [
+                                "Beverages",
+                                "Bakery"
+                              ],
+                              "avgRating": 4.2,
+                              "feeDetails": {
+                                "restaurantId": "664470",
+                                "title": "Delivery Charge",
+                                "amount": "0"
+                              },
+                              "totalRatingsString": "437",
+                              "sla": {
+                                "deliveryTime": 53,
+                                "minDeliveryTime": 50,
+                                "maxDeliveryTime": 60,
+                                "serviceability": "SERVICEABLE",
+                                "slaString": "50-60 MINS",
+                                "lastMileTravelString": "7.4 km",
+                                "iconType": "ICON_TYPE_EMPTY"
+                              },
+                              "availability": {
+                                "nextCloseTime": "2026-05-18 01:15:00",
+                                "opened": true
+                              },
+                              "badges": {},
+                              "aggregatedDiscountInfoV3": {
+                                "header": "₹200 OFF",
+                                "subHeader": "ABOVE ₹449",
+                                "discountTag": "FLAT DEAL",
+                                "logoCtx": {
+                                  "text": "BENEFITS"
+                                }
+                              },
+                              "externalRatings": {
+                                "aggregatedRating": {
+                                  "rating": "4.6",
+                                  "ratingCount": "589"
+                                },
+                                "source": "GOOGLE",
+                                "sourceIconImageId": "v1704440323/google_ratings/rating_google_tag"
+                              },
+                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
+                            },
+                            "analytics": {},
+                            "cta": {}
+                          },
+                          {
+                            "info": {
+                              "id": "935594",
+                              "name": "abcoffee",
+                              "city": "1",
+                              "slugs": {
+                                "restaurant": "abcoffee-indiranagar-indiranagar-4"
+                              },
+                              "cloudinaryImageId": "RX_THUMBNAIL/IMAGES/VENDOR/2026/5/12/29e81ce4-3df0-4b6f-a572-1b286c595209_935594.JPG",
+                              "locality": "Indiranagar",
+                              "areaName": "Indiranagar",
+                              "costForTwo": "₹200 for two",
+                              "cuisines": [
+                                "Beverages",
+                                "Cafe",
+                                "Bakery"
+                              ],
+                              "avgRating": 4.4,
+                              "feeDetails": {
+                                "restaurantId": "935594",
+                                "title": "Delivery Charge",
+                                "amount": "0"
+                              },
+                              "totalRatingsString": "1.1K+",
+                              "promoted": true,
+                              "adTrackingId": "cid=ebfef922-5fb4-40a1-9909-daf6ddca6634~p=1~adgrpid=ebfef922-5fb4-40a1-9909-daf6ddca6634#ag1~mp=SWIGGY_IN~bl=FOOD~aet=RESTAURANT~aeid=935594~plpr=COLLECTION~st=third wave coffee~eid=b4fbbb9e-29b0-4021-8dbf-1d5b15378e56~srvts=1778980660203~collid=56861",
+                              "sla": {
+                                "deliveryTime": 30,
+                                "minDeliveryTime": 25,
+                                "maxDeliveryTime": 30,
+                                "serviceability": "SERVICEABLE",
+                                "slaString": "25-30 MINS",
+                                "lastMileTravelString": "5.0 km",
+                                "iconType": "ICON_TYPE_EMPTY"
+                              },
+                              "availability": {
+                                "nextCloseTime": "2026-05-18 01:50:00",
+                                "opened": true
+                              },
+                              "badges": {
+                                "imageBadges": [
+                                  {
+                                    "imageId": "Green%20Dot%20Awards/Best%20In%20Veg%20Cafe.png",
+                                    "description": "Delivery!"
+                                  },
+                                  {
+                                    "imageId": "Rxawards/_CATEGORY-Cafe%20&%20Chai.png",
+                                    "description": "Delivery!"
+                                  },
+                                  {
+                                    "imageId": "v1695133679/badges/Pure_Veg111.png",
+                                    "description": "pureveg"
+                                  }
+                                ]
+                              },
+                              "aggregatedDiscountInfoV3": {
+                                "header": "ITEMS",
+                                "subHeader": "AT ₹69"
+                              },
+                              "externalRatings": {
+                                "aggregatedRating": {
+                                  "rating": "4.3",
+                                  "ratingCount": "51"
+                                },
+                                "source": "GOOGLE",
+                                "sourceIconImageId": "v1704440323/google_ratings/rating_google_tag"
+                              },
+                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY",
+                              "campaignId": "ebfef922-5fb4-40a1-9909-daf6ddca6634"
+                            },
+                            "analytics": {},
+                            "cta": {}
+                          },
+                          {
+                            "info": {
+                              "id": "387468",
+                              "name": "The Breakfast Nook",
+                              "city": "1",
+                              "slugs": {
+                                "restaurant": "the-breakfast-nook-hsr-hsr"
+                              },
+                              "cloudinaryImageId": "3a26aa967dc44e104627a4b8a8117454",
+                              "locality": "6th Sector",
+                              "areaName": "HSR Layout",
+                              "costForTwo": "₹300 for two",
+                              "cuisines": [
+                                "Healthy Food"
+                              ],
+                              "avgRating": 4.4,
+                              "feeDetails": {
+                                "restaurantId": "387468",
+                                "title": "Delivery Charge",
+                                "amount": "0"
+                              },
+                              "totalRatingsString": "6.8K+",
+                              "sla": {
+                                "deliveryTime": 41,
+                                "minDeliveryTime": 40,
+                                "maxDeliveryTime": 45,
+                                "serviceability": "SERVICEABLE",
+                                "slaString": "40-45 MINS",
+                                "lastMileTravelString": "8.6 km",
+                                "iconType": "ICON_TYPE_EMPTY"
+                              },
+                              "availability": {
+                                "nextCloseTime": "2026-05-24 00:00:00",
+                                "opened": true
+                              },
+                              "badges": {
+                                "imageBadges": [
+                                  {
+                                    "imageId": "Health%20Hub/RX%20BADGE/BADGE2.png",
+                                    "description": "EatRight"
+                                  }
+                                ]
+                              },
+                              "aggregatedDiscountInfoV3": {
+                                "header": "ITEMS",
+                                "subHeader": "AT ₹49",
+                                "logoCtx": {
+                                  "text": "BENEFITS"
+                                }
+                              },
+                              "externalRatings": {
+                                "aggregatedRating": {
+                                  "rating": "--"
+                                }
+                              },
+                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
+                            },
+                            "analytics": {},
+                            "cta": {}
+                          },
+                          {
+                            "info": {
+                              "id": "1531",
+                              "name": "A2B - Adyar Ananda Bhavan",
+                              "city": "1",
+                              "slugs": {
+                                "restaurant": "a2b-veg-cmh-road-indiranagar"
+                              },
+                              "cloudinaryImageId": "RX_THUMBNAIL/IMAGES/VENDOR/2026/1/7/79f24502-f5b9-4347-ac14-4829213029e9_1531.JPG",
+                              "locality": "Indiranagar",
+                              "areaName": "Indiranagar",
+                              "costForTwo": "₹300 for two",
+                              "cuisines": [
+                                "South Indian",
+                                "Sweets",
+                                "Chinese"
+                              ],
+                              "avgRating": 4.5,
+                              "feeDetails": {
+                                "restaurantId": "1531",
+                                "title": "Delivery Charge",
+                                "amount": "0"
+                              },
+                              "totalRatingsString": "115K+",
+                              "promoted": true,
+                              "adTrackingId": "cid=780ea766-8dda-4b5f-8fc9-3b86af5d7570~p=2~adgrpid=780ea766-8dda-4b5f-8fc9-3b86af5d7570#ag1~mp=SWIGGY_IN~bl=FOOD~aet=RESTAURANT~aeid=1531~plpr=COLLECTION~st=third wave coffee~eid=8de8b700-679b-4257-ad97-b9e2a5d2d0da~srvts=1778980660203~collid=56861",
+                              "sla": {
+                                "deliveryTime": 35,
+                                "minDeliveryTime": 35,
+                                "maxDeliveryTime": 40,
+                                "serviceability": "SERVICEABLE",
+                                "slaString": "35-40 MINS",
+                                "lastMileTravelString": "6.1 km",
+                                "iconType": "ICON_TYPE_EMPTY"
+                              },
+                              "availability": {
+                                "nextCloseTime": "2026-05-17 23:59:00",
+                                "opened": true
+                              },
+                              "badges": {
+                                "imageBadges": [
+                                  {
+                                    "imageId": "brand_cards/Badges%202026/32_Best%20in%20South%20Indian2026.png",
+                                    "description": "Best in South Indian"
+                                  },
+                                  {
+                                    "imageId": "brand_cards/Badges%202026/57_Best%20in%20Indian%20Sweets2026.png",
+                                    "description": "Best in Indian Sweets"
+                                  }
+                                ]
+                              },
+                              "aggregatedDiscountInfoV3": {
+                                "header": "ITEMS",
+                                "subHeader": "AT ₹29",
+                                "logoCtx": {
+                                  "text": "BENEFITS"
+                                }
+                              },
+                              "externalRatings": {
+                                "aggregatedRating": {
+                                  "rating": "4.2",
+                                  "ratingCount": "21K+"
+                                },
+                                "source": "GOOGLE",
+                                "sourceIconImageId": "v1704440323/google_ratings/rating_google_tag"
+                              },
+                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY",
+                              "campaignId": "780ea766-8dda-4b5f-8fc9-3b86af5d7570"
+                            },
+                            "analytics": {},
+                            "cta": {}
+                          },
+                          {
+                            "info": {
+                              "id": "348812",
+                              "name": "Sandoitchi Kojo - Authentic Japanese Sandwiches",
+                              "city": "1",
+                              "slugs": {
+                                "restaurant": "glo-juiceworks-hsr-hsr"
+                              },
+                              "cloudinaryImageId": "mab9dtzlzuprbzwc1bz1",
+                              "locality": "6th Sector",
+                              "areaName": "HSR Layout",
+                              "costForTwo": "₹300 for two",
+                              "cuisines": [
+                                "Cafe"
+                              ],
+                              "avgRating": 4.4,
+                              "feeDetails": {
+                                "restaurantId": "348812",
+                                "title": "Delivery Charge",
+                                "amount": "0"
+                              },
+                              "totalRatingsString": "1.3K+",
+                              "sla": {
+                                "deliveryTime": 40,
+                                "minDeliveryTime": 40,
+                                "maxDeliveryTime": 45,
+                                "serviceability": "SERVICEABLE",
+                                "slaString": "40-45 MINS",
+                                "lastMileTravelString": "8.6 km",
+                                "iconType": "ICON_TYPE_EMPTY"
+                              },
+                              "availability": {
+                                "nextCloseTime": "2026-05-19 00:00:00",
+                                "opened": true
+                              },
+                              "badges": {
+                                "imageBadges": [
+                                  {
+                                    "imageId": "Health%20Hub/RX%20BADGE/BADGE2.png",
+                                    "description": "EatRight"
+                                  }
+                                ]
+                              },
+                              "aggregatedDiscountInfoV3": {
+                                "header": "ITEMS",
+                                "subHeader": "AT ₹52",
+                                "logoCtx": {
+                                  "text": "BENEFITS"
+                                }
+                              },
+                              "externalRatings": {
+                                "aggregatedRating": {
+                                  "rating": "--"
+                                }
+                              },
+                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
+                            },
+                            "analytics": {},
+                            "cta": {}
+                          },
+                          {
+                            "info": {
+                              "id": "168884",
+                              "name": "Uncle Peter's Pancakes",
+                              "city": "1",
+                              "slugs": {
+                                "restaurant": "uncle-peter39s-pancakes-indiranagar"
+                              },
+                              "cloudinaryImageId": "RX_THUMBNAIL/IMAGES/VENDOR/2025/10/9/c2b4a088-9530-4f06-a905-e1a6ba31fb72_168884.JPG",
+                              "locality": "Indiranagar",
+                              "areaName": "Indiranagar",
+                              "costForTwo": "₹300 for two",
+                              "cuisines": [
+                                "Waffle",
+                                "Desserts",
+                                "American",
+                                "Continental",
+                                "Beverages",
+                                "Ice Cream"
+                              ],
+                              "avgRating": 4.1,
+                              "feeDetails": {
+                                "restaurantId": "168884",
+                                "title": "Delivery Charge",
+                                "amount": "0"
+                              },
+                              "totalRatingsString": "5.8K+",
+                              "promoted": true,
+                              "adTrackingId": "cid=807ff66d-4e72-47fe-b762-1e587e4b987d~p=5~adgrpid=807ff66d-4e72-47fe-b762-1e587e4b987d#ag1~mp=SWIGGY_IN~bl=FOOD~aet=RESTAURANT~aeid=168884~plpr=COLLECTION~st=third wave coffee~eid=0c453c29-c716-4fe6-a857-28e56b30b13f~srvts=1778980660203~collid=56861",
+                              "sla": {
+                                "deliveryTime": 46,
+                                "minDeliveryTime": 45,
+                                "maxDeliveryTime": 55,
+                                "serviceability": "SERVICEABLE",
+                                "slaString": "45-55 MINS",
+                                "lastMileTravelString": "7.4 km",
+                                "iconType": "ICON_TYPE_EMPTY"
+                              },
+                              "availability": {
+                                "nextCloseTime": "2026-05-17 23:59:00",
+                                "opened": true
+                              },
+                              "badges": {},
+                              "aggregatedDiscountInfoV3": {
+                                "header": "ITEMS",
+                                "subHeader": "AT ₹129",
+                                "logoCtx": {
+                                  "text": "BENEFITS"
+                                }
+                              },
+                              "externalRatings": {
+                                "aggregatedRating": {
+                                  "rating": "4.7",
+                                  "ratingCount": "2.8K+"
+                                },
+                                "source": "GOOGLE",
+                                "sourceIconImageId": "v1704440323/google_ratings/rating_google_tag"
+                              },
+                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY",
+                              "campaignId": "807ff66d-4e72-47fe-b762-1e587e4b987d"
+                            },
+                            "analytics": {},
+                            "cta": {}
+                          },
+                          {
+                            "info": {
+                              "id": "1007220",
+                              "name": "Levista Coffee Gourmet Studio",
+                              "city": "1",
+                              "slugs": {
+                                "restaurant": "levista-central-bangalore-central-bangalore"
+                              },
+                              "cloudinaryImageId": "RX_THUMBNAIL/IMAGES/VENDOR/2026/4/21/1e204011-aa14-4342-b3be-74ad33b29f95_1007220.jpg",
+                              "locality": "Church Street",
+                              "areaName": "Church Street",
+                              "costForTwo": "₹399 for two",
+                              "cuisines": [
+                                "Snacks",
+                                "Breakfast",
+                                "Bakery",
+                                "Coffee",
+                                "Gourmet"
+                              ],
+                              "avgRating": 4.7,
+                              "feeDetails": {
+                                "restaurantId": "1007220",
+                                "title": "Delivery Charge",
+                                "amount": "0"
+                              },
+                              "totalRatingsString": "105",
+                              "sla": {
+                                "deliveryTime": 16,
+                                "minDeliveryTime": 15,
+                                "maxDeliveryTime": 20,
+                                "serviceability": "SERVICEABLE",
+                                "slaString": "15-20 MINS",
+                                "lastMileTravelString": "1.7 km",
+                                "iconType": "ICON_TYPE_EMPTY"
+                              },
+                              "availability": {
+                                "nextCloseTime": "2026-05-17 23:45:00",
+                                "opened": true
+                              },
+                              "badges": {},
+                              "aggregatedDiscountInfoV3": {
+                                "header": "20% OFF",
+                                "subHeader": "UPTO ₹50",
+                                "logoCtx": {
+                                  "text": "BENEFITS"
+                                }
+                              },
+                              "externalRatings": {
+                                "aggregatedRating": {
+                                  "rating": "4.6",
+                                  "ratingCount": "1.2K+"
+                                },
+                                "source": "GOOGLE",
+                                "sourceIconImageId": "v1704440323/google_ratings/rating_google_tag"
+                              },
+                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
+                            },
+                            "analytics": {},
+                            "cta": {}
+                          },
+                          {
+                            "info": {
+                              "id": "958523",
+                              "name": "BIMBOX - Burger In My Box",
+                              "city": "1",
+                              "slugs": {
+                                "restaurant": "bimbox---burger-in-my-box-btm-btm"
+                              },
+                              "cloudinaryImageId": "RX_THUMBNAIL/IMAGES/VENDOR/2024/9/24/a2466df4-eaeb-431a-adb1-8a0dd53a7003_958523.jpg",
+                              "locality": "BTM",
+                              "areaName": "BTM",
+                              "costForTwo": "₹300 for two",
+                              "cuisines": [
+                                "Burgers"
+                              ],
+                              "avgRating": 4.2,
+                              "feeDetails": {
+                                "restaurantId": "958523",
+                                "title": "Delivery Charge",
+                                "amount": "0"
+                              },
+                              "totalRatingsString": "407",
+                              "promoted": true,
+                              "adTrackingId": "cid=fdb04e8d-7a87-4889-8d16-45d06e38dc3d~p=10~adgrpid=fdb04e8d-7a87-4889-8d16-45d06e38dc3d#ag1~mp=SWIGGY_IN~bl=FOOD~aet=RESTAURANT~aeid=958523~plpr=COLLECTION~st=third wave coffee~eid=493c5d30-97f3-4567-93f7-4b0a6d9b15fc~srvts=1778980660203~collid=56861",
+                              "sla": {
+                                "deliveryTime": 43,
+                                "minDeliveryTime": 40,
+                                "maxDeliveryTime": 45,
+                                "serviceability": "SERVICEABLE",
+                                "slaString": "40-45 MINS",
+                                "lastMileTravelString": "9.1 km",
+                                "iconType": "ICON_TYPE_EMPTY"
+                              },
+                              "availability": {
+                                "nextCloseTime": "2026-05-17 08:00:00",
+                                "opened": true
+                              },
+                              "badges": {},
+                              "aggregatedDiscountInfoV3": {
+                                "header": "ITEMS",
+                                "subHeader": "AT ₹40",
+                                "logoCtx": {
+                                  "text": "BENEFITS"
+                                }
+                              },
+                              "externalRatings": {
+                                "aggregatedRating": {
+                                  "rating": "--"
+                                }
+                              },
+                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY",
+                              "campaignId": "fdb04e8d-7a87-4889-8d16-45d06e38dc3d"
+                            },
+                            "analytics": {},
+                            "cta": {}
+                          },
+                          {
+                            "info": {
+                              "id": "1129138",
+                              "name": "Coffee Naa Tea Naa",
+                              "city": "1",
+                              "slugs": {
+                                "restaurant": "coffee-naa-tea-naa-jayanagar-jayanagar"
+                              },
+                              "cloudinaryImageId": "RX_THUMBNAIL/IMAGES/VENDOR/2025/6/24/cd42ede6-8463-4ac6-8b9c-f3ac358a2b2b_1129138.JPG",
+                              "locality": "Jayanagar",
+                              "areaName": "Jayanagar",
+                              "costForTwo": "₹200 for two",
+                              "cuisines": [
+                                "Chinese",
+                                "South Indian",
+                                "Bakery",
+                                "Ice Cream",
+                                "Juices",
+                                "Korean",
+                                "Snacks"
+                              ],
+                              "avgRating": 3.8,
+                              "feeDetails": {
+                                "restaurantId": "1129138",
+                                "title": "Delivery Charge",
+                                "amount": "0"
+                              },
+                              "totalRatingsString": "83",
+                              "sla": {
+                                "deliveryTime": 31,
+                                "minDeliveryTime": 30,
+                                "maxDeliveryTime": 35,
+                                "serviceability": "SERVICEABLE",
+                                "slaString": "30-35 MINS",
+                                "lastMileTravelString": "6.3 km",
+                                "iconType": "ICON_TYPE_EMPTY"
+                              },
+                              "availability": {
+                                "nextCloseTime": "2026-05-18 01:00:00",
+                                "opened": true
+                              },
+                              "aggregatedDiscountInfo": {},
+                              "badges": {},
+                              "aggregatedDiscountInfoV2": {},
+                              "externalRatings": {
+                                "aggregatedRating": {
+                                  "rating": "--"
+                                }
+                              },
+                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
+                            },
+                            "analytics": {},
+                            "cta": {}
+                          },
+                          {
+                            "info": {
+                              "id": "1194324",
+                              "name": "Boba Bhai - Bubble Tea & Korean Street Food",
+                              "city": "1",
+                              "slugs": {
+                                "restaurant": "boba-bhai-bubble-tea-korean-street-food-ashok-nagar-central-bangalore"
+                              },
+                              "cloudinaryImageId": "RX_THUMBNAIL/IMAGES/VENDOR/2025/12/4/b1477b68-4cf2-4191-b9bb-9d3f8c10dea9_1194324.JPG",
+                              "locality": "Ashok Nagar",
+                              "areaName": "Brigade Rd",
+                              "costForTwo": "₹200 for two",
+                              "cuisines": [
+                                "Bubble Tea",
+                                "Burger",
+                                "Korean",
+                                "Beverages",
+                                "Fast Food",
+                                "Juice and shake"
+                              ],
+                              "avgRating": 4.2,
+                              "feeDetails": {
+                                "restaurantId": "1194324",
+                                "title": "Delivery Charge",
+                                "amount": "0"
+                              },
+                              "totalRatingsString": "74",
+                              "promoted": true,
+                              "adTrackingId": "cid=9ef961c5-d412-4fa2-868b-83d59476175b~p=11~adgrpid=9ef961c5-d412-4fa2-868b-83d59476175b#ag1~mp=SWIGGY_IN~bl=FOOD~aet=RESTAURANT~aeid=1194324~plpr=COLLECTION~st=third wave coffee~eid=6f7d857d-813d-4e45-a16d-fece6b601e16~srvts=1778980660203~collid=56861",
+                              "sla": {
+                                "deliveryTime": 39,
+                                "minDeliveryTime": 35,
+                                "maxDeliveryTime": 40,
+                                "serviceability": "SERVICEABLE",
+                                "slaString": "35-40 MINS",
+                                "lastMileTravelString": "2.1 km",
+                                "iconType": "ICON_TYPE_EMPTY"
+                              },
+                              "availability": {
+                                "nextCloseTime": "2026-05-18 01:00:00",
+                                "opened": true
+                              },
+                              "badges": {},
+                              "aggregatedDiscountInfoV3": {
+                                "header": "ITEMS",
+                                "subHeader": "AT ₹99"
+                              },
+                              "externalRatings": {
+                                "aggregatedRating": {
+                                  "rating": "--"
+                                }
+                              },
+                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY",
+                              "campaignId": "9ef961c5-d412-4fa2-868b-83d59476175b"
+                            },
+                            "analytics": {},
+                            "cta": {}
+                          },
+                          {
+                            "info": {
+                              "id": "348811",
+                              "name": "The Cubano Sandwich Co.",
+                              "city": "1",
+                              "slugs": {
+                                "restaurant": "the-jolly-nawabs-hsr-hsr"
+                              },
+                              "cloudinaryImageId": "10099994d51aaaa5bd92b253af10fcf4",
+                              "locality": "6th Sector",
+                              "areaName": "HSR Layout",
+                              "costForTwo": "₹300 for two",
+                              "cuisines": [
+                                "Cafe"
+                              ],
+                              "avgRating": 4.1,
+                              "feeDetails": {
+                                "restaurantId": "348811",
+                                "title": "Delivery Charge",
+                                "amount": "0"
+                              },
+                              "totalRatingsString": "5.2K+",
+                              "sla": {
+                                "deliveryTime": 41,
+                                "minDeliveryTime": 40,
+                                "maxDeliveryTime": 45,
+                                "serviceability": "SERVICEABLE",
+                                "slaString": "40-45 MINS",
+                                "lastMileTravelString": "8.6 km",
+                                "iconType": "ICON_TYPE_EMPTY"
+                              },
+                              "availability": {
+                                "nextCloseTime": "2026-05-24 00:00:00",
+                                "opened": true
+                              },
+                              "badges": {},
+                              "aggregatedDiscountInfoV3": {
+                                "header": "ITEMS",
+                                "subHeader": "AT ₹52",
+                                "logoCtx": {
+                                  "text": "BENEFITS"
+                                }
+                              },
+                              "externalRatings": {
+                                "aggregatedRating": {
+                                  "rating": "--"
+                                }
+                              },
+                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
+                            },
+                            "analytics": {},
+                            "cta": {}
+                          },
+                          {
+                            "info": {
+                              "id": "168880",
+                              "name": "Chainaama",
+                              "city": "1",
+                              "slugs": {
+                                "restaurant": "chainama-indiranagar"
+                              },
+                              "cloudinaryImageId": "RX_THUMBNAIL/IMAGES/VENDOR/2024/12/31/60f829ab-bae4-43f7-9b40-04ac4b44d209_168880.JPG",
+                              "locality": "2nd stage",
+                              "areaName": "Indiranagar",
+                              "costForTwo": "₹100 for two",
+                              "cuisines": [
+                                "Snacks",
+                                "Bakery",
+                                "Beverages"
+                              ],
+                              "avgRating": 3.7,
+                              "feeDetails": {
+                                "restaurantId": "168880",
+                                "title": "Delivery Charge",
+                                "amount": "0"
+                              },
+                              "totalRatingsString": "1.2K+",
+                              "promoted": true,
+                              "adTrackingId": "cid=39164c5b-0c04-46c5-b732-858455f96e29~p=13~adgrpid=39164c5b-0c04-46c5-b732-858455f96e29#ag1~mp=SWIGGY_IN~bl=FOOD~aet=RESTAURANT~aeid=168880~plpr=COLLECTION~st=third wave coffee~eid=83faa17e-930f-49a2-9d8f-b1079a67db42~srvts=1778980660203~collid=56861",
+                              "sla": {
+                                "deliveryTime": 41,
+                                "minDeliveryTime": 40,
+                                "maxDeliveryTime": 45,
+                                "serviceability": "SERVICEABLE",
+                                "slaString": "40-45 MINS",
+                                "lastMileTravelString": "7.4 km",
+                                "iconType": "ICON_TYPE_EMPTY"
+                              },
+                              "availability": {
+                                "nextCloseTime": "2026-05-17 23:59:00",
+                                "opened": true
+                              },
+                              "badges": {},
+                              "aggregatedDiscountInfoV3": {
+                                "header": "ITEMS",
+                                "subHeader": "AT ₹79",
+                                "logoCtx": {
+                                  "text": "BENEFITS"
+                                }
+                              },
+                              "externalRatings": {
+                                "aggregatedRating": {
+                                  "rating": "--"
+                                }
+                              },
+                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY",
+                              "campaignId": "39164c5b-0c04-46c5-b732-858455f96e29"
+                            },
+                            "analytics": {},
+                            "cta": {}
+                          },
+                          {
+                            "info": {
+                              "id": "523324",
+                              "name": "Boba Chai By Chai Point",
+                              "city": "1",
+                              "slugs": {
+                                "restaurant": "enchante-indira-nagar-1st-stage-indiranagar"
+                              },
+                              "cloudinaryImageId": "RX_THUMBNAIL/IMAGES/VENDOR/2024/5/16/741fbf1f-b063-4262-bb8f-496bb13a3d0f_523324.jpg",
+                              "locality": "1st Stage",
+                              "areaName": "Indiranagar",
+                              "costForTwo": "₹150 for two",
+                              "cuisines": [
+                                "Bakery",
+                                "Beverages",
+                                "Maharashtrian",
+                                "Snacks",
+                                "Street Food",
+                                "South Indian",
+                                "Punjabi",
+                                "Chaat",
+                                "Indian",
+                                "American"
+                              ],
+                              "avgRating": 3.8,
+                              "feeDetails": {
+                                "restaurantId": "523324",
+                                "title": "Delivery Charge",
+                                "amount": "0"
+                              },
+                              "totalRatingsString": "24",
+                              "sla": {
+                                "deliveryTime": 37,
+                                "minDeliveryTime": 35,
+                                "maxDeliveryTime": 40,
+                                "serviceability": "SERVICEABLE",
+                                "slaString": "35-40 MINS",
+                                "lastMileTravelString": "6.0 km",
+                                "iconType": "ICON_TYPE_EMPTY"
+                              },
+                              "availability": {
+                                "nextCloseTime": "2026-05-24 00:00:00",
+                                "opened": true
+                              },
+                              "aggregatedDiscountInfo": {},
+                              "badges": {
+                                "imageBadges": [
+                                  {
+                                    "imageId": "Health%20Hub/RX%20BADGE/BADGE2.png",
+                                    "description": "EatRight"
+                                  }
+                                ]
+                              },
+                              "aggregatedDiscountInfoV2": {},
+                              "externalRatings": {
+                                "aggregatedRating": {
+                                  "rating": "--"
+                                }
+                              },
+                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
+                            },
+                            "analytics": {},
+                            "cta": {}
+                          },
+                          {
+                            "info": {
+                              "id": "279815",
+                              "name": "Maggination",
+                              "city": "1",
+                              "slugs": {
+                                "restaurant": "maggination-indiranagar-indiranagar"
+                              },
+                              "cloudinaryImageId": "RX_THUMBNAIL/IMAGES/VENDOR/2025/10/9/f07d63c9-074e-4aa4-b6dd-ac6a244abb3c_279815.JPG",
+                              "locality": "100 Feet Road",
+                              "areaName": "Indiranagar",
+                              "costForTwo": "₹200 for two",
+                              "cuisines": [
+                                "Snacks",
+                                "Fast Food"
+                              ],
+                              "avgRating": 3.9,
+                              "feeDetails": {
+                                "restaurantId": "279815",
+                                "title": "Delivery Charge",
+                                "amount": "0"
+                              },
+                              "totalRatingsString": "1.6K+",
+                              "promoted": true,
+                              "adTrackingId": "cid=0a576845-5753-4363-9dbe-7e78e01ed4ed~p=14~adgrpid=0a576845-5753-4363-9dbe-7e78e01ed4ed#ag1~mp=SWIGGY_IN~bl=FOOD~aet=RESTAURANT~aeid=279815~plpr=COLLECTION~st=third wave coffee~eid=7d85c520-abe9-4a1e-9dce-769843b555a3~srvts=1778980660203~collid=56861",
+                              "sla": {
+                                "deliveryTime": 40,
+                                "minDeliveryTime": 35,
+                                "maxDeliveryTime": 45,
+                                "serviceability": "SERVICEABLE",
+                                "slaString": "35-45 MINS",
+                                "lastMileTravelString": "6.9 km",
+                                "iconType": "ICON_TYPE_EMPTY"
+                              },
+                              "availability": {
+                                "nextCloseTime": "2026-05-17 23:59:00",
+                                "opened": true
+                              },
+                              "badges": {},
+                              "aggregatedDiscountInfoV3": {
+                                "header": "ITEMS",
+                                "subHeader": "AT ₹129",
+                                "logoCtx": {
+                                  "text": "BENEFITS"
+                                }
+                              },
+                              "externalRatings": {
+                                "aggregatedRating": {
+                                  "rating": "--"
+                                }
+                              },
+                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY",
+                              "campaignId": "0a576845-5753-4363-9dbe-7e78e01ed4ed"
+                            },
+                            "analytics": {},
+                            "cta": {}
+                          },
+                          {
+                            "info": {
+                              "id": "69274",
+                              "name": "Chai Point",
+                              "city": "1",
+                              "slugs": {
+                                "restaurant": "chai-point-church-st-central-bangalore"
+                              },
+                              "cloudinaryImageId": "RX_THUMBNAIL/IMAGES/VENDOR/2026/1/7/e4676e4c-09c3-4020-b322-94e28bd15913_69274.JPG",
+                              "locality": "Ashok Nagar",
+                              "areaName": "Ashok Nagar",
+                              "costForTwo": "₹150 for two",
+                              "cuisines": [
+                                "Bakery",
+                                "Beverages",
+                                "Maharashtrian",
+                                "Snacks",
+                                "Street Food",
+                                "South Indian",
+                                "Punjabi",
+                                "Chaat",
+                                "Indian",
+                                "American"
+                              ],
+                              "avgRating": 4.4,
+                              "feeDetails": {
+                                "restaurantId": "69274",
+                                "title": "Delivery Charge",
+                                "amount": "0"
+                              },
+                              "totalRatingsString": "10K+",
+                              "sla": {
+                                "deliveryTime": 11,
+                                "minDeliveryTime": 10,
+                                "maxDeliveryTime": 15,
+                                "serviceability": "SERVICEABLE",
+                                "slaString": "10-15 MINS",
+                                "lastMileTravelString": "1.7 km",
+                                "iconType": "ICON_TYPE_EMPTY"
+                              },
+                              "availability": {
+                                "nextCloseTime": "2026-05-17 23:00:00",
+                                "opened": true
+                              },
+                              "badges": {
+                                "imageBadges": [
+                                  {
+                                    "imageId": "Health%20Hub/RX%20BADGE/BADGE2.png",
+                                    "description": "EatRight"
+                                  },
+                                  {
+                                    "imageId": "brand_cards/Badges%202026/110_Best%20in%20Coffee%20&%20Tea2026.png",
+                                    "description": "Best in Coffee & Tea"
+                                  }
+                                ]
+                              },
+                              "aggregatedDiscountInfoV3": {
+                                "header": "ITEMS",
+                                "subHeader": "AT ₹79"
+                              },
+                              "externalRatings": {
+                                "aggregatedRating": {
+                                  "rating": "4.1",
+                                  "ratingCount": "1.8K+"
+                                },
+                                "source": "GOOGLE",
+                                "sourceIconImageId": "v1704440323/google_ratings/rating_google_tag"
+                              },
+                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
+                            },
+                            "analytics": {},
+                            "cta": {}
+                          },
+                          {
+                            "info": {
+                              "id": "524353",
+                              "name": " Irani Std. Tea",
+                              "city": "1",
+                              "slugs": {
+                                "restaurant": "cafe-irani-hsr-hsr"
+                              },
+                              "cloudinaryImageId": "bwkz4uv3qyx33brboywf",
+                              "locality": "4th Sector",
+                              "areaName": "HSR Layout",
+                              "costForTwo": "₹100 for two",
+                              "cuisines": [
+                                "Snacks",
+                                "Beverages",
+                                "Bakery",
+                                "Desserts",
+                                "Fast Food"
+                              ],
+                              "avgRating": 4.4,
+                              "feeDetails": {
+                                "restaurantId": "524353",
+                                "title": "Delivery Charge",
+                                "amount": "0"
+                              },
+                              "totalRatingsString": "8.0K+",
+                              "promoted": true,
+                              "adTrackingId": "cid=d4ff9a26-bbaa-4eaf-97da-e4495d7c59ce~p=25~adgrpid=d4ff9a26-bbaa-4eaf-97da-e4495d7c59ce#ag1~mp=SWIGGY_IN~bl=FOOD~aet=RESTAURANT~aeid=524353~plpr=COLLECTION~st=third wave coffee~eid=ff581032-407a-4252-b33f-89f9ddb74357~srvts=1778980660203~collid=56861",
+                              "sla": {
+                                "deliveryTime": 44,
+                                "minDeliveryTime": 40,
+                                "maxDeliveryTime": 45,
+                                "serviceability": "SERVICEABLE",
+                                "slaString": "40-45 MINS",
+                                "lastMileTravelString": "10.6 km",
+                                "iconType": "ICON_TYPE_EMPTY"
+                              },
+                              "availability": {
+                                "nextCloseTime": "2026-05-17 23:59:00",
+                                "opened": true
+                              },
+                              "badges": {},
+                              "aggregatedDiscountInfoV3": {
+                                "header": "ITEMS",
+                                "subHeader": "AT ₹139",
+                                "logoCtx": {
+                                  "text": "BENEFITS"
+                                }
+                              },
+                              "externalRatings": {
+                                "aggregatedRating": {
+                                  "rating": "--"
+                                }
+                              },
+                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY",
+                              "campaignId": "d4ff9a26-bbaa-4eaf-97da-e4495d7c59ce"
+                            },
+                            "analytics": {},
+                            "cta": {}
+                          },
+                          {
+                            "info": {
+                              "id": "709479",
+                              "name": "The Morning Crumb",
+                              "city": "1",
+                              "slugs": {
+                                "restaurant": "the-morning-crumb-jp-nagar-jp-nagar-2"
+                              },
+                              "cloudinaryImageId": "17ab7aa5d31217f452b9fee28973e82b",
+                              "locality": "Annaiah Reddy Layout",
+                              "areaName": "Jayanagar",
+                              "costForTwo": "₹400 for two",
+                              "cuisines": [
+                                "Continental",
+                                "Pasta",
+                                "American",
+                                "sandwich"
+                              ],
+                              "avgRating": 4.3,
+                              "feeDetails": {
+                                "restaurantId": "709479",
+                                "title": "Delivery Charge",
+                                "amount": "0"
+                              },
+                              "totalRatingsString": "1.6K+",
+                              "sla": {
+                                "deliveryTime": 51,
+                                "minDeliveryTime": 50,
+                                "maxDeliveryTime": 60,
+                                "serviceability": "SERVICEABLE",
+                                "slaString": "50-60 MINS",
+                                "lastMileTravelString": "8.3 km",
+                                "iconType": "ICON_TYPE_EMPTY"
+                              },
+                              "availability": {
+                                "nextCloseTime": "2026-05-17 22:00:00",
+                                "opened": true
+                              },
+                              "badges": {
+                                "imageBadges": [
+                                  {
+                                    "imageId": "Health%20Hub/RX%20BADGE/BADGE2.png",
+                                    "description": "EatRight"
+                                  }
+                                ]
+                              },
+                              "aggregatedDiscountInfoV3": {
+                                "header": "ITEMS",
+                                "subHeader": "AT ₹138",
+                                "logoCtx": {
+                                  "text": "BENEFITS"
+                                }
+                              },
+                              "externalRatings": {
+                                "aggregatedRating": {
+                                  "rating": "--"
+                                }
+                              },
+                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
+                            },
+                            "analytics": {},
+                            "cta": {}
+                          },
+                          {
+                            "info": {
+                              "id": "481851",
+                              "name": "Peppy Parathas & Rolls By Chai Point",
+                              "city": "1",
+                              "slugs": {
+                                "restaurant": "peppy-paratha-indira-nagar-1st-stage-indiranagar"
+                              },
+                              "cloudinaryImageId": "tdfq5jhwn1llaz1chw0t",
+                              "locality": "1st Stage",
+                              "areaName": "Indiranagar",
+                              "costForTwo": "₹150 for two",
+                              "cuisines": [
+                                "Bakery",
+                                "Beverages",
+                                "Maharashtrian",
+                                "Snacks",
+                                "Street Food",
+                                "South Indian",
+                                "Punjabi",
+                                "Chaat",
+                                "Indian",
+                                "American"
+                              ],
+                              "avgRating": 4.4,
+                              "feeDetails": {
+                                "restaurantId": "481851",
+                                "title": "Delivery Charge",
+                                "amount": "0"
+                              },
+                              "totalRatingsString": "43",
+                              "sla": {
+                                "deliveryTime": 36,
+                                "minDeliveryTime": 35,
+                                "maxDeliveryTime": 40,
+                                "serviceability": "SERVICEABLE",
+                                "slaString": "35-40 MINS",
+                                "lastMileTravelString": "6.0 km",
+                                "iconType": "ICON_TYPE_EMPTY"
+                              },
+                              "availability": {
+                                "nextCloseTime": "2026-05-19 00:00:00",
+                                "opened": true
+                              },
+                              "aggregatedDiscountInfo": {},
+                              "badges": {
+                                "imageBadges": [
+                                  {
+                                    "imageId": "Health%20Hub/RX%20BADGE/BADGE2.png",
+                                    "description": "EatRight"
+                                  }
+                                ]
+                              },
+                              "aggregatedDiscountInfoV2": {},
+                              "externalRatings": {
+                                "aggregatedRating": {
+                                  "rating": "--"
+                                }
+                              },
+                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
+                            },
+                            "analytics": {},
+                            "cta": {}
+                          },
+                          {
+                            "info": {
+                              "id": "50710",
+                              "name": "Wood Fire Pizza",
+                              "city": "1",
+                              "slugs": {
+                                "restaurant": "woodfire-pizza-indiranagar-indiranagar"
+                              },
+                              "cloudinaryImageId": "ocx9ixmjekwtw7a0crwr",
+                              "locality": "Subbanna Palya",
+                              "areaName": "Kammanahalli/Kalyan Nagar",
+                              "costForTwo": "₹400 for two",
+                              "cuisines": [
+                                "Italian",
+                                "Pizzas",
+                                "Pastas",
+                                "Beverages",
+                                "American",
+                                "Desserts",
+                                "Snacks"
+                              ],
+                              "avgRating": 4.1,
+                              "feeDetails": {
+                                "restaurantId": "50710",
+                                "title": "Delivery Charge",
+                                "amount": "0"
+                              },
+                              "totalRatingsString": "2.4K+",
+                              "sla": {
+                                "deliveryTime": 53,
+                                "minDeliveryTime": 50,
+                                "maxDeliveryTime": 60,
+                                "serviceability": "SERVICEABLE",
+                                "slaString": "50-60 MINS",
+                                "lastMileTravelString": "8.3 km",
+                                "iconType": "ICON_TYPE_EMPTY"
+                              },
+                              "availability": {
+                                "nextCloseTime": "2026-05-24 00:00:00",
+                                "opened": true
+                              },
+                              "badges": {},
+                              "aggregatedDiscountInfoV3": {
+                                "header": "ITEMS",
+                                "subHeader": "AT ₹89",
+                                "logoCtx": {
+                                  "text": "BENEFITS"
+                                }
+                              },
+                              "externalRatings": {
+                                "aggregatedRating": {
+                                  "rating": "--"
+                                }
+                              },
+                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
+                            },
+                            "analytics": {},
+                            "cta": {}
+                          },
+                          {
+                            "info": {
+                              "id": "559737",
+                              "name": "crunch pizza 24/7",
+                              "city": "1",
+                              "slugs": {
+                                "restaurant": "fresh-crunch-pizza-indiranagar-indiranagar"
+                              },
+                              "cloudinaryImageId": "ojsvhtrmvqprjp8etfqg",
+                              "locality": "18th C Main, HAL 2nd Stage",
+                              "areaName": " indranagar ",
+                              "costForTwo": "₹400 for two",
+                              "cuisines": [
+                                "Pizzas",
+                                "Burgers"
+                              ],
+                              "avgRating": 4.6,
+                              "feeDetails": {
+                                "restaurantId": "559737",
+                                "title": "Delivery Charge",
+                                "amount": "0"
+                              },
+                              "totalRatingsString": "57",
+                              "sla": {
+                                "deliveryTime": 53,
+                                "minDeliveryTime": 50,
+                                "maxDeliveryTime": 60,
+                                "serviceability": "SERVICEABLE",
+                                "slaString": "50-60 MINS",
+                                "lastMileTravelString": "7.4 km",
+                                "iconType": "ICON_TYPE_EMPTY"
+                              },
+                              "availability": {
+                                "nextCloseTime": "2026-05-17 23:59:00",
+                                "opened": true
+                              },
+                              "aggregatedDiscountInfo": {},
+                              "badges": {},
+                              "aggregatedDiscountInfoV2": {},
+                              "externalRatings": {
+                                "aggregatedRating": {
+                                  "rating": "--"
+                                }
+                              },
+                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
+                            },
+                            "analytics": {},
+                            "cta": {}
+                          },
+                          {
+                            "info": {
+                              "id": "27771",
+                              "name": "Hatti Kaapi - Coffee and more",
+                              "city": "1",
+                              "slugs": {
+                                "restaurant": "hatti-kaapi-jayanagar-jayanagar"
+                              },
+                              "cloudinaryImageId": "RX_THUMBNAIL/IMAGES/VENDOR/2024/12/24/7e637639-a9c0-4d06-a099-437338226546_27771.jpg",
+                              "locality": "Jayanagar",
+                              "areaName": "Jayanagar",
+                              "costForTwo": "₹200 for two",
+                              "cuisines": [
+                                "Beverages",
+                                "South Indian",
+                                "Snacks",
+                                "Bakery"
+                              ],
+                              "avgRating": 4.5,
+                              "feeDetails": {
+                                "restaurantId": "27771",
+                                "title": "Delivery Charge",
+                                "amount": "0"
+                              },
+                              "totalRatingsString": "5.9K+",
+                              "sla": {
+                                "deliveryTime": 28,
+                                "minDeliveryTime": 25,
+                                "maxDeliveryTime": 30,
+                                "serviceability": "SERVICEABLE",
+                                "slaString": "25-30 MINS",
+                                "lastMileTravelString": "5.7 km",
+                                "iconType": "ICON_TYPE_EMPTY"
+                              },
+                              "availability": {
+                                "nextCloseTime": "2026-05-17 22:00:00",
+                                "opened": true
+                              },
+                              "badges": {
+                                "imageBadges": [
+                                  {
+                                    "imageId": "v1695133679/badges/Pure_Veg111.png",
+                                    "description": "pureveg"
+                                  }
+                                ]
+                              },
+                              "aggregatedDiscountInfoV3": {
+                                "header": "ITEMS",
+                                "subHeader": "AT ₹39",
+                                "logoCtx": {
+                                  "text": "BENEFITS"
+                                }
+                              },
+                              "externalRatings": {
+                                "aggregatedRating": {
+                                  "rating": "4.2",
+                                  "ratingCount": "3.4K+"
+                                },
+                                "source": "GOOGLE",
+                                "sourceIconImageId": "v1704440323/google_ratings/rating_google_tag"
+                              },
+                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
+                            },
+                            "analytics": {},
+                            "cta": {}
+                          },
+                          {
+                            "info": {
+                              "id": "822259",
+                              "name": "The Breakfast Express",
+                              "city": "1",
+                              "slugs": {
+                                "restaurant": "the-breakfast-express-hsr-hsr"
+                              },
+                              "cloudinaryImageId": "66a7475c4b8847b98252bd301b88d1b3",
+                              "locality": "Sector 6",
+                              "areaName": "HSR",
+                              "costForTwo": "₹249 for two",
+                              "cuisines": [
+                                "American",
+                                "Italian-American",
+                                "Pastas"
+                              ],
+                              "avgRating": 4,
+                              "feeDetails": {
+                                "restaurantId": "822259",
+                                "title": "Delivery Charge",
+                                "amount": "0"
+                              },
+                              "totalRatingsString": "155",
+                              "sla": {
+                                "deliveryTime": 47,
+                                "minDeliveryTime": 45,
+                                "maxDeliveryTime": 50,
+                                "serviceability": "SERVICEABLE",
+                                "slaString": "45-50 MINS",
+                                "lastMileTravelString": "8.6 km",
+                                "iconType": "ICON_TYPE_EMPTY"
+                              },
+                              "availability": {
+                                "nextCloseTime": "2026-05-24 00:00:00",
+                                "opened": true
+                              },
+                              "aggregatedDiscountInfo": {},
+                              "badges": {},
+                              "aggregatedDiscountInfoV2": {},
+                              "externalRatings": {
+                                "aggregatedRating": {
+                                  "rating": "--"
+                                }
+                              },
+                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
+                            },
+                            "analytics": {},
+                            "cta": {}
+                          },
+                          {
+                            "info": {
+                              "id": "298606",
+                              "name": "Joy Elephant Cafe",
+                              "city": "1",
+                              "slugs": {
+                                "restaurant": "drunken-monkey-koramangala-koramangala"
+                              },
+                              "cloudinaryImageId": "RX_THUMBNAIL/IMAGES/VENDOR/2026/1/29/d5a12998-098e-4f20-8d58-039573d25ce3_298606.jpg",
+                              "locality": "4th Block",
+                              "areaName": "koramangala 4th block",
+                              "costForTwo": "₹300 for two",
+                              "cuisines": [
+                                "sandwich",
+                                "Beverages",
+                                "Cafe",
+                                "Healthy Food"
+                              ],
+                              "avgRating": 3.7,
+                              "feeDetails": {
+                                "restaurantId": "298606",
+                                "title": "Delivery Charge",
+                                "amount": "0"
+                              },
+                              "totalRatingsString": "652",
+                              "sla": {
+                                "deliveryTime": 47,
+                                "minDeliveryTime": 45,
+                                "maxDeliveryTime": 50,
+                                "serviceability": "SERVICEABLE",
+                                "slaString": "45-50 MINS",
+                                "lastMileTravelString": "7.3 km",
+                                "iconType": "ICON_TYPE_EMPTY"
+                              },
+                              "availability": {
+                                "nextCloseTime": "2026-05-17 07:00:00",
+                                "opened": true
+                              },
+                              "badges": {},
+                              "aggregatedDiscountInfoV3": {
+                                "header": "₹80 OFF",
+                                "subHeader": "ABOVE ₹499",
+                                "discountTag": "FLAT DEAL",
+                                "logoCtx": {
+                                  "text": "BENEFITS"
+                                }
+                              },
+                              "externalRatings": {
+                                "aggregatedRating": {
+                                  "rating": "--"
+                                }
+                              },
+                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
+                            },
+                            "analytics": {},
+                            "cta": {}
+                          },
+                          {
+                            "info": {
+                              "id": "378681",
+                              "name": "Tea Time Cafe",
+                              "city": "1",
+                              "slugs": {
+                                "restaurant": "tea-time-cafe-btm-btm"
+                              },
+                              "cloudinaryImageId": "xj9ozbmtbuhf8jbzay3l",
+                              "locality": "Maruti Nagar",
+                              "areaName": "Btm Layout",
+                              "costForTwo": "₹149 for two",
+                              "cuisines": [
+                                "Beverages",
+                                "Snacks"
+                              ],
+                              "avgRating": 4.3,
+                              "feeDetails": {
+                                "restaurantId": "378681",
+                                "title": "Delivery Charge",
+                                "amount": "0"
+                              },
+                              "totalRatingsString": "2.5K+",
+                              "sla": {
+                                "deliveryTime": 37,
+                                "minDeliveryTime": 35,
+                                "maxDeliveryTime": 40,
+                                "serviceability": "SERVICEABLE",
+                                "slaString": "35-40 MINS",
+                                "lastMileTravelString": "6.8 km",
+                                "iconType": "ICON_TYPE_EMPTY"
+                              },
+                              "availability": {
+                                "nextCloseTime": "2026-05-17 23:00:00",
+                                "opened": true
+                              },
+                              "badges": {},
+                              "aggregatedDiscountInfoV3": {
+                                "header": "ITEMS",
+                                "subHeader": "AT ₹19",
+                                "logoCtx": {
+                                  "text": "BENEFITS"
+                                }
+                              },
+                              "externalRatings": {
+                                "aggregatedRating": {
+                                  "rating": "--"
+                                }
+                              },
+                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
+                            },
+                            "analytics": {},
+                            "cta": {}
+                          },
+                          {
+                            "info": {
+                              "id": "1033274",
+                              "name": "Pizza Palette",
+                              "city": "1",
+                              "slugs": {
+                                "restaurant": "pizza-palette-arekere-arekere"
+                              },
+                              "cloudinaryImageId": "RX_THUMBNAIL/IMAGES/VENDOR/2025/1/24/3039a49b-f3d3-499a-bd96-291d0a3b1630_1033274.JPG",
+                              "locality": "Arekempanahalli Jayanagar",
+                              "areaName": "Mavallipura",
+                              "costForTwo": "₹200 for two",
+                              "cuisines": [
+                                "Bakery",
+                                "Beverages",
+                                "Pizzas",
+                                "Burgers"
+                              ],
+                              "avgRating": 4.3,
+                              "feeDetails": {
+                                "restaurantId": "1033274",
+                                "title": "Delivery Charge",
+                                "amount": "0"
+                              },
+                              "totalRatingsString": "6",
+                              "sla": {
+                                "deliveryTime": 38,
+                                "minDeliveryTime": 35,
+                                "maxDeliveryTime": 40,
+                                "serviceability": "SERVICEABLE",
+                                "slaString": "35-40 MINS",
+                                "lastMileTravelString": "4.3 km",
+                                "iconType": "ICON_TYPE_EMPTY"
+                              },
+                              "availability": {
+                                "nextCloseTime": "2026-05-17 23:00:00",
+                                "opened": true
+                              },
+                              "badges": {},
+                              "aggregatedDiscountInfoV3": {
+                                "header": "₹100 OFF",
+                                "subHeader": "ABOVE ₹499",
+                                "discountTag": "FLAT DEAL",
+                                "logoCtx": {
+                                  "text": "BENEFITS"
+                                }
+                              },
+                              "externalRatings": {
+                                "aggregatedRating": {
+                                  "rating": "--"
+                                }
+                              },
+                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
+                            },
+                            "analytics": {},
+                            "cta": {}
+                          },
+                          {
+                            "info": {
+                              "id": "1375211",
+                              "name": "Chai Katte & Snacks",
+                              "city": "1",
+                              "slugs": {
+                                "restaurant": "chai-katte-&-snacks-btm-btm"
+                              },
+                              "cloudinaryImageId": "RX_THUMBNAIL/IMAGES/VENDOR/2026/5/9/98bc7758-a3b6-4b40-aac7-9460c555a03a_1375211.jpg",
+                              "locality": "BTM",
+                              "areaName": "BTM",
+                              "costForTwo": "₹690 for two",
+                              "cuisines": [
+                                "Beverages",
+                                "Snacks",
+                                "Fast Food",
+                                "Indian"
+                              ],
+                              "feeDetails": {
+                                "restaurantId": "1375211",
+                                "title": "Delivery Charge",
+                                "amount": "0"
+                              },
+                              "sla": {
+                                "deliveryTime": 52,
+                                "minDeliveryTime": 50,
+                                "maxDeliveryTime": 60,
+                                "serviceability": "SERVICEABLE",
+                                "slaString": "50-60 MINS",
+                                "lastMileTravelString": "9.6 km",
+                                "iconType": "ICON_TYPE_EMPTY"
+                              },
+                              "availability": {
+                                "nextCloseTime": "2026-05-24 00:00:00",
+                                "opened": true
+                              },
+                              "badges": {},
+                              "aggregatedDiscountInfoV3": {
+                                "header": "30% OFF",
+                                "subHeader": "UPTO ₹150",
+                                "discountTag": "SAVE BIG",
+                                "logoCtx": {
+                                  "text": "BENEFITS"
+                                }
+                              },
+                              "externalRatings": {
+                                "aggregatedRating": {
+                                  "rating": "--"
+                                }
+                              },
+                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
+                            },
+                            "analytics": {},
+                            "cta": {}
+                          },
+                          {
+                            "info": {
+                              "id": "1105477",
+                              "name": "Artisyn",
+                              "city": "1",
+                              "slugs": {
+                                "restaurant": "artisyn-yeshwanthpur-yeshwanthpur"
+                              },
+                              "cloudinaryImageId": "RX_THUMBNAIL/IMAGES/VENDOR/2026/3/6/d1495e29-3d69-4ae4-9840-7e2b9e9de385_1105477.jpg",
+                              "locality": "Yeshwanthpur",
+                              "areaName": "Yeshwanthpur",
+                              "costForTwo": "₹300 for two",
+                              "cuisines": [
+                                "Salads",
+                                "sandwich",
+                                "Juices",
+                                "Healthy Food"
+                              ],
+                              "avgRating": 4.2,
+                              "feeDetails": {
+                                "restaurantId": "1105477",
+                                "title": "Delivery Charge",
+                                "amount": "0"
+                              },
+                              "totalRatingsString": "15",
+                              "sla": {
+                                "deliveryTime": 47,
+                                "minDeliveryTime": 45,
+                                "maxDeliveryTime": 50,
+                                "serviceability": "SERVICEABLE",
+                                "slaString": "45-50 MINS",
+                                "lastMileTravelString": "9.6 km",
+                                "iconType": "ICON_TYPE_EMPTY"
+                              },
+                              "availability": {
+                                "nextCloseTime": "2026-05-17 23:59:00",
+                                "opened": true
+                              },
+                              "badges": {},
+                              "aggregatedDiscountInfoV3": {
+                                "header": "₹40 OFF",
+                                "subHeader": "ABOVE ₹499",
+                                "discountTag": "FLAT DEAL",
+                                "logoCtx": {
+                                  "text": "BENEFITS"
+                                }
+                              },
+                              "externalRatings": {
+                                "aggregatedRating": {
+                                  "rating": "--"
+                                }
+                              },
+                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
+                            },
+                            "analytics": {},
+                            "cta": {}
+                          },
+                          {
+                            "info": {
+                              "id": "822257",
+                              "name": "The Cubano Express",
+                              "city": "1",
+                              "slugs": {
+                                "restaurant": "the-cubano-express-hsr-hsr"
+                              },
+                              "cloudinaryImageId": "10099994d51aaaa5bd92b253af10fcf4",
+                              "locality": "Sector 6",
+                              "areaName": "HSR",
+                              "costForTwo": "₹249 for two",
+                              "cuisines": [
+                                "Spanish",
+                                "Burgers",
+                                "Fast Food",
+                                "Snacks",
+                                "Beverages"
+                              ],
+                              "avgRating": 4.8,
+                              "feeDetails": {
+                                "restaurantId": "822257",
+                                "title": "Delivery Charge",
+                                "amount": "0"
+                              },
+                              "totalRatingsString": "10",
+                              "sla": {
+                                "deliveryTime": 49,
+                                "minDeliveryTime": 45,
+                                "maxDeliveryTime": 50,
+                                "serviceability": "SERVICEABLE",
+                                "slaString": "45-50 MINS",
+                                "lastMileTravelString": "8.6 km",
+                                "iconType": "ICON_TYPE_EMPTY"
+                              },
+                              "availability": {
+                                "nextCloseTime": "2026-05-24 00:00:00",
+                                "opened": true
+                              },
+                              "aggregatedDiscountInfo": {},
+                              "badges": {},
+                              "aggregatedDiscountInfoV2": {},
+                              "externalRatings": {
+                                "aggregatedRating": {
+                                  "rating": "--"
+                                }
+                              },
+                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
+                            },
+                            "analytics": {},
+                            "cta": {}
+                          },
+                          {
+                            "info": {
+                              "id": "723466",
+                              "name": "The Sandwich Box",
+                              "city": "1",
+                              "slugs": {
+                                "restaurant": "the-sandwich-box-btm-btm"
+                              },
+                              "cloudinaryImageId": "d09e6cd04a575865814385db6f5fc5d8",
+                              "locality": "7Th Cross Road",
+                              "areaName": "Btm layout stage 2",
+                              "costForTwo": "₹250 for two",
+                              "cuisines": [
+                                "Fast Food",
+                                "Beverages",
+                                "Salads"
+                              ],
+                              "feeDetails": {
+                                "restaurantId": "723466",
+                                "title": "Delivery Charge",
+                                "amount": "0"
+                              },
+                              "sla": {
+                                "deliveryTime": 43,
+                                "minDeliveryTime": 40,
+                                "maxDeliveryTime": 45,
+                                "serviceability": "SERVICEABLE",
+                                "slaString": "40-45 MINS",
+                                "lastMileTravelString": "9.1 km",
+                                "iconType": "ICON_TYPE_EMPTY"
+                              },
+                              "availability": {
+                                "nextCloseTime": "2026-05-17 07:45:00",
+                                "opened": true
+                              },
+                              "badges": {},
+                              "aggregatedDiscountInfoV3": {
+                                "header": "₹100 OFF",
+                                "subHeader": "ABOVE ₹499",
+                                "discountTag": "FLAT DEAL",
+                                "logoCtx": {
+                                  "text": "BENEFITS"
+                                }
+                              },
+                              "externalRatings": {
+                                "aggregatedRating": {
+                                  "rating": "--"
+                                }
+                              },
+                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
+                            },
+                            "analytics": {},
+                            "cta": {}
+                          },
+                          {
+                            "info": {
+                              "id": "424153",
+                              "name": "Kuttyz Pizza",
+                              "city": "1",
+                              "slugs": {
+                                "restaurant": "kuttyz-pizza-banaswadi-banaswadi"
+                              },
+                              "cloudinaryImageId": "vexlujnihyvephlw5ecx",
+                              "locality": "Subbannaiah Palya",
+                              "areaName": "Lingrajapuram",
+                              "costForTwo": "₹400 for two",
+                              "cuisines": [
+                                "Pizzas"
+                              ],
+                              "avgRating": 3.5,
+                              "feeDetails": {
+                                "restaurantId": "424153",
+                                "title": "Delivery Charge",
+                                "amount": "0"
+                              },
+                              "totalRatingsString": "37",
+                              "sla": {
+                                "deliveryTime": 47,
+                                "minDeliveryTime": 45,
+                                "maxDeliveryTime": 50,
+                                "serviceability": "SERVICEABLE",
+                                "slaString": "45-50 MINS",
+                                "lastMileTravelString": "8.5 km",
+                                "iconType": "ICON_TYPE_EMPTY"
+                              },
+                              "availability": {
+                                "nextCloseTime": "2026-05-24 00:00:00",
+                                "opened": true
+                              },
+                              "badges": {},
+                              "aggregatedDiscountInfoV3": {
+                                "header": "ITEMS",
+                                "subHeader": "AT ₹89",
+                                "logoCtx": {
+                                  "text": "BENEFITS"
+                                }
+                              },
+                              "externalRatings": {
+                                "aggregatedRating": {
+                                  "rating": "--"
+                                }
+                              },
+                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
+                            },
+                            "analytics": {},
+                            "cta": {}
+                          },
+                          {
+                            "info": {
+                              "id": "1346876",
+                              "name": "Chill Out cafe",
+                              "city": "1",
+                              "slugs": {
+                                "restaurant": "chill-out-cafe-vijayanagar-vijayanagar"
+                              },
+                              "cloudinaryImageId": "rest_image/c79545f0-f56d-11e9-b791-06585e0038e8Wednesday_23_October_2019__13_49id215723.jpg",
+                              "locality": "Vijayanagar",
+                              "areaName": "Vijayanagar",
+                              "costForTwo": "₹346 for two",
+                              "cuisines": [
+                                "Snacks",
+                                "Home Food",
+                                "Healthy Food",
+                                "Fast Food",
+                                "Cafe",
+                                "Pizzas",
+                                "Indian"
+                              ],
+                              "avgRating": 3.1,
+                              "feeDetails": {
+                                "restaurantId": "1346876",
+                                "title": "Delivery Charge",
+                                "amount": "0"
+                              },
+                              "totalRatingsString": "24",
+                              "sla": {
+                                "deliveryTime": 46,
+                                "minDeliveryTime": 45,
+                                "maxDeliveryTime": 50,
+                                "serviceability": "SERVICEABLE",
+                                "slaString": "45-50 MINS",
+                                "lastMileTravelString": "7.0 km",
+                                "iconType": "ICON_TYPE_EMPTY"
+                              },
+                              "availability": {
+                                "nextCloseTime": "2026-05-17 07:00:00",
+                                "opened": true
+                              },
+                              "badges": {},
+                              "aggregatedDiscountInfoV3": {
+                                "header": "ITEMS",
+                                "subHeader": "AT ₹99",
+                                "logoCtx": {
+                                  "text": "BENEFITS"
+                                }
+                              },
+                              "externalRatings": {
+                                "aggregatedRating": {
+                                  "rating": "--"
+                                }
+                              },
+                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
+                            },
+                            "analytics": {},
+                            "cta": {}
+                          }
+                        ],
+                        "cta": {},
+                        "id": "56861",
+                        "theme": "SEARCH_SIMILAR_RESTAURANTS"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      ],
+      "firstOffsetRequest": true
+    },
+    "tid": "eyJLSUQiOiIyIiwiYWxnIjoiSFMyNTYiLCJ0eXAiOiJKV1QifQ.eyJleHAiOjE3Nzg5ODQyNTksImlhdCI6MTc3ODk4MDY1OSwic2Vzc2lvbl9kYXRhIjoid1lkbnNpeVZDNXRuVmhUN1I4SSt5MURiTytmdGd6Uk9WRloyY05IWm56a2w2bzZPWTU3WmVKc2JmbWxZRjJtSy9ES3cwQVB1QU9IcGJwNVA3c2J2T3JXclhKa3JyMXVqSW5kb3N6Y2w2TXIvMUlBU1U4U3ljYXF1QjFwMlVVeWRNS3NqajRQVElBeGNOWkpoeVVCU2oxdWNJVDRnTEZaUkZsdHFZcnlpZU1FLzZXK2paUXdleGtrM1ZkTG0vMmg1RXBsbVhBd3kzOWQ0U3ZMNWZFYUJ5Zz09Iiwic2lkIjoicmU2ZDM3MDNkYjEtYTg1YS00MGNmLTg5OTYtOWJiYzY5MDJkIiwic3ViIjoiMWM2NDczZjktZmZkZC00ZGI4LTk4MWUtOTQ5MGFkZDA5YTFlIiwidXNlcl9pZCI6IjAifQ.ZPsoTCBXAkcEz_bgT4ObPIGslyV-Ct_R_ul55hSuoQ0",
+    "sid": "re6d3703db1-a85a-40cf-8996-9bbc6902d",
+    "deviceId": "37d3c94a-c177-f5b0-9c6e-6f5e72f67c0e",
+    "csrfToken": "dzEOAICUUPq1-NlzRGCshb5g4Wbyk_OCcbKkvto8"
+  }
+}

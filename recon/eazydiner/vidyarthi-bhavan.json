@@ -1,0 +1,16 @@
+{
+  "meta": {
+    "restaurant": {
+      "slug": "vidyarthi-bhavan",
+      "name": "Vidyarthi Bhavan",
+      "area": "Gandhi Bazaar",
+      "districtSlugs": [
+        "vidyarthi-bhavan-since-1943-basavanagudi-bangalore"
+      ]
+    },
+    "found": false,
+    "error": "not in EazyDiner sitemap — slug not mapped",
+    "offerSummary": []
+  },
+  "raw": null
+}

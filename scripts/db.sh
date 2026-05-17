@@ -21,8 +21,8 @@ PROJECT_REF="dmmhtzwxqkduxvxipfqs"
 # Walmart corporate network blocks direct DNS to api.supabase.com.
 # Route through the Walmart sysproxy so every command Just Works.
 # If you're ever off-network and these break, comment these two lines out.
-export HTTP_PROXY="http://sysproxy.wal-mart.com:8080"
-export HTTPS_PROXY="http://sysproxy.wal-mart.com:8080"
+# export HTTP_PROXY="http://sysproxy.wal-mart.com:8080"
+# export HTTPS_PROXY="http://sysproxy.wal-mart.com:8080"
 
 cmd="${1:-help}"
 shift || true
