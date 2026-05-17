@@ -93,8 +93,8 @@ Gmail → Parser → `enrichAmount()` → Supabase → Dashboard
 | 6 ~~dining-verify-session.ts~~ | ✅ Deleted |
 | 7 API route: search | ✅ Done |
 | 8 DiningTab.tsx + nav wiring | ✅ Done (re-auth banner removed, prebook/walk-in split added) |
-| 9 scripts/dining-recon.ts — guest scrape ~30 restaurants × 3 platforms, dump JSON | ⏳ Next |
-| 10 docs/DINING_OFFER_TAXONOMY.md — analyze recon dumps, define offer type schema | ⏳ Pending |
+| 9 scripts/dining-recon.ts — guest scrape ~30 restaurants × 3 platforms, dump JSON | ✅ Done (29/30 Swiggy, 28/30 District, 21/30 EazyDiner) |
+| 10 docs/DINING_OFFER_TAXONOMY.md — analyze recon dumps, define offer type schema | ✅ Done |
 | 11 Migration 012 — add booking_type + revise offer_type enum per taxonomy | ⏳ Pending |
 | 12 Per-platform scrapers (zomato, swiggy, eazydiner) | ⏳ Pending |
 | 13 dining-scrape.ts orchestrator | ⏳ Pending |
@@ -125,11 +125,10 @@ Gmail → Parser → `enrichAmount()` → Supabase → Dashboard
 - **Auth infrastructure deleted** — no sessions, no Playwright, no re-auth banner
 - `dining-login.ts`, `dining-verify-session.ts`, `sessions.ts` removed; `Platform` type moved to `src/lib/dining/types.ts`
 - `DiningTab.tsx` updated: re-auth banner gone, prebook/walk-in offer split added to UI
-- `scripts/dining-recon.ts` built — 30-restaurant guest scrape, dumps to `recon/<platform>/`
-- **Swiggy Dineout endpoint: NOT YET FOUND** — current recon hits food-delivery search, not dineout
-- **Zomato endpoint: requires CSRF token** — autoSuggest returns empty without it; need two-step flow
-- **EazyDiner endpoint: NOT YET FOUND** — 404 on guessed path
+- **Recon complete** — 29/30 Swiggy, 28/30 District, 21/30 EazyDiner. All data in `recon/`
+- **Taxonomy doc written** — `docs/DINING_OFFER_TAXONOMY.md` defines offer_type enum, booking_type enum, scraper rules
 - Migration `011_drop_dining_sessions.sql` created (not yet applied)
+- Migration `012` not yet written — add `offer_type` + `booking_type` columns to `dining_offers`
 
 ---
 
@@ -140,10 +139,8 @@ Gmail → Parser → `enrichAmount()` → Supabase → Dashboard
 | Walmart network blocks Supabase Cloud, jsdelivr CDN, Frankfurter | Ongoing — use Eagle WiFi or hotspot |
 | fawazahmed0 FX only goes back to 2024-03-06 | Accepted — older exotic-currency txns fall back to today's rate |
 | No mobile-optimised UI | Not planned for v1 |
-| Zomato autoSuggest returns empty without CSRF token | Next session — fetch CSRF first, then search |
-| Swiggy recon hitting food-delivery API, not Dineout | Next session — find dineout-specific endpoint via DevTools |
-| EazyDiner search endpoint unknown | Next session — DevTools capture needed |
-| Migration 011 not yet applied to Supabase | Run `./scripts/db.sh push` when ready |
+| Migrations 011 + 012 not yet applied to Supabase | Run `./scripts/db.sh push` when ready |
+| Swiggy Dineout: `tabsOfferInfo.offersTab` prebook deals require Swiggy login to redeem | Data is guest-readable; display the offer, note "Login to buy" in UI |
 
 ---
 
@@ -167,11 +164,12 @@ npm run dining:recon -- --platform zomato --slug toit   # single test
 
 *(Updated 2026-05-17)*
 
-- **Big pivot this session:** All 3 platforms confirmed guest-accessible. Deleted entire auth stack (sessions, Playwright, re-auth banner). DiningTab updated with prebook/walk-in split UI.
-- **Recon script built** (`scripts/dining-recon.ts`): guest scrapes 30 Bangalore restaurants × 3 platforms, dumps raw JSON to `recon/`, generates `recon/SUMMARY.md`. Swiggy returns data but from food-delivery API (not Dineout). Zomato needs CSRF token first. EazyDiner endpoint unknown.
-- **Next session priority 1:** Fix Zomato — fetch `https://www.zomato.com/webroutes/csrf` first to get token, then use it in `autoSuggest?context=dineout&q=<name>`. Also find correct Swiggy Dineout + EazyDiner endpoints via DevTools (same process KP already did for Zomato).
-- **Next session priority 2:** Once all 3 platforms return real offer data, read the raw JSONs and write `docs/DINING_OFFER_TAXONOMY.md` — the taxonomy doc that gates all scraper code.
-- Tests: 152/152 passing, tsc clean. `Platform` type now lives in `src/lib/dining/types.ts`.
+- **Chunk 10 complete:** `docs/DINING_OFFER_TAXONOMY.md` written and all 3 open questions resolved from recon data.
+- **Key finding — Swiggy has prebook deals:** `tabsOfferInfo.offersTab[].tabOffers.offers[]` contains restaurant-specific pre-booking % discounts for 5/29 restaurants. The scraper must parse BOTH `addOnOffer` (addon/cashback) AND `tabsOfferInfo.offersTab` (prebook). `prebook_pct` now covers District + Swiggy.
+- **Key finding — District `allOffers` is prebook-only:** Confirmed from recon data. No walk-in offers in `allOffers`; all walk-in deals are in `bankOffers`.
+- **Decision — store bank_card + addon_coupon:** Raw capture; filter in UI per §6 ranking. Don't discard at scrape time.
+- **Next: Chunk 11** — Migration 012: `ALTER TABLE dining_offers ADD COLUMN offer_type TEXT, ADD COLUMN booking_type TEXT CHECK (booking_type IN ('prebook', 'walkin', 'either'))`. Then chunk 12: build the three production scrapers using the now-complete taxonomy spec.
+- Tests: 152/152 passing, tsc clean. Migrations 011 + 012 not yet applied to Supabase.
 
 ---
 
