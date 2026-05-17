@@ -1,0 +1,134 @@
+import { diningFetchWithBackoff } from "../http";
+import type { ScrapedOffer } from "../types";
+
+const BANGALORE_LAT = "12.9716";
+const BANGALORE_LNG = "77.5946";
+
+/**
+ * Scrape Swiggy Dineout for one restaurant.
+ *
+ * Step 1: Resolve restaurant ID — use swiggyDineoutId when available,
+ *         otherwise fall back to food-delivery search.
+ * Step 2: Fetch disc.swiggy.com/api/v1/dinersone-restaurant/json.
+ *         Parse two sections:
+ *         - addOnOffer.offers[]       → addon_coupon / addon_cashback (walkin)
+ *         - tabsOfferInfo.offersTab[] → prebook_pct (prebook)
+ */
+export async function scrapeSwiggy(
+  restaurantName: string,
+  swiggyDineoutId?: string,
+): Promise<ScrapedOffer[]> {
+  const id = swiggyDineoutId ?? await resolveSwiggyId(restaurantName);
+  if (!id) return [];
+
+  const url = `https://disc.swiggy.com/api/v1/dinersone-restaurant/json?restaurantId=${id}`;
+  const res = await diningFetchWithBackoff(url, {
+    headers: {
+      latitude: BANGALORE_LAT,
+      longitude: BANGALORE_LNG,
+      Referer: "https://www.swiggy.com/dineout",
+      Origin: "https://www.swiggy.com",
+    },
+  });
+
+  if (res.kind !== "ok") return [];
+
+  let body: Record<string, unknown>;
+  try {
+    body = JSON.parse(res.body) as Record<string, unknown>;
+  } catch {
+    return [];
+  }
+
+  return parseSwiggyOffers(body);
+}
+
+async function resolveSwiggyId(name: string): Promise<string | null> {
+  const url = `https://www.swiggy.com/dapi/restaurants/search/v3?lat=${BANGALORE_LAT}&lng=${BANGALORE_LNG}&str=${encodeURIComponent(name)}&trackingId=undefined&submitAction=ENTER&queryUniqueId=undefined`;
+  const res = await diningFetchWithBackoff(url, {
+    headers: { Referer: "https://www.swiggy.com/" },
+  });
+  if (res.kind !== "ok") return null;
+
+  let body: Record<string, unknown>;
+  try {
+    body = JSON.parse(res.body) as Record<string, unknown>;
+  } catch {
+    return null;
+  }
+
+  const str = JSON.stringify(body);
+  const nameNorm = name.toLowerCase().replace(/[^a-z0-9]/g, "");
+
+  for (const m of str.matchAll(/"@type":"[^"]*food\.v2\.Restaurant"[^}]{0,200}"id":"(\d+)"[^}]{0,200}"name":"([^"]+)"/g)) {
+    const norm = m[2].toLowerCase().replace(/[^a-z0-9]/g, "");
+    if (norm.includes(nameNorm) || nameNorm.includes(norm)) return m[1];
+  }
+  for (const m of str.matchAll(/"name":"([^"]+)"[^}]{0,200}"id":"(\d+)"/g)) {
+    const norm = m[1].toLowerCase().replace(/[^a-z0-9]/g, "");
+    if (norm.includes(nameNorm) || nameNorm.includes(norm)) return m[2];
+  }
+  return null;
+}
+
+function parseSwiggyOffers(body: Record<string, unknown>): ScrapedOffer[] {
+  const offers: ScrapedOffer[] = [];
+  const cards = (((body.success as Record<string, unknown> | undefined)?.cards ?? []) as Array<Record<string, unknown>>);
+
+  for (const c of cards) {
+    const card = ((c.card as Record<string, unknown>)?.card as Record<string, unknown> | undefined);
+    if (!card) continue;
+    if (!((card["@type"] as string | undefined)?.includes("DealAndOfferInfo"))) continue;
+
+    const dayWise = (card.dayWiseOfferInfo as Array<Record<string, unknown>>) ?? [];
+    for (const day of dayWise) {
+      // Section 1: platform-wide addon offers (bank/card coupons, cashback)
+      const addOnOffers = (((day.addOnOffer as Record<string, unknown> | undefined)?.offers ?? []) as Array<Record<string, unknown>>);
+      for (const o of addOnOffers) {
+        const title = (o.title as string | undefined)?.trim();
+        const desc = (o.description as string | undefined)?.trim();
+        if (!title) continue;
+        const isCashback = title.toLowerCase().includes("cashback");
+        const headline = desc ? `${title} — ${desc}` : title;
+        offers.push({
+          offer_type: isCashback ? "addon_cashback" : "addon_coupon",
+          booking_type: "walkin",
+          headline,
+          discount_pct: extractPct(title),
+        });
+      }
+
+      // Section 2: restaurant-specific prebook offers from tabsOfferInfo
+      const offersTab = (((day.tabsOfferInfo as Record<string, unknown> | undefined)?.offersTab ?? []) as Array<Record<string, unknown>>);
+      for (const tab of offersTab) {
+        const tabId = ((tab.tabInfo as Record<string, unknown> | undefined)?.id as string | undefined) ?? "";
+        if (tabId !== "PREBOOK") continue;
+        const tabOffers = (((tab.tabOffers as Record<string, unknown> | undefined)?.offers ?? []) as Array<Record<string, unknown>>);
+        for (const o of tabOffers) {
+          const title = ((o.title as string | undefined) ?? (o.textInfo as Record<string, unknown> | undefined)?.info as string | undefined)?.trim();
+          if (!title) continue;
+          offers.push({
+            offer_type: "prebook_pct",
+            booking_type: "prebook",
+            headline: title,
+            discount_pct: extractPct(title),
+          });
+        }
+      }
+    }
+  }
+
+  // Dedupe by headline (addOn offers are platform-wide and repeat; keep first occurrence)
+  const seen = new Set<string>();
+  return offers.filter((o) => {
+    const key = `${o.offer_type}::${o.headline}`;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
+function extractPct(text: string): number | undefined {
+  const m = text.match(/(\d+)%/);
+  return m ? parseInt(m[1], 10) : undefined;
+}

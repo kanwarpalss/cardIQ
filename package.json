@@ -10,7 +10,8 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
-    "dining:recon": "tsx scripts/dining-recon.ts"
+    "dining:recon": "tsx scripts/dining-recon.ts",
+    "dining:scrape": "tsx scripts/dining-scrape.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.30.1",
