@@ -6,11 +6,1211 @@
       "area": "Koramangala",
       "districtSlugs": [
         "hoot-craftwork-2-0-1-sarjapur-road-bangalore"
-      ]
+      ],
+      "swiggyDineoutId": "1152615"
     },
-    "found": false,
-    "error": "Restaurant not found in food-delivery search results",
-    "offerSummary": []
+    "found": true,
+    "offerSummary": [
+      "[addon] Flat 10% off* — use HDFCINFINIA",
+      "[addon] Flat 10% off* — use HDFCCCEMI",
+      "[addon] Flat 10% off* — use HDFCDINERS",
+      "[addon] Flat ₹200 off — use HDFCCARDS",
+      "[addon] Cashback ₹50 — use MBKDINEUPI",
+      "[addon] Cashback ₹50 — use MBKDINE",
+      "[addon] Cashback ₹50 — use POPUPI",
+      "[addon] Cashback 10%* — Swiggy HDFC Bank Credit Card",
+      "[addon] Cashback 5%* — Swiggy Ornge HDFC Bank Credit Card"
+    ]
   },
-  "raw": null
+  "raw": {
+    "restaurantId": "1152615",
+    "detail": {
+      "requestId": "72250523-e8cd-4e59-a03b-b863c45bb279",
+      "apiTime": "2026-05-17T16:18:01.811919108Z",
+      "success": {
+        "statusMessage": "done successfully",
+        "cards": [
+          {
+            "card": {
+              "card": {
+                "@type": "type.googleapis.com/swiggy.presentation.dinersone.v1.EntityInfoWithMasthead",
+                "id": "1152615",
+                "info": {
+                  "name": "Hoot Craftwork 2.0",
+                  "locationInfo": {
+                    "distanceString": "13.1 km",
+                    "navigationUrl": "https://www.google.com/maps/dir/?api=1&origin=12.9716,77.5946&destination=12.9140861,77.67858820000001&travelmode=driving",
+                    "lat": "12.9140861",
+                    "long": "77.67858820000001",
+                    "city": {
+                      "name": "Bangalore"
+                    },
+                    "formattedAddress": "Sarjapur Road, Bangalore",
+                    "additionalInfo": {
+                      "cta": {
+                        "link": "swiggydiners://collectiondetails/DINEOUT_BRAND_OUTLETS?tags=layout_dineout_brand_outlets&metaMap=%7B%22brandId%22%3A%22660898%22%2C%22restaurant_id%22%3A%221152615%22%2C%22sourcePage%22%3A%22RDP%22%7D&header_title=Outlets",
+                        "text": "outlets",
+                        "type": "DEEPLINK",
+                        "metaInfo": {
+                          "ctaImage": "dineout/details/red_arrow_down.png"
+                        },
+                        "analytics": {
+                          "screenName": "DO-Detail",
+                          "context": "{\"restId\":\"1152615\"}",
+                          "objectValue": "outlet_switcher_dropdown",
+                          "impressionObjectName": "entity_info_masthead",
+                          "clickObjectName": "entity_info_masthead"
+                        }
+                      }
+                    },
+                    "displayAreaName": "Sarjapur Road"
+                  },
+                  "timingsInfo": {
+                    "status": "Open",
+                    "message": "till 12:30AM",
+                    "outletTiming": {
+                      "infoList": [
+                        {
+                          "title": "Monday",
+                          "subtitle": "Noon - 12:30AM",
+                          "titleColor": "text_high_emphasis",
+                          "subtitleColor": "text_high_emphasis"
+                        },
+                        {
+                          "title": "Tuesday",
+                          "subtitle": "Noon - 12:30AM",
+                          "titleColor": "text_high_emphasis",
+                          "subtitleColor": "text_high_emphasis"
+                        },
+                        {
+                          "title": "Wednesday",
+                          "subtitle": "Noon - 12:30AM",
+                          "titleColor": "text_high_emphasis",
+                          "subtitleColor": "text_high_emphasis"
+                        },
+                        {
+                          "title": "Thursday",
+                          "subtitle": "Noon - 12:30AM",
+                          "titleColor": "text_high_emphasis",
+                          "subtitleColor": "text_high_emphasis"
+                        },
+                        {
+                          "title": "Friday",
+                          "subtitle": "Noon - 12:30AM",
+                          "titleColor": "text_high_emphasis",
+                          "subtitleColor": "text_high_emphasis"
+                        },
+                        {
+                          "title": "Saturday",
+                          "subtitle": "Noon - 12:30AM",
+                          "titleColor": "text_high_emphasis",
+                          "subtitleColor": "text_high_emphasis"
+                        },
+                        {
+                          "title": "Today",
+                          "subtitle": "Noon - 12:30AM",
+                          "titleColor": "primary",
+                          "subtitleColor": "primary"
+                        }
+                      ],
+                      "title": "Outlet timings"
+                    },
+                    "styleInfo": {
+                      "titleColor": "positive",
+                      "subtitleColor": "text_color_low_emphasis"
+                    }
+                  },
+                  "callDetail": {
+                    "title": "Trying to reach the outlet?",
+                    "style": {
+                      "cornerRadius": {
+                        "topLeft": 16,
+                        "topRight": 16
+                      },
+                      "backgroundColour": "#F0F0F5"
+                    },
+                    "actions": [
+                      {
+                        "link": "dailer-app?phone=8123469006",
+                        "text": "8123469006",
+                        "type": "DIALER",
+                        "metaInfo": {
+                          "ctaImage": "dineout/details/call_no_bg.png"
+                        }
+                      }
+                    ]
+                  },
+                  "ratingsInfo": {
+                    "value": "4.2",
+                    "description": "22K ratings",
+                    "count": 22452,
+                    "countDescription": "22K+ Google ratings",
+                    "icon": "dineout/details/google_tag.png",
+                    "style": "RATING_STYLE_V2"
+                  },
+                  "typeInfo": {
+                    "type": "ENTITY_TYPE_RESTAURANT",
+                    "restaurantType": "RESTAURANT_TYPE_PARTICIPATING"
+                  },
+                  "style": {
+                    "backgroundColour": "#FFFFFF",
+                    "cornerRadius": {
+                      "topLeft": 16,
+                      "topRight": 16,
+                      "bottomLeft": 16,
+                      "bottomRight": 16
+                    },
+                    "animationConfig": {
+                      "type": "ANIMATION_TYPE_ENTRY_PUSH_DOWN",
+                      "startDelay": 250,
+                      "duration": 100,
+                      "interpolator": "INTERPOLATOR_LINEAR"
+                    },
+                    "dimension": {
+                      "width": {
+                        "type": "TYPE_RELATIVE",
+                        "value": 1,
+                        "reference": "RELATIVE_DIMENSION_REFERENCE_DEVICE_WIDTH"
+                      },
+                      "height": {
+                        "type": "TYPE_RELATIVE",
+                        "value": 0.778,
+                        "reference": "RELATIVE_DIMENSION_REFERENCE_WIDTH"
+                      }
+                    }
+                  },
+                  "favourite": {
+                    "entityLotte": {
+                      "frequencyCapping": 2,
+                      "image": "favourite-image",
+                      "lotteFiles": [
+                        {
+                          "type": "LOTTIE_TYPE_FAVOURITE",
+                          "lotte": "favourite-lottie"
+                        },
+                        {
+                          "type": "LOTTIE_TYPE_NON_FAVOURITE",
+                          "lotte": "non-favourite-lottie"
+                        }
+                      ]
+                    },
+                    "accessibility": {
+                      "altText": "favourite alt text",
+                      "altTextCta": "favourite alt text cta"
+                    }
+                  },
+                  "share": {
+                    "entityLotte": {
+                      "frequencyCapping": 3,
+                      "image": "share-image",
+                      "lotteFiles": [
+                        {
+                          "type": "LOTTIE_TYPE_SHARE",
+                          "lotte": "share-lottie"
+                        }
+                      ]
+                    },
+                    "shareUrl": "Hey, I think you will love Hoot Craftwork 2.0, Sarjapur Road, Bangalore on Swiggy Dineout https://swiggy.onelink.me/BVRZ?af_dp=swiggydiners%3A%2F%2Fdetails%2F1152615%3Fsource%3Dsharing Happy dining!",
+                    "accessibility": {
+                      "altText": "share alt text",
+                      "altTextCta": "share alt text cta"
+                    }
+                  },
+                  "entityAttributes": {
+                    "restaurantEntityAttributes": {
+                      "outlets": {},
+                      "cuisines": [
+                        "Continental",
+                        "North Indian"
+                      ],
+                      "costForTwo": "₹1500 for two"
+                    }
+                  }
+                },
+                "masthead": {
+                  "files": [
+                    {
+                      "type": "IMAGE",
+                      "id": "2025-07-24T14:05:11.234",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2025/7/24/3a0ad7f3-5aae-45fd-8126-9fc3984e28aa_image139365c8a0e1e747649cdf2191555b54e2.JPG"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2025-07-24T14:05:11.330",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2025/7/24/7c24dc5a-81db-4b89-ad28-3124389601b0_image98ce804303c7a4743869190806ed735a2.JPG"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2025-07-24T14:05:11.379",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2025/7/24/8fd1df66-17c1-4b0a-badc-a3a1b6dc0026_image7b855f4f6244a4cd186b8b062dfc953cb.JPG"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2025-07-24T14:05:11.722",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2025/7/24/b18e6a68-84be-4849-b228-f22842fd32e4_image8d435af4cf5c94821a6eec647ec35bee6.JPG"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2025-07-21T06:27:35.224",
+                      "description": "Ambience",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2025/7/21/35df6d46-b927-41ea-83a1-698c0a51d43c_IMG182rrr1189138fbf3741368b2ae95c2ca00a84.JPG"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2025-07-24T14:05:11.008",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2025/7/24/d1ccb62a-d278-4cdc-83b9-669478ef8e02_image1550c7ffc3ed6540eb8bd9cf3b2c145af4.JPG"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2025-07-24T14:05:11.355",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2025/7/24/f93e0e1e-5a3d-42e6-b0a3-47adcb252df4_image0b8fab2b8d48e43d8afe2f0bf3710f52c.JPG"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2026-03-13T10:54:10.528973567",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2026/3/13/28bd2ca7-3965-43fe-9058-80927194a14d_JJRVIN3424ee299376d40c431680fd553270ad0add.JPG"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2026-03-13T10:54:11.010319431",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2026/3/13/2cc456a9-2b68-47da-9f42-7398f640912e_JJRVIN3433b2b3a16565d5436ab0595d29a6f2bf57.JPG"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2026-03-13T10:54:11.172763445",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2026/3/13/8abb75a5-b123-447a-a7d7-6621aecf16b0_JJRVIN34341484dd9835994b71823bd50defce8ee9.JPG"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2026-03-13T10:54:21.198109632",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2026/3/13/2868d0d0-4d6f-42af-8c57-932a6eb64d3b_JJRVIN3331Copy420e77e0f8f24f60836c0c1623218fab.JPG"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2026-03-13T10:54:49.629230097",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2026/3/13/a0a4382b-4c15-4d6c-ae44-4c08ca490cdf_JJRVIN3359146f770ab6d34ce5bd0502e12cf2803e.JPG"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2026-03-13T10:54:51.777688717",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2026/3/13/e2320214-9c38-4abb-925a-34d9b52b21aa_JJRVIN337372b542e6a3424e13964442cf58451e1d.JPG"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2026-03-13T10:54:52.319479491",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2026/3/13/f08bfbd5-3702-4446-8bd6-8eb6228d6b26_JJRVIN33887fe97957b0024391a3aa86483cee2b9b.JPG"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2026-03-13T10:54:52.619544078",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2026/3/13/dfa16e24-977b-4048-bde1-862a5ebe22a9_JJRVIN34132fd1b704d47a496fb0342105cebed5ea.JPG"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2026-03-13T10:54:52.730948469",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2026/3/13/54203ea4-dfa0-4af6-a11b-5c70c6e572cc_JJRVIN339885f940a8e12448489101886c2a2f4077.JPG"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2026-03-13T10:53:53.798488638",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2026/3/13/b74e4d33-a5d5-4daf-821f-2e26ff2cdbe3_JJRVIN328764aa4c8e3ee9428ea46d819b87b846df.JPG"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2026-03-13T10:53:54.687650077",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2026/3/13/6130eb90-b3ad-414e-a9b0-d13d49ac310c_JJRVIN3354d460275ecc0e4aac96a52ae8e20d8430.JPG"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2026-03-13T10:53:54.843939741",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2026/3/13/6ed149bb-fe36-4285-8eec-e9878b2bfe0e_JJRVIN32906e292e7a0a854f9dab8baadb09759fe4.JPG"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2026-03-13T10:53:55.078884902",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2026/3/13/74eda7f4-0afd-4429-84a2-6c95fdbacc66_JJRVIN33563dc255c7b6ad4db998f1e916835ab401.JPG"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2026-03-13T10:54:01.322933982",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2026/3/13/b81b38bc-facc-41aa-8836-c028f1b183e3_JJRVIN3359Copye264685b729d44379e7e770f7c8fadb9.JPG"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2026-03-13T10:54:02.239749201",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2026/3/13/28930537-08ef-423d-ad23-9261cc634d1b_JJRVIN34659ca0c2b7be53426782ed2b31af7bb246.JPG"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2026-03-13T10:54:03.576303785",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2026/3/13/31c56681-f2e2-477e-b6c6-6431fac47919_JJRVIN34290a57365135574834a1d9a46eb60dc6c9.JPG"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2026-03-13T10:54:03.775708727",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2026/3/13/744c4bb3-d52c-4b8a-8f40-1962c7a1203c_JJRVIN3474b1ca31c744b44e1d8e359545529e1144.JPG"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2026-03-13T10:54:04.298832420",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2026/3/13/accc7e5b-7696-45c3-b857-b797da180f0b_JJRVIN3287Copy94f276931f3a4ef5872fba4e8d46b515.JPG"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2026-03-13T10:54:05.238836056",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2026/3/13/bce2a790-dd78-4b23-acd2-3cd4a04b1c3e_JJRVIN3290Copyb3c063eec797447099d124417b8d445b.JPG"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2026-03-13T10:54:05.241642535",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2026/3/13/de94bb4d-c102-4da2-bcec-ce61328a4d7b_JJRVIN3354Copy4d62961ce9c7403cb0c7d353bace65c1.JPG"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2026-03-13T10:54:05.432125363",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2026/3/13/11c75031-e238-4d13-9f2a-4325d98b53e4_JJRVIN3356Copy7a24e259f005419bad6fb2dfae1af03d.JPG"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2026-03-13T10:54:05.557726842",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2026/3/13/c2387c64-6235-46df-9251-9857cc41f2bd_JJRVIN3433f5eaf085cea34c86b1712dff5fa51cc8.JPG"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2026-03-13T10:54:06.102592270",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2026/3/13/b54422e0-3499-491d-81ff-32b4963d0984_JJRVIN34349297af12e8224209b51696e42b36aec6.JPG"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2026-03-13T10:54:06.226911788",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2026/3/13/799d9305-4561-41a8-9567-9a6df780cff9_JJRVIN3331Copyfb2de8e10f0a43cfaffbd222c1cf6aae.JPG"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2026-03-13T10:54:09.619896773",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2026/3/13/9daf9bf4-6a9f-48f7-9899-5360517ff16c_JJRVIN34652d3bc312aece4aa5809a8a62fe0ef5f3.JPG"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2026-03-13T10:54:10.494056685",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2026/3/13/3f94c869-3468-4021-a3be-19d306813d7b_JJRVIN3429d8083ce895fa4133b5cdcebd14022d3d.JPG"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2026-03-13T10:54:19.401820380",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2026/3/13/f03e54b4-7d2e-4fa4-93ae-1e970513c897_JJRVIN3287Copy33e90a0a1bf846e480ee7a95c7c97df5.JPG"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2026-03-13T10:54:19.522850480",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2026/3/13/4e4980ca-767c-41a2-a774-a9b484e8b5cb_JJRVIN32877eeb853d575a4d98ae840b94d67ddfe3.JPG"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2026-03-13T10:54:26.579537044",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2026/3/13/82dc88f2-1dd5-4fb8-9455-3c0d69548b13_JJRVIN3381c4a6d472de634fd4ae2ba35c61a9aa37.JPG"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2026-03-13T10:54:49.531696447",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2026/3/13/09520cfb-fffb-4cbb-b153-6f5c59220bd4_JJRVIN3359Copy639005642b5e4d82a13005908816a730.JPG"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2026-03-13T10:54:52.604612684",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2026/3/13/eedcdda8-2871-4c50-b7a9-26b952fbd06c_JJRVIN33872d1b33b6262c499b907e8e9b577a97a3.JPG"
+                    }
+                  ],
+                  "cta": {
+                    "link": "swiggydiners://gallery/1152615",
+                    "type": "DEEPLINK"
+                  },
+                  "cornerRadius": {
+                    "bottomLeft": 24,
+                    "bottomRight": 24
+                  },
+                  "autoScrollConfig": {
+                    "isScrollEnabled": true,
+                    "autoScrollDuration": 3,
+                    "autoScrollResetDuration": 5
+                  }
+                }
+              }
+            }
+          },
+          {
+            "card": {
+              "card": {
+                "@type": "type.googleapis.com/swiggy.presentation.dinersone.v1.DealAndOfferInfo",
+                "dayWiseOfferInfo": [
+                  {
+                    "segment": {
+                      "id": "OFFERS_FOR_YOU",
+                      "title": "Offers for you",
+                      "isSelected": true,
+                      "analyticsInfo": {
+                        "screenName": "DO-Detail",
+                        "context": "{\"offer_day\":\"offers_for_you\"}",
+                        "objectValue": "1152615",
+                        "impressionObjectName": "offer_day"
+                      }
+                    },
+                    "tabsOfferInfo": {
+                      "offersTab": [
+                        {
+                          "tabInfo": {
+                            "id": "PREBOOK",
+                            "title": "Pre-booking offers",
+                            "isSelected": true,
+                            "analyticsInfo": {
+                              "screenName": "DO-Detail",
+                              "context": "{\"offer_type\":\"deals\",\"offer_title\":\"Pre-booking offers\"}",
+                              "objectValue": "1152615",
+                              "clickObjectName": "offer_panel_offer_tab_click"
+                            }
+                          },
+                          "tabOffers": {
+                            "offers": [
+                              {
+                                "type": "Pre-Book",
+                                "title": "Flat 20% off on Total Bill",
+                                "cta": {
+                                  "link": "swiggydiners://login",
+                                  "text": "LOGIN TO BUY DEALS",
+                                  "type": "primary"
+                                },
+                                "isAvailable": true,
+                                "analytics": {
+                                  "screenName": "DO-Detail",
+                                  "context": "{\"offer_type\":\"Pre-Book\",\"offer_title\":\"Flat 20% off on Total Bill\",\"offer_subtext\":\"\",\"special_callout\":\"dineout/OneExclusive.png\",\"offer_position\":1,\"offer_count\":1}",
+                                  "objectValue": "1152615",
+                                  "impressionObjectName": "offer_panel_offer_item_impression",
+                                  "clickObjectName": "offer_panel_offer_item_click"
+                                },
+                                "textInfo": {
+                                  "info": "Flat 20% off on Total Bill"
+                                },
+                                "offerTheme": {
+                                  "logo": "dineout/details/discountwidget/One_Exclusive_upd.png"
+                                },
+                                "offerCallout": [
+                                  {
+                                    "logo": "dineout/OneExclusive.png"
+                                  }
+                                ]
+                              }
+                            ],
+                            "dotScrollBar": {
+                              "activeColor": "#FF5200",
+                              "inactiveColor": "#02060C",
+                              "activeSize": 6,
+                              "inactiveMediumSize": 4,
+                              "inactiveSmallSize": 4,
+                              "dotSpacing": 4,
+                              "windowSize": 5
+                            }
+                          }
+                        }
+                      ],
+                      "tabStyle": {
+                        "selectedBgColor": "color_background_primary_inverse",
+                        "unselectedBgColor": "color_background_secondary",
+                        "selectedTextColor": "text_color_highest_emphasis_inverse",
+                        "unselectedTextColor": "text_highest_emphasis",
+                        "selectedBorderColor": "white",
+                        "unselectedBorderColor": "black",
+                        "selectTitleFont": "FONT_NAME_V2_BODY2_NEUTRAL_BOLD",
+                        "unselectTitleFont": "FONT_NAME_V2_BODY2_NEUTRAL_MEDIUM",
+                        "selectSubTitleFont": "FONT_NAME_HEADER_H3",
+                        "unselectSubTitleFont": "FONT_NAME_HEADER_H4",
+                        "singleTabTitleFont": "FONT_NAME_HEADER_H4",
+                        "singleTabBgColor": "grey"
+                      },
+                      "cornerRadius": {
+                        "topLeft": 30,
+                        "topRight": 30,
+                        "bottomLeft": 30,
+                        "bottomRight": 30
+                      },
+                      "tabCornerRadius": {
+                        "topLeft": 10,
+                        "topRight": 30,
+                        "bottomLeft": 30,
+                        "bottomRight": 10
+                      }
+                    },
+                    "addOnOffer": {
+                      "title": "ADD-ON OFFERS",
+                      "offers": [
+                        {
+                          "title": "Flat 10% off*",
+                          "tnc": {
+                            "title": "Offer terms & conditions",
+                            "texts": [
+                              "Apply the coupon code HDFCINFINIA to avail the offer",
+                              "Applicable twice per user per calendar month",
+                              "User will get a maximum discount of ₹500 per transaction",
+                              "Offer is available only for HDFC Bank Infinia Credit Cardholders",
+                              "Transaction amount (amount after deduction of restaurant discounts) of ₹3500 or more payable using an HDFC Bank Infinia Credit Card are eligible for the discount",
+                              "Other T&Cs may apply"
+                            ]
+                          },
+                          "description": "use HDFCINFINIA",
+                          "secondarySubtext": {
+                            "title": "Use coupon code HDFCINFINIA | Avail on final payable amount of ₹3500 or more"
+                          },
+                          "offerLogo": {
+                            "logo": "MARKETING_BANNERS/IMAGES/OFFERS/2026/4/27/a89c7389-3b12-43e8-a0ca-f345638a66c7_"
+                          },
+                          "analytics": {
+                            "screenName": "DO-Detail",
+                            "context": "{\"additional_offer_title\":\"Flat 10% off*\",\"additional_offer_subtitle\":\"use HDFCINFINIA\",\"additional_offer_type\":\"addon\",\"additional_offer_position\":1,\"additional_offer_count\":9}",
+                            "objectValue": "1152615",
+                            "impressionObjectName": "offer_panel_addon_offer_item_impression",
+                            "clickObjectName": "offer_panel_addon_offer_item_click"
+                          }
+                        },
+                        {
+                          "title": "Flat 10% off*",
+                          "tnc": {
+                            "title": "Offer terms & conditions",
+                            "texts": [
+                              "Apply the coupon code HDFCCCEMI to avail the offer",
+                              "Applicable once per user per calendar month",
+                              "User will get a maximum discount of ₹500 per transaction",
+                              "Offer is available only for HDFC Bank Credit Card EMI transactions",
+                              "Transaction amount (amount after deduction of restaurant discounts) of ₹3500 or more payable using HDFC Bank Credit Card EMI payment are eligible for the discount",
+                              "The offer is an instant discount and will be provided upfront at the time of purchase",
+                              "Refer the given link for detailed terms and conditions of EMI transactions - hdfcbank.com/personal/borrow/popular-loans/easy-emi/easyemi-on-consumer-durables",
+                              "Other T&Cs may apply"
+                            ]
+                          },
+                          "description": "use HDFCCCEMI",
+                          "secondarySubtext": {
+                            "title": "Use coupon code HDFCCCEMI | Avail on final payable amount of ₹3500 or more"
+                          },
+                          "offerLogo": {
+                            "logo": "MARKETING_BANNERS/IMAGES/OFFERS/2026/4/29/171de65d-20a5-43a4-ad76-91765635391c_"
+                          },
+                          "analytics": {
+                            "screenName": "DO-Detail",
+                            "context": "{\"additional_offer_title\":\"Flat 10% off*\",\"additional_offer_subtitle\":\"use HDFCCCEMI\",\"additional_offer_type\":\"addon\",\"additional_offer_position\":2,\"additional_offer_count\":9}",
+                            "objectValue": "1152615",
+                            "impressionObjectName": "offer_panel_addon_offer_item_impression",
+                            "clickObjectName": "offer_panel_addon_offer_item_click"
+                          }
+                        },
+                        {
+                          "title": "Flat 10% off*",
+                          "tnc": {
+                            "title": "Offer terms & conditions",
+                            "texts": [
+                              "Apply the coupon code HDFCDINERS to avail the offer",
+                              "Applicable twice per user per calendar month",
+                              "User will get a maximum discount of ₹400 per transaction",
+                              "Offer is available only for HDFC Bank Diners Club Black/Biz Black Credit Cardholders",
+                              "Transaction amount (amount after deduction of restaurant discounts) of ₹3000 or more payable using HDFC Bank Diners Club Black/Biz Black Credit Card are eligible for the discount",
+                              "Other T&Cs may apply"
+                            ]
+                          },
+                          "description": "use HDFCDINERS",
+                          "secondarySubtext": {
+                            "title": "Use coupon code HDFCDINERS | Avail on final payable amount of ₹3000 or more"
+                          },
+                          "offerLogo": {
+                            "logo": "MARKETING_BANNERS/IMAGES/OFFERS/2026/4/27/a2d19ccb-7b28-4786-aca8-d990ef69e4cc_"
+                          },
+                          "analytics": {
+                            "screenName": "DO-Detail",
+                            "context": "{\"additional_offer_title\":\"Flat 10% off*\",\"additional_offer_subtitle\":\"use HDFCDINERS\",\"additional_offer_type\":\"addon\",\"additional_offer_position\":3,\"additional_offer_count\":9}",
+                            "objectValue": "1152615",
+                            "impressionObjectName": "offer_panel_addon_offer_item_impression",
+                            "clickObjectName": "offer_panel_addon_offer_item_click"
+                          }
+                        },
+                        {
+                          "title": "Flat ₹200 off",
+                          "tnc": {
+                            "title": "Offer terms & conditions",
+                            "texts": [
+                              "Apply the coupon code HDFCCARDS to avail the offer",
+                              "Applicable twice per user per calendar month",
+                              "User wili get a flat ₹200 discount per transaction",
+                              "Offer is available for all HDFC Bank Credit Cardholders except HDFC Bank Infinia & Diners Club Black Credit Cards",
+                              "Not valid on Swiggy HDFC Bank Credit Card",
+                              "Transaction amount (amount after deduction of restaurant discounts) of ₹2000 or more payable using HDFC Bank Credit Card are eligible for the discount",
+                              "Other T&Cs may apply"
+                            ]
+                          },
+                          "description": "use HDFCCARDS",
+                          "secondarySubtext": {
+                            "title": "Use coupon code HDFCCARDS | Avail on final payable amount of ₹2000 or more"
+                          },
+                          "offerLogo": {
+                            "logo": "MARKETING_BANNERS/IMAGES/OFFERS/2026/4/27/b9217d65-e29a-476f-9d42-f9fd19f8d1cf_"
+                          },
+                          "analytics": {
+                            "screenName": "DO-Detail",
+                            "context": "{\"additional_offer_title\":\"Flat ₹200 off\",\"additional_offer_subtitle\":\"use HDFCCARDS\",\"additional_offer_type\":\"addon\",\"additional_offer_position\":4,\"additional_offer_count\":9}",
+                            "objectValue": "1152615",
+                            "impressionObjectName": "offer_panel_addon_offer_item_impression",
+                            "clickObjectName": "offer_panel_addon_offer_item_click"
+                          }
+                        },
+                        {
+                          "title": "Cashback ₹50",
+                          "tnc": {
+                            "title": "Offer terms & conditions",
+                            "texts": [
+                              "Apply the coupon code MBKDINEUPI to avail the offer",
+                              "Applicable once per user during the offer period",
+                              "Transaction amount (amount after deduction of restaurant discounts) of ₹1500 or more payable using MobiKwik UPI are eligible for cashback",
+                              "Cashback can be claimed through a Scratch card on the MobiKwik app in the rewards section & the Scratch card will be valid for 7 days only",
+                              "Other T&Cs may apply"
+                            ]
+                          },
+                          "description": "use MBKDINEUPI",
+                          "secondarySubtext": {
+                            "title": "Use coupon code MBKDINEUPI | Avail on final payable amount of ₹1500 or more"
+                          },
+                          "offerLogo": {
+                            "logo": "MARKETING_BANNERS/IMAGES/OFFERS/2026/4/27/ac59c31b-d38d-484d-96a9-92b330794aa9_"
+                          },
+                          "analytics": {
+                            "screenName": "DO-Detail",
+                            "context": "{\"additional_offer_title\":\"Cashback ₹50\",\"additional_offer_subtitle\":\"use MBKDINEUPI\",\"additional_offer_type\":\"addon\",\"additional_offer_position\":5,\"additional_offer_count\":9}",
+                            "objectValue": "1152615",
+                            "impressionObjectName": "offer_panel_addon_offer_item_impression",
+                            "clickObjectName": "offer_panel_addon_offer_item_click"
+                          }
+                        },
+                        {
+                          "title": "Cashback ₹50",
+                          "tnc": {
+                            "title": "Offer terms & conditions",
+                            "texts": [
+                              "Apply the coupon code MBKDINE to avail the offer",
+                              "Applicable once per user during the offer period",
+                              "Transaction amount (amount after deduction of restaurant discounts) of ₹1500 or more payable using MobiKwik Wallet are eligible for cashback",
+                              "Cashback can be claimed through a Scratch card on the MobiKwik app in the rewards section & the Scratch card will be valid for 7 days only",
+                              "Other T&Cs may apply"
+                            ]
+                          },
+                          "description": "use MBKDINE",
+                          "secondarySubtext": {
+                            "title": "Use coupon code MBKDINE | Avail on final payable amount of ₹1500 or more"
+                          },
+                          "offerLogo": {
+                            "logo": "MARKETING_BANNERS/IMAGES/OFFERS/2026/4/27/e72241b7-4f46-4c50-b56f-b0696f450fc1_"
+                          },
+                          "analytics": {
+                            "screenName": "DO-Detail",
+                            "context": "{\"additional_offer_title\":\"Cashback ₹50\",\"additional_offer_subtitle\":\"use MBKDINE\",\"additional_offer_type\":\"addon\",\"additional_offer_position\":6,\"additional_offer_count\":9}",
+                            "objectValue": "1152615",
+                            "impressionObjectName": "offer_panel_addon_offer_item_impression",
+                            "clickObjectName": "offer_panel_addon_offer_item_click"
+                          }
+                        },
+                        {
+                          "title": "Cashback ₹50",
+                          "tnc": {
+                            "title": "Offer terms & conditions",
+                            "texts": [
+                              "Apply the coupon code POPUPI to avail the offer",
+                              "Applicable once per user during the offer period",
+                              "Transaction amount (amount after deduction of restaurant discounts) of ₹999 or more payable using POP UPI are eligible for cashback",
+                              "The customer will redeem POP Coins for cashback",
+                              "The customer will get cashback in their POP Cashback Zone",
+                              "Other T&Cs may apply"
+                            ]
+                          },
+                          "description": "use POPUPI",
+                          "secondarySubtext": {
+                            "title": "Use coupon code POPUPI | Avail on final payable amount of ₹999 or more"
+                          },
+                          "offerLogo": {
+                            "logo": "MARKETING_BANNERS/IMAGES/OFFERS/2026/5/6/f0e1f551-8392-490b-b744-c33aa0a17477_"
+                          },
+                          "analytics": {
+                            "screenName": "DO-Detail",
+                            "context": "{\"additional_offer_title\":\"Cashback ₹50\",\"additional_offer_subtitle\":\"use POPUPI\",\"additional_offer_type\":\"addon\",\"additional_offer_position\":7,\"additional_offer_count\":9}",
+                            "objectValue": "1152615",
+                            "impressionObjectName": "offer_panel_addon_offer_item_impression",
+                            "clickObjectName": "offer_panel_addon_offer_item_click"
+                          }
+                        },
+                        {
+                          "title": "Cashback 10%*",
+                          "tnc": {
+                            "title": "Offer terms & conditions",
+                            "texts": [
+                              "Valid only on Swiggy HDFC Bank Credit Card or Swiggy Blck HDFC Bank Credit Card",
+                              "Monthly cashback limit of ₹1500 on Swiggy spends",
+                              "Cashback will be processed in the next statement cycle",
+                              "Other T&Cs may apply"
+                            ]
+                          },
+                          "description": "Swiggy HDFC Bank Credit Card",
+                          "secondarySubtext": {
+                            "title": "Avail on final payable amount of ₹249 or more"
+                          },
+                          "offerLogo": {
+                            "logo": "MARKETING_BANNERS/IMAGES/OFFERS/2026/4/28/05619bca-252d-4dd1-b136-26f43f54b68d_"
+                          },
+                          "analytics": {
+                            "screenName": "DO-Detail",
+                            "context": "{\"additional_offer_title\":\"Cashback 10%*\",\"additional_offer_subtitle\":\"Swiggy HDFC Bank Credit Card\",\"additional_offer_type\":\"addon\",\"additional_offer_position\":8,\"additional_offer_count\":9}",
+                            "objectValue": "1152615",
+                            "impressionObjectName": "offer_panel_addon_offer_item_impression",
+                            "clickObjectName": "offer_panel_addon_offer_item_click"
+                          }
+                        },
+                        {
+                          "title": "Cashback 5%*",
+                          "tnc": {
+                            "title": "Offer terms & conditions",
+                            "texts": [
+                              "Valid only on Swiggy Ornge HDFC Bank Credit Card",
+                              "Applicable on a minimum net transaction value of ₹249",
+                              "Monthly cashback limit of ₹1500 on Swiggy spends",
+                              "Cashback will be processed in the next statement cycle",
+                              "Other T&Cs may apply"
+                            ]
+                          },
+                          "description": "Swiggy Ornge HDFC Bank Credit Card",
+                          "secondarySubtext": {
+                            "title": "Avail on final payable amount of ₹249 or more"
+                          },
+                          "offerLogo": {
+                            "logo": "MARKETING_BANNERS/IMAGES/OFFERS/2026/3/16/1526a46c-c05f-4c13-86bf-142fdec229ad_"
+                          },
+                          "analytics": {
+                            "screenName": "DO-Detail",
+                            "context": "{\"additional_offer_title\":\"Cashback 5%*\",\"additional_offer_subtitle\":\"Swiggy Ornge HDFC Bank Credit Card\",\"additional_offer_type\":\"addon\",\"additional_offer_position\":9,\"additional_offer_count\":9}",
+                            "objectValue": "1152615",
+                            "impressionObjectName": "offer_panel_addon_offer_item_impression",
+                            "clickObjectName": "offer_panel_addon_offer_item_click"
+                          }
+                        }
+                      ],
+                      "dotScrollBar": {
+                        "activeColor": "#FF5200",
+                        "inactiveColor": "#02060C",
+                        "activeSize": 4,
+                        "inactiveMediumSize": 3,
+                        "inactiveSmallSize": 3,
+                        "dotSpacing": 4,
+                        "windowSize": 3
+                      },
+                      "autoScrollConfig": {
+                        "isScrollEnabled": true,
+                        "autoScrollDuration": 3,
+                        "autoScrollResetDuration": 3
+                      }
+                    },
+                    "dineCashInfo": {
+                      "offers": [
+                        {
+                          "title": "10% cashback",
+                          "cta": {
+                            "link": "swiggydiners://login",
+                            "text": "LOGIN TO PAY BILL",
+                            "type": "primary"
+                          },
+                          "description": "On every bill payment",
+                          "isAvailable": true,
+                          "offerLogo": {
+                            "logo": "dineout/loyalty/nba_rupees.png"
+                          },
+                          "analytics": {
+                            "screenName": "DO-Detail",
+                            "context": "{\"additional_offer_title\":\"10% cashback\",\"additional_offer_subtitle\":\"On every bill payment\",\"additional_offer_type\":\"dinecash\",\"additional_offer_position\":1,\"additional_offer_count\":1}",
+                            "objectValue": "1152615",
+                            "impressionObjectName": "offer_panel_dinecash_offer_item_impression",
+                            "clickObjectName": "offer_panel_dinecash_offer_item_click"
+                          },
+                          "offerTheme": {
+                            "logo": "dineout/details/discountwidget/DineCashSplit.png"
+                          },
+                          "offerTooltip": {
+                            "title": {
+                              "info": "Earn DineCash",
+                              "color": "text_highest_emphasis",
+                              "font": "FONT_NAME_V2_BODY1_NEUTRAL_BOLD"
+                            },
+                            "description": {
+                              "info": "Get flat 10% cashback on every bill you pay on Dineout",
+                              "color": "text_low_emphasis",
+                              "font": "FONT_NAME_V2_OVERLINE_MEDIUM"
+                            },
+                            "iconImage": "dineout/loyalty/dinecashTooltipRupee.png",
+                            "frequency": {
+                              "entityId": "rdp-dinecash-tooltip-1",
+                              "maxCount": 3,
+                              "cappingInfo": {
+                                "cappingEnabled": true,
+                                "cappingMode": "VIEW"
+                              }
+                            },
+                            "analytics": {
+                              "screenName": "DO-Detail",
+                              "context": "{\"subtitle\":\"Get flat 10% cashback on every bill you pay on Dineout\",\"title\":\"Earn DineCash\"}",
+                              "objectValue": "1152615",
+                              "impressionObjectName": "impression-tooltip",
+                              "clickObjectName": "cross-tooltip"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ],
+                "gradientStyle": {
+                  "colours": [
+                    "#F0FCF7",
+                    "#EBF8F3"
+                  ],
+                  "gradientAngle": 270
+                },
+                "headerStyle": {
+                  "padding": {
+                    "bottom": 8
+                  },
+                  "titleColor": "text_color_highest_emphasis",
+                  "titleFontName": "FONT_NAME_BODY_B1_MED"
+                },
+                "padding": {
+                  "left": 12,
+                  "top": 24,
+                  "right": 12
+                },
+                "type": "DEAL_AND_OFFER_INFO_TYPE_PILL_TAB_V2",
+                "scrollAnchor": {
+                  "id": "offer"
+                }
+              }
+            }
+          },
+          {
+            "card": {
+              "card": {
+                "@type": "type.googleapis.com/swiggy.gandalf.widgets.v2.StaggeredGrid",
+                "info": [
+                  {
+                    "imageCardInfo": {
+                      "id": "2025-07-24T14:05:11.234",
+                      "imageId": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2025/7/24/3a0ad7f3-5aae-45fd-8126-9fc3984e28aa_image139365c8a0e1e747649cdf2191555b54e2.JPG",
+                      "action": {
+                        "link": "swiggydiners://fullScreenGallery/1152615?imageId=DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2025/7/24/3a0ad7f3-5aae-45fd-8126-9fc3984e28aa_image139365c8a0e1e747649cdf2191555b54e2.JPG&apiCall=true",
+                        "type": "DEEPLINK"
+                      },
+                      "analytics": {
+                        "screenName": "DO-Detail",
+                        "context": "{\"photo_id\":\"2025-07-24T14:05:11.234\",\"click_position\":1,\"click_on_indicator_+\":false}",
+                        "objectValue": "1152615",
+                        "clickObjectName": "photos"
+                      }
+                    },
+                    "style": {
+                      "width": 0.611,
+                      "height": 0.586,
+                      "left": 0.0333
+                    },
+                    "mediaItemCornerRadius": {
+                      "topLeft": 16,
+                      "topRight": 16,
+                      "bottomLeft": 16,
+                      "bottomRight": 16
+                    }
+                  },
+                  {
+                    "imageCardInfo": {
+                      "id": "2025-07-24T14:05:11.330",
+                      "imageId": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2025/7/24/7c24dc5a-81db-4b89-ad28-3124389601b0_image98ce804303c7a4743869190806ed735a2.JPG",
+                      "action": {
+                        "link": "swiggydiners://fullScreenGallery/1152615?imageId=DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2025/7/24/7c24dc5a-81db-4b89-ad28-3124389601b0_image98ce804303c7a4743869190806ed735a2.JPG&apiCall=true",
+                        "type": "DEEPLINK"
+                      },
+                      "analytics": {
+                        "screenName": "DO-Detail",
+                        "context": "{\"photo_id\":\"2025-07-24T14:05:11.330\",\"click_position\":2,\"click_on_indicator_+\":false}",
+                        "objectValue": "1152615",
+                        "clickObjectName": "photos"
+                      }
+                    },
+                    "style": {
+                      "width": 0.288,
+                      "height": 0.277,
+                      "left": 0.675
+                    },
+                    "mediaItemCornerRadius": {
+                      "topLeft": 16,
+                      "topRight": 16,
+                      "bottomLeft": 16,
+                      "bottomRight": 16
+                    }
+                  },
+                  {
+                    "imageCardInfo": {
+                      "id": "2025-07-24T14:05:11.379",
+                      "imageId": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2025/7/24/8fd1df66-17c1-4b0a-badc-a3a1b6dc0026_image7b855f4f6244a4cd186b8b062dfc953cb.JPG",
+                      "action": {
+                        "link": "swiggydiners://fullScreenGallery/1152615?imageId=DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2025/7/24/8fd1df66-17c1-4b0a-badc-a3a1b6dc0026_image7b855f4f6244a4cd186b8b062dfc953cb.JPG&apiCall=true",
+                        "type": "DEEPLINK"
+                      },
+                      "analytics": {
+                        "screenName": "DO-Detail",
+                        "context": "{\"photo_id\":\"2025-07-24T14:05:11.379\",\"click_position\":3,\"click_on_indicator_+\":false}",
+                        "objectValue": "1152615",
+                        "clickObjectName": "photos"
+                      }
+                    },
+                    "style": {
+                      "width": 0.288,
+                      "height": 0.277,
+                      "top": 0.307,
+                      "left": 0.675
+                    },
+                    "mediaItemCornerRadius": {
+                      "topLeft": 16,
+                      "topRight": 16,
+                      "bottomLeft": 16,
+                      "bottomRight": 16
+                    }
+                  },
+                  {
+                    "imageCardInfo": {
+                      "id": "2025-07-24T14:05:11.722",
+                      "imageId": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2025/7/24/b18e6a68-84be-4849-b228-f22842fd32e4_image8d435af4cf5c94821a6eec647ec35bee6.JPG",
+                      "action": {
+                        "link": "swiggydiners://fullScreenGallery/1152615?imageId=DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2025/7/24/b18e6a68-84be-4849-b228-f22842fd32e4_image8d435af4cf5c94821a6eec647ec35bee6.JPG&apiCall=true",
+                        "type": "DEEPLINK"
+                      },
+                      "analytics": {
+                        "screenName": "DO-Detail",
+                        "context": "{\"photo_id\":\"2025-07-24T14:05:11.722\",\"click_position\":4,\"click_on_indicator_+\":false}",
+                        "objectValue": "1152615",
+                        "clickObjectName": "photos"
+                      }
+                    },
+                    "style": {
+                      "width": 0.288,
+                      "height": 0.277,
+                      "top": 0.618,
+                      "left": 0.0333
+                    },
+                    "mediaItemCornerRadius": {
+                      "topLeft": 16,
+                      "topRight": 16,
+                      "bottomLeft": 16,
+                      "bottomRight": 16
+                    }
+                  },
+                  {
+                    "imageCardInfo": {
+                      "id": "2025-07-21T06:27:35.224",
+                      "imageId": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2025/7/21/35df6d46-b927-41ea-83a1-698c0a51d43c_IMG182rrr1189138fbf3741368b2ae95c2ca00a84.JPG",
+                      "action": {
+                        "link": "swiggydiners://fullScreenGallery/1152615?imageId=DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2025/7/21/35df6d46-b927-41ea-83a1-698c0a51d43c_IMG182rrr1189138fbf3741368b2ae95c2ca00a84.JPG&apiCall=true",
+                        "type": "DEEPLINK"
+                      },
+                      "analytics": {
+                        "screenName": "DO-Detail",
+                        "context": "{\"photo_id\":\"2025-07-21T06:27:35.224\",\"click_position\":5,\"click_on_indicator_+\":false}",
+                        "objectValue": "1152615",
+                        "clickObjectName": "photos"
+                      }
+                    },
+                    "style": {
+                      "width": 0.288,
+                      "height": 0.277,
+                      "top": 0.618,
+                      "left": 0.357
+                    },
+                    "mediaItemCornerRadius": {
+                      "topLeft": 16,
+                      "topRight": 16,
+                      "bottomLeft": 16,
+                      "bottomRight": 16
+                    }
+                  },
+                  {
+                    "imageCardInfo": {
+                      "id": "2025-07-24T14:05:11.008",
+                      "imageId": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2025/7/24/d1ccb62a-d278-4cdc-83b9-669478ef8e02_image1550c7ffc3ed6540eb8bd9cf3b2c145af4.JPG",
+                      "action": {
+                        "link": "swiggydiners://gallery/1152615",
+                        "type": "DEEPLINK"
+                      },
+                      "analytics": {
+                        "screenName": "DO-Detail",
+                        "context": "{\"photo_id\":\"2025-07-24T14:05:11.008\",\"click_position\":6,\"click_on_indicator_+\":true}",
+                        "objectValue": "1152615",
+                        "clickObjectName": "photos"
+                      }
+                    },
+                    "style": {
+                      "width": 0.288,
+                      "height": 0.277,
+                      "top": 0.618,
+                      "left": 0.675
+                    },
+                    "overlay": {
+                      "textInfo": {
+                        "info": "+32",
+                        "color": "white",
+                        "font": "FONT_NAME_V2_SUBHEADING1_NEUTRAL_BOLD"
+                      },
+                      "backgroundColor": "#9902060C"
+                    },
+                    "mediaItemCornerRadius": {
+                      "topLeft": 16,
+                      "topRight": 16,
+                      "bottomLeft": 16,
+                      "bottomRight": 16
+                    }
+                  }
+                ],
+                "layout": {
+                  "widgetPadding": {
+                    "bottom": 12
+                  },
+                  "scrollBar": {
+                    "width": 54,
+                    "height": 4
+                  },
+                  "widgetTheme": {
+                    "defaultMode": {
+                      "backgroundColour": "#FFFFFF",
+                      "theme": "THEME_TYPE_LIGHT",
+                      "themeVariant": "THEME_VARIANT_DEFAULT"
+                    },
+                    "darkMode": {
+                      "backgroundColour": "#FFFFFF",
+                      "theme": "THEME_TYPE_DARK",
+                      "themeVariant": "THEME_VARIANT_DEFAULT"
+                    }
+                  }
+                },
+                "id": "dineoutRdpHexaPhotosWidget",
+                "header": {
+                  "title": "Photos",
+                  "headerStyling": {
+                    "padding": {
+                      "left": 16,
+                      "top": 24,
+                      "bottom": 8
+                    },
+                    "titleFontName": "FONT_NAME_BODY_B1_BOLD"
+                  },
+                  "analytics": {
+                    "screenName": "DO-Detail",
+                    "context": "{\"photo_count\":38,\"photos_shown_count\":6,\"photo_ids\":[\"2025-07-24T14:05:11.234\",\"2025-07-24T14:05:11.330\",\"2025-07-24T14:05:11.379\",\"2025-07-24T14:05:11.722\",\"2025-07-21T06:27:35.224\",\"2025-07-24T14:05:11.008\",\"2025-07-24T14:05:11.355\",\"2026-03-13T10:54:10.528973567\",\"2026-03-13T10:54:11.010319431\",\"2026-03-13T10:54:11.172763445\",\"2026-03-13T10:54:21.198109632\",\"2026-03-13T10:54:49.629230097\",\"2026-03-13T10:54:51.777688717\",\"2026-03-13T10:54:52.319479491\",\"2026-03-13T10:54:52.619544078\",\"2026-03-13T10:54:52.730948469\",\"2026-03-13T10:53:53.798488638\",\"2026-03-13T10:53:54.687650077\",\"2026-03-13T10:53:54.843939741\",\"2026-03-13T10:53:55.078884902\",\"2026-03-13T10:54:01.322933982\",\"2026-03-13T10:54:02.239749201\",\"2026-03-13T10:54:03.576303785\",\"2026-03-13T10:54:03.775708727\",\"2026-03-13T10:54:04.298832420\",\"2026-03-13T10:54:05.238836056\",\"2026-03-13T10:54:05.241642535\",\"2026-03-13T10:54:05.432125363\",\"2026-03-13T10:54:05.557726842\",\"2026-03-13T10:54:06.102592270\",\"2026-03-13T10:54:06.226911788\",\"2026-03-13T10:54:09.619896773\",\"2026-03-13T10:54:10.494056685\",\"2026-03-13T10:54:19.401820380\",\"2026-03-13T10:54:19.522850480\",\"2026-03-13T10:54:26.579537044\",\"2026-03-13T10:54:49.531696447\",\"2026-03-13T10:54:52.604612684\"]}",
+                    "objectValue": "1152615",
+                    "impressionObjectName": "photos"
+                  },
+                  "collapseConfig": {
+                    "enabled": true,
+                    "collapseIcon": "chevron_down_12",
+                    "expandIcon": "chevron_up_12"
+                  }
+                },
+                "scrollAnchor": {
+                  "id": "photos"
+                }
+              }
+            }
+          },
+          {
+            "card": {
+              "card": {
+                "@type": "type.googleapis.com/swiggy.presentation.dinersone.v1.RestaurantHighlights",
+                "title": "Amenities (5)",
+                "element": [
+                  "Alcohol served",
+                  "Reservation available",
+                  "Valet parking",
+                  "Smoking area",
+                  "SwiggyPay accepted"
+                ],
+                "content": [
+                  {
+                    "info": "Alcohol served",
+                    "icon": "dineout/details/rx_highlight_star.png"
+                  },
+                  {
+                    "info": "Reservation available",
+                    "icon": "dineout/details/rx_highlight_star.png"
+                  },
+                  {
+                    "info": "Valet parking",
+                    "icon": "dineout/details/rx_highlight_star.png"
+                  },
+                  {
+                    "info": "Smoking area",
+                    "icon": "dineout/details/rx_highlight_star.png"
+                  },
+                  {
+                    "info": "SwiggyPay accepted",
+                    "icon": "dineout/details/rx_highlight_star.png"
+                  }
+                ],
+                "rowCount": 2,
+                "colCount": 2,
+                "scrollAnchor": {
+                  "id": "about"
+                }
+              }
+            }
+          },
+          {
+            "card": {
+              "card": {
+                "@type": "type.googleapis.com/swiggy.gandalf.widgets.v2.TextInfoWidget",
+                "title": {
+                  "info": "Location",
+                  "color": "text_color_highest_emphasis"
+                },
+                "description": {
+                  "info": "13.1 km • Plot No. 2034/69, Block 2, Village, Varthur, Bbmp, Sarjapur Road, Kaikondrahalli, Bengaluru, Karnataka",
+                  "color": "text_color_high_emphasis",
+                  "font": "FONT_NAME_BODY_B2_REG"
+                },
+                "iconUrl": "dineout/details/direction.png",
+                "cta": {
+                  "link": "https://www.google.com/maps/dir/?api=1&origin=12.9716,77.5946&destination=12.9140861,77.67858820000001&travelmode=driving",
+                  "text": "MAP_DEEPLINK",
+                  "type": "MAPS_DIRECTION"
+                },
+                "scrollAnchor": {
+                  "id": "about"
+                },
+                "metaInfo": {
+                  "lat": "12.9140861",
+                  "lng": "77.67858820000001",
+                  "showMap": "true"
+                }
+              }
+            }
+          },
+          {
+            "card": {
+              "card": {
+                "@type": "type.googleapis.com/swiggy.presentation.dinersone.v1.CtaList",
+                "ctas": [
+                  {
+                    "link": "swiggydiners://login",
+                    "text": "Login to avail offer & pay",
+                    "type": "primary",
+                    "metaInfo": {}
+                  }
+                ]
+              }
+            }
+          }
+        ],
+        "firstOffsetRequest": true
+      }
+    }
+  }
 }

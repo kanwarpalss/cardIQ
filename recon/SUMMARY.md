@@ -1,6 +1,6 @@
 # Dining Recon — Offer Summary
 
-Generated: 2026-05-17T16:10:39.222214Z
+Generated: 2026-05-17T16:21:55.247539+00:00
 Restaurants: 30 | Platforms: 3
 
 ## DISTRICT
@@ -285,7 +285,7 @@ Found: 28/30 | With offer data: 15
 - [bank] 15% OFF up to ₹500 on Ananta Credit Card
 
 ## SWIGGY
-Found: 22/30 | With offer data: 8
+Found: 29/30 | With offer data: 11
 
 ### Absolute Barbecues (Koramangala)
 > (found, no offers extracted)
@@ -330,10 +330,10 @@ Found: 22/30 | With offer data: 8
 - [addon] Cashback 5%* — Swiggy Ornge HDFC Bank Credit Card
 
 ### Communiti (Indiranagar)
-> ❌ Restaurant not found in food-delivery search results
+> (found, no offers extracted)
 
 ### Farzi Cafe (UB City)
-> ❌ Restaurant not found in food-delivery search results
+> (found, no offers extracted)
 
 ### The Fatty Bao (Indiranagar)
 - [addon] Flat 10% off* — use HDFCINFINIA
@@ -358,19 +358,27 @@ Found: 22/30 | With offer data: 8
 - [addon] Cashback 5%* — Swiggy Ornge HDFC Bank Credit Card
 
 ### Foxtrot (Koramangala)
-> ❌ Restaurant not found in food-delivery search results
+> (found, no offers extracted)
 
 ### Glen's Bakehouse (Koramangala)
 > (found, no offers extracted)
 
 ### Hoot (Koramangala)
-> ❌ Restaurant not found in food-delivery search results
+- [addon] Flat 10% off* — use HDFCINFINIA
+- [addon] Flat 10% off* — use HDFCCCEMI
+- [addon] Flat 10% off* — use HDFCDINERS
+- [addon] Flat ₹200 off — use HDFCCARDS
+- [addon] Cashback ₹50 — use MBKDINEUPI
+- [addon] Cashback ₹50 — use MBKDINE
+- [addon] Cashback ₹50 — use POPUPI
+- [addon] Cashback 10%* — Swiggy HDFC Bank Credit Card
+- [addon] Cashback 5%* — Swiggy Ornge HDFC Bank Credit Card
 
 ### Indigo Deli (Koramangala)
-> ❌ Restaurant not found in food-delivery search results
+> ❌ Not on Swiggy Dineout — no swiggyDineoutId and not found via food-delivery search
 
 ### Karavalli (Residency Road)
-> ❌ Restaurant not found in food-delivery search results
+> (found, no offers extracted)
 
 ### Meghana Foods (Koramangala)
 > (found, no offers extracted)
@@ -385,7 +393,7 @@ Found: 22/30 | With offer data: 8
 > (found, no offers extracted)
 
 ### Olive Beach (Sankey Road)
-> ❌ Restaurant not found in food-delivery search results
+> (found, no offers extracted)
 
 ### Onesta (Koramangala)
 - [addon] Flat 10% off* — use HDFCINFINIA
@@ -399,7 +407,7 @@ Found: 22/30 | With offer data: 8
 - [addon] Cashback 5%* — Swiggy Ornge HDFC Bank Credit Card
 
 ### The Permit Room (Indiranagar)
-> ❌ Restaurant not found in food-delivery search results
+> (found, no offers extracted)
 
 ### Shiro (UB City)
 - [addon] Flat 10% off* — use HDFCINFINIA
@@ -413,7 +421,15 @@ Found: 22/30 | With offer data: 8
 - [addon] Cashback 5%* — Swiggy Ornge HDFC Bank Credit Card
 
 ### Smoke House Deli (Indiranagar)
-> (found, no offers extracted)
+- [addon] Flat 10% off* — use HDFCINFINIA
+- [addon] Flat 10% off* — use HDFCCCEMI
+- [addon] Flat 10% off* — use HDFCDINERS
+- [addon] Flat ₹200 off — use HDFCCARDS
+- [addon] Cashback ₹50 — use MBKDINEUPI
+- [addon] Cashback ₹50 — use MBKDINE
+- [addon] Cashback ₹50 — use POPUPI
+- [addon] Cashback 10%* — Swiggy HDFC Bank Credit Card
+- [addon] Cashback 5%* — Swiggy Ornge HDFC Bank Credit Card
 
 ### Third Wave Coffee (Indiranagar)
 > (found, no offers extracted)
@@ -430,7 +446,15 @@ Found: 22/30 | With offer data: 8
 - [addon] Cashback 5%* — Swiggy Ornge HDFC Bank Credit Card
 
 ### Toit Brewpub (Indiranagar)
-> (found, no offers extracted)
+- [addon] Flat 10% off* — use HDFCINFINIA
+- [addon] Flat 10% off* — use HDFCCCEMI
+- [addon] Flat 10% off* — use HDFCDINERS
+- [addon] Flat ₹200 off — use HDFCCARDS
+- [addon] Cashback ₹50 — use MBKDINEUPI
+- [addon] Cashback ₹50 — use MBKDINE
+- [addon] Cashback ₹50 — use POPUPI
+- [addon] Cashback 10%* — Swiggy HDFC Bank Credit Card
+- [addon] Cashback 5%* — Swiggy Ornge HDFC Bank Credit Card
 
 ### Truffles (Koramangala)
 > (found, no offers extracted)
@@ -548,13 +572,13 @@ Found: 21/30 | With offer data: 8
 
 ## Offer keyword frequency (all platforms)
 - `prebook`: 8 mentions
-- `flat`: 91 mentions
-- `off`: 252 mentions
-- `1+1`: 6 mentions
+- `flat`: 103 mentions
+- `off`: 264 mentions
 - `buffet`: 8 mentions
-- `cashback`: 40 mentions
-- `bank`: 269 mentions
-- `addon`: 72 mentions
+- `cashback`: 55 mentions
+- `addon`: 99 mentions
 - `payeazy`: 14 mentions
-- `hdfc`: 48 mentions
+- `hdfc`: 66 mentions
 - `deal`: 4 mentions
+- `bank`: 275 mentions
+- `1+1`: 6 mentions

@@ -7,7 +7,7 @@
       "districtSlugs": []
     },
     "found": false,
-    "error": "Restaurant not found in food-delivery search results",
+    "error": "Not on Swiggy Dineout — no swiggyDineoutId and not found via food-delivery search",
     "offerSummary": []
   },
   "raw": null

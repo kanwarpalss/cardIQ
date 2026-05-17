@@ -12,8 +12,8 @@
   "raw": {
     "restaurantId": "305776",
     "detail": {
-      "requestId": "9f7ae1bd-2808-4c9f-840e-04d88f0a33e4",
-      "apiTime": "2026-05-17T16:08:18.916605282Z",
+      "requestId": "54be03c0-6ca5-497b-a0e2-a1e74ef8052b",
+      "apiTime": "2026-05-17T16:19:23.943346787Z",
       "success": {
         "statusMessage": "done successfully",
         "cards": [
@@ -533,9 +533,9 @@
                   "id": "about"
                 },
                 "metaInfo": {
-                  "lat": "12.9752155149",
                   "lng": "77.6039202511",
-                  "showMap": "true"
+                  "showMap": "true",
+                  "lat": "12.9752155149"
                 }
               }
             }

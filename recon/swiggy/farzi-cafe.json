@@ -7,11 +7,745 @@
       "districtSlugs": [
         "farzi-cafe-lavelle-road"
       ],
-      "eazyDinerSlug": "farzi-cafe-vittal-mallya-road-337292"
+      "eazyDinerSlug": "farzi-cafe-vittal-mallya-road-337292",
+      "swiggyDineoutId": "302257"
     },
-    "found": false,
-    "error": "Restaurant not found in food-delivery search results",
+    "found": true,
     "offerSummary": []
   },
-  "raw": null
+  "raw": {
+    "restaurantId": "302257",
+    "detail": {
+      "requestId": "1a8d7d96-f161-47f6-a727-fa9e25ef9fba",
+      "apiTime": "2026-05-17T16:18:37.195501337Z",
+      "success": {
+        "statusMessage": "done successfully",
+        "cards": [
+          {
+            "card": {
+              "card": {
+                "@type": "type.googleapis.com/swiggy.presentation.dinersone.v1.EntityInfoWithMasthead",
+                "id": "302257",
+                "info": {
+                  "name": "Farzi Cafe",
+                  "locationInfo": {
+                    "distanceString": "0.3 km",
+                    "navigationUrl": "https://www.google.com/maps/dir/?api=1&origin=12.9716,77.5946&destination=12.97152327,77.59585753&travelmode=driving",
+                    "lat": "12.97152327",
+                    "long": "77.59585753",
+                    "landmarkName": "UB City",
+                    "city": {
+                      "name": "Bangalore"
+                    },
+                    "formattedAddress": "UB City, Vittal Mallya Road, Bangalore",
+                    "additionalInfo": {
+                      "cta": {
+                        "link": "swiggydiners://collectiondetails/DINEOUT_BRAND_OUTLETS?tags=layout_dineout_brand_outlets&metaMap=%7B%22brandId%22%3A%2210908%22%2C%22restaurant_id%22%3A%22302257%22%2C%22sourcePage%22%3A%22RDP%22%7D&header_title=Outlets",
+                        "text": "outlets",
+                        "type": "DEEPLINK",
+                        "metaInfo": {
+                          "ctaImage": "dineout/details/red_arrow_down.png"
+                        },
+                        "analytics": {
+                          "screenName": "DO-Detail",
+                          "context": "{\"restId\":\"302257\"}",
+                          "objectValue": "outlet_switcher_dropdown",
+                          "impressionObjectName": "entity_info_masthead",
+                          "clickObjectName": "entity_info_masthead"
+                        }
+                      }
+                    },
+                    "displayAreaName": "Vittal Mallya Road"
+                  },
+                  "timingsInfo": {
+                    "outletTiming": {
+                      "infoList": [
+                        {
+                          "title": "Monday",
+                          "subtitle": "Noon - Midnight",
+                          "titleColor": "text_high_emphasis",
+                          "subtitleColor": "text_high_emphasis"
+                        },
+                        {
+                          "title": "Tuesday",
+                          "subtitle": "Noon - Midnight",
+                          "titleColor": "text_high_emphasis",
+                          "subtitleColor": "text_high_emphasis"
+                        },
+                        {
+                          "title": "Wednesday",
+                          "subtitle": "Noon - Midnight",
+                          "titleColor": "text_high_emphasis",
+                          "subtitleColor": "text_high_emphasis"
+                        },
+                        {
+                          "title": "Thursday",
+                          "subtitle": "Noon - Midnight",
+                          "titleColor": "text_high_emphasis",
+                          "subtitleColor": "text_high_emphasis"
+                        },
+                        {
+                          "title": "Friday",
+                          "subtitle": "Noon - Midnight",
+                          "titleColor": "text_high_emphasis",
+                          "subtitleColor": "text_high_emphasis"
+                        },
+                        {
+                          "title": "Saturday",
+                          "subtitle": "Noon - Midnight",
+                          "titleColor": "text_high_emphasis",
+                          "subtitleColor": "text_high_emphasis"
+                        },
+                        {
+                          "title": "Today",
+                          "subtitle": "Noon - Midnight",
+                          "titleColor": "primary",
+                          "subtitleColor": "primary"
+                        }
+                      ],
+                      "title": "Outlet timings"
+                    },
+                    "styleInfo": {
+                      "titleColor": "negative",
+                      "subtitleColor": "text_color_low_emphasis"
+                    }
+                  },
+                  "callDetail": {
+                    "title": "Trying to reach the outlet?",
+                    "style": {
+                      "cornerRadius": {
+                        "topLeft": 16,
+                        "topRight": 16
+                      },
+                      "backgroundColour": "#F0F0F5"
+                    },
+                    "actions": [
+                      {
+                        "link": "dailer-app?phone=7259400900",
+                        "text": "7259400900",
+                        "type": "DIALER",
+                        "metaInfo": {
+                          "ctaImage": "dineout/details/call_no_bg.png"
+                        }
+                      }
+                    ]
+                  },
+                  "ratingsInfo": {
+                    "value": "4.1",
+                    "description": "6K ratings",
+                    "count": 6621,
+                    "countDescription": "6K+ Google ratings",
+                    "icon": "dineout/details/google_tag.png",
+                    "style": "RATING_STYLE_V2"
+                  },
+                  "typeInfo": {
+                    "type": "ENTITY_TYPE_RESTAURANT",
+                    "restaurantType": "RESTAURANT_TYPE_NON_PARTICIPATING"
+                  },
+                  "style": {
+                    "backgroundColour": "#FFFFFF",
+                    "cornerRadius": {
+                      "topLeft": 16,
+                      "topRight": 16,
+                      "bottomLeft": 16,
+                      "bottomRight": 16
+                    },
+                    "animationConfig": {
+                      "type": "ANIMATION_TYPE_ENTRY_PUSH_DOWN",
+                      "startDelay": 250,
+                      "duration": 100,
+                      "interpolator": "INTERPOLATOR_LINEAR"
+                    },
+                    "dimension": {
+                      "width": {
+                        "type": "TYPE_RELATIVE",
+                        "value": 1,
+                        "reference": "RELATIVE_DIMENSION_REFERENCE_DEVICE_WIDTH"
+                      },
+                      "height": {
+                        "type": "TYPE_RELATIVE",
+                        "value": 0.778,
+                        "reference": "RELATIVE_DIMENSION_REFERENCE_WIDTH"
+                      }
+                    }
+                  },
+                  "favourite": {
+                    "entityLotte": {
+                      "frequencyCapping": 2,
+                      "image": "favourite-image",
+                      "lotteFiles": [
+                        {
+                          "type": "LOTTIE_TYPE_FAVOURITE",
+                          "lotte": "favourite-lottie"
+                        },
+                        {
+                          "type": "LOTTIE_TYPE_NON_FAVOURITE",
+                          "lotte": "non-favourite-lottie"
+                        }
+                      ]
+                    },
+                    "accessibility": {
+                      "altText": "favourite alt text",
+                      "altTextCta": "favourite alt text cta"
+                    }
+                  },
+                  "share": {
+                    "entityLotte": {
+                      "frequencyCapping": 3,
+                      "image": "share-image",
+                      "lotteFiles": [
+                        {
+                          "type": "LOTTIE_TYPE_SHARE",
+                          "lotte": "share-lottie"
+                        }
+                      ]
+                    },
+                    "shareUrl": "Hey, I think you will love Farzi Cafe, UB City, Vittal Mallya Road, Bangalore on Swiggy Dineout https://swiggy.onelink.me/BVRZ?af_dp=swiggydiners%3A%2F%2Fdetails%2F302257%3Fsource%3Dsharing Happy dining!",
+                    "accessibility": {
+                      "altText": "share alt text",
+                      "altTextCta": "share alt text cta"
+                    }
+                  },
+                  "entityAttributes": {
+                    "restaurantEntityAttributes": {
+                      "outlets": {},
+                      "cuisines": [
+                        "Modern Indian",
+                        "Continental"
+                      ],
+                      "costForTwo": "₹2000 for two"
+                    }
+                  }
+                },
+                "masthead": {
+                  "files": [
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-02-23T22:00:50.549",
+                      "name": "ambience",
+                      "url": "v1677189653/e3a08405e996f990fbf6b2c648a99c61.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-02-23T22:00:54.591",
+                      "name": "ambience",
+                      "url": "v1677189657/f856ff9334dbbc3f193b8b509e972a71.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-02-23T22:00:58.415",
+                      "name": "ambience",
+                      "url": "v1677189661/ba5bbf74b3f9091297dd3395d83ba120.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-02-23T22:01:03.875",
+                      "name": "ambience",
+                      "url": "v1677189666/b885d36486e02a5621e4863e718601fa.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-02-23T22:01:08.046",
+                      "name": "ambience",
+                      "url": "v1677189670/f4f6284aab0b60424eab1a05299f88e1.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-02-23T22:01:12.968",
+                      "name": "ambience",
+                      "url": "v1677189675/45bab3c2b84b3b87f995ca69d5260ebe.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-02-23T22:01:16.636",
+                      "name": "ambience",
+                      "url": "v1677189679/ebd88de4dc82b5ebf9a7706abae96c23.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-02-23T22:01:21.358",
+                      "name": "ambience",
+                      "url": "v1677189684/252029dc281dfba9df46b0c3907015ef.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-02-23T22:01:28.381",
+                      "name": "ambience",
+                      "url": "v1677189691/7e5c37e1ce4ad85c4bd2ed6b120b763a.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-02-23T22:01:33.928",
+                      "name": "ambience",
+                      "url": "v1677189697/613d39ea71c1a80f25fcd7daae662fcb.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-02-23T22:01:39.609",
+                      "name": "ambience",
+                      "url": "v1677189702/755f1feefddaefc005cea396fac103ad.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-02-23T22:01:44.835",
+                      "name": "ambience",
+                      "url": "v1677189708/941a5c92bc601d12614bd94f855e59e4.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-02-23T22:02:39.770",
+                      "name": "dish",
+                      "url": "v1677189761/e9e39ef03927f8b38571dabf20415f78.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-02-23T22:02:43.060",
+                      "name": "dish",
+                      "url": "v1677189765/1a46f562917d61a8aca83ef1a0225d43.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-02-23T22:02:46.240",
+                      "name": "dish",
+                      "url": "v1677189768/8f97941bb8364f5e34aabf243df6e664.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-02-23T22:02:49.322",
+                      "name": "dish",
+                      "url": "v1677189771/2decfe489c946a76e142e05d4dab4dff.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-02-23T22:02:52.432",
+                      "name": "dish",
+                      "url": "v1677189774/b839c34d023f74b5f5e73c5f26959aea.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-02-23T22:02:55.376",
+                      "name": "dish",
+                      "url": "v1677189777/ba8fa41b5a716d59119f13a1877760c0.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-02-23T22:02:58.381",
+                      "name": "dish",
+                      "url": "v1677189780/a9d29498c12b7aee0fdf21671d56a645.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-02-23T22:03:02.283",
+                      "name": "dish",
+                      "url": "v1677189784/2a0e23b67d694f9ada10fd7f368f10ec.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-02-23T22:03:05.250",
+                      "name": "dish",
+                      "url": "v1676838733/d57422262383e6c5f1e6080849188ac5.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-02-23T22:03:10.466",
+                      "name": "dish",
+                      "url": "v1676838737/ec82e23f5639ac3fb7227e2dfd78245c.jpg"
+                    }
+                  ],
+                  "cta": {
+                    "link": "swiggydiners://gallery/302257",
+                    "type": "DEEPLINK"
+                  },
+                  "cornerRadius": {
+                    "bottomLeft": 24,
+                    "bottomRight": 24
+                  },
+                  "autoScrollConfig": {
+                    "isScrollEnabled": true,
+                    "autoScrollDuration": 3,
+                    "autoScrollResetDuration": 5
+                  }
+                }
+              }
+            }
+          },
+          {
+            "card": {
+              "card": {
+                "@type": "type.googleapis.com/swiggy.presentation.dinersone.v1.RestaurantHighlights",
+                "title": "Popular dishes",
+                "element": [
+                  "Asparagus & Waterchestnut Khurma",
+                  "Donne Biryani Bowl",
+                  "Shawarma Biryani",
+                  "Gongura Chicken Curry",
+                  "Alleppey Duck Curry",
+                  "Jalfrezi Lasagna",
+                  "Potato Crisp",
+                  "Farzi OK",
+                  "Drinks on Highway",
+                  "Three Musketeer"
+                ],
+                "content": [
+                  {
+                    "info": "Asparagus & Waterchestnut Khurma",
+                    "icon": "dineout/details/popular_dishes.png"
+                  },
+                  {
+                    "info": "Donne Biryani Bowl",
+                    "icon": "dineout/details/popular_dishes.png"
+                  },
+                  {
+                    "info": "Shawarma Biryani",
+                    "icon": "dineout/details/popular_dishes.png"
+                  },
+                  {
+                    "info": "Gongura Chicken Curry",
+                    "icon": "dineout/details/popular_dishes.png"
+                  },
+                  {
+                    "info": "Alleppey Duck Curry",
+                    "icon": "dineout/details/popular_dishes.png"
+                  },
+                  {
+                    "info": "Jalfrezi Lasagna",
+                    "icon": "dineout/details/popular_dishes.png"
+                  },
+                  {
+                    "info": "Potato Crisp",
+                    "icon": "dineout/details/popular_dishes.png"
+                  },
+                  {
+                    "info": "Farzi OK",
+                    "icon": "dineout/details/popular_dishes.png"
+                  },
+                  {
+                    "info": "Drinks on Highway",
+                    "icon": "dineout/details/popular_dishes.png"
+                  },
+                  {
+                    "info": "Three Musketeer",
+                    "icon": "dineout/details/popular_dishes.png"
+                  }
+                ],
+                "rowCount": 2,
+                "colCount": 4,
+                "scrollAnchor": {
+                  "id": "menu"
+                }
+              }
+            }
+          },
+          {
+            "card": {
+              "card": {
+                "@type": "type.googleapis.com/swiggy.gandalf.widgets.v2.StaggeredGrid",
+                "info": [
+                  {
+                    "imageCardInfo": {
+                      "id": "2023-02-23T22:00:50.549",
+                      "imageId": "v1677189653/e3a08405e996f990fbf6b2c648a99c61.jpg",
+                      "action": {
+                        "link": "swiggydiners://fullScreenGallery/302257?imageId=v1677189653/e3a08405e996f990fbf6b2c648a99c61.jpg&apiCall=true",
+                        "type": "DEEPLINK"
+                      },
+                      "analytics": {
+                        "screenName": "DO-Detail",
+                        "context": "{\"photo_id\":\"2023-02-23T22:00:50.549\",\"click_position\":1,\"click_on_indicator_+\":false}",
+                        "objectValue": "302257",
+                        "clickObjectName": "photos"
+                      }
+                    },
+                    "style": {
+                      "width": 0.611,
+                      "height": 0.586,
+                      "left": 0.0333
+                    },
+                    "mediaItemCornerRadius": {
+                      "topLeft": 16,
+                      "topRight": 16,
+                      "bottomLeft": 16,
+                      "bottomRight": 16
+                    }
+                  },
+                  {
+                    "imageCardInfo": {
+                      "id": "2023-02-23T22:00:54.591",
+                      "imageId": "v1677189657/f856ff9334dbbc3f193b8b509e972a71.jpg",
+                      "action": {
+                        "link": "swiggydiners://fullScreenGallery/302257?imageId=v1677189657/f856ff9334dbbc3f193b8b509e972a71.jpg&apiCall=true",
+                        "type": "DEEPLINK"
+                      },
+                      "analytics": {
+                        "screenName": "DO-Detail",
+                        "context": "{\"photo_id\":\"2023-02-23T22:00:54.591\",\"click_position\":2,\"click_on_indicator_+\":false}",
+                        "objectValue": "302257",
+                        "clickObjectName": "photos"
+                      }
+                    },
+                    "style": {
+                      "width": 0.288,
+                      "height": 0.277,
+                      "left": 0.675
+                    },
+                    "mediaItemCornerRadius": {
+                      "topLeft": 16,
+                      "topRight": 16,
+                      "bottomLeft": 16,
+                      "bottomRight": 16
+                    }
+                  },
+                  {
+                    "imageCardInfo": {
+                      "id": "2023-02-23T22:00:58.415",
+                      "imageId": "v1677189661/ba5bbf74b3f9091297dd3395d83ba120.jpg",
+                      "action": {
+                        "link": "swiggydiners://fullScreenGallery/302257?imageId=v1677189661/ba5bbf74b3f9091297dd3395d83ba120.jpg&apiCall=true",
+                        "type": "DEEPLINK"
+                      },
+                      "analytics": {
+                        "screenName": "DO-Detail",
+                        "context": "{\"photo_id\":\"2023-02-23T22:00:58.415\",\"click_position\":3,\"click_on_indicator_+\":false}",
+                        "objectValue": "302257",
+                        "clickObjectName": "photos"
+                      }
+                    },
+                    "style": {
+                      "width": 0.288,
+                      "height": 0.277,
+                      "top": 0.307,
+                      "left": 0.675
+                    },
+                    "mediaItemCornerRadius": {
+                      "topLeft": 16,
+                      "topRight": 16,
+                      "bottomLeft": 16,
+                      "bottomRight": 16
+                    }
+                  },
+                  {
+                    "imageCardInfo": {
+                      "id": "2023-02-23T22:01:03.875",
+                      "imageId": "v1677189666/b885d36486e02a5621e4863e718601fa.jpg",
+                      "action": {
+                        "link": "swiggydiners://fullScreenGallery/302257?imageId=v1677189666/b885d36486e02a5621e4863e718601fa.jpg&apiCall=true",
+                        "type": "DEEPLINK"
+                      },
+                      "analytics": {
+                        "screenName": "DO-Detail",
+                        "context": "{\"photo_id\":\"2023-02-23T22:01:03.875\",\"click_position\":4,\"click_on_indicator_+\":false}",
+                        "objectValue": "302257",
+                        "clickObjectName": "photos"
+                      }
+                    },
+                    "style": {
+                      "width": 0.288,
+                      "height": 0.277,
+                      "top": 0.618,
+                      "left": 0.0333
+                    },
+                    "mediaItemCornerRadius": {
+                      "topLeft": 16,
+                      "topRight": 16,
+                      "bottomLeft": 16,
+                      "bottomRight": 16
+                    }
+                  },
+                  {
+                    "imageCardInfo": {
+                      "id": "2023-02-23T22:01:08.046",
+                      "imageId": "v1677189670/f4f6284aab0b60424eab1a05299f88e1.jpg",
+                      "action": {
+                        "link": "swiggydiners://fullScreenGallery/302257?imageId=v1677189670/f4f6284aab0b60424eab1a05299f88e1.jpg&apiCall=true",
+                        "type": "DEEPLINK"
+                      },
+                      "analytics": {
+                        "screenName": "DO-Detail",
+                        "context": "{\"photo_id\":\"2023-02-23T22:01:08.046\",\"click_position\":5,\"click_on_indicator_+\":false}",
+                        "objectValue": "302257",
+                        "clickObjectName": "photos"
+                      }
+                    },
+                    "style": {
+                      "width": 0.288,
+                      "height": 0.277,
+                      "top": 0.618,
+                      "left": 0.357
+                    },
+                    "mediaItemCornerRadius": {
+                      "topLeft": 16,
+                      "topRight": 16,
+                      "bottomLeft": 16,
+                      "bottomRight": 16
+                    }
+                  },
+                  {
+                    "imageCardInfo": {
+                      "id": "2023-02-23T22:01:12.968",
+                      "imageId": "v1677189675/45bab3c2b84b3b87f995ca69d5260ebe.jpg",
+                      "action": {
+                        "link": "swiggydiners://gallery/302257",
+                        "type": "DEEPLINK"
+                      },
+                      "analytics": {
+                        "screenName": "DO-Detail",
+                        "context": "{\"photo_id\":\"2023-02-23T22:01:12.968\",\"click_position\":6,\"click_on_indicator_+\":true}",
+                        "objectValue": "302257",
+                        "clickObjectName": "photos"
+                      }
+                    },
+                    "style": {
+                      "width": 0.288,
+                      "height": 0.277,
+                      "top": 0.618,
+                      "left": 0.675
+                    },
+                    "overlay": {
+                      "textInfo": {
+                        "info": "+16",
+                        "color": "white",
+                        "font": "FONT_NAME_V2_SUBHEADING1_NEUTRAL_BOLD"
+                      },
+                      "backgroundColor": "#9902060C"
+                    },
+                    "mediaItemCornerRadius": {
+                      "topLeft": 16,
+                      "topRight": 16,
+                      "bottomLeft": 16,
+                      "bottomRight": 16
+                    }
+                  }
+                ],
+                "layout": {
+                  "widgetPadding": {
+                    "bottom": 12
+                  },
+                  "scrollBar": {
+                    "width": 54,
+                    "height": 4
+                  },
+                  "widgetTheme": {
+                    "defaultMode": {
+                      "backgroundColour": "#FFFFFF",
+                      "theme": "THEME_TYPE_LIGHT",
+                      "themeVariant": "THEME_VARIANT_DEFAULT"
+                    },
+                    "darkMode": {
+                      "backgroundColour": "#FFFFFF",
+                      "theme": "THEME_TYPE_DARK",
+                      "themeVariant": "THEME_VARIANT_DEFAULT"
+                    }
+                  }
+                },
+                "id": "dineoutRdpHexaPhotosWidget",
+                "header": {
+                  "title": "Photos",
+                  "headerStyling": {
+                    "padding": {
+                      "left": 16,
+                      "top": 24,
+                      "bottom": 8
+                    },
+                    "titleFontName": "FONT_NAME_BODY_B1_BOLD"
+                  },
+                  "analytics": {
+                    "screenName": "DO-Detail",
+                    "context": "{\"photo_count\":22,\"photos_shown_count\":6,\"photo_ids\":[\"2023-02-23T22:00:50.549\",\"2023-02-23T22:00:54.591\",\"2023-02-23T22:00:58.415\",\"2023-02-23T22:01:03.875\",\"2023-02-23T22:01:08.046\",\"2023-02-23T22:01:12.968\",\"2023-02-23T22:01:16.636\",\"2023-02-23T22:01:21.358\",\"2023-02-23T22:01:28.381\",\"2023-02-23T22:01:33.928\",\"2023-02-23T22:01:39.609\",\"2023-02-23T22:01:44.835\",\"2023-02-23T22:02:39.770\",\"2023-02-23T22:02:43.060\",\"2023-02-23T22:02:46.240\",\"2023-02-23T22:02:49.322\",\"2023-02-23T22:02:52.432\",\"2023-02-23T22:02:55.376\",\"2023-02-23T22:02:58.381\",\"2023-02-23T22:03:02.283\",\"2023-02-23T22:03:05.250\",\"2023-02-23T22:03:10.466\"]}",
+                    "objectValue": "302257",
+                    "impressionObjectName": "photos"
+                  },
+                  "collapseConfig": {
+                    "enabled": true,
+                    "collapseIcon": "chevron_down_12",
+                    "expandIcon": "chevron_up_12"
+                  }
+                },
+                "scrollAnchor": {
+                  "id": "photos"
+                }
+              }
+            }
+          },
+          {
+            "card": {
+              "card": {
+                "@type": "type.googleapis.com/swiggy.presentation.dinersone.v1.RestaurantHighlights",
+                "title": "Amenities (3)",
+                "element": [
+                  "Alcohol served",
+                  "Parking available",
+                  "Valet parking"
+                ],
+                "content": [
+                  {
+                    "info": "Alcohol served",
+                    "icon": "dineout/details/rx_highlight_star.png"
+                  },
+                  {
+                    "info": "Parking available",
+                    "icon": "dineout/details/rx_highlight_star.png"
+                  },
+                  {
+                    "info": "Valet parking",
+                    "icon": "dineout/details/rx_highlight_star.png"
+                  }
+                ],
+                "rowCount": 3,
+                "colCount": 1,
+                "scrollAnchor": {
+                  "id": "about"
+                }
+              }
+            }
+          },
+          {
+            "card": {
+              "card": {
+                "@type": "type.googleapis.com/swiggy.gandalf.widgets.v2.TextInfoWidget",
+                "title": {
+                  "info": "Location",
+                  "color": "text_color_highest_emphasis"
+                },
+                "description": {
+                  "info": "0.3 km • 2Nd Ub City, Mg Road, Kg Halli, Shanthala Nagar, Ashok Nagar, Bengaluru, Karnataka 560001",
+                  "color": "text_color_high_emphasis",
+                  "font": "FONT_NAME_BODY_B2_REG"
+                },
+                "iconUrl": "dineout/details/direction.png",
+                "cta": {
+                  "link": "https://www.google.com/maps/dir/?api=1&origin=12.9716,77.5946&destination=12.97152327,77.59585753&travelmode=driving",
+                  "text": "MAP_DEEPLINK",
+                  "type": "MAPS_DIRECTION"
+                },
+                "scrollAnchor": {
+                  "id": "about"
+                },
+                "metaInfo": {
+                  "lat": "12.97152327",
+                  "lng": "77.59585753",
+                  "showMap": "true"
+                }
+              }
+            }
+          },
+          {
+            "card": {
+              "card": {
+                "@type": "type.googleapis.com/swiggy.presentation.dinersone.v1.CtaList",
+                "ctas": [
+                  {
+                    "link": "swiggydiners://login",
+                    "text": "Login to avail offer & pay",
+                    "type": "primary",
+                    "metaInfo": {}
+                  }
+                ]
+              }
+            }
+          }
+        ],
+        "firstOffsetRequest": true
+      }
+    }
+  }
 }

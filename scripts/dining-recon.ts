@@ -34,24 +34,27 @@ const slugFilter = args.includes("--slug") ? args[args.indexOf("--slug") + 1] : 
 // API to find each restaurant, then fetch its detail page.
 
 interface ReconRestaurant {
-  slug: string;            // our internal key (used for filenames)
-  name: string;            // display name
-  area: string;            // Bangalore neighbourhood — helps disambiguate
-  districtSlugs: string[]; // all District.in path segments for this brand; [] = not listed
-  eazyDinerSlug?: string;  // eazydiner.com/bengaluru/{slug}; undefined = not listed
+  slug: string;              // our internal key (used for filenames)
+  name: string;              // display name
+  area: string;              // Bangalore neighbourhood — helps disambiguate
+  districtSlugs: string[];   // all District.in path segments for this brand; [] = not listed
+  eazyDinerSlug?: string;    // eazydiner.com/bengaluru/{slug}; undefined = not listed
+  swiggyDineoutId?: string;  // Swiggy Dineout restaurant ID (from swiggy.com/restaurants/{id}/dineout)
+                             // Required for restaurants not on Swiggy food-delivery.
+                             // When set, used as primary; food-delivery search is the fallback.
 }
 
 const RESTAURANTS: ReconRestaurant[] = [
   // Pubs / casual
   { slug: "toit",            name: "Toit Brewpub",         area: "Indiranagar",    districtSlugs: ["toit-indiranagar", "toit-mahadevapura-mahadevapura-bangalore"],          eazyDinerSlug: "toit-indiranagar-330151" },
-  { slug: "permit-room",     name: "The Permit Room",       area: "Indiranagar",    districtSlugs: ["the-permit-room-indiranagar-bangalore"],                                      eazyDinerSlug: "the-permit-room-richmond-town-central-bengaluru-613800" },
-  { slug: "communiti",       name: "Communiti",             area: "Indiranagar",    districtSlugs: ["communiti-brigade-road-bangalore"] },
-  { slug: "foxtrot",         name: "Foxtrot",               area: "Koramangala",    districtSlugs: ["foxtrot-marathahalli-bangalore"],                                             eazyDinerSlug: "foxtrot-gastropub-marathahalli-east-bengaluru-652608" },
-  { slug: "hoot",            name: "Hoot",                  area: "Koramangala",    districtSlugs: ["hoot-craftwork-2-0-1-sarjapur-road-bangalore"] },
+  { slug: "permit-room",     name: "The Permit Room",       area: "Indiranagar",    districtSlugs: ["the-permit-room-indiranagar-bangalore"],                                      eazyDinerSlug: "the-permit-room-richmond-town-central-bengaluru-613800", swiggyDineoutId: "63024" },
+  { slug: "communiti",       name: "Communiti",             area: "Indiranagar",    districtSlugs: ["communiti-brigade-road-bangalore"],                                                                                                                                       swiggyDineoutId: "390913" },
+  { slug: "foxtrot",         name: "Foxtrot",               area: "Koramangala",    districtSlugs: ["foxtrot-marathahalli-bangalore"],                                             eazyDinerSlug: "foxtrot-gastropub-marathahalli-east-bengaluru-652608",   swiggyDineoutId: "157210" },
+  { slug: "hoot",            name: "Hoot",                  area: "Koramangala",    districtSlugs: ["hoot-craftwork-2-0-1-sarjapur-road-bangalore"],                                                                                                                          swiggyDineoutId: "1152615" },
   { slug: "byg-brewski",    name: "Byg Brewski",           area: "Hennur",         districtSlugs: ["byg-brewski-brewing-company-hennur-bangalore", "byg-brewski-brewing-company-sarjapur-road-bangalore", "byg-brewski-brewing-company-yeshwantpur-bangalore"],          eazyDinerSlug: "byg-brewski-brewing-company-hennur-north-bengaluru-656351" },
   // Fine dining
-  { slug: "karavalli",       name: "Karavalli",             area: "Residency Road", districtSlugs: ["karavalli-the-gateway-hotel-residency-road"],                                eazyDinerSlug: "karavalli-the-gateway-hotel-residency-road-330289" },
-  { slug: "olive-beach",     name: "Olive Beach",           area: "Sankey Road",    districtSlugs: ["olive-beach-richmond-road-bangalore"],                                       eazyDinerSlug: "olive-beach-richmond-road-330137" },
+  { slug: "karavalli",       name: "Karavalli",             area: "Residency Road", districtSlugs: ["karavalli-the-gateway-hotel-residency-road"],                                eazyDinerSlug: "karavalli-the-gateway-hotel-residency-road-330289",       swiggyDineoutId: "941651" },
+  { slug: "olive-beach",     name: "Olive Beach",           area: "Sankey Road",    districtSlugs: ["olive-beach-richmond-road-bangalore"],                                       eazyDinerSlug: "olive-beach-richmond-road-330137",                        swiggyDineoutId: "477654" },
   { slug: "fatty-bao",       name: "The Fatty Bao",         area: "Indiranagar",    districtSlugs: ["the-fatty-bao-indiranagar-bangalore", "the-fatty-bao-lavelle-road-bangalore"], eazyDinerSlug: "the-fatty-bao-lavelle-road-central-bengaluru-682670" },
   { slug: "yauatcha",        name: "Yauatcha",              area: "UB City",        districtSlugs: ["yauatcha-mg-road", "yauatcha-patisserie-mg-road-bangalore"],               eazyDinerSlug: "yauatcha-1-mg-road-mall-mg-road-330178" },
   { slug: "shiro",           name: "Shiro",                 area: "UB City",        districtSlugs: ["shiro-lavelle-road"],                                                        eazyDinerSlug: "shiro-ub-city-330141" },
@@ -61,7 +64,7 @@ const RESTAURANTS: ReconRestaurant[] = [
   { slug: "mtr",             name: "MTR",                   area: "Lalbagh",        districtSlugs: ["mavalli-tiffin-room-mtr-basavanagudi-bangalore", "mavalli-tiffin-room-mtr-jakkur-bangalore", "mtr-since-1924-1-kalyan-nagar-bangalore", "mtr-since-1924-hsr-bangalore", "mtr-since-1924-indiranagar-bangalore", "mtr-since-1924-jp-nagar-bangalore", "mtr-since-1924-kalyan-nagar-bangalore", "mtr-since-1924-kanakapura-road-bangalore", "mtr-since-1924-majestic-bangalore", "mtr-since-1924-st-marks-road-bangalore"], eazyDinerSlug: "mtr-1924-st-marks-road-334798" },
   { slug: "nagarjuna",       name: "Nagarjuna",             area: "Residency Road", districtSlugs: ["nagarjuna-since-1984-btm-bangalore", "nagarjuna-since-1984-indiranagar-bangalore", "nagarjuna-since-1984-koramangala-5th-block-bangalore", "nagarjuna-since-1984-marathahalli-bangalore", "nagarjuna-since-1984-residency-road-bangalore", "nagarjuna-since-1984-sarjapur-road-bangalore", "nagarjuna-since-1984-whitefield-bangalore"], eazyDinerSlug: "nagarjuna-residency-road-334689" },
   // International
-  { slug: "farzi-cafe",      name: "Farzi Cafe",            area: "UB City",        districtSlugs: ["farzi-cafe-lavelle-road"],                                                   eazyDinerSlug: "farzi-cafe-vittal-mallya-road-337292" },
+  { slug: "farzi-cafe",      name: "Farzi Cafe",            area: "UB City",        districtSlugs: ["farzi-cafe-lavelle-road"],                                                   eazyDinerSlug: "farzi-cafe-vittal-mallya-road-337292",             swiggyDineoutId: "302257" },
   { slug: "misu",            name: "Misu",                  area: "Indiranagar",    districtSlugs: ["misu-1-race-course-road-bangalore", "misu-ashok-nagar-bangalore", "misu-hebbal-bangalore", "misu-indiranagar-bangalore", "misu-kumaraswamy-layout-bangalore"] },
   { slug: "indigo-deli",     name: "Indigo Deli",           area: "Koramangala",    districtSlugs: [] },
   { slug: "black-pearl",     name: "The Black Pearl",       area: "Indiranagar",    districtSlugs: ["the-black-pearl-1-rajajinagar-bangalore", "the-black-pearl-indiranagar-bangalore", "the-black-pearl-kadubeesanahalli-bangalore"] },
@@ -75,7 +78,7 @@ const RESTAURANTS: ReconRestaurant[] = [
   { slug: "onesta",          name: "Onesta",                area: "Koramangala",    districtSlugs: ["onesta-1-bommanahalli-bangalore", "onesta-1-electronic-city-bangalore", "onesta-1-mahadevapura-bangalore", "onesta-1-marathahalli-bangalore", "onesta-2-electronic-city-bangalore", "onesta-aecs-layout-bangalore", "onesta-bannerghatta-road-bangalore", "onesta-basaveshwara-nagar-bangalore", "onesta-hebbal-bangalore", "onesta-hsr", "onesta-indiranagar-bangalore", "onesta-jp-nagar", "onesta-kammanahalli", "onesta-kanakapura-road-bangalore", "onesta-koramangala-4th-block-bangalore", "onesta-koramangala-5th-block-bangalore", "onesta-mahadevapura-bangalore", "onesta-new-bel-road", "onesta-rajarajeshwari-nagar", "onesta-yelahanka"] },
   // Wildcard — budget / hyped / chain
   { slug: "vidyarthi-bhavan",name: "Vidyarthi Bhavan",      area: "Gandhi Bazaar",  districtSlugs: ["vidyarthi-bhavan-since-1943-basavanagudi-bangalore"] },
-  { slug: "smoke-house-deli",name: "Smoke House Deli",      area: "Indiranagar",    districtSlugs: ["smoke-house-deli-indiranagar-bangalore", "smoke-house-deli-lavelle-road", "smoke-house-deli-whitefield-bangalore", "the-drawing-room-by-smoke-house-deli-indiranagar-bangalore"], eazyDinerSlug: "smoke-house-deli-lavelle-road-335752" },
+  { slug: "smoke-house-deli",name: "Smoke House Deli",      area: "Indiranagar",    districtSlugs: ["smoke-house-deli-indiranagar-bangalore", "smoke-house-deli-lavelle-road", "smoke-house-deli-whitefield-bangalore", "the-drawing-room-by-smoke-house-deli-indiranagar-bangalore"], eazyDinerSlug: "smoke-house-deli-lavelle-road-335752", swiggyDineoutId: "834227" },
   { slug: "asia-kitchen",    name: "Asia Kitchen",          area: "Indiranagar",    districtSlugs: [] },
   { slug: "flechazo",        name: "Flechazo",              area: "Indiranagar",    districtSlugs: ["flechazo-1-marathahalli-bangalore", "flechazo-gold-whitefield-bangalore", "flechazo-whitefield-bangalore"] },
   { slug: "tiger-trail",     name: "Tiger Trail",           area: "Jayamahal",      districtSlugs: ["tiger-trail-regenta-place-shivajinagar-bangalore", "tiger-trail-royal-orchid-hotel-airport-road-bangalore"], eazyDinerSlug: "tiger-trail-ramada-bangalore-shivajinagar-330037" },
@@ -220,21 +223,27 @@ function extractDistrictOffers(rscText: string): string[] {
 async function reconSwiggy(r: ReconRestaurant): Promise<ReconResult> {
   const base: ReconResult = { restaurant: r, platform: "swiggy", found: false, raw: null, offerSummary: [] };
   try {
-    // Step 1: food-delivery search to get restaurant ID
-    const searchUrl = `https://www.swiggy.com/dapi/restaurants/search/v3?lat=12.9716&lng=77.5946&str=${encodeURIComponent(r.name)}&trackingId=undefined&submitAction=ENTER&queryUniqueId=undefined`;
-    const searchRes = await guestFetch(searchUrl, {
-      headers: { "Referer": "https://www.swiggy.com/" },
-    });
-
-    if (!searchRes.ok) {
-      return { ...base, error: `Food-delivery search HTTP ${searchRes.status}` };
-    }
-
-    const searchBody = await searchRes.json() as Record<string, unknown>;
-    const restaurantId = extractSwiggyRestaurantId(searchBody, r.name);
+    // Step 1: resolve restaurant ID.
+    // Primary: use swiggyDineoutId if explicitly set (from swiggy.com/restaurants/{id}/dineout URL).
+    // Fallback: food-delivery search — works for restaurants also on Swiggy food delivery.
+    let restaurantId = r.swiggyDineoutId ?? null;
 
     if (!restaurantId) {
-      return { ...base, error: "Restaurant not found in food-delivery search results" };
+      const searchUrl = `https://www.swiggy.com/dapi/restaurants/search/v3?lat=12.9716&lng=77.5946&str=${encodeURIComponent(r.name)}&trackingId=undefined&submitAction=ENTER&queryUniqueId=undefined`;
+      const searchRes = await guestFetch(searchUrl, {
+        headers: { "Referer": "https://www.swiggy.com/" },
+      });
+
+      if (!searchRes.ok) {
+        return { ...base, error: `Food-delivery search HTTP ${searchRes.status}` };
+      }
+
+      const searchBody = await searchRes.json() as Record<string, unknown>;
+      restaurantId = extractSwiggyRestaurantId(searchBody, r.name);
+    }
+
+    if (!restaurantId) {
+      return { ...base, error: "Not on Swiggy Dineout — no swiggyDineoutId and not found via food-delivery search" };
     }
 
     // Step 2: Dineout detail endpoint

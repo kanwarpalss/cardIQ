@@ -16,8 +16,8 @@
   "raw": {
     "restaurantId": "281835",
     "detail": {
-      "requestId": "a151a351-1233-433f-ae22-b3526d0a3040",
-      "apiTime": "2026-05-17T16:07:11.265720352Z",
+      "requestId": "b46c526e-efba-4d5b-a2d5-baf9a3f08fea",
+      "apiTime": "2026-05-17T16:18:14.845794529Z",
       "success": {
         "statusMessage": "done successfully",
         "cards": [
@@ -560,9 +560,9 @@
                   "id": "about"
                 },
                 "metaInfo": {
+                  "lat": "12.97323885",
                   "lng": "77.62034765",
-                  "showMap": "true",
-                  "lat": "12.97323885"
+                  "showMap": "true"
                 }
               }
             }

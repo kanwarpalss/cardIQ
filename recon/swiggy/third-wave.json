@@ -65,8 +65,8 @@
   "raw": {
     "restaurantId": "533773",
     "detail": {
-      "requestId": "178a9156-f810-4b0f-bf83-0b480de9af79",
-      "apiTime": "2026-05-17T16:07:46.450643517Z",
+      "requestId": "c403851f-e85a-440d-bfb7-297156722ef4",
+      "apiTime": "2026-05-17T16:18:51.100156239Z",
       "success": {
         "statusMessage": "done successfully",
         "cards": [
@@ -642,9 +642,9 @@
                   "id": "about"
                 },
                 "metaInfo": {
+                  "lat": "12.97200175",
                   "lng": "77.59811903",
-                  "showMap": "true",
-                  "lat": "12.97200175"
+                  "showMap": "true"
                 }
               }
             }

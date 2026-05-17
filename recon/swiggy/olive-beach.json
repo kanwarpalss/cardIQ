@@ -7,11 +7,754 @@
       "districtSlugs": [
         "olive-beach-richmond-road-bangalore"
       ],
-      "eazyDinerSlug": "olive-beach-richmond-road-330137"
+      "eazyDinerSlug": "olive-beach-richmond-road-330137",
+      "swiggyDineoutId": "477654"
     },
-    "found": false,
-    "error": "Restaurant not found in food-delivery search results",
+    "found": true,
     "offerSummary": []
   },
-  "raw": null
+  "raw": {
+    "restaurantId": "477654",
+    "detail": {
+      "requestId": "4b30ccd4-ed3f-44e9-8f1d-bbb1892ffc24",
+      "apiTime": "2026-05-17T16:18:08.543535251Z",
+      "success": {
+        "statusMessage": "done successfully",
+        "cards": [
+          {
+            "card": {
+              "card": {
+                "@type": "type.googleapis.com/swiggy.presentation.dinersone.v1.EntityInfoWithMasthead",
+                "id": "477654",
+                "info": {
+                  "name": "Olive Beach",
+                  "locationInfo": {
+                    "distanceString": "2.6 km",
+                    "navigationUrl": "https://www.google.com/maps/dir/?api=1&origin=12.9716,77.5946&destination=12.96744,77.60826&travelmode=driving",
+                    "lat": "12.96744",
+                    "long": "77.60826",
+                    "city": {
+                      "name": "Bangalore"
+                    },
+                    "formattedAddress": "Richmond Town, Bangalore",
+                    "additionalInfo": {
+                      "cta": {
+                        "link": "swiggydiners://collectiondetails/DINEOUT_BRAND_OUTLETS?tags=layout_dineout_brand_outlets&metaMap=%7B%22brandId%22%3A%22151402%22%2C%22restaurant_id%22%3A%22477654%22%2C%22sourcePage%22%3A%22RDP%22%7D&header_title=Outlets",
+                        "text": "outlets",
+                        "type": "DEEPLINK",
+                        "metaInfo": {
+                          "ctaImage": "dineout/details/red_arrow_down.png"
+                        },
+                        "analytics": {
+                          "screenName": "DO-Detail",
+                          "context": "{\"restId\":\"477654\"}",
+                          "objectValue": "outlet_switcher_dropdown",
+                          "impressionObjectName": "entity_info_masthead",
+                          "clickObjectName": "entity_info_masthead"
+                        }
+                      }
+                    },
+                    "displayAreaName": "Richmond Town"
+                  },
+                  "timingsInfo": {
+                    "status": "Open",
+                    "message": "till 12AM",
+                    "outletTiming": {
+                      "infoList": [
+                        {
+                          "title": "Monday",
+                          "subtitle": "Noon - 4PM · 7PM - 11:59PM",
+                          "titleColor": "text_high_emphasis",
+                          "subtitleColor": "text_high_emphasis"
+                        },
+                        {
+                          "title": "Tuesday",
+                          "subtitle": "Noon - 4PM · 7PM - 11:59PM",
+                          "titleColor": "text_high_emphasis",
+                          "subtitleColor": "text_high_emphasis"
+                        },
+                        {
+                          "title": "Wednesday",
+                          "subtitle": "Noon - 4PM · 7PM - 11:59PM",
+                          "titleColor": "text_high_emphasis",
+                          "subtitleColor": "text_high_emphasis"
+                        },
+                        {
+                          "title": "Thursday",
+                          "subtitle": "Noon - 4PM · 7PM - 11:59PM",
+                          "titleColor": "text_high_emphasis",
+                          "subtitleColor": "text_high_emphasis"
+                        },
+                        {
+                          "title": "Friday",
+                          "subtitle": "Noon - 4PM · 7PM - 1AM",
+                          "titleColor": "text_high_emphasis",
+                          "subtitleColor": "text_high_emphasis"
+                        },
+                        {
+                          "title": "Saturday",
+                          "subtitle": "Noon - 4PM · 7PM - 1AM",
+                          "titleColor": "text_high_emphasis",
+                          "subtitleColor": "text_high_emphasis"
+                        },
+                        {
+                          "title": "Today",
+                          "subtitle": "Noon - 4PM · 7PM - 1AM",
+                          "titleColor": "primary",
+                          "subtitleColor": "primary"
+                        }
+                      ],
+                      "title": "Outlet timings"
+                    },
+                    "styleInfo": {
+                      "titleColor": "positive",
+                      "subtitleColor": "text_color_low_emphasis"
+                    }
+                  },
+                  "callDetail": {
+                    "title": "Trying to reach the outlet?",
+                    "style": {
+                      "cornerRadius": {
+                        "topLeft": 16,
+                        "topRight": 16
+                      },
+                      "backgroundColour": "#F0F0F5"
+                    },
+                    "actions": [
+                      {
+                        "link": "dailer-app?phone=9886220084",
+                        "text": "9886220084",
+                        "type": "DIALER",
+                        "metaInfo": {
+                          "ctaImage": "dineout/details/call_no_bg.png"
+                        }
+                      }
+                    ]
+                  },
+                  "ratingsInfo": {
+                    "value": "4.5",
+                    "description": "8K ratings",
+                    "count": 8063,
+                    "countDescription": "8K+ Google ratings",
+                    "icon": "dineout/details/google_tag.png",
+                    "style": "RATING_STYLE_V2"
+                  },
+                  "typeInfo": {
+                    "type": "ENTITY_TYPE_RESTAURANT",
+                    "restaurantType": "RESTAURANT_TYPE_NON_PARTICIPATING"
+                  },
+                  "style": {
+                    "backgroundColour": "#FFFFFF",
+                    "cornerRadius": {
+                      "topLeft": 16,
+                      "topRight": 16,
+                      "bottomLeft": 16,
+                      "bottomRight": 16
+                    },
+                    "animationConfig": {
+                      "type": "ANIMATION_TYPE_ENTRY_PUSH_DOWN",
+                      "startDelay": 250,
+                      "duration": 100,
+                      "interpolator": "INTERPOLATOR_LINEAR"
+                    },
+                    "dimension": {
+                      "width": {
+                        "type": "TYPE_RELATIVE",
+                        "value": 1,
+                        "reference": "RELATIVE_DIMENSION_REFERENCE_DEVICE_WIDTH"
+                      },
+                      "height": {
+                        "type": "TYPE_RELATIVE",
+                        "value": 0.778,
+                        "reference": "RELATIVE_DIMENSION_REFERENCE_WIDTH"
+                      }
+                    }
+                  },
+                  "favourite": {
+                    "entityLotte": {
+                      "frequencyCapping": 2,
+                      "image": "favourite-image",
+                      "lotteFiles": [
+                        {
+                          "type": "LOTTIE_TYPE_FAVOURITE",
+                          "lotte": "favourite-lottie"
+                        },
+                        {
+                          "type": "LOTTIE_TYPE_NON_FAVOURITE",
+                          "lotte": "non-favourite-lottie"
+                        }
+                      ]
+                    },
+                    "accessibility": {
+                      "altText": "favourite alt text",
+                      "altTextCta": "favourite alt text cta"
+                    }
+                  },
+                  "share": {
+                    "entityLotte": {
+                      "frequencyCapping": 3,
+                      "image": "share-image",
+                      "lotteFiles": [
+                        {
+                          "type": "LOTTIE_TYPE_SHARE",
+                          "lotte": "share-lottie"
+                        }
+                      ]
+                    },
+                    "shareUrl": "Hey, I think you will love Olive Beach, Richmond Town, Bangalore on Swiggy Dineout https://swiggy.onelink.me/BVRZ?af_dp=swiggydiners%3A%2F%2Fdetails%2F477654%3Fsource%3Dsharing Happy dining!",
+                    "accessibility": {
+                      "altText": "share alt text",
+                      "altTextCta": "share alt text cta"
+                    }
+                  },
+                  "entityAttributes": {
+                    "restaurantEntityAttributes": {
+                      "outlets": {},
+                      "cuisines": [
+                        "Mediterranean",
+                        "European"
+                      ],
+                      "costForTwo": "₹2300 for two"
+                    }
+                  }
+                },
+                "masthead": {
+                  "files": [
+                    {
+                      "type": "IMAGE",
+                      "id": "2025-02-13T07:54:18.177",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2025/2/13/a7ccf82f-ecc2-4604-a252-50481e6c0068_55ea7312a707f4dc785c7e9a24835764c.JPG"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2025-02-13T07:54:18.927",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2025/2/13/150e817b-2c1c-417b-aab5-0a585d9ce9d0_3b6cb2e31240948cd9bddc58ccc06f125.JPG"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2025-02-13T07:54:18.940",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2025/2/13/175cfb3b-e9ec-4935-96a5-d508cefea8b0_157565913e17a4db5939b8171ecaa56bb.JPG"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2025-02-13T07:54:19.084",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2025/2/13/c5a6d891-390e-41df-9aaa-ea7531c0f137_49d234d47dd8444c2abf60b3952923817.JPG"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2025-02-13T07:54:19.103",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2025/2/13/e45d9f96-f83a-4e14-9add-32e633d4f928_22abd77675024450fb6ec82abe1a1dbb7.JPG"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2025-02-13T07:49:31.490",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2025/2/13/5a6e182e-4ca0-4809-ad5d-cea56364895f_image8b4e3f0c1b46c4f2baee9ff833bc72e4a.JPG"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2025-02-13T07:49:31.563",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2025/2/13/c0420e8b-3564-43fd-addf-755b8d27954f_image7e777dd2f6d5c4d739168773e0b6be675.JPG"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2025-02-13T07:49:31.565",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2025/2/13/bd9314f6-4d68-4ba5-bca8-c1e0f394490a_image68d7609f4b0d548fcbbe2f2979705778e.JPG"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2025-02-13T07:49:31.566",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2025/2/13/3b6bb23f-92f7-4dbb-b5cb-1347fc73ac45_image070e2d68bc0364e83b493a4ad9aa3698b.JPG"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2025-02-13T07:49:31.570",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2025/2/13/26b61c7c-5375-45ed-a840-0aba56279b11_image36c73466e7cc449c1a618ab604238b944.JPG"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2025-02-13T07:49:31.647",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2025/2/13/0bf3241f-4b2c-48a3-acb4-04fdf2e32ff2_image2596fc952cd524347934895cfc09191f7.JPG"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2025-02-13T07:50:02.023",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2025/2/13/f9bed19b-0681-4688-b926-71ac3b5f6997_image104011ddc8fcbf49b192865d4b9fc5c507.JPG"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2025-02-13T07:50:03.393",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2025/2/13/79358ad2-4424-4644-9f8b-98a192bd6292_image15a6c34b42a5bc4ec49afd8e95b011d50a.JPG"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2025-02-13T07:50:03.397",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2025/2/13/9eaabd3b-be9c-43ad-b92d-91848113399e_image99e066368900a422aa8df14a1e9b7b730.JPG"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2025-02-13T07:50:03.465",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2025/2/13/d4e478ef-99bc-4278-a020-69de350fc01a_image1773fb3cee68504613bab3f6a473257c2c.JPG"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2025-02-13T07:50:03.564",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2025/2/13/c0e25280-5270-4d41-9243-639c6b433979_image12c0032e10908c4d0f920371c58cd2327c.JPG"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2025-02-13T07:50:03.744",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2025/2/13/8a72afa1-670d-4c5f-8f36-d82287b617fa_image13f1213ea743ca483e9b8434247a2bfd76.JPG"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2025-02-13T07:50:15.947",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2025/2/13/c85c3d96-0d09-4e34-8bfe-c950df8c15ff_image1828fd497874b04de4aaabb6a0dd8b5554.JPG"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2025-02-13T07:50:17.919",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2025/2/13/28206ed4-67d7-438f-a8d3-f476e4653346_image209320854bdbc048ce87fe4acdad23e713.JPG"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2025-02-13T07:50:19.018",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2025/2/13/0e85eef9-185c-44a2-a25b-6610645f4f51_image26607cff1c983c449c8f8cb379033903b4.JPG"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2025-02-13T07:50:19.198",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2025/2/13/0e884907-ddcb-4906-8c5c-7b80b3cbd542_image2956172235cb6c4d3d8a43540c303c8e22.JPG"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2025-02-13T07:50:19.356",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2025/2/13/99bb41ec-3e83-4184-960c-5ac5ed7b76be_image302bfe09bf553f4132b10ca27cf77aad55.JPG"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2025-02-13T07:50:19.493",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2025/2/13/05490010-5f3f-473b-82b9-76c40b1369b8_image2174ac3af326ec460fa664cf3b4744e4d6.JPG"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2025-02-13T07:50:19.638",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2025/2/13/65836514-75f3-4a87-bd4c-0620e5bdeba2_image2370898b8fc5044fbd9af2a42317fc78aa.JPG"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2025-02-13T07:50:19.849",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2025/2/13/dd242ec9-ca6b-41d3-8333-ee1a96badf9c_image2509ab80a10f7a406eb36a9a9a5820c386.JPG"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2025-02-13T07:50:19.867",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2025/2/13/78c56339-d232-4f88-8466-54b19b81017c_image314163cc61c8474caf8c75dfa7826a550e.JPG"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2025-02-13T07:50:20.115",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2025/2/13/57370311-b643-4f90-933b-7c49d6340820_image28a1694111ea43442687dfea4fbad1870d.JPG"
+                    }
+                  ],
+                  "cta": {
+                    "link": "swiggydiners://gallery/477654",
+                    "type": "DEEPLINK"
+                  },
+                  "cornerRadius": {
+                    "bottomLeft": 24,
+                    "bottomRight": 24
+                  },
+                  "autoScrollConfig": {
+                    "isScrollEnabled": true,
+                    "autoScrollDuration": 3,
+                    "autoScrollResetDuration": 5
+                  }
+                }
+              }
+            }
+          },
+          {
+            "card": {
+              "card": {
+                "@type": "type.googleapis.com/swiggy.presentation.dinersone.v1.RestaurantHighlights",
+                "title": "Popular dishes",
+                "element": [
+                  "Caramalized Pear and Blue Cheese",
+                  "Harissa Prawns",
+                  "Crab Cake",
+                  "Burrata",
+                  "Duo of Duck",
+                  "Lamb Leg",
+                  "Wild Mushroom Ragu",
+                  "Spinach and Goat Cheese Pizza",
+                  "Pasta and Dessert Chocolate"
+                ],
+                "content": [
+                  {
+                    "info": "Caramalized Pear and Blue Cheese",
+                    "icon": "dineout/details/popular_dishes.png"
+                  },
+                  {
+                    "info": "Harissa Prawns",
+                    "icon": "dineout/details/popular_dishes.png"
+                  },
+                  {
+                    "info": "Crab Cake",
+                    "icon": "dineout/details/popular_dishes.png"
+                  },
+                  {
+                    "info": "Burrata",
+                    "icon": "dineout/details/popular_dishes.png"
+                  },
+                  {
+                    "info": "Duo of Duck",
+                    "icon": "dineout/details/popular_dishes.png"
+                  },
+                  {
+                    "info": "Lamb Leg",
+                    "icon": "dineout/details/popular_dishes.png"
+                  },
+                  {
+                    "info": "Wild Mushroom Ragu",
+                    "icon": "dineout/details/popular_dishes.png"
+                  },
+                  {
+                    "info": "Spinach and Goat Cheese Pizza",
+                    "icon": "dineout/details/popular_dishes.png"
+                  },
+                  {
+                    "info": "Pasta and Dessert Chocolate",
+                    "icon": "dineout/details/popular_dishes.png"
+                  }
+                ],
+                "rowCount": 3,
+                "colCount": 3,
+                "scrollAnchor": {
+                  "id": "menu"
+                }
+              }
+            }
+          },
+          {
+            "card": {
+              "card": {
+                "@type": "type.googleapis.com/swiggy.gandalf.widgets.v2.StaggeredGrid",
+                "info": [
+                  {
+                    "imageCardInfo": {
+                      "id": "2025-02-13T07:54:18.177",
+                      "imageId": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2025/2/13/a7ccf82f-ecc2-4604-a252-50481e6c0068_55ea7312a707f4dc785c7e9a24835764c.JPG",
+                      "action": {
+                        "link": "swiggydiners://fullScreenGallery/477654?imageId=DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2025/2/13/a7ccf82f-ecc2-4604-a252-50481e6c0068_55ea7312a707f4dc785c7e9a24835764c.JPG&apiCall=true",
+                        "type": "DEEPLINK"
+                      },
+                      "analytics": {
+                        "screenName": "DO-Detail",
+                        "context": "{\"photo_id\":\"2025-02-13T07:54:18.177\",\"click_position\":1,\"click_on_indicator_+\":false}",
+                        "objectValue": "477654",
+                        "clickObjectName": "photos"
+                      }
+                    },
+                    "style": {
+                      "width": 0.611,
+                      "height": 0.586,
+                      "left": 0.0333
+                    },
+                    "mediaItemCornerRadius": {
+                      "topLeft": 16,
+                      "topRight": 16,
+                      "bottomLeft": 16,
+                      "bottomRight": 16
+                    }
+                  },
+                  {
+                    "imageCardInfo": {
+                      "id": "2025-02-13T07:54:18.927",
+                      "imageId": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2025/2/13/150e817b-2c1c-417b-aab5-0a585d9ce9d0_3b6cb2e31240948cd9bddc58ccc06f125.JPG",
+                      "action": {
+                        "link": "swiggydiners://fullScreenGallery/477654?imageId=DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2025/2/13/150e817b-2c1c-417b-aab5-0a585d9ce9d0_3b6cb2e31240948cd9bddc58ccc06f125.JPG&apiCall=true",
+                        "type": "DEEPLINK"
+                      },
+                      "analytics": {
+                        "screenName": "DO-Detail",
+                        "context": "{\"photo_id\":\"2025-02-13T07:54:18.927\",\"click_position\":2,\"click_on_indicator_+\":false}",
+                        "objectValue": "477654",
+                        "clickObjectName": "photos"
+                      }
+                    },
+                    "style": {
+                      "width": 0.288,
+                      "height": 0.277,
+                      "left": 0.675
+                    },
+                    "mediaItemCornerRadius": {
+                      "topLeft": 16,
+                      "topRight": 16,
+                      "bottomLeft": 16,
+                      "bottomRight": 16
+                    }
+                  },
+                  {
+                    "imageCardInfo": {
+                      "id": "2025-02-13T07:54:18.940",
+                      "imageId": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2025/2/13/175cfb3b-e9ec-4935-96a5-d508cefea8b0_157565913e17a4db5939b8171ecaa56bb.JPG",
+                      "action": {
+                        "link": "swiggydiners://fullScreenGallery/477654?imageId=DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2025/2/13/175cfb3b-e9ec-4935-96a5-d508cefea8b0_157565913e17a4db5939b8171ecaa56bb.JPG&apiCall=true",
+                        "type": "DEEPLINK"
+                      },
+                      "analytics": {
+                        "screenName": "DO-Detail",
+                        "context": "{\"photo_id\":\"2025-02-13T07:54:18.940\",\"click_position\":3,\"click_on_indicator_+\":false}",
+                        "objectValue": "477654",
+                        "clickObjectName": "photos"
+                      }
+                    },
+                    "style": {
+                      "width": 0.288,
+                      "height": 0.277,
+                      "top": 0.307,
+                      "left": 0.675
+                    },
+                    "mediaItemCornerRadius": {
+                      "topLeft": 16,
+                      "topRight": 16,
+                      "bottomLeft": 16,
+                      "bottomRight": 16
+                    }
+                  },
+                  {
+                    "imageCardInfo": {
+                      "id": "2025-02-13T07:54:19.084",
+                      "imageId": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2025/2/13/c5a6d891-390e-41df-9aaa-ea7531c0f137_49d234d47dd8444c2abf60b3952923817.JPG",
+                      "action": {
+                        "link": "swiggydiners://fullScreenGallery/477654?imageId=DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2025/2/13/c5a6d891-390e-41df-9aaa-ea7531c0f137_49d234d47dd8444c2abf60b3952923817.JPG&apiCall=true",
+                        "type": "DEEPLINK"
+                      },
+                      "analytics": {
+                        "screenName": "DO-Detail",
+                        "context": "{\"photo_id\":\"2025-02-13T07:54:19.084\",\"click_position\":4,\"click_on_indicator_+\":false}",
+                        "objectValue": "477654",
+                        "clickObjectName": "photos"
+                      }
+                    },
+                    "style": {
+                      "width": 0.288,
+                      "height": 0.277,
+                      "top": 0.618,
+                      "left": 0.0333
+                    },
+                    "mediaItemCornerRadius": {
+                      "topLeft": 16,
+                      "topRight": 16,
+                      "bottomLeft": 16,
+                      "bottomRight": 16
+                    }
+                  },
+                  {
+                    "imageCardInfo": {
+                      "id": "2025-02-13T07:54:19.103",
+                      "imageId": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2025/2/13/e45d9f96-f83a-4e14-9add-32e633d4f928_22abd77675024450fb6ec82abe1a1dbb7.JPG",
+                      "action": {
+                        "link": "swiggydiners://fullScreenGallery/477654?imageId=DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2025/2/13/e45d9f96-f83a-4e14-9add-32e633d4f928_22abd77675024450fb6ec82abe1a1dbb7.JPG&apiCall=true",
+                        "type": "DEEPLINK"
+                      },
+                      "analytics": {
+                        "screenName": "DO-Detail",
+                        "context": "{\"photo_id\":\"2025-02-13T07:54:19.103\",\"click_position\":5,\"click_on_indicator_+\":false}",
+                        "objectValue": "477654",
+                        "clickObjectName": "photos"
+                      }
+                    },
+                    "style": {
+                      "width": 0.288,
+                      "height": 0.277,
+                      "top": 0.618,
+                      "left": 0.357
+                    },
+                    "mediaItemCornerRadius": {
+                      "topLeft": 16,
+                      "topRight": 16,
+                      "bottomLeft": 16,
+                      "bottomRight": 16
+                    }
+                  },
+                  {
+                    "imageCardInfo": {
+                      "id": "2025-02-13T07:49:31.490",
+                      "imageId": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2025/2/13/5a6e182e-4ca0-4809-ad5d-cea56364895f_image8b4e3f0c1b46c4f2baee9ff833bc72e4a.JPG",
+                      "action": {
+                        "link": "swiggydiners://gallery/477654",
+                        "type": "DEEPLINK"
+                      },
+                      "analytics": {
+                        "screenName": "DO-Detail",
+                        "context": "{\"photo_id\":\"2025-02-13T07:49:31.490\",\"click_position\":6,\"click_on_indicator_+\":true}",
+                        "objectValue": "477654",
+                        "clickObjectName": "photos"
+                      }
+                    },
+                    "style": {
+                      "width": 0.288,
+                      "height": 0.277,
+                      "top": 0.618,
+                      "left": 0.675
+                    },
+                    "overlay": {
+                      "textInfo": {
+                        "info": "+21",
+                        "color": "white",
+                        "font": "FONT_NAME_V2_SUBHEADING1_NEUTRAL_BOLD"
+                      },
+                      "backgroundColor": "#9902060C"
+                    },
+                    "mediaItemCornerRadius": {
+                      "topLeft": 16,
+                      "topRight": 16,
+                      "bottomLeft": 16,
+                      "bottomRight": 16
+                    }
+                  }
+                ],
+                "layout": {
+                  "widgetPadding": {
+                    "bottom": 12
+                  },
+                  "scrollBar": {
+                    "width": 54,
+                    "height": 4
+                  },
+                  "widgetTheme": {
+                    "defaultMode": {
+                      "backgroundColour": "#FFFFFF",
+                      "theme": "THEME_TYPE_LIGHT",
+                      "themeVariant": "THEME_VARIANT_DEFAULT"
+                    },
+                    "darkMode": {
+                      "backgroundColour": "#FFFFFF",
+                      "theme": "THEME_TYPE_DARK",
+                      "themeVariant": "THEME_VARIANT_DEFAULT"
+                    }
+                  }
+                },
+                "id": "dineoutRdpHexaPhotosWidget",
+                "header": {
+                  "title": "Photos",
+                  "headerStyling": {
+                    "padding": {
+                      "left": 16,
+                      "top": 24,
+                      "bottom": 8
+                    },
+                    "titleFontName": "FONT_NAME_BODY_B1_BOLD"
+                  },
+                  "analytics": {
+                    "screenName": "DO-Detail",
+                    "context": "{\"photo_count\":27,\"photos_shown_count\":6,\"photo_ids\":[\"2025-02-13T07:54:18.177\",\"2025-02-13T07:54:18.927\",\"2025-02-13T07:54:18.940\",\"2025-02-13T07:54:19.084\",\"2025-02-13T07:54:19.103\",\"2025-02-13T07:49:31.490\",\"2025-02-13T07:49:31.563\",\"2025-02-13T07:49:31.565\",\"2025-02-13T07:49:31.566\",\"2025-02-13T07:49:31.570\",\"2025-02-13T07:49:31.647\",\"2025-02-13T07:50:02.023\",\"2025-02-13T07:50:03.393\",\"2025-02-13T07:50:03.397\",\"2025-02-13T07:50:03.465\",\"2025-02-13T07:50:03.564\",\"2025-02-13T07:50:03.744\",\"2025-02-13T07:50:15.947\",\"2025-02-13T07:50:17.919\",\"2025-02-13T07:50:19.018\",\"2025-02-13T07:50:19.198\",\"2025-02-13T07:50:19.356\",\"2025-02-13T07:50:19.493\",\"2025-02-13T07:50:19.638\",\"2025-02-13T07:50:19.849\",\"2025-02-13T07:50:19.867\",\"2025-02-13T07:50:20.115\"]}",
+                    "objectValue": "477654",
+                    "impressionObjectName": "photos"
+                  },
+                  "collapseConfig": {
+                    "enabled": true,
+                    "collapseIcon": "chevron_down_12",
+                    "expandIcon": "chevron_up_12"
+                  }
+                },
+                "scrollAnchor": {
+                  "id": "photos"
+                }
+              }
+            }
+          },
+          {
+            "card": {
+              "card": {
+                "@type": "type.googleapis.com/swiggy.presentation.dinersone.v1.RestaurantHighlights",
+                "title": "Amenities (5)",
+                "element": [
+                  "Alcohol served",
+                  "Parking available",
+                  "Valet parking",
+                  "Free wifi",
+                  "Smoking area"
+                ],
+                "content": [
+                  {
+                    "info": "Alcohol served",
+                    "icon": "dineout/details/rx_highlight_star.png"
+                  },
+                  {
+                    "info": "Parking available",
+                    "icon": "dineout/details/rx_highlight_star.png"
+                  },
+                  {
+                    "info": "Valet parking",
+                    "icon": "dineout/details/rx_highlight_star.png"
+                  },
+                  {
+                    "info": "Free wifi",
+                    "icon": "dineout/details/rx_highlight_star.png"
+                  },
+                  {
+                    "info": "Smoking area",
+                    "icon": "dineout/details/rx_highlight_star.png"
+                  }
+                ],
+                "rowCount": 2,
+                "colCount": 2,
+                "scrollAnchor": {
+                  "id": "about"
+                }
+              }
+            }
+          },
+          {
+            "card": {
+              "card": {
+                "@type": "type.googleapis.com/swiggy.gandalf.widgets.v2.TextInfoWidget",
+                "title": {
+                  "info": "Location",
+                  "color": "text_color_highest_emphasis"
+                },
+                "description": {
+                  "info": "2.6 km • 16, Wood St, Near Karnataka Bank, Ashok Nagar, Bengaluru, Karnataka - 560025",
+                  "color": "text_color_high_emphasis",
+                  "font": "FONT_NAME_BODY_B2_REG"
+                },
+                "iconUrl": "dineout/details/direction.png",
+                "cta": {
+                  "link": "https://www.google.com/maps/dir/?api=1&origin=12.9716,77.5946&destination=12.96744,77.60826&travelmode=driving",
+                  "text": "MAP_DEEPLINK",
+                  "type": "MAPS_DIRECTION"
+                },
+                "scrollAnchor": {
+                  "id": "about"
+                },
+                "metaInfo": {
+                  "showMap": "true",
+                  "lat": "12.96744",
+                  "lng": "77.60826"
+                }
+              }
+            }
+          },
+          {
+            "card": {
+              "card": {
+                "@type": "type.googleapis.com/swiggy.presentation.dinersone.v1.CtaList",
+                "ctas": [
+                  {
+                    "link": "swiggydiners://login",
+                    "text": "Login to avail offer & pay",
+                    "type": "primary",
+                    "metaInfo": {}
+                  }
+                ]
+              }
+            }
+          }
+        ],
+        "firstOffsetRequest": true
+      }
+    }
+  }
 }
