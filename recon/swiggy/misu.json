@@ -13,206 +13,758 @@
       ]
     },
     "found": true,
-    "offerSummary": [
-      "aggregatedDiscountInfo",
-      "aggregatedDiscountInfoV2",
-      "showEoOffer",
-      "firstOffsetRequest"
-    ]
+    "offerSummary": []
   },
   "raw": {
-    "statusCode": 0,
-    "data": {
-      "statusMessage": "done successfully",
-      "cards": [
-        {
-          "card": {
+    "restaurantId": "29063",
+    "detail": {
+      "requestId": "f6969fcb-3a0e-40e7-92df-ad2aa0a65917",
+      "apiTime": "2026-05-17T16:07:35.884177964Z",
+      "success": {
+        "statusMessage": "done successfully",
+        "cards": [
+          {
             "card": {
-              "@type": "type.googleapis.com/swiggy.gandalf.widgets.v2.Navigation",
-              "tab": [
-                {
-                  "id": "RESTAURANT",
-                  "title": "Restaurants",
-                  "selected": true,
-                  "analytics": {
-                    "screenName": "explore",
-                    "context": "{\"tid\":\"undefined\",\"query\":\"Misu\"}",
-                    "objectValue": "RESTAURANT",
-                    "clickObjectName": "click-tab"
-                  },
-                  "selectedBgColor": "#1B1E24",
-                  "unselectedBgColor": "#FFFFFF",
-                  "selectedTextColor": "#BFFFFFFF",
-                  "unselectedTextColor": "#9902060C",
-                  "selectedBorderColor": "#1B1E24",
-                  "unselectedBorderColor": "#E2E2E7"
-                },
-                {
-                  "id": "DISH",
-                  "title": "Dishes",
-                  "analytics": {
-                    "screenName": "explore",
-                    "context": "{\"tid\":\"undefined\",\"query\":\"Misu\"}",
-                    "objectValue": "DISH",
-                    "clickObjectName": "click-tab"
-                  },
-                  "selectedBgColor": "#1B1E24",
-                  "unselectedBgColor": "#FFFFFF",
-                  "selectedTextColor": "#BFFFFFFF",
-                  "unselectedTextColor": "#9902060C",
-                  "selectedBorderColor": "#1B1E24",
-                  "unselectedBorderColor": "#E2E2E7"
-                }
-              ],
-              "meta": {
-                "orderable": "false",
-                "correctedQuery": "",
-                "suggestionType": "",
-                "queryIntent": "RESTAURANT"
-              }
-            }
-          }
-        },
-        {
-          "groupedCard": {
-            "cardGroupMap": {
-              "RESTAURANT": {
-                "cards": [
-                  {
-                    "card": {
-                      "card": {
-                        "@type": "type.googleapis.com/swiggy.presentation.food.v2.Restaurant",
-                        "info": {
-                          "id": "29063",
-                          "name": "Misu",
-                          "city": "1",
-                          "slugs": {
-                            "restaurant": "misu-st-marks-road-central-bangalore",
-                            "city": "bangalore"
-                          },
-                          "cloudinaryImageId": "lx0tpfgsbqygafwh30wh",
-                          "address": "First floor F9 & F9A, No.50, Sobha Mall, St.Marks Road, Banglaore-560001",
-                          "locality": "St. Marks Road",
-                          "areaName": "St. Marks Road",
-                          "costForTwo": "130000",
-                          "costForTwoMessage": "₹1300 FOR TWO",
-                          "cuisines": [
-                            "Asian",
-                            "Chinese",
-                            "Vietnamese",
-                            "Malaysian",
-                            "Sushi",
-                            "Singaporean",
-                            "Desserts"
-                          ],
-                          "avgRating": 4.5,
-                          "feeDetails": {},
-                          "parentId": "7415",
-                          "avgRatingString": "4.5",
-                          "totalRatingsString": "6.3K+",
-                          "sla": {
-                            "deliveryTime": 34,
-                            "minDeliveryTime": 30,
-                            "maxDeliveryTime": 35,
-                            "lastMileTravel": 1.3,
-                            "serviceability": "SERVICEABLE",
-                            "rainMode": "RAIN_MODE_NONE",
-                            "slaString": "30-35 MINS",
-                            "lastMileTravelString": "1.3 km",
-                            "iconType": "ICON_TYPE_EMPTY"
-                          },
-                          "availability": {
-                            "nextOpenTimeMessage": "Opens next at 12 noon, today",
-                            "restaurantClosedMeta": {
-                              "title": "CLOSED",
-                              "subtitle": "FOR NOW"
-                            }
-                          },
-                          "aggregatedDiscountInfo": {
-                            "visible": true
-                          },
-                          "badges": {
-                            "imageBadges": [
-                              {
-                                "imageId": "newg.png",
-                                "description": "Gourmet"
-                              }
-                            ]
-                          },
-                          "unorderableMessage": "Opens next at 12 noon, today",
-                          "aggregatedDiscountInfoV2": {
-                            "visible": true
-                          },
-                          "ratingSlab": "RATING_SLAB_5",
-                          "availabilityServiceabilityMessage": "Currently closed for delivery. Opens next at 12 noon, today",
-                          "orderabilityCommunication": {
-                            "title": {
-                              "text": "CURRENTLY"
-                            },
-                            "subTitle": {
-                              "text": "CLOSED"
-                            },
-                            "message": {
-                              "text": "Opens today at 12:00 PM",
-                              "textColour": "primary"
-                            },
-                            "customIcon": {
-                              "bgGradientColorStart": "#EB8322",
-                              "bgGradientColorEnd": "#EE5803"
-                            },
-                            "commsStyling": {}
-                          },
-                          "cartOrderabilityNudgeBanner": {
-                            "parameters": {},
-                            "presentation": {}
-                          },
-                          "externalRatings": {
-                            "aggregatedRating": {
-                              "rating": "4.4",
-                              "ratingCount": "3.3K+"
-                            },
-                            "source": "GOOGLE",
-                            "sourceIconImageId": "v1704440323/google_ratings/rating_google_tag"
-                          },
-                          "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY",
-                          "featuredSectionInfo": {},
-                          "showEoOffer": true,
-                          "priceComparisonComms": {}
+              "card": {
+                "@type": "type.googleapis.com/swiggy.presentation.dinersone.v1.EntityInfoWithMasthead",
+                "id": "29063",
+                "info": {
+                  "name": "Misu- NPR donot activate",
+                  "locationInfo": {
+                    "distanceString": "2.4 km",
+                    "navigationUrl": "https://www.google.com/maps/dir/?api=1&origin=12.9716,77.5946&destination=12.975478460615067,77.60262754547358&travelmode=driving",
+                    "lat": "12.975478460615067",
+                    "long": "77.60262754547358",
+                    "landmarkName": "Halcyon Complex",
+                    "city": {
+                      "name": "Bangalore"
+                    },
+                    "formattedAddress": "Halcyon Complex, St. Marks Road, Bangalore",
+                    "additionalInfo": {
+                      "cta": {
+                        "link": "swiggydiners://collectiondetails/DINEOUT_BRAND_OUTLETS?tags=layout_dineout_brand_outlets&metaMap=%7B%22brandId%22%3A%227415%22%2C%22restaurant_id%22%3A%2229063%22%2C%22sourcePage%22%3A%22RDP%22%7D&header_title=Outlets",
+                        "text": "outlets",
+                        "type": "DEEPLINK",
+                        "metaInfo": {
+                          "ctaImage": "dineout/details/red_arrow_down.png"
                         },
                         "analytics": {
-                          "screenName": "explore",
-                          "context": "{\"tid\":\"undefined\",\"grid\":\"577f13b6-254c-4e92-95e9-a13a17d5a806\",\"queryUniqueId\":\"undefined\",\"query\":\"Misu\"}",
-                          "objectValue": "29063",
-                          "impressionObjectName": "impression-restaurant",
-                          "clickObjectName": "click-restaurant"
-                        },
-                        "ctaWithParams": {
-                          "link": "swiggy://menu",
-                          "type": "DEEPLINK",
-                          "params": {
-                            "isSld": "false",
-                            "sourceRequestId": "00000000000000000000000000000000",
-                            "qrEnabled": "false",
-                            "restaurant_id": "29063",
-                            "query": "Misu",
-                            "sourceSessionId": "re607a1becb-8a2d-4ada-9882-0a16b7fdc",
-                            "source": "SEARCH"
-                          }
+                          "screenName": "DO-Detail",
+                          "context": "{\"restId\":\"29063\"}",
+                          "objectValue": "outlet_switcher_dropdown",
+                          "impressionObjectName": "entity_info_masthead",
+                          "clickObjectName": "entity_info_masthead"
                         }
                       }
+                    },
+                    "displayAreaName": "St. Marks Road"
+                  },
+                  "timingsInfo": {
+                    "outletTiming": {
+                      "infoList": [
+                        {
+                          "title": "Monday",
+                          "subtitle": "Noon - 4PM · 7:30PM - 11:59PM",
+                          "titleColor": "text_high_emphasis",
+                          "subtitleColor": "text_high_emphasis"
+                        },
+                        {
+                          "title": "Tuesday",
+                          "subtitle": "Noon - 4PM · 7:30PM - 11:59PM",
+                          "titleColor": "text_high_emphasis",
+                          "subtitleColor": "text_high_emphasis"
+                        },
+                        {
+                          "title": "Wednesday",
+                          "subtitle": "Noon - 4PM · 7:30PM - 11:59PM",
+                          "titleColor": "text_high_emphasis",
+                          "subtitleColor": "text_high_emphasis"
+                        },
+                        {
+                          "title": "Thursday",
+                          "subtitle": "Noon - 4PM · 7:30PM - 11:59PM",
+                          "titleColor": "text_high_emphasis",
+                          "subtitleColor": "text_high_emphasis"
+                        },
+                        {
+                          "title": "Friday",
+                          "subtitle": "Noon - 4PM · 7:30PM - 11:59PM",
+                          "titleColor": "text_high_emphasis",
+                          "subtitleColor": "text_high_emphasis"
+                        },
+                        {
+                          "title": "Saturday",
+                          "subtitle": "12:30PM - 1AM",
+                          "titleColor": "text_high_emphasis",
+                          "subtitleColor": "text_high_emphasis"
+                        },
+                        {
+                          "title": "Today",
+                          "subtitle": "12:30PM - 11:59PM",
+                          "titleColor": "primary",
+                          "subtitleColor": "primary"
+                        }
+                      ],
+                      "title": "Outlet timings"
+                    },
+                    "styleInfo": {
+                      "titleColor": "negative",
+                      "subtitleColor": "text_color_low_emphasis"
                     }
+                  },
+                  "callDetail": {
+                    "title": "Trying to reach the outlet?",
+                    "style": {
+                      "cornerRadius": {
+                        "topLeft": 16,
+                        "topRight": 16
+                      },
+                      "backgroundColour": "#F0F0F5"
+                    },
+                    "actions": [
+                      {
+                        "link": "dailer-app?phone=9686992071",
+                        "text": "9686992071",
+                        "type": "DIALER",
+                        "metaInfo": {
+                          "ctaImage": "dineout/details/call_no_bg.png"
+                        }
+                      }
+                    ]
+                  },
+                  "ratingsInfo": {
+                    "value": "4.4",
+                    "description": "3K ratings",
+                    "count": 3316,
+                    "countDescription": "3K+ Google ratings",
+                    "icon": "dineout/details/google_tag.png",
+                    "style": "RATING_STYLE_V2"
+                  },
+                  "typeInfo": {
+                    "type": "ENTITY_TYPE_RESTAURANT",
+                    "restaurantType": "RESTAURANT_TYPE_NON_PARTICIPATING"
+                  },
+                  "style": {
+                    "backgroundColour": "#FFFFFF",
+                    "cornerRadius": {
+                      "topLeft": 16,
+                      "topRight": 16,
+                      "bottomLeft": 16,
+                      "bottomRight": 16
+                    },
+                    "animationConfig": {
+                      "type": "ANIMATION_TYPE_ENTRY_PUSH_DOWN",
+                      "startDelay": 250,
+                      "duration": 100,
+                      "interpolator": "INTERPOLATOR_LINEAR"
+                    },
+                    "dimension": {
+                      "width": {
+                        "type": "TYPE_RELATIVE",
+                        "value": 1,
+                        "reference": "RELATIVE_DIMENSION_REFERENCE_DEVICE_WIDTH"
+                      },
+                      "height": {
+                        "type": "TYPE_RELATIVE",
+                        "value": 0.778,
+                        "reference": "RELATIVE_DIMENSION_REFERENCE_WIDTH"
+                      }
+                    }
+                  },
+                  "favourite": {
+                    "entityLotte": {
+                      "frequencyCapping": 2,
+                      "image": "favourite-image",
+                      "lotteFiles": [
+                        {
+                          "type": "LOTTIE_TYPE_FAVOURITE",
+                          "lotte": "favourite-lottie"
+                        },
+                        {
+                          "type": "LOTTIE_TYPE_NON_FAVOURITE",
+                          "lotte": "non-favourite-lottie"
+                        }
+                      ]
+                    },
+                    "accessibility": {
+                      "altText": "favourite alt text",
+                      "altTextCta": "favourite alt text cta"
+                    }
+                  },
+                  "share": {
+                    "entityLotte": {
+                      "frequencyCapping": 3,
+                      "image": "share-image",
+                      "lotteFiles": [
+                        {
+                          "type": "LOTTIE_TYPE_SHARE",
+                          "lotte": "share-lottie"
+                        }
+                      ]
+                    },
+                    "shareUrl": "Hey, I think you will love Misu- NPR donot activate, Halcyon Complex, St. Marks Road, Bangalore on Swiggy Dineout https://swiggy.onelink.me/BVRZ?af_dp=swiggydiners%3A%2F%2Fdetails%2F29063%3Fsource%3Dsharing Happy dining!",
+                    "accessibility": {
+                      "altText": "share alt text",
+                      "altTextCta": "share alt text cta"
+                    }
+                  },
+                  "entityAttributes": {
+                    "restaurantEntityAttributes": {
+                      "outlets": {},
+                      "cuisines": [
+                        "Asian",
+                        "Chinese"
+                      ],
+                      "costForTwo": "₹1500 for two"
+                    }
+                  }
+                },
+                "masthead": {
+                  "files": [
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-08-24T22:05:21.968",
+                      "name": "Misu-1.jpg",
+                      "url": "v1692914724/0df885b53383cfc824c1a969004bb435.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-08-24T22:05:26.645",
+                      "name": "Misu-2.jpg",
+                      "url": "v1692914728/b6394a43a52ecd1b3f7711443c3eee60.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-08-24T22:05:30.843",
+                      "name": "Misu-3.jpg",
+                      "url": "v1692914732/b145bb6ed5fd92ff15ae677846ebc33d.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-08-24T22:05:35.018",
+                      "name": "Misu-4.jpg",
+                      "url": "v1692914736/4d611538c88769923870aee3e66dc6c8.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-08-24T22:05:38.692",
+                      "name": "Misu-5.jpg",
+                      "url": "v1692914740/fd85787ff3d02624efb465996b905664.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-08-24T22:05:43.112",
+                      "name": "Misu-6.jpg",
+                      "url": "v1692914744/c510615043deacf0df5362866bab0ce1.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-08-24T22:05:47.163",
+                      "name": "Misu-1.jpg",
+                      "url": "v1692914748/b0883257af824765d85c3e39f46d715d.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-08-24T22:05:51.393",
+                      "name": "Misu-8.jpg",
+                      "url": "v1692914753/6317eddf21ef067d1275d790e8085f84.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-08-24T22:05:55.446",
+                      "name": "amb1.jpg",
+                      "url": "v1692914758/2dc10a1fafb8c84fbc68e8f59e3edeb8.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-08-24T22:06:01.344",
+                      "name": "amb2.jpg",
+                      "url": "v1692914764/bfdfd6d82bd28e968eb10d15539c992e.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-08-24T22:07:11.965",
+                      "name": "Misu-Food-1.jpg",
+                      "url": "v1692914833/395e0b307d6819e274d2dde2f57efb61.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-08-24T22:07:15.603",
+                      "name": "Misu-Food-2.jpg",
+                      "url": "v1692914836/63e47d8c6be289e7c1ffedd3eb503526.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-08-24T22:07:20.430",
+                      "name": "Misu-Food-3.jpg",
+                      "url": "v1692914841/bb4702fa942b104b3ddca24df37be037.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-08-24T22:07:25.350",
+                      "name": "Misu-Food-4.jpg",
+                      "url": "v1692914846/c2690167c9783e7b066401b90acf8494.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-08-24T22:07:28.983",
+                      "name": "Misu-Food-5.jpg",
+                      "url": "v1692914850/50475a3a05d5b35d87022816f30bad71.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-08-24T22:07:32.710",
+                      "name": "Misu-Food-6.jpg",
+                      "url": "v1692914853/c7dc0fb2c027676b652524b55fb6336c.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-08-24T22:07:36.201",
+                      "name": "Misu-Food-7.jpg",
+                      "url": "v1692914857/00aa21b27a8f1e34f820fceed39d5b42.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-08-24T22:07:39.607",
+                      "name": "Misu-Food-8.jpg",
+                      "url": "v1692914860/ca50c7931b720b7461bb52e8918f68a9.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-08-24T22:07:42.906",
+                      "name": "Misu-Food-9.jpg",
+                      "url": "v1692914864/fde799354a293f9c0bd7b8c81c8b3f72.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-08-24T22:07:46.162",
+                      "name": "Misu-Food-10.jpg",
+                      "url": "v1692914867/9154aa0736bca1c8f50cf59e9fcf29bd.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-08-24T22:07:49.212",
+                      "name": "Misu-Food-11.jpg",
+                      "url": "v1692914870/09760dc223610c2d1dcbe46d47a7083d.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-08-24T22:07:52.252",
+                      "name": "Misu-Food-12.jpg",
+                      "url": "v1692914873/c57de5bc1585257715f01b542ecbb9b8.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-08-24T22:07:56.798",
+                      "name": "Misu-Food-13.jpg",
+                      "url": "v1692914878/d6cd599df999768a6de878ea719a38ef.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-08-24T22:08:00.107",
+                      "name": "Misu-Food-14.jpg",
+                      "url": "v1692914881/5a4405d46b514b61c5bd6364064cd7c9.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-08-24T22:08:02.908",
+                      "name": "Misu-Food-15.jpg",
+                      "url": "v1692914884/efe9521591ec959ba21394a4c1d4aa08.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-08-24T22:08:06.063",
+                      "name": "Misu-Food-16.jpg",
+                      "url": "v1692914887/9efe2323deb5961f91bdba452acfea5f.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-08-24T22:08:10.432",
+                      "name": "Misu-Food-17.jpg",
+                      "url": "v1692914891/092bda1fe37544b1755164580ec150fe.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-08-24T22:08:13.452",
+                      "name": "Misu-Food-19.jpg",
+                      "url": "v1692914894/fddd99d928e65e3036bfa208c3e7707c.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-08-24T22:08:16.619",
+                      "name": "Misu-Food-20.jpg",
+                      "url": "v1692914897/448949f4c6645829f82d48bda879212b.jpg"
+                    }
+                  ],
+                  "cta": {
+                    "link": "swiggydiners://gallery/29063",
+                    "type": "DEEPLINK"
+                  },
+                  "cornerRadius": {
+                    "bottomLeft": 24,
+                    "bottomRight": 24
+                  },
+                  "autoScrollConfig": {
+                    "isScrollEnabled": true,
+                    "autoScrollDuration": 3,
+                    "autoScrollResetDuration": 5
+                  }
+                }
+              }
+            }
+          },
+          {
+            "card": {
+              "card": {
+                "@type": "type.googleapis.com/swiggy.presentation.dinersone.v1.RestaurantHighlights",
+                "title": "Popular dishes",
+                "element": [
+                  "Dumplings",
+                  "Sushi",
+                  "Khau Suey",
+                  "Cocktails",
+                  "Kimchi",
+                  "Salad",
+                  "Momos"
+                ],
+                "content": [
+                  {
+                    "info": "Dumplings",
+                    "icon": "dineout/details/popular_dishes.png"
+                  },
+                  {
+                    "info": "Sushi",
+                    "icon": "dineout/details/popular_dishes.png"
+                  },
+                  {
+                    "info": "Khau Suey",
+                    "icon": "dineout/details/popular_dishes.png"
+                  },
+                  {
+                    "info": "Cocktails",
+                    "icon": "dineout/details/popular_dishes.png"
+                  },
+                  {
+                    "info": "Kimchi",
+                    "icon": "dineout/details/popular_dishes.png"
+                  },
+                  {
+                    "info": "Salad",
+                    "icon": "dineout/details/popular_dishes.png"
+                  },
+                  {
+                    "info": "Momos",
+                    "icon": "dineout/details/popular_dishes.png"
+                  }
+                ],
+                "rowCount": 2,
+                "colCount": 3,
+                "scrollAnchor": {
+                  "id": "menu"
+                }
+              }
+            }
+          },
+          {
+            "card": {
+              "card": {
+                "@type": "type.googleapis.com/swiggy.gandalf.widgets.v2.StaggeredGrid",
+                "info": [
+                  {
+                    "imageCardInfo": {
+                      "id": "2023-08-24T22:05:21.968",
+                      "imageId": "v1692914724/0df885b53383cfc824c1a969004bb435.jpg",
+                      "action": {
+                        "link": "swiggydiners://fullScreenGallery/29063?imageId=v1692914724/0df885b53383cfc824c1a969004bb435.jpg&apiCall=true",
+                        "type": "DEEPLINK"
+                      },
+                      "analytics": {
+                        "screenName": "DO-Detail",
+                        "context": "{\"photo_id\":\"2023-08-24T22:05:21.968\",\"click_position\":1,\"click_on_indicator_+\":false}",
+                        "objectValue": "29063",
+                        "clickObjectName": "photos"
+                      }
+                    },
+                    "style": {
+                      "width": 0.611,
+                      "height": 0.586,
+                      "left": 0.0333
+                    },
+                    "mediaItemCornerRadius": {
+                      "topLeft": 16,
+                      "topRight": 16,
+                      "bottomLeft": 16,
+                      "bottomRight": 16
+                    }
+                  },
+                  {
+                    "imageCardInfo": {
+                      "id": "2023-08-24T22:05:26.645",
+                      "imageId": "v1692914728/b6394a43a52ecd1b3f7711443c3eee60.jpg",
+                      "action": {
+                        "link": "swiggydiners://fullScreenGallery/29063?imageId=v1692914728/b6394a43a52ecd1b3f7711443c3eee60.jpg&apiCall=true",
+                        "type": "DEEPLINK"
+                      },
+                      "analytics": {
+                        "screenName": "DO-Detail",
+                        "context": "{\"photo_id\":\"2023-08-24T22:05:26.645\",\"click_position\":2,\"click_on_indicator_+\":false}",
+                        "objectValue": "29063",
+                        "clickObjectName": "photos"
+                      }
+                    },
+                    "style": {
+                      "width": 0.288,
+                      "height": 0.277,
+                      "left": 0.675
+                    },
+                    "mediaItemCornerRadius": {
+                      "topLeft": 16,
+                      "topRight": 16,
+                      "bottomLeft": 16,
+                      "bottomRight": 16
+                    }
+                  },
+                  {
+                    "imageCardInfo": {
+                      "id": "2023-08-24T22:05:30.843",
+                      "imageId": "v1692914732/b145bb6ed5fd92ff15ae677846ebc33d.jpg",
+                      "action": {
+                        "link": "swiggydiners://fullScreenGallery/29063?imageId=v1692914732/b145bb6ed5fd92ff15ae677846ebc33d.jpg&apiCall=true",
+                        "type": "DEEPLINK"
+                      },
+                      "analytics": {
+                        "screenName": "DO-Detail",
+                        "context": "{\"photo_id\":\"2023-08-24T22:05:30.843\",\"click_position\":3,\"click_on_indicator_+\":false}",
+                        "objectValue": "29063",
+                        "clickObjectName": "photos"
+                      }
+                    },
+                    "style": {
+                      "width": 0.288,
+                      "height": 0.277,
+                      "top": 0.307,
+                      "left": 0.675
+                    },
+                    "mediaItemCornerRadius": {
+                      "topLeft": 16,
+                      "topRight": 16,
+                      "bottomLeft": 16,
+                      "bottomRight": 16
+                    }
+                  },
+                  {
+                    "imageCardInfo": {
+                      "id": "2023-08-24T22:05:35.018",
+                      "imageId": "v1692914736/4d611538c88769923870aee3e66dc6c8.jpg",
+                      "action": {
+                        "link": "swiggydiners://fullScreenGallery/29063?imageId=v1692914736/4d611538c88769923870aee3e66dc6c8.jpg&apiCall=true",
+                        "type": "DEEPLINK"
+                      },
+                      "analytics": {
+                        "screenName": "DO-Detail",
+                        "context": "{\"photo_id\":\"2023-08-24T22:05:35.018\",\"click_position\":4,\"click_on_indicator_+\":false}",
+                        "objectValue": "29063",
+                        "clickObjectName": "photos"
+                      }
+                    },
+                    "style": {
+                      "width": 0.288,
+                      "height": 0.277,
+                      "top": 0.618,
+                      "left": 0.0333
+                    },
+                    "mediaItemCornerRadius": {
+                      "topLeft": 16,
+                      "topRight": 16,
+                      "bottomLeft": 16,
+                      "bottomRight": 16
+                    }
+                  },
+                  {
+                    "imageCardInfo": {
+                      "id": "2023-08-24T22:05:38.692",
+                      "imageId": "v1692914740/fd85787ff3d02624efb465996b905664.jpg",
+                      "action": {
+                        "link": "swiggydiners://fullScreenGallery/29063?imageId=v1692914740/fd85787ff3d02624efb465996b905664.jpg&apiCall=true",
+                        "type": "DEEPLINK"
+                      },
+                      "analytics": {
+                        "screenName": "DO-Detail",
+                        "context": "{\"photo_id\":\"2023-08-24T22:05:38.692\",\"click_position\":5,\"click_on_indicator_+\":false}",
+                        "objectValue": "29063",
+                        "clickObjectName": "photos"
+                      }
+                    },
+                    "style": {
+                      "width": 0.288,
+                      "height": 0.277,
+                      "top": 0.618,
+                      "left": 0.357
+                    },
+                    "mediaItemCornerRadius": {
+                      "topLeft": 16,
+                      "topRight": 16,
+                      "bottomLeft": 16,
+                      "bottomRight": 16
+                    }
+                  },
+                  {
+                    "imageCardInfo": {
+                      "id": "2023-08-24T22:05:43.112",
+                      "imageId": "v1692914744/c510615043deacf0df5362866bab0ce1.jpg",
+                      "action": {
+                        "link": "swiggydiners://gallery/29063",
+                        "type": "DEEPLINK"
+                      },
+                      "analytics": {
+                        "screenName": "DO-Detail",
+                        "context": "{\"photo_id\":\"2023-08-24T22:05:43.112\",\"click_position\":6,\"click_on_indicator_+\":true}",
+                        "objectValue": "29063",
+                        "clickObjectName": "photos"
+                      }
+                    },
+                    "style": {
+                      "width": 0.288,
+                      "height": 0.277,
+                      "top": 0.618,
+                      "left": 0.675
+                    },
+                    "overlay": {
+                      "textInfo": {
+                        "info": "+23",
+                        "color": "white",
+                        "font": "FONT_NAME_V2_SUBHEADING1_NEUTRAL_BOLD"
+                      },
+                      "backgroundColor": "#9902060C"
+                    },
+                    "mediaItemCornerRadius": {
+                      "topLeft": 16,
+                      "topRight": 16,
+                      "bottomLeft": 16,
+                      "bottomRight": 16
+                    }
+                  }
+                ],
+                "layout": {
+                  "widgetPadding": {
+                    "bottom": 12
+                  },
+                  "scrollBar": {
+                    "width": 54,
+                    "height": 4
+                  },
+                  "widgetTheme": {
+                    "defaultMode": {
+                      "backgroundColour": "#FFFFFF",
+                      "theme": "THEME_TYPE_LIGHT",
+                      "themeVariant": "THEME_VARIANT_DEFAULT"
+                    },
+                    "darkMode": {
+                      "backgroundColour": "#FFFFFF",
+                      "theme": "THEME_TYPE_DARK",
+                      "themeVariant": "THEME_VARIANT_DEFAULT"
+                    }
+                  }
+                },
+                "id": "dineoutRdpHexaPhotosWidget",
+                "header": {
+                  "title": "Photos",
+                  "headerStyling": {
+                    "padding": {
+                      "left": 16,
+                      "top": 24,
+                      "bottom": 8
+                    },
+                    "titleFontName": "FONT_NAME_BODY_B1_BOLD"
+                  },
+                  "analytics": {
+                    "screenName": "DO-Detail",
+                    "context": "{\"photo_count\":29,\"photos_shown_count\":6,\"photo_ids\":[\"2023-08-24T22:05:21.968\",\"2023-08-24T22:05:26.645\",\"2023-08-24T22:05:30.843\",\"2023-08-24T22:05:35.018\",\"2023-08-24T22:05:38.692\",\"2023-08-24T22:05:43.112\",\"2023-08-24T22:05:47.163\",\"2023-08-24T22:05:51.393\",\"2023-08-24T22:05:55.446\",\"2023-08-24T22:06:01.344\",\"2023-08-24T22:07:11.965\",\"2023-08-24T22:07:15.603\",\"2023-08-24T22:07:20.430\",\"2023-08-24T22:07:25.350\",\"2023-08-24T22:07:28.983\",\"2023-08-24T22:07:32.710\",\"2023-08-24T22:07:36.201\",\"2023-08-24T22:07:39.607\",\"2023-08-24T22:07:42.906\",\"2023-08-24T22:07:46.162\",\"2023-08-24T22:07:49.212\",\"2023-08-24T22:07:52.252\",\"2023-08-24T22:07:56.798\",\"2023-08-24T22:08:00.107\",\"2023-08-24T22:08:02.908\",\"2023-08-24T22:08:06.063\",\"2023-08-24T22:08:10.432\",\"2023-08-24T22:08:13.452\",\"2023-08-24T22:08:16.619\"]}",
+                    "objectValue": "29063",
+                    "impressionObjectName": "photos"
+                  },
+                  "collapseConfig": {
+                    "enabled": true,
+                    "collapseIcon": "chevron_down_12",
+                    "expandIcon": "chevron_up_12"
+                  }
+                },
+                "scrollAnchor": {
+                  "id": "photos"
+                }
+              }
+            }
+          },
+          {
+            "card": {
+              "card": {
+                "@type": "type.googleapis.com/swiggy.presentation.dinersone.v1.RestaurantHighlights",
+                "title": "Amenities (1)",
+                "element": [
+                  "Parking available"
+                ],
+                "content": [
+                  {
+                    "info": "Parking available",
+                    "icon": "dineout/details/rx_highlight_star.png"
+                  }
+                ],
+                "rowCount": 1,
+                "colCount": 1,
+                "scrollAnchor": {
+                  "id": "about"
+                }
+              }
+            }
+          },
+          {
+            "card": {
+              "card": {
+                "@type": "type.googleapis.com/swiggy.gandalf.widgets.v2.TextInfoWidget",
+                "title": {
+                  "info": "Location",
+                  "color": "text_color_highest_emphasis"
+                },
+                "description": {
+                  "info": "2.4 km • First floor F9 & F9A, No.50, Sobha Mall, St.Marks Road, Banglaore-560001",
+                  "color": "text_color_high_emphasis",
+                  "font": "FONT_NAME_BODY_B2_REG"
+                },
+                "iconUrl": "dineout/details/direction.png",
+                "cta": {
+                  "link": "https://www.google.com/maps/dir/?api=1&origin=12.9716,77.5946&destination=12.975478460615067,77.60262754547358&travelmode=driving",
+                  "text": "MAP_DEEPLINK",
+                  "type": "MAPS_DIRECTION"
+                },
+                "scrollAnchor": {
+                  "id": "about"
+                },
+                "metaInfo": {
+                  "lat": "12.975478460615067",
+                  "lng": "77.60262754547358",
+                  "showMap": "true"
+                }
+              }
+            }
+          },
+          {
+            "card": {
+              "card": {
+                "@type": "type.googleapis.com/swiggy.presentation.dinersone.v1.CtaList",
+                "ctas": [
+                  {
+                    "link": "swiggydiners://login",
+                    "text": "Login to avail offer & pay",
+                    "type": "primary",
+                    "metaInfo": {}
                   }
                 ]
               }
             }
           }
-        }
-      ],
-      "firstOffsetRequest": true
-    },
-    "tid": "f9a2d14a-6d95-40ac-8856-13036ba508f6",
-    "sid": "re607a1becb-8a2d-4ada-9882-0a16b7fdc",
-    "deviceId": "2e5dac0d-18a2-2105-bec1-d3558675be21",
-    "csrfToken": "r0fyeYroMJs7-lsc--_ntTr6EHI43JgnrLXkzypo"
+        ],
+        "firstOffsetRequest": true
+      }
+    }
   }
 }

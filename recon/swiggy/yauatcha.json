@@ -11,203 +11,580 @@
       "eazyDinerSlug": "yauatcha-1-mg-road-mall-mg-road-330178"
     },
     "found": true,
-    "offerSummary": [
-      "aggregatedDiscountInfo",
-      "aggregatedDiscountInfoV2",
-      "showEoOffer",
-      "firstOffsetRequest"
-    ]
+    "offerSummary": []
   },
   "raw": {
-    "statusCode": 0,
-    "data": {
-      "statusMessage": "done successfully",
-      "cards": [
-        {
-          "card": {
+    "restaurantId": "281835",
+    "detail": {
+      "requestId": "a151a351-1233-433f-ae22-b3526d0a3040",
+      "apiTime": "2026-05-17T16:07:11.265720352Z",
+      "success": {
+        "statusMessage": "done successfully",
+        "cards": [
+          {
             "card": {
-              "@type": "type.googleapis.com/swiggy.gandalf.widgets.v2.Navigation",
-              "tab": [
-                {
-                  "id": "RESTAURANT",
-                  "title": "Restaurants",
-                  "selected": true,
-                  "analytics": {
-                    "screenName": "explore",
-                    "context": "{\"tid\":\"undefined\",\"query\":\"Yauatcha\"}",
-                    "objectValue": "RESTAURANT",
-                    "clickObjectName": "click-tab"
-                  },
-                  "selectedBgColor": "#1B1E24",
-                  "unselectedBgColor": "#FFFFFF",
-                  "selectedTextColor": "#BFFFFFFF",
-                  "unselectedTextColor": "#9902060C",
-                  "selectedBorderColor": "#1B1E24",
-                  "unselectedBorderColor": "#E2E2E7"
-                },
-                {
-                  "id": "DISH",
-                  "title": "Dishes",
-                  "analytics": {
-                    "screenName": "explore",
-                    "context": "{\"tid\":\"undefined\",\"query\":\"Yauatcha\"}",
-                    "objectValue": "DISH",
-                    "clickObjectName": "click-tab"
-                  },
-                  "selectedBgColor": "#1B1E24",
-                  "unselectedBgColor": "#FFFFFF",
-                  "selectedTextColor": "#BFFFFFFF",
-                  "unselectedTextColor": "#9902060C",
-                  "selectedBorderColor": "#1B1E24",
-                  "unselectedBorderColor": "#E2E2E7"
-                }
-              ],
-              "meta": {
-                "queryIntent": "RESTAURANT",
-                "orderable": "false",
-                "correctedQuery": "",
-                "suggestionType": ""
-              }
-            }
-          }
-        },
-        {
-          "groupedCard": {
-            "cardGroupMap": {
-              "RESTAURANT": {
-                "cards": [
-                  {
-                    "card": {
-                      "card": {
-                        "@type": "type.googleapis.com/swiggy.presentation.food.v2.Restaurant",
-                        "info": {
-                          "id": "281835",
-                          "name": "Yauatcha",
-                          "city": "1",
-                          "slugs": {
-                            "restaurant": "yauatcha-halasuru-indiranagar",
-                            "city": "bangalore"
-                          },
-                          "cloudinaryImageId": "kkcixpbzrwbt7ohqpwsh",
-                          "address": "Yauatcha, Level 5, 1 Mg Mall, Mg Road Bengaluru 560008",
-                          "locality": "MG Road",
-                          "areaName": "Halasuru",
-                          "costForTwo": "180000",
-                          "costForTwoMessage": "₹1800 FOR TWO",
-                          "cuisines": [
-                            "Chinese",
-                            "Asian",
-                            "Seafood",
-                            "Desserts"
-                          ],
-                          "avgRating": 4.7,
-                          "feeDetails": {},
-                          "parentId": "10254",
-                          "avgRatingString": "4.7",
-                          "totalRatingsString": "2.4K+",
-                          "sla": {
-                            "deliveryTime": 361,
-                            "minDeliveryTime": 357,
-                            "maxDeliveryTime": 362,
-                            "lastMileTravel": 4.8,
-                            "serviceability": "SERVICEABLE",
-                            "rainMode": "RAIN_MODE_NONE",
-                            "slaString": "357-362 MINS",
-                            "lastMileTravelString": "4.8 km",
-                            "iconType": "ICON_TYPE_EMPTY"
-                          },
-                          "availability": {
-                            "nextOpenTimeMessage": "Opens next at 12 noon, today",
-                            "restaurantClosedMeta": {
-                              "title": "CLOSED",
-                              "subtitle": "FOR NOW"
-                            }
-                          },
-                          "aggregatedDiscountInfo": {
-                            "visible": true
-                          },
-                          "badges": {
-                            "imageBadges": [
-                              {
-                                "imageId": "newg.png",
-                                "description": "Gourmet"
-                              }
-                            ]
-                          },
-                          "unorderableMessage": "Opens next at 12 noon, today",
-                          "aggregatedDiscountInfoV2": {
-                            "visible": true
-                          },
-                          "ratingSlab": "RATING_SLAB_5",
-                          "availabilityServiceabilityMessage": "Currently closed for delivery. Opens next at 12 noon, today",
-                          "orderabilityCommunication": {
-                            "title": {
-                              "text": "CURRENTLY"
-                            },
-                            "subTitle": {
-                              "text": "CLOSED"
-                            },
-                            "message": {
-                              "text": "Opens today at 12:00 PM",
-                              "textColour": "primary"
-                            },
-                            "customIcon": {
-                              "bgGradientColorStart": "#EB8322",
-                              "bgGradientColorEnd": "#EE5803"
-                            },
-                            "commsStyling": {}
-                          },
-                          "cartOrderabilityNudgeBanner": {
-                            "parameters": {},
-                            "presentation": {}
-                          },
-                          "externalRatings": {
-                            "aggregatedRating": {
-                              "rating": "4.4",
-                              "ratingCount": "2.9K+"
-                            },
-                            "source": "GOOGLE",
-                            "sourceIconImageId": "v1704440323/google_ratings/rating_google_tag"
-                          },
-                          "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY",
-                          "featuredSectionInfo": {},
-                          "showEoOffer": true,
-                          "priceComparisonComms": {}
+              "card": {
+                "@type": "type.googleapis.com/swiggy.presentation.dinersone.v1.EntityInfoWithMasthead",
+                "id": "281835",
+                "info": {
+                  "name": "Yauatcha Patisserie",
+                  "locationInfo": {
+                    "distanceString": "3.2 km",
+                    "navigationUrl": "https://www.google.com/maps/dir/?api=1&origin=12.9716,77.5946&destination=12.97323885,77.62034765&travelmode=driving",
+                    "lat": "12.97323885",
+                    "long": "77.62034765",
+                    "city": {
+                      "name": "Bangalore"
+                    },
+                    "formattedAddress": "Halasuru, Bangalore",
+                    "additionalInfo": {
+                      "cta": {
+                        "link": "swiggydiners://collectiondetails/DINEOUT_BRAND_OUTLETS?tags=layout_dineout_brand_outlets&metaMap=%7B%22brandId%22%3A%2210254%22%2C%22restaurant_id%22%3A%22281835%22%2C%22sourcePage%22%3A%22RDP%22%7D&header_title=Outlets",
+                        "text": "outlets",
+                        "type": "DEEPLINK",
+                        "metaInfo": {
+                          "ctaImage": "dineout/details/red_arrow_down.png"
                         },
                         "analytics": {
-                          "screenName": "explore",
-                          "context": "{\"tid\":\"undefined\",\"grid\":\"483618a9-8f8c-4fa4-ba05-bdf9b587a14f\",\"queryUniqueId\":\"undefined\",\"query\":\"Yauatcha\"}",
-                          "objectValue": "281835",
-                          "impressionObjectName": "impression-restaurant",
-                          "clickObjectName": "click-restaurant"
-                        },
-                        "ctaWithParams": {
-                          "link": "swiggy://menu",
-                          "type": "DEEPLINK",
-                          "params": {
-                            "sourceSessionId": "re60f93f8d0-71c0-4232-b876-833d7aa23",
-                            "source": "SEARCH",
-                            "isSld": "false",
-                            "sourceRequestId": "00000000000000000000000000000000",
-                            "qrEnabled": "false",
-                            "restaurant_id": "281835",
-                            "query": "Yauatcha"
-                          }
+                          "screenName": "DO-Detail",
+                          "context": "{\"restId\":\"281835\"}",
+                          "objectValue": "outlet_switcher_dropdown",
+                          "impressionObjectName": "entity_info_masthead",
+                          "clickObjectName": "entity_info_masthead"
                         }
                       }
+                    },
+                    "displayAreaName": "Halasuru"
+                  },
+                  "timingsInfo": {
+                    "outletTiming": {
+                      "infoList": [
+                        {
+                          "title": "Monday",
+                          "subtitle": "Noon - 1AM",
+                          "titleColor": "text_high_emphasis",
+                          "subtitleColor": "text_high_emphasis"
+                        },
+                        {
+                          "title": "Tuesday",
+                          "subtitle": "Noon - 1AM",
+                          "titleColor": "text_high_emphasis",
+                          "subtitleColor": "text_high_emphasis"
+                        },
+                        {
+                          "title": "Wednesday",
+                          "subtitle": "Noon - 1AM",
+                          "titleColor": "text_high_emphasis",
+                          "subtitleColor": "text_high_emphasis"
+                        },
+                        {
+                          "title": "Thursday",
+                          "subtitle": "Noon - 1AM",
+                          "titleColor": "text_high_emphasis",
+                          "subtitleColor": "text_high_emphasis"
+                        },
+                        {
+                          "title": "Friday",
+                          "subtitle": "Noon - 1AM",
+                          "titleColor": "text_high_emphasis",
+                          "subtitleColor": "text_high_emphasis"
+                        },
+                        {
+                          "title": "Saturday",
+                          "subtitle": "Noon - 1AM",
+                          "titleColor": "text_high_emphasis",
+                          "subtitleColor": "text_high_emphasis"
+                        },
+                        {
+                          "title": "Today",
+                          "subtitle": "Noon - 1AM",
+                          "titleColor": "primary",
+                          "subtitleColor": "primary"
+                        }
+                      ],
+                      "title": "Outlet timings"
+                    },
+                    "styleInfo": {
+                      "titleColor": "negative",
+                      "subtitleColor": "text_color_low_emphasis"
                     }
+                  },
+                  "callDetail": {
+                    "title": "Trying to reach the outlet?",
+                    "style": {
+                      "cornerRadius": {
+                        "topLeft": 16,
+                        "topRight": 16
+                      },
+                      "backgroundColour": "#F0F0F5"
+                    },
+                    "actions": [
+                      {
+                        "link": "dailer-app?phone=9222222800",
+                        "text": "9222222800",
+                        "type": "DIALER",
+                        "metaInfo": {
+                          "ctaImage": "dineout/details/call_no_bg.png"
+                        }
+                      }
+                    ]
+                  },
+                  "ratingsInfo": {
+                    "value": "4.4",
+                    "description": "2K ratings",
+                    "count": 2904,
+                    "countDescription": "2K+ Google ratings",
+                    "icon": "dineout/details/google_tag.png",
+                    "style": "RATING_STYLE_V2"
+                  },
+                  "typeInfo": {
+                    "type": "ENTITY_TYPE_RESTAURANT",
+                    "restaurantType": "RESTAURANT_TYPE_NON_PARTICIPATING"
+                  },
+                  "style": {
+                    "backgroundColour": "#FFFFFF",
+                    "cornerRadius": {
+                      "topLeft": 16,
+                      "topRight": 16,
+                      "bottomLeft": 16,
+                      "bottomRight": 16
+                    },
+                    "animationConfig": {
+                      "type": "ANIMATION_TYPE_ENTRY_PUSH_DOWN",
+                      "startDelay": 250,
+                      "duration": 100,
+                      "interpolator": "INTERPOLATOR_LINEAR"
+                    },
+                    "dimension": {
+                      "width": {
+                        "type": "TYPE_RELATIVE",
+                        "value": 1,
+                        "reference": "RELATIVE_DIMENSION_REFERENCE_DEVICE_WIDTH"
+                      },
+                      "height": {
+                        "type": "TYPE_RELATIVE",
+                        "value": 0.778,
+                        "reference": "RELATIVE_DIMENSION_REFERENCE_WIDTH"
+                      }
+                    }
+                  },
+                  "favourite": {
+                    "entityLotte": {
+                      "frequencyCapping": 2,
+                      "image": "favourite-image",
+                      "lotteFiles": [
+                        {
+                          "type": "LOTTIE_TYPE_FAVOURITE",
+                          "lotte": "favourite-lottie"
+                        },
+                        {
+                          "type": "LOTTIE_TYPE_NON_FAVOURITE",
+                          "lotte": "non-favourite-lottie"
+                        }
+                      ]
+                    },
+                    "accessibility": {
+                      "altText": "favourite alt text",
+                      "altTextCta": "favourite alt text cta"
+                    }
+                  },
+                  "share": {
+                    "entityLotte": {
+                      "frequencyCapping": 3,
+                      "image": "share-image",
+                      "lotteFiles": [
+                        {
+                          "type": "LOTTIE_TYPE_SHARE",
+                          "lotte": "share-lottie"
+                        }
+                      ]
+                    },
+                    "shareUrl": "Hey, I think you will love Yauatcha Patisserie, Halasuru, Bangalore on Swiggy Dineout https://swiggy.onelink.me/BVRZ?af_dp=swiggydiners%3A%2F%2Fdetails%2F281835%3Fsource%3Dsharing Happy dining!",
+                    "accessibility": {
+                      "altText": "share alt text",
+                      "altTextCta": "share alt text cta"
+                    }
+                  },
+                  "entityAttributes": {
+                    "restaurantEntityAttributes": {
+                      "outlets": {},
+                      "cuisines": [
+                        "Desserts"
+                      ],
+                      "costForTwo": "₹700 for two"
+                    }
+                  }
+                },
+                "masthead": {
+                  "files": [
+                    {
+                      "type": "IMAGE",
+                      "id": "2024-05-17T16:30:27.125",
+                      "name": "f1.jpg",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2024/5/17/5a4d7d3a-b400-4536-a4ff-c1e34832a93d_20240517T163028204.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2024-05-17T16:30:28.295",
+                      "name": "f2.jpg",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2024/5/17/1a3835c5-7018-44d8-ba12-c13ea107b62e_20240517T163028730.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2024-05-17T16:30:28.814",
+                      "name": "f3.jpg",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2024/5/17/e968823d-0cf3-4cb0-83ad-16f4cf581eee_20240517T163029103.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2024-05-17T16:30:29.208",
+                      "name": "f4.jpg",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2024/5/17/cf34d766-6642-4a63-bb72-f66f5aea09e1_20240517T163029411.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2024-05-17T16:30:29.479",
+                      "name": "f5.jpg",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2024/5/17/97fbb934-0a94-4c96-8824-3a3dfeee8e33_20240517T163029754.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2024-05-17T16:30:29.827",
+                      "name": "f6.jpg",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2024/5/17/6131c3be-8a42-4cbd-bc68-15b7d3e3ef0d_20240517T163030151.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2024-05-17T16:30:30.220",
+                      "name": "Macarons--Group-shot-2.jpg",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2024/5/17/869c9728-0ee9-49f7-9387-53534f2400af_20240517T163031089.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2024-05-17T16:30:31.516",
+                      "name": "Pekin-Coffee-Delice-2.jpg",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2024/5/17/002f0258-a4ac-4ca7-87a3-a27b35f7e0c9_20240517T163031971.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2024-05-17T16:30:32.329",
+                      "name": "Pistachio-_-camomile.jpg",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2024/5/17/6af81b6f-ead7-438f-9754-71f7d4ffd1eb_20240517T163032728.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2024-05-17T16:30:33.051",
+                      "name": "Red-fruit-fromage.jpg",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2024/5/17/1572fcb5-d1fe-44e3-aebc-c5fe15f23af0_20240517T163033444.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2024-05-17T16:30:33.782",
+                      "name": "Tamarind-and-mango.jpg",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2024/5/17/d333e0c7-2962-439e-804f-a19ed48f1605_20240517T163034303.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2024-05-17T16:30:34.687",
+                      "name": "Tropical-Dome.jpg",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2024/5/17/ed56831b-5a9b-4919-b1cb-17ef1883d449_20240517T163035169.jpg"
+                    }
+                  ],
+                  "cta": {
+                    "link": "swiggydiners://gallery/281835",
+                    "type": "DEEPLINK"
+                  },
+                  "cornerRadius": {
+                    "bottomLeft": 24,
+                    "bottomRight": 24
+                  },
+                  "autoScrollConfig": {
+                    "isScrollEnabled": true,
+                    "autoScrollDuration": 3,
+                    "autoScrollResetDuration": 5
+                  }
+                }
+              }
+            }
+          },
+          {
+            "card": {
+              "card": {
+                "@type": "type.googleapis.com/swiggy.gandalf.widgets.v2.StaggeredGrid",
+                "info": [
+                  {
+                    "imageCardInfo": {
+                      "id": "2024-05-17T16:30:27.125",
+                      "imageId": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2024/5/17/5a4d7d3a-b400-4536-a4ff-c1e34832a93d_20240517T163028204.jpg",
+                      "action": {
+                        "link": "swiggydiners://fullScreenGallery/281835?imageId=DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2024/5/17/5a4d7d3a-b400-4536-a4ff-c1e34832a93d_20240517T163028204.jpg&apiCall=true",
+                        "type": "DEEPLINK"
+                      },
+                      "analytics": {
+                        "screenName": "DO-Detail",
+                        "context": "{\"photo_id\":\"2024-05-17T16:30:27.125\",\"click_position\":1,\"click_on_indicator_+\":false}",
+                        "objectValue": "281835",
+                        "clickObjectName": "photos"
+                      }
+                    },
+                    "style": {
+                      "width": 0.611,
+                      "height": 0.586,
+                      "left": 0.0333
+                    },
+                    "mediaItemCornerRadius": {
+                      "topLeft": 16,
+                      "topRight": 16,
+                      "bottomLeft": 16,
+                      "bottomRight": 16
+                    }
+                  },
+                  {
+                    "imageCardInfo": {
+                      "id": "2024-05-17T16:30:28.295",
+                      "imageId": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2024/5/17/1a3835c5-7018-44d8-ba12-c13ea107b62e_20240517T163028730.jpg",
+                      "action": {
+                        "link": "swiggydiners://fullScreenGallery/281835?imageId=DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2024/5/17/1a3835c5-7018-44d8-ba12-c13ea107b62e_20240517T163028730.jpg&apiCall=true",
+                        "type": "DEEPLINK"
+                      },
+                      "analytics": {
+                        "screenName": "DO-Detail",
+                        "context": "{\"photo_id\":\"2024-05-17T16:30:28.295\",\"click_position\":2,\"click_on_indicator_+\":false}",
+                        "objectValue": "281835",
+                        "clickObjectName": "photos"
+                      }
+                    },
+                    "style": {
+                      "width": 0.288,
+                      "height": 0.277,
+                      "left": 0.675
+                    },
+                    "mediaItemCornerRadius": {
+                      "topLeft": 16,
+                      "topRight": 16,
+                      "bottomLeft": 16,
+                      "bottomRight": 16
+                    }
+                  },
+                  {
+                    "imageCardInfo": {
+                      "id": "2024-05-17T16:30:28.814",
+                      "imageId": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2024/5/17/e968823d-0cf3-4cb0-83ad-16f4cf581eee_20240517T163029103.jpg",
+                      "action": {
+                        "link": "swiggydiners://fullScreenGallery/281835?imageId=DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2024/5/17/e968823d-0cf3-4cb0-83ad-16f4cf581eee_20240517T163029103.jpg&apiCall=true",
+                        "type": "DEEPLINK"
+                      },
+                      "analytics": {
+                        "screenName": "DO-Detail",
+                        "context": "{\"photo_id\":\"2024-05-17T16:30:28.814\",\"click_position\":3,\"click_on_indicator_+\":false}",
+                        "objectValue": "281835",
+                        "clickObjectName": "photos"
+                      }
+                    },
+                    "style": {
+                      "width": 0.288,
+                      "height": 0.277,
+                      "top": 0.307,
+                      "left": 0.675
+                    },
+                    "mediaItemCornerRadius": {
+                      "topLeft": 16,
+                      "topRight": 16,
+                      "bottomLeft": 16,
+                      "bottomRight": 16
+                    }
+                  },
+                  {
+                    "imageCardInfo": {
+                      "id": "2024-05-17T16:30:29.208",
+                      "imageId": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2024/5/17/cf34d766-6642-4a63-bb72-f66f5aea09e1_20240517T163029411.jpg",
+                      "action": {
+                        "link": "swiggydiners://fullScreenGallery/281835?imageId=DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2024/5/17/cf34d766-6642-4a63-bb72-f66f5aea09e1_20240517T163029411.jpg&apiCall=true",
+                        "type": "DEEPLINK"
+                      },
+                      "analytics": {
+                        "screenName": "DO-Detail",
+                        "context": "{\"photo_id\":\"2024-05-17T16:30:29.208\",\"click_position\":4,\"click_on_indicator_+\":false}",
+                        "objectValue": "281835",
+                        "clickObjectName": "photos"
+                      }
+                    },
+                    "style": {
+                      "width": 0.288,
+                      "height": 0.277,
+                      "top": 0.618,
+                      "left": 0.0333
+                    },
+                    "mediaItemCornerRadius": {
+                      "topLeft": 16,
+                      "topRight": 16,
+                      "bottomLeft": 16,
+                      "bottomRight": 16
+                    }
+                  },
+                  {
+                    "imageCardInfo": {
+                      "id": "2024-05-17T16:30:29.479",
+                      "imageId": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2024/5/17/97fbb934-0a94-4c96-8824-3a3dfeee8e33_20240517T163029754.jpg",
+                      "action": {
+                        "link": "swiggydiners://fullScreenGallery/281835?imageId=DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2024/5/17/97fbb934-0a94-4c96-8824-3a3dfeee8e33_20240517T163029754.jpg&apiCall=true",
+                        "type": "DEEPLINK"
+                      },
+                      "analytics": {
+                        "screenName": "DO-Detail",
+                        "context": "{\"photo_id\":\"2024-05-17T16:30:29.479\",\"click_position\":5,\"click_on_indicator_+\":false}",
+                        "objectValue": "281835",
+                        "clickObjectName": "photos"
+                      }
+                    },
+                    "style": {
+                      "width": 0.288,
+                      "height": 0.277,
+                      "top": 0.618,
+                      "left": 0.357
+                    },
+                    "mediaItemCornerRadius": {
+                      "topLeft": 16,
+                      "topRight": 16,
+                      "bottomLeft": 16,
+                      "bottomRight": 16
+                    }
+                  },
+                  {
+                    "imageCardInfo": {
+                      "id": "2024-05-17T16:30:29.827",
+                      "imageId": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2024/5/17/6131c3be-8a42-4cbd-bc68-15b7d3e3ef0d_20240517T163030151.jpg",
+                      "action": {
+                        "link": "swiggydiners://gallery/281835",
+                        "type": "DEEPLINK"
+                      },
+                      "analytics": {
+                        "screenName": "DO-Detail",
+                        "context": "{\"photo_id\":\"2024-05-17T16:30:29.827\",\"click_position\":6,\"click_on_indicator_+\":true}",
+                        "objectValue": "281835",
+                        "clickObjectName": "photos"
+                      }
+                    },
+                    "style": {
+                      "width": 0.288,
+                      "height": 0.277,
+                      "top": 0.618,
+                      "left": 0.675
+                    },
+                    "overlay": {
+                      "textInfo": {
+                        "info": "+6",
+                        "color": "white",
+                        "font": "FONT_NAME_V2_SUBHEADING1_NEUTRAL_BOLD"
+                      },
+                      "backgroundColor": "#9902060C"
+                    },
+                    "mediaItemCornerRadius": {
+                      "topLeft": 16,
+                      "topRight": 16,
+                      "bottomLeft": 16,
+                      "bottomRight": 16
+                    }
+                  }
+                ],
+                "layout": {
+                  "widgetPadding": {
+                    "bottom": 12
+                  },
+                  "scrollBar": {
+                    "width": 54,
+                    "height": 4
+                  },
+                  "widgetTheme": {
+                    "defaultMode": {
+                      "backgroundColour": "#FFFFFF",
+                      "theme": "THEME_TYPE_LIGHT",
+                      "themeVariant": "THEME_VARIANT_DEFAULT"
+                    },
+                    "darkMode": {
+                      "backgroundColour": "#FFFFFF",
+                      "theme": "THEME_TYPE_DARK",
+                      "themeVariant": "THEME_VARIANT_DEFAULT"
+                    }
+                  }
+                },
+                "id": "dineoutRdpHexaPhotosWidget",
+                "header": {
+                  "title": "Photos",
+                  "headerStyling": {
+                    "padding": {
+                      "left": 16,
+                      "top": 24,
+                      "bottom": 8
+                    },
+                    "titleFontName": "FONT_NAME_BODY_B1_BOLD"
+                  },
+                  "analytics": {
+                    "screenName": "DO-Detail",
+                    "context": "{\"photo_count\":12,\"photos_shown_count\":6,\"photo_ids\":[\"2024-05-17T16:30:27.125\",\"2024-05-17T16:30:28.295\",\"2024-05-17T16:30:28.814\",\"2024-05-17T16:30:29.208\",\"2024-05-17T16:30:29.479\",\"2024-05-17T16:30:29.827\",\"2024-05-17T16:30:30.220\",\"2024-05-17T16:30:31.516\",\"2024-05-17T16:30:32.329\",\"2024-05-17T16:30:33.051\",\"2024-05-17T16:30:33.782\",\"2024-05-17T16:30:34.687\"]}",
+                    "objectValue": "281835",
+                    "impressionObjectName": "photos"
+                  },
+                  "collapseConfig": {
+                    "enabled": true,
+                    "collapseIcon": "chevron_down_12",
+                    "expandIcon": "chevron_up_12"
+                  }
+                },
+                "scrollAnchor": {
+                  "id": "photos"
+                }
+              }
+            }
+          },
+          {
+            "card": {
+              "card": {
+                "@type": "type.googleapis.com/swiggy.gandalf.widgets.v2.TextInfoWidget",
+                "title": {
+                  "info": "Location",
+                  "color": "text_color_highest_emphasis"
+                },
+                "description": {
+                  "info": "3.2 km • Yauatcha, Level 5, 1 Mg Mall, Mg Road Bengaluru 560008",
+                  "color": "text_color_high_emphasis",
+                  "font": "FONT_NAME_BODY_B2_REG"
+                },
+                "iconUrl": "dineout/details/direction.png",
+                "cta": {
+                  "link": "https://www.google.com/maps/dir/?api=1&origin=12.9716,77.5946&destination=12.97323885,77.62034765&travelmode=driving",
+                  "text": "MAP_DEEPLINK",
+                  "type": "MAPS_DIRECTION"
+                },
+                "scrollAnchor": {
+                  "id": "about"
+                },
+                "metaInfo": {
+                  "lng": "77.62034765",
+                  "showMap": "true",
+                  "lat": "12.97323885"
+                }
+              }
+            }
+          },
+          {
+            "card": {
+              "card": {
+                "@type": "type.googleapis.com/swiggy.presentation.dinersone.v1.CtaList",
+                "ctas": [
+                  {
+                    "link": "swiggydiners://login",
+                    "text": "Login to avail offer & pay",
+                    "type": "primary",
+                    "metaInfo": {}
                   }
                 ]
               }
             }
           }
-        }
-      ],
-      "firstOffsetRequest": true
-    },
-    "tid": "68592390-3fbc-448f-8d67-7aad57afc8c9",
-    "sid": "re60f93f8d0-71c0-4232-b876-833d7aa23",
-    "deviceId": "c3358aa9-409e-5840-db64-8aeea4d8f1e4",
-    "csrfToken": "OzQjz7iO4iU7-sSPwz6dhogJgnjwnAVCYOKwEVjU"
+        ],
+        "firstOffsetRequest": true
+      }
+    }
   }
 }

@@ -16,434 +16,670 @@
       "eazyDinerSlug": "nagarjuna-residency-road-334689"
     },
     "found": true,
-    "offerSummary": [
-      "aggregatedDiscountInfo",
-      "aggregatedDiscountInfoV2",
-      "showEoOffer",
-      "firstOffsetRequest"
-    ]
+    "offerSummary": []
   },
   "raw": {
-    "statusCode": 0,
-    "data": {
-      "statusMessage": "done successfully",
-      "cards": [
-        {
-          "card": {
+    "restaurantId": "41100",
+    "detail": {
+      "requestId": "d0f4dcbb-f5ab-4d22-8c45-041e313cc6f0",
+      "apiTime": "2026-05-17T16:07:30.166344024Z",
+      "success": {
+        "statusMessage": "done successfully",
+        "cards": [
+          {
             "card": {
-              "@type": "type.googleapis.com/swiggy.gandalf.widgets.v2.Navigation",
-              "tab": [
-                {
-                  "id": "RESTAURANT",
-                  "title": "Restaurants",
-                  "selected": true,
-                  "analytics": {
-                    "screenName": "explore",
-                    "context": "{\"tid\":\"undefined\",\"query\":\"Nagarjuna\"}",
-                    "objectValue": "RESTAURANT",
-                    "clickObjectName": "click-tab"
+              "card": {
+                "@type": "type.googleapis.com/swiggy.presentation.dinersone.v1.EntityInfoWithMasthead",
+                "id": "41100",
+                "info": {
+                  "name": "Nagarjuna",
+                  "locationInfo": {
+                    "distanceString": "2.2 km",
+                    "navigationUrl": "https://www.google.com/maps/dir/?api=1&origin=12.9716,77.5946&destination=12.97317721,77.60919692&travelmode=driving",
+                    "lat": "12.97317721",
+                    "long": "77.60919692",
+                    "city": {
+                      "name": "Bangalore"
+                    },
+                    "formattedAddress": "Ashok Nagar, Bangalore",
+                    "additionalInfo": {
+                      "cta": {
+                        "link": "swiggydiners://collectiondetails/DINEOUT_BRAND_OUTLETS?tags=layout_dineout_brand_outlets&metaMap=%7B%22brandId%22%3A%22509973%22%2C%22restaurant_id%22%3A%2241100%22%2C%22sourcePage%22%3A%22RDP%22%7D&header_title=Outlets",
+                        "text": "outlets",
+                        "type": "DEEPLINK",
+                        "metaInfo": {
+                          "ctaImage": "dineout/details/red_arrow_down.png"
+                        },
+                        "analytics": {
+                          "screenName": "DO-Detail",
+                          "context": "{\"restId\":\"41100\"}",
+                          "objectValue": "outlet_switcher_dropdown",
+                          "impressionObjectName": "entity_info_masthead",
+                          "clickObjectName": "entity_info_masthead"
+                        }
+                      }
+                    },
+                    "displayAreaName": "Ashok Nagar"
                   },
-                  "selectedBgColor": "#1B1E24",
-                  "unselectedBgColor": "#FFFFFF",
-                  "selectedTextColor": "#BFFFFFFF",
-                  "unselectedTextColor": "#9902060C",
-                  "selectedBorderColor": "#1B1E24",
-                  "unselectedBorderColor": "#E2E2E7"
+                  "timingsInfo": {
+                    "status": "Open",
+                    "message": "till 10:30PM",
+                    "outletTiming": {
+                      "infoList": [
+                        {
+                          "title": "Monday",
+                          "subtitle": "Noon - 3:30PM · 7PM - 10:30PM",
+                          "titleColor": "text_high_emphasis",
+                          "subtitleColor": "text_high_emphasis"
+                        },
+                        {
+                          "title": "Tuesday",
+                          "subtitle": "Noon - 3:30PM · 7PM - 10:30PM",
+                          "titleColor": "text_high_emphasis",
+                          "subtitleColor": "text_high_emphasis"
+                        },
+                        {
+                          "title": "Wednesday",
+                          "subtitle": "Noon - 3:30PM · 7PM - 10:30PM",
+                          "titleColor": "text_high_emphasis",
+                          "subtitleColor": "text_high_emphasis"
+                        },
+                        {
+                          "title": "Thursday",
+                          "subtitle": "Noon - 3:30PM · 7PM - 10:30PM",
+                          "titleColor": "text_high_emphasis",
+                          "subtitleColor": "text_high_emphasis"
+                        },
+                        {
+                          "title": "Friday",
+                          "subtitle": "Noon - 3:30PM · 7PM - 10:30PM",
+                          "titleColor": "text_high_emphasis",
+                          "subtitleColor": "text_high_emphasis"
+                        },
+                        {
+                          "title": "Saturday",
+                          "subtitle": "Noon - 3:30PM · 7PM - 10:30PM",
+                          "titleColor": "text_high_emphasis",
+                          "subtitleColor": "text_high_emphasis"
+                        },
+                        {
+                          "title": "Today",
+                          "subtitle": "Noon - 3:30PM · 7PM - 10:30PM",
+                          "titleColor": "primary",
+                          "subtitleColor": "primary"
+                        }
+                      ],
+                      "title": "Outlet timings"
+                    },
+                    "styleInfo": {
+                      "titleColor": "positive",
+                      "subtitleColor": "text_color_low_emphasis"
+                    }
+                  },
+                  "callDetail": {
+                    "title": "Trying to reach the outlet?",
+                    "style": {
+                      "cornerRadius": {
+                        "topLeft": 16,
+                        "topRight": 16
+                      },
+                      "backgroundColour": "#F0F0F5"
+                    },
+                    "actions": [
+                      {
+                        "link": "dailer-app?phone=08041494942",
+                        "text": "08041494942",
+                        "type": "DIALER",
+                        "metaInfo": {
+                          "ctaImage": "dineout/details/call_no_bg.png"
+                        }
+                      }
+                    ]
+                  },
+                  "ratingsInfo": {
+                    "value": "4.2",
+                    "description": "22K ratings",
+                    "count": 22264,
+                    "countDescription": "22K+ Google ratings",
+                    "icon": "dineout/details/google_tag.png",
+                    "style": "RATING_STYLE_V2"
+                  },
+                  "typeInfo": {
+                    "type": "ENTITY_TYPE_RESTAURANT",
+                    "restaurantType": "RESTAURANT_TYPE_NON_PARTICIPATING"
+                  },
+                  "style": {
+                    "backgroundColour": "#FFFFFF",
+                    "cornerRadius": {
+                      "topLeft": 16,
+                      "topRight": 16,
+                      "bottomLeft": 16,
+                      "bottomRight": 16
+                    },
+                    "animationConfig": {
+                      "type": "ANIMATION_TYPE_ENTRY_PUSH_DOWN",
+                      "startDelay": 250,
+                      "duration": 100,
+                      "interpolator": "INTERPOLATOR_LINEAR"
+                    },
+                    "dimension": {
+                      "width": {
+                        "type": "TYPE_RELATIVE",
+                        "value": 1,
+                        "reference": "RELATIVE_DIMENSION_REFERENCE_DEVICE_WIDTH"
+                      },
+                      "height": {
+                        "type": "TYPE_RELATIVE",
+                        "value": 0.778,
+                        "reference": "RELATIVE_DIMENSION_REFERENCE_WIDTH"
+                      }
+                    }
+                  },
+                  "favourite": {
+                    "entityLotte": {
+                      "frequencyCapping": 2,
+                      "image": "favourite-image",
+                      "lotteFiles": [
+                        {
+                          "type": "LOTTIE_TYPE_FAVOURITE",
+                          "lotte": "favourite-lottie"
+                        },
+                        {
+                          "type": "LOTTIE_TYPE_NON_FAVOURITE",
+                          "lotte": "non-favourite-lottie"
+                        }
+                      ]
+                    },
+                    "accessibility": {
+                      "altText": "favourite alt text",
+                      "altTextCta": "favourite alt text cta"
+                    }
+                  },
+                  "share": {
+                    "entityLotte": {
+                      "frequencyCapping": 3,
+                      "image": "share-image",
+                      "lotteFiles": [
+                        {
+                          "type": "LOTTIE_TYPE_SHARE",
+                          "lotte": "share-lottie"
+                        }
+                      ]
+                    },
+                    "shareUrl": "Hey, I think you will love Nagarjuna, Ashok Nagar, Bangalore on Swiggy Dineout https://swiggy.onelink.me/BVRZ?af_dp=swiggydiners%3A%2F%2Fdetails%2F41100%3Fsource%3Dsharing Happy dining!",
+                    "accessibility": {
+                      "altText": "share alt text",
+                      "altTextCta": "share alt text cta"
+                    }
+                  },
+                  "entityAttributes": {
+                    "restaurantEntityAttributes": {
+                      "outlets": {},
+                      "cuisines": [
+                        "Andhra"
+                      ],
+                      "costForTwo": "₹800 for two"
+                    }
+                  }
                 },
-                {
-                  "id": "DISH",
-                  "title": "Dishes",
-                  "analytics": {
-                    "screenName": "explore",
-                    "context": "{\"tid\":\"undefined\",\"query\":\"Nagarjuna\"}",
-                    "objectValue": "DISH",
-                    "clickObjectName": "click-tab"
+                "masthead": {
+                  "files": [
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-09-20T05:37:04.457",
+                      "name": "Untitled-1.jpg",
+                      "url": "v1695188225/bd24e52939b0a3f9d344283d43e93f15.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-09-20T05:37:08.092",
+                      "name": "1.jpg",
+                      "url": "v1695188229/7a27948f5d4e8a370f264e28fc0b68ca.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-09-20T05:37:11.767",
+                      "name": "4.jpg",
+                      "url": "v1695188233/3fc47fad6c4038c06e4ce32c93143b22.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-09-20T05:37:14.909",
+                      "name": "ambience-(1).jpg",
+                      "url": "v1695188236/d9818f8a4b445e8e11f76564c9f8d829.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-09-20T05:37:18.630",
+                      "name": "ambience.JPG",
+                      "url": "v1695188240/6fa7a7d6744dfd72cea2e7e7dda1b49e.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-09-20T05:37:22.276",
+                      "name": "ambience-party-hall.jpg",
+                      "url": "v1695188243/5db1a66e9b547353ed69941493707f81.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-09-20T05:37:31.437",
+                      "name": "Nagarjuna-Food-11.jpg",
+                      "url": "v1691569941/b974bd91f0c489f390d26cd36d420ce1.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-09-20T05:37:34.770",
+                      "name": "Nagarjuna-Food-1.jpg",
+                      "url": "v1691569945/c83152fa3cdeaeb427077db413cdd294.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-09-20T05:37:38.193",
+                      "name": "Nagarjuna-Food-2.jpg",
+                      "url": "v1691569949/37a98ad099219499e5473cf36977cdb2.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-09-20T05:37:41.661",
+                      "name": "Nagarjuna-Food-9.jpg",
+                      "url": "v1691569953/4e01acefa20659b2031b27cce064cd0e.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-09-20T05:37:45.053",
+                      "name": "Nagarjuna-Food-12.jpg",
+                      "url": "v1691569957/01c98f7e9450fb8ca0866578f3456cdc.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-09-20T05:37:48.280",
+                      "name": "Nagarjuna-Food-3.jpg",
+                      "url": "v1691569960/21fad66249b1d05799ce1b836d23f9eb.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-09-20T05:37:51.295",
+                      "name": "Nagarjuna-Food-4.jpg",
+                      "url": "v1691569964/856562805809044b908fcb1a6efeff4c.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-09-20T05:37:54.675",
+                      "name": "Nagarjuna-Food-5.jpg",
+                      "url": "v1691569968/21c14492694cac724e0d7f2868e33dac.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-09-20T05:37:58.143",
+                      "name": "Nagarjuna-Food-6.jpg",
+                      "url": "v1691569971/7fb292859d24d18b01c7f8e10b797a5f.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-09-20T05:38:01.341",
+                      "name": "Nagarjuna-Food-7.jpg",
+                      "url": "v1691569975/505a54f46a6fa0ab5fb1bbf14af29a1f.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-09-20T05:38:04.780",
+                      "name": "Nagarjuna-Food-8.jpg",
+                      "url": "v1691569978/d6308059b79e2ede5a9b975e26c81cca.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-09-20T05:38:08.157",
+                      "name": "Nagarjuna-Food-10.jpg",
+                      "url": "v1691569982/1014af5b73636541f0d8370bc66e94d9.jpg"
+                    }
+                  ],
+                  "cta": {
+                    "link": "swiggydiners://gallery/41100",
+                    "type": "DEEPLINK"
                   },
-                  "selectedBgColor": "#1B1E24",
-                  "unselectedBgColor": "#FFFFFF",
-                  "selectedTextColor": "#BFFFFFFF",
-                  "unselectedTextColor": "#9902060C",
-                  "selectedBorderColor": "#1B1E24",
-                  "unselectedBorderColor": "#E2E2E7"
+                  "cornerRadius": {
+                    "bottomLeft": 24,
+                    "bottomRight": 24
+                  },
+                  "autoScrollConfig": {
+                    "isScrollEnabled": true,
+                    "autoScrollDuration": 3,
+                    "autoScrollResetDuration": 5
+                  }
                 }
-              ],
-              "meta": {
-                "orderable": "true",
-                "correctedQuery": "",
-                "suggestionType": "",
-                "queryIntent": "RESTAURANT"
               }
             }
-          }
-        },
-        {
-          "groupedCard": {
-            "cardGroupMap": {
-              "RESTAURANT": {
-                "cards": [
+          },
+          {
+            "card": {
+              "card": {
+                "@type": "type.googleapis.com/swiggy.presentation.dinersone.v1.RestaurantHighlights",
+                "title": "Popular dishes",
+                "element": [
+                  "Chicken Biryani",
+                  "Mutton Biryani",
+                  "Andhra Meal",
+                  "Chicken 65",
+                  "Andhra Biryani",
+                  "Andhra Thali",
+                  "Hyderabadi Biryani"
+                ],
+                "content": [
                   {
-                    "card": {
-                      "card": {
-                        "@type": "type.googleapis.com/swiggy.presentation.food.v2.Restaurant",
-                        "info": {
-                          "id": "1050",
-                          "name": "Nagarjuna Chimney",
-                          "city": "1",
-                          "slugs": {
-                            "restaurant": "nagarjuna-chimney-3rd-block-jayanagar",
-                            "city": "bangalore"
-                          },
-                          "cloudinaryImageId": "hirj3b66f3uphbdinhev",
-                          "address": "21/22, 22Nd Cross, 3Rd Block, Jayanagar",
-                          "locality": "Jayanagar",
-                          "areaName": "Jayanagar",
-                          "costForTwo": "80000",
-                          "costForTwoMessage": "₹800 FOR TWO",
-                          "cuisines": [
-                            "Seafood",
-                            "Andhra",
-                            "Biryani",
-                            "South Indian",
-                            "Desserts",
-                            "Beverages"
-                          ],
-                          "avgRating": 4.5,
-                          "feeDetails": {},
-                          "parentId": "143166",
-                          "avgRatingString": "4.5",
-                          "totalRatingsString": "34K+",
-                          "sla": {
-                            "deliveryTime": 321,
-                            "minDeliveryTime": 317,
-                            "maxDeliveryTime": 322,
-                            "lastMileTravel": 5.7,
-                            "serviceability": "SERVICEABLE",
-                            "rainMode": "RAIN_MODE_NONE",
-                            "slaString": "317-322 MINS",
-                            "lastMileTravelString": "5.7 km",
-                            "iconType": "ICON_TYPE_EMPTY"
-                          },
-                          "availability": {
-                            "nextOpenTimeMessage": "Opens next at 11:30 am, today",
-                            "restaurantClosedMeta": {
-                              "title": "CLOSED",
-                              "subtitle": "FOR NOW"
-                            }
-                          },
-                          "aggregatedDiscountInfo": {
-                            "visible": true
-                          },
-                          "badges": {},
-                          "unorderableMessage": "Opens next at 11:30 am, today",
-                          "aggregatedDiscountInfoV2": {
-                            "visible": true
-                          },
-                          "ratingSlab": "RATING_SLAB_5",
-                          "availabilityServiceabilityMessage": "Currently closed for delivery. Opens next at 11:30 am, today",
-                          "orderabilityCommunication": {
-                            "title": {
-                              "text": "CURRENTLY"
-                            },
-                            "subTitle": {
-                              "text": "CLOSED"
-                            },
-                            "message": {
-                              "text": "Opens today at 11:30 AM",
-                              "textColour": "primary"
-                            },
-                            "customIcon": {
-                              "bgGradientColorStart": "#EB8322",
-                              "bgGradientColorEnd": "#EE5803"
-                            },
-                            "commsStyling": {}
-                          },
-                          "cartOrderabilityNudgeBanner": {
-                            "parameters": {},
-                            "presentation": {}
-                          },
-                          "externalRatings": {
-                            "aggregatedRating": {
-                              "rating": "3.8",
-                              "ratingCount": "12K+"
-                            },
-                            "source": "GOOGLE",
-                            "sourceIconImageId": "v1704440323/google_ratings/rating_google_tag"
-                          },
-                          "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY",
-                          "featuredSectionInfo": {
-                            "sectionTitle": "More"
-                          },
-                          "showEoOffer": true,
-                          "priceComparisonComms": {}
-                        },
-                        "analytics": {
-                          "screenName": "explore",
-                          "context": "{\"tid\":\"undefined\",\"grid\":\"034e5202-e5a0-4a6b-9c41-57d039abbadd\",\"queryUniqueId\":\"undefined\",\"query\":\"Nagarjuna\"}",
-                          "objectValue": "1050",
-                          "impressionObjectName": "impression-restaurant",
-                          "clickObjectName": "click-restaurant"
-                        },
-                        "ctaWithParams": {
-                          "link": "swiggy://menu",
-                          "type": "DEEPLINK",
-                          "params": {
-                            "restaurant_id": "1050",
-                            "query": "Nagarjuna",
-                            "sourceSessionId": "re6a686044b-d4f0-4778-8cec-5e23a2f19",
-                            "source": "SEARCH",
-                            "isSld": "false",
-                            "sourceRequestId": "00000000000000000000000000000000",
-                            "qrEnabled": "false"
-                          }
-                        }
+                    "info": "Chicken Biryani",
+                    "icon": "dineout/details/popular_dishes.png"
+                  },
+                  {
+                    "info": "Mutton Biryani",
+                    "icon": "dineout/details/popular_dishes.png"
+                  },
+                  {
+                    "info": "Andhra Meal",
+                    "icon": "dineout/details/popular_dishes.png"
+                  },
+                  {
+                    "info": "Chicken 65",
+                    "icon": "dineout/details/popular_dishes.png"
+                  },
+                  {
+                    "info": "Andhra Biryani",
+                    "icon": "dineout/details/popular_dishes.png"
+                  },
+                  {
+                    "info": "Andhra Thali",
+                    "icon": "dineout/details/popular_dishes.png"
+                  },
+                  {
+                    "info": "Hyderabadi Biryani",
+                    "icon": "dineout/details/popular_dishes.png"
+                  }
+                ],
+                "rowCount": 2,
+                "colCount": 3,
+                "scrollAnchor": {
+                  "id": "menu"
+                }
+              }
+            }
+          },
+          {
+            "card": {
+              "card": {
+                "@type": "type.googleapis.com/swiggy.gandalf.widgets.v2.StaggeredGrid",
+                "info": [
+                  {
+                    "imageCardInfo": {
+                      "id": "2023-09-20T05:37:04.457",
+                      "imageId": "v1695188225/bd24e52939b0a3f9d344283d43e93f15.jpg",
+                      "action": {
+                        "link": "swiggydiners://fullScreenGallery/41100?imageId=v1695188225/bd24e52939b0a3f9d344283d43e93f15.jpg&apiCall=true",
+                        "type": "DEEPLINK"
+                      },
+                      "analytics": {
+                        "screenName": "DO-Detail",
+                        "context": "{\"photo_id\":\"2023-09-20T05:37:04.457\",\"click_position\":1,\"click_on_indicator_+\":false}",
+                        "objectValue": "41100",
+                        "clickObjectName": "photos"
                       }
+                    },
+                    "style": {
+                      "width": 0.611,
+                      "height": 0.586,
+                      "left": 0.0333
+                    },
+                    "mediaItemCornerRadius": {
+                      "topLeft": 16,
+                      "topRight": 16,
+                      "bottomLeft": 16,
+                      "bottomRight": 16
                     }
                   },
                   {
-                    "card": {
-                      "card": {
-                        "@type": "type.googleapis.com/swiggy.presentation.food.v2.Restaurant",
-                        "info": {
-                          "id": "41100",
-                          "name": "Nagarjuna - Since 1984",
-                          "city": "1",
-                          "slugs": {
-                            "restaurant": "nagarjuna-residency-road-central-bangalore",
-                            "city": "bangalore"
-                          },
-                          "cloudinaryImageId": "RX_THUMBNAIL/IMAGES/VENDOR/2025/12/5/6aa9d686-3455-4c35-a06e-e759ddf54e52_41100.jpg",
-                          "address": "#44 1, Residency Road, Bangalore 560025",
-                          "locality": "Residency Road",
-                          "areaName": "Ashok Nagar",
-                          "costForTwo": "60000",
-                          "costForTwoMessage": "₹600 FOR TWO",
-                          "cuisines": [
-                            "Andhra",
-                            "South Indian",
-                            "Biryani",
-                            "Beverages",
-                            "Desserts"
-                          ],
-                          "avgRating": 4.6,
-                          "feeDetails": {},
-                          "parentId": "509973",
-                          "avgRatingString": "4.6",
-                          "totalRatingsString": "50K+",
-                          "sla": {
-                            "deliveryTime": 40,
-                            "minDeliveryTime": 35,
-                            "maxDeliveryTime": 40,
-                            "lastMileTravel": 2.1,
-                            "serviceability": "SERVICEABLE",
-                            "rainMode": "RAIN_MODE_NONE",
-                            "slaString": "35-40 MINS",
-                            "lastMileTravelString": "2.1 km",
-                            "iconType": "ICON_TYPE_EMPTY"
-                          },
-                          "availability": {
-                            "nextOpenTimeMessage": "Opens next at 11:30 am, today",
-                            "restaurantClosedMeta": {
-                              "title": "CLOSED",
-                              "subtitle": "FOR NOW"
-                            }
-                          },
-                          "aggregatedDiscountInfo": {
-                            "visible": true
-                          },
-                          "badges": {
-                            "imageBadges": [
-                              {
-                                "imageId": "brand_cards/Badges%202026/35_Best%20in%20Andhra%20Food2026.png",
-                                "description": "Best in Andhra Food"
-                              }
-                            ]
-                          },
-                          "unorderableMessage": "Opens next at 11:30 am, today",
-                          "aggregatedDiscountInfoV2": {
-                            "visible": true
-                          },
-                          "ratingSlab": "RATING_SLAB_5",
-                          "availabilityServiceabilityMessage": "Currently closed for delivery. Opens next at 11:30 am, today",
-                          "orderabilityCommunication": {
-                            "title": {
-                              "text": "CURRENTLY"
-                            },
-                            "subTitle": {
-                              "text": "CLOSED"
-                            },
-                            "message": {
-                              "text": "Opens today at 11:30 AM",
-                              "textColour": "primary"
-                            },
-                            "customIcon": {
-                              "bgGradientColorStart": "#EB8322",
-                              "bgGradientColorEnd": "#EE5803"
-                            },
-                            "commsStyling": {}
-                          },
-                          "cartOrderabilityNudgeBanner": {
-                            "parameters": {},
-                            "presentation": {}
-                          },
-                          "externalRatings": {
-                            "aggregatedRating": {
-                              "rating": "4.2",
-                              "ratingCount": "22K+"
-                            },
-                            "source": "GOOGLE",
-                            "sourceIconImageId": "v1704440323/google_ratings/rating_google_tag"
-                          },
-                          "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY",
-                          "featuredSectionInfo": {
-                            "sectionTitle": "More"
-                          },
-                          "showEoOffer": true,
-                          "priceComparisonComms": {}
-                        },
-                        "analytics": {
-                          "screenName": "explore",
-                          "context": "{\"tid\":\"undefined\",\"grid\":\"034e5202-e5a0-4a6b-9c41-57d039abbadd\",\"queryUniqueId\":\"undefined\",\"query\":\"Nagarjuna\"}",
-                          "objectValue": "41100",
-                          "impressionObjectName": "impression-restaurant",
-                          "clickObjectName": "click-restaurant"
-                        },
-                        "ctaWithParams": {
-                          "link": "swiggy://menu",
-                          "type": "DEEPLINK",
-                          "params": {
-                            "sourceSessionId": "re6a686044b-d4f0-4778-8cec-5e23a2f19",
-                            "source": "SEARCH",
-                            "isSld": "false",
-                            "sourceRequestId": "00000000000000000000000000000000",
-                            "qrEnabled": "false",
-                            "restaurant_id": "41100",
-                            "query": "Nagarjuna"
-                          }
-                        }
+                    "imageCardInfo": {
+                      "id": "2023-09-20T05:37:08.092",
+                      "imageId": "v1695188229/7a27948f5d4e8a370f264e28fc0b68ca.jpg",
+                      "action": {
+                        "link": "swiggydiners://fullScreenGallery/41100?imageId=v1695188229/7a27948f5d4e8a370f264e28fc0b68ca.jpg&apiCall=true",
+                        "type": "DEEPLINK"
+                      },
+                      "analytics": {
+                        "screenName": "DO-Detail",
+                        "context": "{\"photo_id\":\"2023-09-20T05:37:08.092\",\"click_position\":2,\"click_on_indicator_+\":false}",
+                        "objectValue": "41100",
+                        "clickObjectName": "photos"
                       }
+                    },
+                    "style": {
+                      "width": 0.288,
+                      "height": 0.277,
+                      "left": 0.675
+                    },
+                    "mediaItemCornerRadius": {
+                      "topLeft": 16,
+                      "topRight": 16,
+                      "bottomLeft": 16,
+                      "bottomRight": 16
                     }
                   },
                   {
-                    "card": {
-                      "card": {
-                        "@type": "type.googleapis.com/swiggy.presentation.food.v2.Restaurant",
-                        "info": {
-                          "id": "1375173",
-                          "name": "Nagarjuna Biryani",
-                          "city": "1",
-                          "slugs": {
-                            "restaurant": "nagarjuna-biryani-central-bangalore-central-bangalore",
-                            "city": "bangalore"
-                          },
-                          "cloudinaryImageId": "RX_THUMBNAIL/IMAGES/VENDOR/2026/5/9/aa789489-fb0a-4da0-91fa-094316029c2a_1375173.jpg",
-                          "address": "Bearing no. 22 Chick Bazar Chandni Chowk near Shivajinagar bus stand Bengaluru 560051 ,Lingarajapura,Bangalore North,Bangalore Urban,Karnataka-565001",
-                          "locality": "Central Bangalore",
-                          "areaName": "Central Bangalore",
-                          "costForTwo": "20000",
-                          "costForTwoMessage": "₹200 FOR TWO",
-                          "cuisines": [
-                            "Biryani",
-                            "Indian",
-                            "North Indian",
-                            "Meat"
-                          ],
-                          "feeDetails": {},
-                          "parentId": "783386",
-                          "avgRatingString": "NEW",
-                          "sla": {
-                            "deliveryTime": 29,
-                            "minDeliveryTime": 25,
-                            "maxDeliveryTime": 30,
-                            "lastMileTravel": 2.4,
-                            "serviceability": "SERVICEABLE",
-                            "rainMode": "RAIN_MODE_NONE",
-                            "slaString": "25-30 MINS",
-                            "lastMileTravelString": "2.4 km",
-                            "iconType": "ICON_TYPE_EMPTY"
-                          },
-                          "availability": {
-                            "nextOpenTimeMessage": "Opens next at 12 noon, today",
-                            "restaurantClosedMeta": {
-                              "title": "CLOSED",
-                              "subtitle": "FOR NOW"
-                            }
-                          },
-                          "aggregatedDiscountInfo": {
-                            "visible": true
-                          },
-                          "badges": {},
-                          "unorderableMessage": "Opens next at 12 noon, today",
-                          "aggregatedDiscountInfoV2": {
-                            "visible": true
-                          },
-                          "availabilityServiceabilityMessage": "Currently closed for delivery. Opens next at 12 noon, today",
-                          "orderabilityCommunication": {
-                            "title": {
-                              "text": "CURRENTLY"
-                            },
-                            "subTitle": {
-                              "text": "CLOSED"
-                            },
-                            "message": {
-                              "text": "Opens today at 12:00 PM",
-                              "textColour": "primary"
-                            },
-                            "customIcon": {
-                              "bgGradientColorStart": "#EB8322",
-                              "bgGradientColorEnd": "#EE5803"
-                            },
-                            "commsStyling": {}
-                          },
-                          "cartOrderabilityNudgeBanner": {
-                            "parameters": {},
-                            "presentation": {}
-                          },
-                          "externalRatings": {
-                            "aggregatedRating": {
-                              "rating": "--"
-                            }
-                          },
-                          "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY",
-                          "featuredSectionInfo": {
-                            "sectionTitle": "More"
-                          },
-                          "showEoOffer": true,
-                          "priceComparisonComms": {}
-                        },
-                        "analytics": {
-                          "screenName": "explore",
-                          "context": "{\"tid\":\"undefined\",\"grid\":\"034e5202-e5a0-4a6b-9c41-57d039abbadd\",\"queryUniqueId\":\"undefined\",\"query\":\"Nagarjuna\"}",
-                          "objectValue": "1375173",
-                          "impressionObjectName": "impression-restaurant",
-                          "clickObjectName": "click-restaurant"
-                        },
-                        "ctaWithParams": {
-                          "link": "swiggy://menu",
-                          "type": "DEEPLINK",
-                          "params": {
-                            "sourceSessionId": "re6a686044b-d4f0-4778-8cec-5e23a2f19",
-                            "source": "SEARCH",
-                            "isSld": "false",
-                            "sourceRequestId": "00000000000000000000000000000000",
-                            "qrEnabled": "false",
-                            "restaurant_id": "1375173",
-                            "query": "Nagarjuna"
-                          }
-                        }
+                    "imageCardInfo": {
+                      "id": "2023-09-20T05:37:11.767",
+                      "imageId": "v1695188233/3fc47fad6c4038c06e4ce32c93143b22.jpg",
+                      "action": {
+                        "link": "swiggydiners://fullScreenGallery/41100?imageId=v1695188233/3fc47fad6c4038c06e4ce32c93143b22.jpg&apiCall=true",
+                        "type": "DEEPLINK"
+                      },
+                      "analytics": {
+                        "screenName": "DO-Detail",
+                        "context": "{\"photo_id\":\"2023-09-20T05:37:11.767\",\"click_position\":3,\"click_on_indicator_+\":false}",
+                        "objectValue": "41100",
+                        "clickObjectName": "photos"
                       }
+                    },
+                    "style": {
+                      "width": 0.288,
+                      "height": 0.277,
+                      "top": 0.307,
+                      "left": 0.675
+                    },
+                    "mediaItemCornerRadius": {
+                      "topLeft": 16,
+                      "topRight": 16,
+                      "bottomLeft": 16,
+                      "bottomRight": 16
                     }
+                  },
+                  {
+                    "imageCardInfo": {
+                      "id": "2023-09-20T05:37:14.909",
+                      "imageId": "v1695188236/d9818f8a4b445e8e11f76564c9f8d829.jpg",
+                      "action": {
+                        "link": "swiggydiners://fullScreenGallery/41100?imageId=v1695188236/d9818f8a4b445e8e11f76564c9f8d829.jpg&apiCall=true",
+                        "type": "DEEPLINK"
+                      },
+                      "analytics": {
+                        "screenName": "DO-Detail",
+                        "context": "{\"photo_id\":\"2023-09-20T05:37:14.909\",\"click_position\":4,\"click_on_indicator_+\":false}",
+                        "objectValue": "41100",
+                        "clickObjectName": "photos"
+                      }
+                    },
+                    "style": {
+                      "width": 0.288,
+                      "height": 0.277,
+                      "top": 0.618,
+                      "left": 0.0333
+                    },
+                    "mediaItemCornerRadius": {
+                      "topLeft": 16,
+                      "topRight": 16,
+                      "bottomLeft": 16,
+                      "bottomRight": 16
+                    }
+                  },
+                  {
+                    "imageCardInfo": {
+                      "id": "2023-09-20T05:37:18.630",
+                      "imageId": "v1695188240/6fa7a7d6744dfd72cea2e7e7dda1b49e.jpg",
+                      "action": {
+                        "link": "swiggydiners://fullScreenGallery/41100?imageId=v1695188240/6fa7a7d6744dfd72cea2e7e7dda1b49e.jpg&apiCall=true",
+                        "type": "DEEPLINK"
+                      },
+                      "analytics": {
+                        "screenName": "DO-Detail",
+                        "context": "{\"photo_id\":\"2023-09-20T05:37:18.630\",\"click_position\":5,\"click_on_indicator_+\":false}",
+                        "objectValue": "41100",
+                        "clickObjectName": "photos"
+                      }
+                    },
+                    "style": {
+                      "width": 0.288,
+                      "height": 0.277,
+                      "top": 0.618,
+                      "left": 0.357
+                    },
+                    "mediaItemCornerRadius": {
+                      "topLeft": 16,
+                      "topRight": 16,
+                      "bottomLeft": 16,
+                      "bottomRight": 16
+                    }
+                  },
+                  {
+                    "imageCardInfo": {
+                      "id": "2023-09-20T05:37:22.276",
+                      "imageId": "v1695188243/5db1a66e9b547353ed69941493707f81.jpg",
+                      "action": {
+                        "link": "swiggydiners://gallery/41100",
+                        "type": "DEEPLINK"
+                      },
+                      "analytics": {
+                        "screenName": "DO-Detail",
+                        "context": "{\"photo_id\":\"2023-09-20T05:37:22.276\",\"click_position\":6,\"click_on_indicator_+\":true}",
+                        "objectValue": "41100",
+                        "clickObjectName": "photos"
+                      }
+                    },
+                    "style": {
+                      "width": 0.288,
+                      "height": 0.277,
+                      "top": 0.618,
+                      "left": 0.675
+                    },
+                    "overlay": {
+                      "textInfo": {
+                        "info": "+12",
+                        "color": "white",
+                        "font": "FONT_NAME_V2_SUBHEADING1_NEUTRAL_BOLD"
+                      },
+                      "backgroundColor": "#9902060C"
+                    },
+                    "mediaItemCornerRadius": {
+                      "topLeft": 16,
+                      "topRight": 16,
+                      "bottomLeft": 16,
+                      "bottomRight": 16
+                    }
+                  }
+                ],
+                "layout": {
+                  "widgetPadding": {
+                    "bottom": 12
+                  },
+                  "scrollBar": {
+                    "width": 54,
+                    "height": 4
+                  },
+                  "widgetTheme": {
+                    "defaultMode": {
+                      "backgroundColour": "#FFFFFF",
+                      "theme": "THEME_TYPE_LIGHT",
+                      "themeVariant": "THEME_VARIANT_DEFAULT"
+                    },
+                    "darkMode": {
+                      "backgroundColour": "#FFFFFF",
+                      "theme": "THEME_TYPE_DARK",
+                      "themeVariant": "THEME_VARIANT_DEFAULT"
+                    }
+                  }
+                },
+                "id": "dineoutRdpHexaPhotosWidget",
+                "header": {
+                  "title": "Photos",
+                  "headerStyling": {
+                    "padding": {
+                      "left": 16,
+                      "top": 24,
+                      "bottom": 8
+                    },
+                    "titleFontName": "FONT_NAME_BODY_B1_BOLD"
+                  },
+                  "analytics": {
+                    "screenName": "DO-Detail",
+                    "context": "{\"photo_count\":18,\"photos_shown_count\":6,\"photo_ids\":[\"2023-09-20T05:37:04.457\",\"2023-09-20T05:37:08.092\",\"2023-09-20T05:37:11.767\",\"2023-09-20T05:37:14.909\",\"2023-09-20T05:37:18.630\",\"2023-09-20T05:37:22.276\",\"2023-09-20T05:37:31.437\",\"2023-09-20T05:37:34.770\",\"2023-09-20T05:37:38.193\",\"2023-09-20T05:37:41.661\",\"2023-09-20T05:37:45.053\",\"2023-09-20T05:37:48.280\",\"2023-09-20T05:37:51.295\",\"2023-09-20T05:37:54.675\",\"2023-09-20T05:37:58.143\",\"2023-09-20T05:38:01.341\",\"2023-09-20T05:38:04.780\",\"2023-09-20T05:38:08.157\"]}",
+                    "objectValue": "41100",
+                    "impressionObjectName": "photos"
+                  },
+                  "collapseConfig": {
+                    "enabled": true,
+                    "collapseIcon": "chevron_down_12",
+                    "expandIcon": "chevron_up_12"
+                  }
+                },
+                "scrollAnchor": {
+                  "id": "photos"
+                }
+              }
+            }
+          },
+          {
+            "card": {
+              "card": {
+                "@type": "type.googleapis.com/swiggy.gandalf.widgets.v2.TextInfoWidget",
+                "title": {
+                  "info": "Location",
+                  "color": "text_color_highest_emphasis"
+                },
+                "description": {
+                  "info": "2.2 km • #44 1, Residency Road, Bangalore 560025",
+                  "color": "text_color_high_emphasis",
+                  "font": "FONT_NAME_BODY_B2_REG"
+                },
+                "iconUrl": "dineout/details/direction.png",
+                "cta": {
+                  "link": "https://www.google.com/maps/dir/?api=1&origin=12.9716,77.5946&destination=12.97317721,77.60919692&travelmode=driving",
+                  "text": "MAP_DEEPLINK",
+                  "type": "MAPS_DIRECTION"
+                },
+                "scrollAnchor": {
+                  "id": "about"
+                },
+                "metaInfo": {
+                  "lat": "12.97317721",
+                  "lng": "77.60919692",
+                  "showMap": "true"
+                }
+              }
+            }
+          },
+          {
+            "card": {
+              "card": {
+                "@type": "type.googleapis.com/swiggy.presentation.dinersone.v1.CtaList",
+                "ctas": [
+                  {
+                    "link": "swiggydiners://login",
+                    "text": "Login to avail offer & pay",
+                    "type": "primary",
+                    "metaInfo": {}
                   }
                 ]
               }
             }
           }
-        }
-      ],
-      "firstOffsetRequest": true
-    },
-    "tid": "736caac9-745f-4471-8abd-9df09ed66413",
-    "sid": "re6a686044b-d4f0-4778-8cec-5e23a2f19",
-    "deviceId": "e34e2ee7-9ef1-d6e8-2138-3dd35fda41e9",
-    "csrfToken": "mIbqBFWlWnJD--RF2_IbVIOnXAjsjw0dn4hD_zzA"
+        ],
+        "firstOffsetRequest": true
+      }
+    }
   }
 }

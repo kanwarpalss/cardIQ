@@ -23,204 +23,550 @@
       "eazyDinerSlug": "glens-bakehouse-indiranagar-331919"
     },
     "found": true,
-    "offerSummary": [
-      "aggregatedDiscountInfo",
-      "aggregatedDiscountInfoV2",
-      "showEoOffer",
-      "firstOffsetRequest"
-    ]
+    "offerSummary": []
   },
   "raw": {
-    "statusCode": 0,
-    "data": {
-      "statusMessage": "done successfully",
-      "cards": [
-        {
-          "card": {
+    "restaurantId": "17376",
+    "detail": {
+      "requestId": "41c777a9-bf22-4f1b-887c-95b1e35802ba",
+      "apiTime": "2026-05-17T16:07:54.450372820Z",
+      "success": {
+        "statusMessage": "done successfully",
+        "cards": [
+          {
             "card": {
-              "@type": "type.googleapis.com/swiggy.gandalf.widgets.v2.Navigation",
-              "tab": [
-                {
-                  "id": "RESTAURANT",
-                  "title": "Restaurants",
-                  "selected": true,
-                  "analytics": {
-                    "screenName": "explore",
-                    "context": "{\"tid\":\"undefined\",\"query\":\"Glen's Bakehouse\"}",
-                    "objectValue": "RESTAURANT",
-                    "clickObjectName": "click-tab"
-                  },
-                  "selectedBgColor": "#1B1E24",
-                  "unselectedBgColor": "#FFFFFF",
-                  "selectedTextColor": "#BFFFFFFF",
-                  "unselectedTextColor": "#9902060C",
-                  "selectedBorderColor": "#1B1E24",
-                  "unselectedBorderColor": "#E2E2E7"
-                },
-                {
-                  "id": "DISH",
-                  "title": "Dishes",
-                  "analytics": {
-                    "screenName": "explore",
-                    "context": "{\"tid\":\"undefined\",\"query\":\"Glen's Bakehouse\"}",
-                    "objectValue": "DISH",
-                    "clickObjectName": "click-tab"
-                  },
-                  "selectedBgColor": "#1B1E24",
-                  "unselectedBgColor": "#FFFFFF",
-                  "selectedTextColor": "#BFFFFFFF",
-                  "unselectedTextColor": "#9902060C",
-                  "selectedBorderColor": "#1B1E24",
-                  "unselectedBorderColor": "#E2E2E7"
-                }
-              ],
-              "meta": {
-                "correctedQuery": "",
-                "suggestionType": "",
-                "queryIntent": "RESTAURANT",
-                "orderable": "false"
-              }
-            }
-          }
-        },
-        {
-          "groupedCard": {
-            "cardGroupMap": {
-              "RESTAURANT": {
-                "cards": [
-                  {
-                    "card": {
-                      "card": {
-                        "@type": "type.googleapis.com/swiggy.presentation.food.v2.Restaurant",
-                        "info": {
-                          "id": "17376",
-                          "name": "Glen's Bakehouse",
-                          "city": "1",
-                          "slugs": {
-                            "restaurant": "glens-bake-house-lavelle-road-central-bangalore",
-                            "city": "bangalore"
-                          },
-                          "cloudinaryImageId": "m6jahioyu7zrodei5pcq",
-                          "address": "24/1 Lavelle Road, Bangalore 560 001",
-                          "locality": "Lavelle Road",
-                          "areaName": "Ashok Nagar",
-                          "costForTwo": "50000",
-                          "costForTwoMessage": "₹500 FOR TWO",
-                          "cuisines": [
-                            "Desserts",
-                            "Bakery",
-                            "Beverages",
-                            "Continental",
-                            "Italian"
-                          ],
-                          "avgRating": 4.6,
-                          "feeDetails": {},
-                          "parentId": "3220",
-                          "avgRatingString": "4.6",
-                          "totalRatingsString": "26K+",
-                          "sla": {
-                            "deliveryTime": 164,
-                            "minDeliveryTime": 162,
-                            "maxDeliveryTime": 172,
-                            "lastMileTravel": 0.5,
-                            "serviceability": "SERVICEABLE",
-                            "rainMode": "RAIN_MODE_NONE",
-                            "slaString": "162-172 MINS",
-                            "lastMileTravelString": "0.5 km",
-                            "iconType": "ICON_TYPE_EMPTY"
-                          },
-                          "availability": {
-                            "nextOpenTimeMessage": "Opens next at 9 am, today",
-                            "restaurantClosedMeta": {
-                              "title": "CLOSED",
-                              "subtitle": "FOR NOW"
-                            }
-                          },
-                          "aggregatedDiscountInfo": {
-                            "visible": true
-                          },
-                          "badges": {
-                            "imageBadges": [
-                              {
-                                "imageId": "newg.png",
-                                "description": "Gourmet"
-                              }
-                            ]
-                          },
-                          "unorderableMessage": "Opens next at 9 am, today",
-                          "aggregatedDiscountInfoV2": {
-                            "visible": true
-                          },
-                          "ratingSlab": "RATING_SLAB_5",
-                          "availabilityServiceabilityMessage": "Currently closed for delivery. Opens next at 9 am, today",
-                          "orderabilityCommunication": {
-                            "title": {
-                              "text": "CURRENTLY"
-                            },
-                            "subTitle": {
-                              "text": "CLOSED"
-                            },
-                            "message": {
-                              "text": "Opens today at 9:00 AM",
-                              "textColour": "primary"
-                            },
-                            "customIcon": {
-                              "bgGradientColorStart": "#EB8322",
-                              "bgGradientColorEnd": "#EE5803"
-                            },
-                            "commsStyling": {}
-                          },
-                          "cartOrderabilityNudgeBanner": {
-                            "parameters": {},
-                            "presentation": {}
-                          },
-                          "externalRatings": {
-                            "aggregatedRating": {
-                              "rating": "4.4",
-                              "ratingCount": "11K+"
-                            },
-                            "source": "GOOGLE",
-                            "sourceIconImageId": "v1704440323/google_ratings/rating_google_tag"
-                          },
-                          "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY",
-                          "featuredSectionInfo": {},
-                          "showEoOffer": true,
-                          "priceComparisonComms": {}
+              "card": {
+                "@type": "type.googleapis.com/swiggy.presentation.dinersone.v1.EntityInfoWithMasthead",
+                "id": "17376",
+                "info": {
+                  "name": "Glen's Bakehouse",
+                  "locationInfo": {
+                    "distanceString": "0.6 km",
+                    "navigationUrl": "https://www.google.com/maps/dir/?api=1&origin=12.9716,77.5946&destination=12.969992,77.59742900000003&travelmode=driving",
+                    "lat": "12.969992",
+                    "long": "77.59742900000003",
+                    "city": {
+                      "name": "Bangalore"
+                    },
+                    "formattedAddress": "Ashok Nagar, Bangalore",
+                    "additionalInfo": {
+                      "cta": {
+                        "link": "swiggydiners://collectiondetails/DINEOUT_BRAND_OUTLETS?tags=layout_dineout_brand_outlets&metaMap=%7B%22brandId%22%3A%223220%22%2C%22restaurant_id%22%3A%2217376%22%2C%22sourcePage%22%3A%22RDP%22%7D&header_title=Outlets",
+                        "text": "outlets",
+                        "type": "DEEPLINK",
+                        "metaInfo": {
+                          "ctaImage": "dineout/details/red_arrow_down.png"
                         },
                         "analytics": {
-                          "screenName": "explore",
-                          "context": "{\"tid\":\"undefined\",\"grid\":\"de1f7a30-3ece-4e8d-9bb7-4f308957bfbd\",\"queryUniqueId\":\"undefined\",\"query\":\"Glen's Bakehouse\"}",
-                          "objectValue": "17376",
-                          "impressionObjectName": "impression-restaurant",
-                          "clickObjectName": "click-restaurant"
-                        },
-                        "ctaWithParams": {
-                          "link": "swiggy://menu",
-                          "type": "DEEPLINK",
-                          "params": {
-                            "restaurant_id": "17376",
-                            "query": "Glen's Bakehouse",
-                            "sourceSessionId": "re61ff4393b-2e19-43fa-9297-d2bd177f4",
-                            "source": "SEARCH",
-                            "isSld": "false",
-                            "sourceRequestId": "00000000000000000000000000000000",
-                            "qrEnabled": "false"
-                          }
+                          "screenName": "DO-Detail",
+                          "context": "{\"restId\":\"17376\"}",
+                          "objectValue": "outlet_switcher_dropdown",
+                          "impressionObjectName": "entity_info_masthead",
+                          "clickObjectName": "entity_info_masthead"
                         }
                       }
+                    },
+                    "displayAreaName": "Ashok Nagar"
+                  },
+                  "timingsInfo": {
+                    "outletTiming": {
+                      "infoList": [
+                        {
+                          "title": "Monday",
+                          "subtitle": "9AM - 11:59PM",
+                          "titleColor": "text_high_emphasis",
+                          "subtitleColor": "text_high_emphasis"
+                        },
+                        {
+                          "title": "Tuesday",
+                          "subtitle": "9AM - 11:59PM",
+                          "titleColor": "text_high_emphasis",
+                          "subtitleColor": "text_high_emphasis"
+                        },
+                        {
+                          "title": "Wednesday",
+                          "subtitle": "9AM - 11:59PM",
+                          "titleColor": "text_high_emphasis",
+                          "subtitleColor": "text_high_emphasis"
+                        },
+                        {
+                          "title": "Thursday",
+                          "subtitle": "9AM - 11:59PM",
+                          "titleColor": "text_high_emphasis",
+                          "subtitleColor": "text_high_emphasis"
+                        },
+                        {
+                          "title": "Friday",
+                          "subtitle": "9AM - 11:59PM",
+                          "titleColor": "text_high_emphasis",
+                          "subtitleColor": "text_high_emphasis"
+                        },
+                        {
+                          "title": "Saturday",
+                          "subtitle": "9AM - 11:59PM",
+                          "titleColor": "text_high_emphasis",
+                          "subtitleColor": "text_high_emphasis"
+                        },
+                        {
+                          "title": "Today",
+                          "subtitle": "9AM - 11:59PM",
+                          "titleColor": "primary",
+                          "subtitleColor": "primary"
+                        }
+                      ],
+                      "title": "Outlet timings"
+                    },
+                    "styleInfo": {
+                      "titleColor": "negative",
+                      "subtitleColor": "text_color_low_emphasis"
                     }
+                  },
+                  "callDetail": {
+                    "title": "Trying to reach the outlet?",
+                    "style": {
+                      "cornerRadius": {
+                        "topLeft": 16,
+                        "topRight": 16
+                      },
+                      "backgroundColour": "#F0F0F5"
+                    },
+                    "actions": [
+                      {
+                        "link": "dailer-app?phone=8041126825",
+                        "text": "8041126825",
+                        "type": "DIALER",
+                        "metaInfo": {
+                          "ctaImage": "dineout/details/call_no_bg.png"
+                        }
+                      }
+                    ]
+                  },
+                  "ratingsInfo": {
+                    "value": "4.4",
+                    "description": "11K ratings",
+                    "count": 11446,
+                    "countDescription": "11K+ Google ratings",
+                    "icon": "dineout/details/google_tag.png",
+                    "style": "RATING_STYLE_V2"
+                  },
+                  "typeInfo": {
+                    "type": "ENTITY_TYPE_RESTAURANT",
+                    "restaurantType": "RESTAURANT_TYPE_NON_PARTICIPATING"
+                  },
+                  "style": {
+                    "backgroundColour": "#FFFFFF",
+                    "cornerRadius": {
+                      "topLeft": 16,
+                      "topRight": 16,
+                      "bottomLeft": 16,
+                      "bottomRight": 16
+                    },
+                    "animationConfig": {
+                      "type": "ANIMATION_TYPE_ENTRY_PUSH_DOWN",
+                      "startDelay": 250,
+                      "duration": 100,
+                      "interpolator": "INTERPOLATOR_LINEAR"
+                    },
+                    "dimension": {
+                      "width": {
+                        "type": "TYPE_RELATIVE",
+                        "value": 1,
+                        "reference": "RELATIVE_DIMENSION_REFERENCE_DEVICE_WIDTH"
+                      },
+                      "height": {
+                        "type": "TYPE_RELATIVE",
+                        "value": 0.778,
+                        "reference": "RELATIVE_DIMENSION_REFERENCE_WIDTH"
+                      }
+                    }
+                  },
+                  "favourite": {
+                    "entityLotte": {
+                      "frequencyCapping": 2,
+                      "image": "favourite-image",
+                      "lotteFiles": [
+                        {
+                          "type": "LOTTIE_TYPE_FAVOURITE",
+                          "lotte": "favourite-lottie"
+                        },
+                        {
+                          "type": "LOTTIE_TYPE_NON_FAVOURITE",
+                          "lotte": "non-favourite-lottie"
+                        }
+                      ]
+                    },
+                    "accessibility": {
+                      "altText": "favourite alt text",
+                      "altTextCta": "favourite alt text cta"
+                    }
+                  },
+                  "share": {
+                    "entityLotte": {
+                      "frequencyCapping": 3,
+                      "image": "share-image",
+                      "lotteFiles": [
+                        {
+                          "type": "LOTTIE_TYPE_SHARE",
+                          "lotte": "share-lottie"
+                        }
+                      ]
+                    },
+                    "shareUrl": "Hey, I think you will love Glen's Bakehouse, Ashok Nagar, Bangalore on Swiggy Dineout https://swiggy.onelink.me/BVRZ?af_dp=swiggydiners%3A%2F%2Fdetails%2F17376%3Fsource%3Dsharing Happy dining!",
+                    "accessibility": {
+                      "altText": "share alt text",
+                      "altTextCta": "share alt text cta"
+                    }
+                  },
+                  "entityAttributes": {
+                    "restaurantEntityAttributes": {
+                      "outlets": {},
+                      "cuisines": [
+                        "Continental",
+                        "Italian"
+                      ],
+                      "costForTwo": "₹900 for two"
+                    }
+                  }
+                },
+                "masthead": {
+                  "files": [
+                    {
+                      "type": "IMAGE",
+                      "id": "2024-05-21T16:31:05.670",
+                      "name": "3 jpg",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2024/5/21/ad1ef72d-a54e-42f8-8332-4100a73a921f_20240521T163106262.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2024-05-21T16:31:06.376",
+                      "name": "a1 jpg",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2024/5/21/740c91dd-5b97-4535-a867-a2be9f132cbb_20240521T163106581.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2024-05-21T16:31:06.629",
+                      "name": "a2 jpg",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2024/5/21/edde873f-d3c6-4ebf-9e5c-a5a785299e3d_20240521T163106829.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2024-05-21T16:31:06.944",
+                      "name": "f1 jpg",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2024/5/21/57c97e19-6155-4ff7-b829-5dfce1a14a69_20240521T163107149.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2024-05-21T16:31:07.205",
+                      "name": "f2 jpg",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2024/5/21/64a77284-44ca-4cce-aea3-d85a2d03d5b3_20240521T163107411.jpg"
+                    }
+                  ],
+                  "cta": {
+                    "link": "swiggydiners://gallery/17376",
+                    "type": "DEEPLINK"
+                  },
+                  "cornerRadius": {
+                    "bottomLeft": 24,
+                    "bottomRight": 24
+                  },
+                  "autoScrollConfig": {
+                    "isScrollEnabled": true,
+                    "autoScrollDuration": 3,
+                    "autoScrollResetDuration": 5
+                  }
+                }
+              }
+            }
+          },
+          {
+            "card": {
+              "card": {
+                "@type": "type.googleapis.com/swiggy.presentation.dinersone.v1.RestaurantHighlights",
+                "title": "Popular dishes",
+                "element": [
+                  "Red Velvet Chocolate Cupcake",
+                  "Signature Coffee",
+                  "Chicken Pie",
+                  "Cinnamon Roll",
+                  "Quiche",
+                  "Macaroon"
+                ],
+                "content": [
+                  {
+                    "info": "Red Velvet Chocolate Cupcake",
+                    "icon": "dineout/details/popular_dishes.png"
+                  },
+                  {
+                    "info": "Signature Coffee",
+                    "icon": "dineout/details/popular_dishes.png"
+                  },
+                  {
+                    "info": "Chicken Pie",
+                    "icon": "dineout/details/popular_dishes.png"
+                  },
+                  {
+                    "info": "Cinnamon Roll",
+                    "icon": "dineout/details/popular_dishes.png"
+                  },
+                  {
+                    "info": "Quiche",
+                    "icon": "dineout/details/popular_dishes.png"
+                  },
+                  {
+                    "info": "Macaroon",
+                    "icon": "dineout/details/popular_dishes.png"
+                  }
+                ],
+                "rowCount": 3,
+                "colCount": 2,
+                "scrollAnchor": {
+                  "id": "menu"
+                }
+              }
+            }
+          },
+          {
+            "card": {
+              "card": {
+                "@type": "type.googleapis.com/swiggy.gandalf.widgets.v2.StaggeredGrid",
+                "info": [
+                  {
+                    "imageCardInfo": {
+                      "id": "2024-05-21T16:31:05.670",
+                      "imageId": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2024/5/21/ad1ef72d-a54e-42f8-8332-4100a73a921f_20240521T163106262.jpg",
+                      "action": {
+                        "link": "swiggydiners://fullScreenGallery/17376?imageId=DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2024/5/21/ad1ef72d-a54e-42f8-8332-4100a73a921f_20240521T163106262.jpg&apiCall=true",
+                        "type": "DEEPLINK"
+                      },
+                      "analytics": {
+                        "screenName": "DO-Detail",
+                        "context": "{\"photo_id\":\"2024-05-21T16:31:05.670\",\"click_position\":1,\"click_on_indicator_+\":false}",
+                        "objectValue": "17376",
+                        "clickObjectName": "photos"
+                      }
+                    },
+                    "style": {
+                      "width": 0.611,
+                      "height": 0.586,
+                      "left": 0.0333
+                    },
+                    "mediaItemCornerRadius": {
+                      "topLeft": 16,
+                      "topRight": 16,
+                      "bottomLeft": 16,
+                      "bottomRight": 16
+                    }
+                  },
+                  {
+                    "imageCardInfo": {
+                      "id": "2024-05-21T16:31:06.376",
+                      "imageId": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2024/5/21/740c91dd-5b97-4535-a867-a2be9f132cbb_20240521T163106581.jpg",
+                      "action": {
+                        "link": "swiggydiners://fullScreenGallery/17376?imageId=DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2024/5/21/740c91dd-5b97-4535-a867-a2be9f132cbb_20240521T163106581.jpg&apiCall=true",
+                        "type": "DEEPLINK"
+                      },
+                      "analytics": {
+                        "screenName": "DO-Detail",
+                        "context": "{\"photo_id\":\"2024-05-21T16:31:06.376\",\"click_position\":2,\"click_on_indicator_+\":false}",
+                        "objectValue": "17376",
+                        "clickObjectName": "photos"
+                      }
+                    },
+                    "style": {
+                      "width": 0.288,
+                      "height": 0.277,
+                      "left": 0.675
+                    },
+                    "mediaItemCornerRadius": {
+                      "topLeft": 16,
+                      "topRight": 16,
+                      "bottomLeft": 16,
+                      "bottomRight": 16
+                    }
+                  },
+                  {
+                    "imageCardInfo": {
+                      "id": "2024-05-21T16:31:06.629",
+                      "imageId": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2024/5/21/edde873f-d3c6-4ebf-9e5c-a5a785299e3d_20240521T163106829.jpg",
+                      "action": {
+                        "link": "swiggydiners://fullScreenGallery/17376?imageId=DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2024/5/21/edde873f-d3c6-4ebf-9e5c-a5a785299e3d_20240521T163106829.jpg&apiCall=true",
+                        "type": "DEEPLINK"
+                      },
+                      "analytics": {
+                        "screenName": "DO-Detail",
+                        "context": "{\"photo_id\":\"2024-05-21T16:31:06.629\",\"click_position\":3,\"click_on_indicator_+\":false}",
+                        "objectValue": "17376",
+                        "clickObjectName": "photos"
+                      }
+                    },
+                    "style": {
+                      "width": 0.288,
+                      "height": 0.277,
+                      "top": 0.307,
+                      "left": 0.675
+                    },
+                    "mediaItemCornerRadius": {
+                      "topLeft": 16,
+                      "topRight": 16,
+                      "bottomLeft": 16,
+                      "bottomRight": 16
+                    }
+                  },
+                  {
+                    "imageCardInfo": {
+                      "id": "2024-05-21T16:31:06.944",
+                      "imageId": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2024/5/21/57c97e19-6155-4ff7-b829-5dfce1a14a69_20240521T163107149.jpg",
+                      "action": {
+                        "link": "swiggydiners://fullScreenGallery/17376?imageId=DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2024/5/21/57c97e19-6155-4ff7-b829-5dfce1a14a69_20240521T163107149.jpg&apiCall=true",
+                        "type": "DEEPLINK"
+                      },
+                      "analytics": {
+                        "screenName": "DO-Detail",
+                        "context": "{\"photo_id\":\"2024-05-21T16:31:06.944\",\"click_position\":4,\"click_on_indicator_+\":false}",
+                        "objectValue": "17376",
+                        "clickObjectName": "photos"
+                      }
+                    },
+                    "style": {
+                      "width": 0.288,
+                      "height": 0.277,
+                      "top": 0.618,
+                      "left": 0.0333
+                    },
+                    "mediaItemCornerRadius": {
+                      "topLeft": 16,
+                      "topRight": 16,
+                      "bottomLeft": 16,
+                      "bottomRight": 16
+                    }
+                  },
+                  {
+                    "imageCardInfo": {
+                      "id": "2024-05-21T16:31:07.205",
+                      "imageId": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2024/5/21/64a77284-44ca-4cce-aea3-d85a2d03d5b3_20240521T163107411.jpg",
+                      "action": {
+                        "link": "swiggydiners://fullScreenGallery/17376?imageId=DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2024/5/21/64a77284-44ca-4cce-aea3-d85a2d03d5b3_20240521T163107411.jpg&apiCall=true",
+                        "type": "DEEPLINK"
+                      },
+                      "analytics": {
+                        "screenName": "DO-Detail",
+                        "context": "{\"photo_id\":\"2024-05-21T16:31:07.205\",\"click_position\":5,\"click_on_indicator_+\":false}",
+                        "objectValue": "17376",
+                        "clickObjectName": "photos"
+                      }
+                    },
+                    "style": {
+                      "width": 0.288,
+                      "height": 0.277,
+                      "top": 0.618,
+                      "left": 0.357
+                    },
+                    "mediaItemCornerRadius": {
+                      "topLeft": 16,
+                      "topRight": 16,
+                      "bottomLeft": 16,
+                      "bottomRight": 16
+                    }
+                  }
+                ],
+                "layout": {
+                  "widgetPadding": {
+                    "bottom": 12
+                  },
+                  "scrollBar": {
+                    "width": 54,
+                    "height": 4
+                  },
+                  "widgetTheme": {
+                    "defaultMode": {
+                      "backgroundColour": "#FFFFFF",
+                      "theme": "THEME_TYPE_LIGHT",
+                      "themeVariant": "THEME_VARIANT_DEFAULT"
+                    },
+                    "darkMode": {
+                      "backgroundColour": "#FFFFFF",
+                      "theme": "THEME_TYPE_DARK",
+                      "themeVariant": "THEME_VARIANT_DEFAULT"
+                    }
+                  }
+                },
+                "id": "dineoutRdpPentaPhotosWidget",
+                "header": {
+                  "title": "Photos",
+                  "headerStyling": {
+                    "padding": {
+                      "left": 16,
+                      "top": 24,
+                      "bottom": 8
+                    },
+                    "titleFontName": "FONT_NAME_BODY_B1_BOLD"
+                  },
+                  "analytics": {
+                    "screenName": "DO-Detail",
+                    "context": "{\"photo_count\":5,\"photos_shown_count\":5,\"photo_ids\":[\"2024-05-21T16:31:05.670\",\"2024-05-21T16:31:06.376\",\"2024-05-21T16:31:06.629\",\"2024-05-21T16:31:06.944\",\"2024-05-21T16:31:07.205\"]}",
+                    "objectValue": "17376",
+                    "impressionObjectName": "photos"
+                  },
+                  "collapseConfig": {
+                    "enabled": true,
+                    "collapseIcon": "chevron_down_12",
+                    "expandIcon": "chevron_up_12"
+                  }
+                },
+                "scrollAnchor": {
+                  "id": "photos"
+                }
+              }
+            }
+          },
+          {
+            "card": {
+              "card": {
+                "@type": "type.googleapis.com/swiggy.gandalf.widgets.v2.TextInfoWidget",
+                "title": {
+                  "info": "Location",
+                  "color": "text_color_highest_emphasis"
+                },
+                "description": {
+                  "info": "0.6 km • 24/1 Lavelle Road, Bangalore 560 001",
+                  "color": "text_color_high_emphasis",
+                  "font": "FONT_NAME_BODY_B2_REG"
+                },
+                "iconUrl": "dineout/details/direction.png",
+                "cta": {
+                  "link": "https://www.google.com/maps/dir/?api=1&origin=12.9716,77.5946&destination=12.969992,77.59742900000003&travelmode=driving",
+                  "text": "MAP_DEEPLINK",
+                  "type": "MAPS_DIRECTION"
+                },
+                "scrollAnchor": {
+                  "id": "about"
+                },
+                "metaInfo": {
+                  "lat": "12.969992",
+                  "lng": "77.59742900000003",
+                  "showMap": "true"
+                }
+              }
+            }
+          },
+          {
+            "card": {
+              "card": {
+                "@type": "type.googleapis.com/swiggy.presentation.dinersone.v1.CtaList",
+                "ctas": [
+                  {
+                    "link": "swiggydiners://login",
+                    "text": "Login to avail offer & pay",
+                    "type": "primary",
+                    "metaInfo": {}
                   }
                 ]
               }
             }
           }
-        }
-      ],
-      "firstOffsetRequest": true
-    },
-    "tid": "5cdadcef-5825-4d13-99be-34f3b80b6d1b",
-    "sid": "re61ff4393b-2e19-43fa-9297-d2bd177f4",
-    "deviceId": "863a47f6-4b9c-ad19-1e6b-320ab461b72e",
-    "csrfToken": "mjwGEzy13aMY-WEFSoSgRpS578RXc9ZxBlWfZjq4"
+        ],
+        "firstOffsetRequest": true
+      }
+    }
   }
 }

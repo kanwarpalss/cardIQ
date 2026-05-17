@@ -5,1357 +5,798 @@
       "name": "Barbeque Nation",
       "area": "Indiranagar",
       "districtSlugs": [
-        "barbeque-nation-indiranagar"
+        "barbeque-nation-1-electronic-city-bangalore",
+        "barbeque-nation-1-itpl-main-road-whitefield-bangalore",
+        "barbeque-nation-1-marathahalli-bangalore",
+        "barbeque-nation-1-whitefield-bangalore",
+        "barbeque-nation-3-rajarajeshwari-nagar-bangalore",
+        "barbeque-nation-5-rajarajeshwari-nagar-bangalore",
+        "barbeque-nation-brigade-road-bangalore",
+        "barbeque-nation-electronic-city",
+        "barbeque-nation-hebbal-bangalore",
+        "barbeque-nation-indiranagar",
+        "barbeque-nation-itpl-main-road-whitefield-bangalore",
+        "barbeque-nation-jakkur-bangalore",
+        "barbeque-nation-jp-nagar",
+        "barbeque-nation-kalyan-nagar",
+        "barbeque-nation-kanakapura-road-bangalore",
+        "barbeque-nation-koramangala-1st-block",
+        "barbeque-nation-kr-puram-bangalore",
+        "barbeque-nation-majestic-bangalore",
+        "barbeque-nation-rajajinagar",
+        "barbeque-nation-sarjapur-road-bangalore",
+        "barbeque-nation-yelahanka",
+        "barbeque-nation-yeshwantpur-bangalore"
       ],
       "eazyDinerSlug": "barbeque-nation-ascendas-park-square-whitefield-335312"
     },
     "found": true,
-    "offerSummary": [
-      "aggregatedDiscountInfo",
-      "aggregatedDiscountInfoV2",
-      "showEoOffer",
-      "aggregatedDiscountInfoV3",
-      "₹40 OFF",
-      "discountTag",
-      "FLAT DEAL"
-    ]
+    "offerSummary": []
   },
   "raw": {
-    "statusCode": 0,
-    "data": {
-      "statusMessage": "done successfully",
-      "cards": [
-        {
-          "card": {
+    "restaurantId": "302699",
+    "detail": {
+      "requestId": "89ba04c5-056b-4c05-8ba9-d4eac311e99d",
+      "apiTime": "2026-05-17T16:07:59.241821897Z",
+      "success": {
+        "statusMessage": "done successfully",
+        "cards": [
+          {
             "card": {
-              "@type": "type.googleapis.com/swiggy.gandalf.widgets.v2.Navigation",
-              "tab": [
-                {
-                  "id": "RESTAURANT",
-                  "title": "Restaurants",
-                  "selected": true,
-                  "analytics": {
-                    "screenName": "explore",
-                    "context": "{\"tid\":\"undefined\",\"query\":\"Barbeque Nation\"}",
-                    "objectValue": "RESTAURANT",
-                    "clickObjectName": "click-tab"
-                  },
-                  "selectedBgColor": "#1B1E24",
-                  "unselectedBgColor": "#FFFFFF",
-                  "selectedTextColor": "#BFFFFFFF",
-                  "unselectedTextColor": "#9902060C",
-                  "selectedBorderColor": "#1B1E24",
-                  "unselectedBorderColor": "#E2E2E7"
-                },
-                {
-                  "id": "DISH",
-                  "title": "Dishes",
-                  "analytics": {
-                    "screenName": "explore",
-                    "context": "{\"tid\":\"undefined\",\"query\":\"Barbeque Nation\"}",
-                    "objectValue": "DISH",
-                    "clickObjectName": "click-tab"
-                  },
-                  "selectedBgColor": "#1B1E24",
-                  "unselectedBgColor": "#FFFFFF",
-                  "selectedTextColor": "#BFFFFFFF",
-                  "unselectedTextColor": "#9902060C",
-                  "selectedBorderColor": "#1B1E24",
-                  "unselectedBorderColor": "#E2E2E7"
-                }
-              ],
-              "meta": {
-                "orderable": "false",
-                "correctedQuery": "",
-                "suggestionType": "",
-                "queryIntent": "RESTAURANT"
-              }
-            }
-          }
-        },
-        {
-          "groupedCard": {
-            "cardGroupMap": {
-              "RESTAURANT": {
-                "cards": [
-                  {
-                    "card": {
-                      "card": {
-                        "@type": "type.googleapis.com/swiggy.presentation.food.v2.Restaurant",
-                        "info": {
-                          "id": "302699",
-                          "name": "Barbeque Nation",
-                          "city": "1",
-                          "slugs": {
-                            "restaurant": "barbeque-nation-lido-mall-halasuru-central-bangalore",
-                            "city": "bangalore"
-                          },
-                          "cloudinaryImageId": "qzqeafcmayvxggjgj7rf",
-                          "address": "4th floor, 56, Garuda mall, Commissariat Rd, Ashok Nagar, Bengaluru, Karnataka 560025",
-                          "locality": "Ashok Nagar",
-                          "areaName": "Ashok Nagar",
-                          "costForTwo": "60000",
-                          "costForTwoMessage": "₹600 FOR TWO",
-                          "cuisines": [
-                            "North Indian",
-                            "Barbecue",
-                            "Kebabs",
-                            "Biryani",
-                            "Street Food",
-                            "Snacks"
-                          ],
-                          "avgRating": 3.7,
-                          "feeDetails": {},
-                          "parentId": "2438",
-                          "avgRatingString": "3.7",
-                          "totalRatingsString": "1.2K+",
-                          "sla": {
-                            "deliveryTime": 295,
-                            "minDeliveryTime": 292,
-                            "maxDeliveryTime": 297,
-                            "lastMileTravel": 2.5,
-                            "serviceability": "SERVICEABLE",
-                            "rainMode": "RAIN_MODE_NONE",
-                            "slaString": "292-297 MINS",
-                            "lastMileTravelString": "2.5 km",
-                            "iconType": "ICON_TYPE_EMPTY"
-                          },
-                          "availability": {
-                            "nextOpenTimeMessage": "Opens next at 11 am, today",
-                            "restaurantClosedMeta": {
-                              "title": "CLOSED",
-                              "subtitle": "FOR NOW"
-                            }
-                          },
-                          "aggregatedDiscountInfo": {
-                            "visible": true
-                          },
-                          "badges": {},
-                          "unorderableMessage": "Opens next at 11 am, today",
-                          "aggregatedDiscountInfoV2": {
-                            "visible": true
-                          },
-                          "ratingSlab": "RATING_SLAB_4",
-                          "availabilityServiceabilityMessage": "Currently closed for delivery. Opens next at 11 am, today",
-                          "orderabilityCommunication": {
-                            "title": {
-                              "text": "CURRENTLY"
-                            },
-                            "subTitle": {
-                              "text": "CLOSED"
-                            },
-                            "message": {
-                              "text": "Opens today at 11:00 AM",
-                              "textColour": "primary"
-                            },
-                            "customIcon": {
-                              "bgGradientColorStart": "#EB8322",
-                              "bgGradientColorEnd": "#EE5803"
-                            },
-                            "commsStyling": {}
-                          },
-                          "cartOrderabilityNudgeBanner": {
-                            "parameters": {},
-                            "presentation": {}
-                          },
-                          "externalRatings": {
-                            "aggregatedRating": {
-                              "rating": "4.2",
-                              "ratingCount": "6.2K+"
-                            },
-                            "source": "GOOGLE",
-                            "sourceIconImageId": "v1704440323/google_ratings/rating_google_tag"
-                          },
-                          "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY",
-                          "featuredSectionInfo": {},
-                          "showEoOffer": true,
-                          "priceComparisonComms": {}
+              "card": {
+                "@type": "type.googleapis.com/swiggy.presentation.dinersone.v1.EntityInfoWithMasthead",
+                "id": "302699",
+                "info": {
+                  "name": "Barbeque Nation",
+                  "locationInfo": {
+                    "distanceString": "2.6 km",
+                    "navigationUrl": "https://www.google.com/maps/dir/?api=1&origin=12.9716,77.5946&destination=12.970361157215743,77.61015838484657&travelmode=driving",
+                    "lat": "12.970361157215743",
+                    "long": "77.61015838484657",
+                    "landmarkName": "Garuda Mall",
+                    "city": {
+                      "name": "Bangalore"
+                    },
+                    "formattedAddress": "Garuda Mall, Ashok Nagar, Bangalore",
+                    "additionalInfo": {
+                      "cta": {
+                        "link": "swiggydiners://collectiondetails/DINEOUT_BRAND_OUTLETS?tags=layout_dineout_brand_outlets&metaMap=%7B%22brandId%22%3A%222438%22%2C%22restaurant_id%22%3A%22302699%22%2C%22sourcePage%22%3A%22RDP%22%7D&header_title=Outlets",
+                        "text": "outlets",
+                        "type": "DEEPLINK",
+                        "metaInfo": {
+                          "ctaImage": "dineout/details/red_arrow_down.png"
                         },
                         "analytics": {
-                          "screenName": "explore",
-                          "context": "{\"tid\":\"undefined\",\"grid\":\"7d4ed22a-fe1a-48a6-a3a1-3240997a86e9\",\"queryUniqueId\":\"undefined\",\"query\":\"Barbeque Nation\"}",
-                          "objectValue": "302699",
-                          "impressionObjectName": "impression-restaurant",
-                          "clickObjectName": "click-restaurant"
-                        },
-                        "ctaWithParams": {
-                          "link": "swiggy://menu",
-                          "type": "DEEPLINK",
-                          "params": {
-                            "query": "Barbeque Nation",
-                            "sourceSessionId": "re66a4e5a6c-9063-4a1c-8283-a7d17683d",
-                            "source": "SEARCH",
-                            "isSld": "false",
-                            "sourceRequestId": "00000000000000000000000000000000",
-                            "qrEnabled": "false",
-                            "restaurant_id": "302699"
-                          }
+                          "screenName": "DO-Detail",
+                          "context": "{\"restId\":\"302699\"}",
+                          "objectValue": "outlet_switcher_dropdown",
+                          "impressionObjectName": "entity_info_masthead",
+                          "clickObjectName": "entity_info_masthead"
                         }
+                      }
+                    },
+                    "displayAreaName": "Ashok Nagar"
+                  },
+                  "timingsInfo": {
+                    "status": "Open",
+                    "message": "till 10:30PM",
+                    "outletTiming": {
+                      "infoList": [
+                        {
+                          "title": "Monday",
+                          "subtitle": "Noon - 3:30PM · 6:30PM - 10:30PM",
+                          "titleColor": "text_high_emphasis",
+                          "subtitleColor": "text_high_emphasis"
+                        },
+                        {
+                          "title": "Tuesday",
+                          "subtitle": "Noon - 3:30PM · 6:30PM - 10:30PM",
+                          "titleColor": "text_high_emphasis",
+                          "subtitleColor": "text_high_emphasis"
+                        },
+                        {
+                          "title": "Wednesday",
+                          "subtitle": "Noon - 3:30PM · 6:30PM - 10:30PM",
+                          "titleColor": "text_high_emphasis",
+                          "subtitleColor": "text_high_emphasis"
+                        },
+                        {
+                          "title": "Thursday",
+                          "subtitle": "Noon - 3:30PM · 6:30PM - 10:30PM",
+                          "titleColor": "text_high_emphasis",
+                          "subtitleColor": "text_high_emphasis"
+                        },
+                        {
+                          "title": "Friday",
+                          "subtitle": "Noon - 3:30PM · 6:30PM - 10:30PM",
+                          "titleColor": "text_high_emphasis",
+                          "subtitleColor": "text_high_emphasis"
+                        },
+                        {
+                          "title": "Saturday",
+                          "subtitle": "Noon - 3:30PM · 6:30PM - 10:30PM",
+                          "titleColor": "text_high_emphasis",
+                          "subtitleColor": "text_high_emphasis"
+                        },
+                        {
+                          "title": "Today",
+                          "subtitle": "Noon - 3:30PM · 6:30PM - 10:30PM",
+                          "titleColor": "primary",
+                          "subtitleColor": "primary"
+                        }
+                      ],
+                      "title": "Outlet timings"
+                    },
+                    "styleInfo": {
+                      "titleColor": "positive",
+                      "subtitleColor": "text_color_low_emphasis"
+                    }
+                  },
+                  "callDetail": {
+                    "title": "Trying to reach the outlet?",
+                    "style": {
+                      "cornerRadius": {
+                        "topLeft": 16,
+                        "topRight": 16
+                      },
+                      "backgroundColour": "#F0F0F5"
+                    },
+                    "actions": [
+                      {
+                        "link": "dailer-app?phone=08069028722",
+                        "text": "08069028722",
+                        "type": "DIALER",
+                        "metaInfo": {
+                          "ctaImage": "dineout/details/call_no_bg.png"
+                        }
+                      }
+                    ]
+                  },
+                  "ratingsInfo": {
+                    "value": "4.2",
+                    "description": "6K ratings",
+                    "count": 6258,
+                    "countDescription": "6K+ Google ratings",
+                    "icon": "dineout/details/google_tag.png",
+                    "style": "RATING_STYLE_V2"
+                  },
+                  "typeInfo": {
+                    "type": "ENTITY_TYPE_RESTAURANT",
+                    "restaurantType": "RESTAURANT_TYPE_NON_PARTICIPATING"
+                  },
+                  "style": {
+                    "backgroundColour": "#FFFFFF",
+                    "cornerRadius": {
+                      "topLeft": 16,
+                      "topRight": 16,
+                      "bottomLeft": 16,
+                      "bottomRight": 16
+                    },
+                    "animationConfig": {
+                      "type": "ANIMATION_TYPE_ENTRY_PUSH_DOWN",
+                      "startDelay": 250,
+                      "duration": 100,
+                      "interpolator": "INTERPOLATOR_LINEAR"
+                    },
+                    "dimension": {
+                      "width": {
+                        "type": "TYPE_RELATIVE",
+                        "value": 1,
+                        "reference": "RELATIVE_DIMENSION_REFERENCE_DEVICE_WIDTH"
+                      },
+                      "height": {
+                        "type": "TYPE_RELATIVE",
+                        "value": 0.778,
+                        "reference": "RELATIVE_DIMENSION_REFERENCE_WIDTH"
                       }
                     }
                   },
-                  {
-                    "card": {
-                      "card": {
-                        "@type": "type.googleapis.com/swiggy.presentation.food.v2.RestaurantCollection",
-                        "title": "More results like this",
-                        "restaurants": [
-                          {
-                            "info": {
-                              "id": "835574",
-                              "name": "Mughal Darbar",
-                              "city": "1",
-                              "slugs": {
-                                "restaurant": "mughal-darbar-r.t.-nagar-r.t.-nagar"
-                              },
-                              "cloudinaryImageId": "2048d975a6b1cbcefeebe8e29b0067c1",
-                              "locality": "Cholanayakanahalli",
-                              "areaName": "RT Nagar",
-                              "costForTwo": "₹450 for two",
-                              "cuisines": [
-                                "Indian"
-                              ],
-                              "avgRating": 3.4,
-                              "feeDetails": {
-                                "restaurantId": "835574",
-                                "title": "Delivery Charge",
-                                "amount": "0"
-                              },
-                              "totalRatingsString": "284",
-                              "sla": {
-                                "deliveryTime": 49,
-                                "minDeliveryTime": 45,
-                                "maxDeliveryTime": 50,
-                                "serviceability": "SERVICEABLE",
-                                "slaString": "45-50 MINS",
-                                "lastMileTravelString": "8.4 km",
-                                "iconType": "ICON_TYPE_EMPTY"
-                              },
-                              "availability": {
-                                "nextCloseTime": "2026-05-17 12:00:00",
-                                "opened": true
-                              },
-                              "badges": {},
-                              "aggregatedDiscountInfoV3": {
-                                "header": "₹40 OFF",
-                                "subHeader": "ABOVE ₹499",
-                                "discountTag": "FLAT DEAL",
-                                "logoCtx": {
-                                  "text": "BENEFITS"
-                                }
-                              },
-                              "externalRatings": {
-                                "aggregatedRating": {
-                                  "rating": "--"
-                                }
-                              },
-                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
-                            },
-                            "analytics": {},
-                            "cta": {}
-                          },
-                          {
-                            "info": {
-                              "id": "982309",
-                              "name": "Biryani Bazar",
-                              "city": "1",
-                              "slugs": {
-                                "restaurant": "biryani-bazar-sanjay-nagar,-new-bel-road-sanjay-nagar,-new-bel-road"
-                              },
-                              "cloudinaryImageId": "RX_THUMBNAIL/IMAGES/VENDOR/2024/10/29/8d7c6bd5-bb72-4648-9666-79cfa03239d0_982309.jpg",
-                              "locality": "Sanjay Nagar, New BEL Road",
-                              "areaName": "Sanjay Nagar, New BEL Road",
-                              "costForTwo": "₹250 for two",
-                              "cuisines": [
-                                "Biryani",
-                                "Kebabs"
-                              ],
-                              "avgRating": 3,
-                              "feeDetails": {
-                                "restaurantId": "982309",
-                                "title": "Delivery Charge",
-                                "amount": "0"
-                              },
-                              "totalRatingsString": "18",
-                              "sla": {
-                                "deliveryTime": 51,
-                                "minDeliveryTime": 50,
-                                "maxDeliveryTime": 60,
-                                "serviceability": "SERVICEABLE",
-                                "slaString": "50-60 MINS",
-                                "lastMileTravelString": "8.4 km",
-                                "iconType": "ICON_TYPE_EMPTY"
-                              },
-                              "availability": {
-                                "nextCloseTime": "2026-05-17 12:00:00",
-                                "opened": true
-                              },
-                              "badges": {},
-                              "aggregatedDiscountInfoV3": {
-                                "header": "₹40 OFF",
-                                "subHeader": "ABOVE ₹499",
-                                "discountTag": "FLAT DEAL",
-                                "logoCtx": {
-                                  "text": "BENEFITS"
-                                }
-                              },
-                              "externalRatings": {
-                                "aggregatedRating": {
-                                  "rating": "--"
-                                }
-                              },
-                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
-                            },
-                            "analytics": {},
-                            "cta": {}
-                          },
-                          {
-                            "info": {
-                              "id": "835495",
-                              "name": "Siddique Biriyani",
-                              "city": "1",
-                              "slugs": {
-                                "restaurant": "siddique-biriyani-r.t.-nagar-r.t.-nagar"
-                              },
-                              "cloudinaryImageId": "937eb0f1857c97c4c0c3ad5fe41b9d6b",
-                              "locality": "Cholanayakanahalli",
-                              "areaName": "Sanjay Nagar, New BEL Road",
-                              "costForTwo": "₹299 for two",
-                              "cuisines": [
-                                "Biryani"
-                              ],
-                              "avgRating": 3.5,
-                              "feeDetails": {
-                                "restaurantId": "835495",
-                                "title": "Delivery Charge",
-                                "amount": "0"
-                              },
-                              "totalRatingsString": "204",
-                              "sla": {
-                                "deliveryTime": 54,
-                                "minDeliveryTime": 50,
-                                "maxDeliveryTime": 60,
-                                "serviceability": "SERVICEABLE",
-                                "slaString": "50-60 MINS",
-                                "lastMileTravelString": "8.4 km",
-                                "iconType": "ICON_TYPE_EMPTY"
-                              },
-                              "availability": {
-                                "nextCloseTime": "2026-05-17 12:00:00",
-                                "opened": true
-                              },
-                              "badges": {},
-                              "aggregatedDiscountInfoV3": {
-                                "header": "₹40 OFF",
-                                "subHeader": "ABOVE ₹499",
-                                "discountTag": "FLAT DEAL",
-                                "logoCtx": {
-                                  "text": "BENEFITS"
-                                }
-                              },
-                              "externalRatings": {
-                                "aggregatedRating": {
-                                  "rating": "--"
-                                }
-                              },
-                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
-                            },
-                            "analytics": {},
-                            "cta": {}
-                          },
-                          {
-                            "info": {
-                              "id": "835437",
-                              "name": "The Panjabi Dhaba",
-                              "city": "1",
-                              "slugs": {
-                                "restaurant": "the-panjabi-dhaba-r.t.-nagar-r.t.-nagar"
-                              },
-                              "cloudinaryImageId": "aba45375462798eb6c7727b639f893db",
-                              "locality": "Cholanayakanahalli",
-                              "areaName": "RT Nagar",
-                              "costForTwo": "₹399 for two",
-                              "cuisines": [
-                                "Indian",
-                                "Pastas"
-                              ],
-                              "avgRating": 3.5,
-                              "feeDetails": {
-                                "restaurantId": "835437",
-                                "title": "Delivery Charge",
-                                "amount": "0"
-                              },
-                              "totalRatingsString": "168",
-                              "sla": {
-                                "deliveryTime": 61,
-                                "minDeliveryTime": 60,
-                                "maxDeliveryTime": 70,
-                                "serviceability": "SERVICEABLE",
-                                "slaString": "60-70 MINS",
-                                "lastMileTravelString": "8.4 km",
-                                "iconType": "ICON_TYPE_EMPTY"
-                              },
-                              "availability": {
-                                "nextCloseTime": "2026-05-17 12:00:00",
-                                "opened": true
-                              },
-                              "badges": {},
-                              "aggregatedDiscountInfoV3": {
-                                "header": "₹40 OFF",
-                                "subHeader": "ABOVE ₹499",
-                                "discountTag": "FLAT DEAL",
-                                "logoCtx": {
-                                  "text": "BENEFITS"
-                                }
-                              },
-                              "externalRatings": {
-                                "aggregatedRating": {
-                                  "rating": "--"
-                                }
-                              },
-                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
-                            },
-                            "analytics": {},
-                            "cta": {}
-                          },
-                          {
-                            "info": {
-                              "id": "835576",
-                              "name": "Marriott Tandoori Grand",
-                              "city": "1",
-                              "slugs": {
-                                "restaurant": "marriott-tandoori-grand-r.t.-nagar-r.t.-nagar"
-                              },
-                              "cloudinaryImageId": "f94762667b87180d5e997ea96e43be75",
-                              "locality": "Cholanayakanahalli",
-                              "areaName": "Sanjay Nagar, New BEL Road",
-                              "costForTwo": "₹400 for two",
-                              "cuisines": [
-                                "Tandoor",
-                                "Fast Food"
-                              ],
-                              "avgRating": 2.8,
-                              "feeDetails": {
-                                "restaurantId": "835576",
-                                "title": "Delivery Charge",
-                                "amount": "0"
-                              },
-                              "totalRatingsString": "66",
-                              "sla": {
-                                "deliveryTime": 42,
-                                "minDeliveryTime": 40,
-                                "maxDeliveryTime": 45,
-                                "serviceability": "SERVICEABLE",
-                                "slaString": "40-45 MINS",
-                                "lastMileTravelString": "8.4 km",
-                                "iconType": "ICON_TYPE_EMPTY"
-                              },
-                              "availability": {
-                                "nextCloseTime": "2026-05-17 12:00:00",
-                                "opened": true
-                              },
-                              "badges": {},
-                              "aggregatedDiscountInfoV3": {
-                                "header": "₹40 OFF",
-                                "subHeader": "ABOVE ₹499",
-                                "discountTag": "FLAT DEAL",
-                                "logoCtx": {
-                                  "text": "BENEFITS"
-                                }
-                              },
-                              "externalRatings": {
-                                "aggregatedRating": {
-                                  "rating": "--"
-                                }
-                              },
-                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
-                            },
-                            "analytics": {},
-                            "cta": {}
-                          },
-                          {
-                            "info": {
-                              "id": "835575",
-                              "name": "Mayura Restaurant Hub",
-                              "city": "1",
-                              "slugs": {
-                                "restaurant": "mayura-restaurant-hub-r.t.-nagar-r.t.-nagar"
-                              },
-                              "cloudinaryImageId": "3a09279bbf5097a9c768fc9b54478798",
-                              "locality": "Cholanayakanahalli",
-                              "areaName": "Sanjay Nagar, New BEL Road",
-                              "costForTwo": "₹450 for two",
-                              "cuisines": [
-                                "Bengali",
-                                "Seafood"
-                              ],
-                              "avgRating": 3.4,
-                              "feeDetails": {
-                                "restaurantId": "835575",
-                                "title": "Delivery Charge",
-                                "amount": "0"
-                              },
-                              "totalRatingsString": "144",
-                              "sla": {
-                                "deliveryTime": 51,
-                                "minDeliveryTime": 50,
-                                "maxDeliveryTime": 60,
-                                "serviceability": "SERVICEABLE",
-                                "slaString": "50-60 MINS",
-                                "lastMileTravelString": "8.4 km",
-                                "iconType": "ICON_TYPE_EMPTY"
-                              },
-                              "availability": {
-                                "nextCloseTime": "2026-05-17 12:00:00",
-                                "opened": true
-                              },
-                              "badges": {},
-                              "aggregatedDiscountInfoV3": {
-                                "header": "₹40 OFF",
-                                "subHeader": "ABOVE ₹499",
-                                "discountTag": "FLAT DEAL",
-                                "logoCtx": {
-                                  "text": "BENEFITS"
-                                }
-                              },
-                              "externalRatings": {
-                                "aggregatedRating": {
-                                  "rating": "--"
-                                }
-                              },
-                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
-                            },
-                            "analytics": {},
-                            "cta": {}
-                          },
-                          {
-                            "info": {
-                              "id": "836506",
-                              "name": "Fish Curry Land",
-                              "city": "1",
-                              "slugs": {
-                                "restaurant": "fish-curry-land-r.t.-nagar-r.t.-nagar"
-                              },
-                              "cloudinaryImageId": "1ec7a7b02e7572afd22721a10ef372b6",
-                              "locality": "Cholanayakanahalli",
-                              "areaName": "Sanjay Nagar, New BEL Road",
-                              "costForTwo": "₹600 for two",
-                              "cuisines": [
-                                "Seafood"
-                              ],
-                              "avgRating": 2.9,
-                              "feeDetails": {
-                                "restaurantId": "836506",
-                                "title": "Delivery Charge",
-                                "amount": "0"
-                              },
-                              "totalRatingsString": "25",
-                              "sla": {
-                                "deliveryTime": 52,
-                                "minDeliveryTime": 50,
-                                "maxDeliveryTime": 60,
-                                "serviceability": "SERVICEABLE",
-                                "slaString": "50-60 MINS",
-                                "lastMileTravelString": "8.4 km",
-                                "iconType": "ICON_TYPE_EMPTY"
-                              },
-                              "availability": {
-                                "nextCloseTime": "2026-05-17 12:00:00",
-                                "opened": true
-                              },
-                              "badges": {},
-                              "aggregatedDiscountInfoV3": {
-                                "header": "₹40 OFF",
-                                "subHeader": "ABOVE ₹499",
-                                "discountTag": "FLAT DEAL",
-                                "logoCtx": {
-                                  "text": "BENEFITS"
-                                }
-                              },
-                              "externalRatings": {
-                                "aggregatedRating": {
-                                  "rating": "4.3",
-                                  "ratingCount": "88"
-                                },
-                                "source": "GOOGLE",
-                                "sourceIconImageId": "v1704440323/google_ratings/rating_google_tag"
-                              },
-                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
-                            },
-                            "analytics": {},
-                            "cta": {}
-                          },
-                          {
-                            "info": {
-                              "id": "980916",
-                              "name": "The Cozy Plate",
-                              "city": "1",
-                              "slugs": {
-                                "restaurant": "the-cozy-plate-sanjay-nagar,-new-bel-road-sanjay-nagar,-new-bel-road"
-                              },
-                              "cloudinaryImageId": "RX_THUMBNAIL/IMAGES/VENDOR/2024/11/4/e2379151-2ddd-4dc7-9408-b0e24647f96a_980916.JPG",
-                              "locality": "Sanjay Nagar, New BEL Road",
-                              "areaName": "Sanjay Nagar, New BEL Road",
-                              "costForTwo": "₹499 for two",
-                              "cuisines": [
-                                "Indian"
-                              ],
-                              "avgRating": 2.1,
-                              "feeDetails": {
-                                "restaurantId": "980916",
-                                "title": "Delivery Charge",
-                                "amount": "0"
-                              },
-                              "totalRatingsString": "10",
-                              "sla": {
-                                "deliveryTime": 47,
-                                "minDeliveryTime": 45,
-                                "maxDeliveryTime": 50,
-                                "serviceability": "SERVICEABLE",
-                                "slaString": "45-50 MINS",
-                                "lastMileTravelString": "8.4 km",
-                                "iconType": "ICON_TYPE_EMPTY"
-                              },
-                              "availability": {
-                                "nextCloseTime": "2026-05-17 12:00:00",
-                                "opened": true
-                              },
-                              "badges": {},
-                              "aggregatedDiscountInfoV3": {
-                                "header": "₹40 OFF",
-                                "subHeader": "ABOVE ₹499",
-                                "discountTag": "FLAT DEAL",
-                                "logoCtx": {
-                                  "text": "BENEFITS"
-                                }
-                              },
-                              "externalRatings": {
-                                "aggregatedRating": {
-                                  "rating": "--"
-                                }
-                              },
-                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
-                            },
-                            "analytics": {},
-                            "cta": {}
-                          },
-                          {
-                            "info": {
-                              "id": "1013516",
-                              "name": "Earthy Eats",
-                              "city": "1",
-                              "slugs": {
-                                "restaurant": "earthy-eats-sanjay-nagar,-new-bel-road-sanjay-nagar,-new-bel-road"
-                              },
-                              "cloudinaryImageId": "RX_THUMBNAIL/IMAGES/VENDOR/2024/12/23/829b3869-62d8-4e50-a56f-86e89b4bdc21_1013516.jpg",
-                              "locality": "Sanjay Nagar, New BEL Road",
-                              "areaName": "Sanjay Nagar, New BEL Road",
-                              "costForTwo": "₹250 for two",
-                              "cuisines": [
-                                "Chinese"
-                              ],
-                              "avgRating": 3.1,
-                              "feeDetails": {
-                                "restaurantId": "1013516",
-                                "title": "Delivery Charge",
-                                "amount": "0"
-                              },
-                              "totalRatingsString": "26",
-                              "sla": {
-                                "deliveryTime": 45,
-                                "minDeliveryTime": 40,
-                                "maxDeliveryTime": 45,
-                                "serviceability": "SERVICEABLE",
-                                "slaString": "40-45 MINS",
-                                "lastMileTravelString": "8.4 km",
-                                "iconType": "ICON_TYPE_EMPTY"
-                              },
-                              "availability": {
-                                "nextCloseTime": "2026-05-17 12:00:00",
-                                "opened": true
-                              },
-                              "badges": {},
-                              "aggregatedDiscountInfoV3": {
-                                "header": "₹40 OFF",
-                                "subHeader": "ABOVE ₹499",
-                                "discountTag": "FLAT DEAL",
-                                "logoCtx": {
-                                  "text": "BENEFITS"
-                                }
-                              },
-                              "externalRatings": {
-                                "aggregatedRating": {
-                                  "rating": "--"
-                                }
-                              },
-                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
-                            },
-                            "analytics": {},
-                            "cta": {}
-                          },
-                          {
-                            "info": {
-                              "id": "836695",
-                              "name": "Delhi Dhaba",
-                              "city": "1",
-                              "slugs": {
-                                "restaurant": "delhi-dhaba-r.t.-nagar-r.t.-nagar"
-                              },
-                              "cloudinaryImageId": "ff3ff46bc88f9fd3b79aab181d6f0088",
-                              "locality": "Cholanayakanahalli",
-                              "areaName": "Sanjay Nagar, New BEL Road",
-                              "costForTwo": "₹400 for two",
-                              "cuisines": [
-                                "Pastas"
-                              ],
-                              "avgRating": 3.5,
-                              "feeDetails": {
-                                "restaurantId": "836695",
-                                "title": "Delivery Charge",
-                                "amount": "0"
-                              },
-                              "totalRatingsString": "92",
-                              "sla": {
-                                "deliveryTime": 44,
-                                "minDeliveryTime": 40,
-                                "maxDeliveryTime": 45,
-                                "serviceability": "SERVICEABLE",
-                                "slaString": "40-45 MINS",
-                                "lastMileTravelString": "8.4 km",
-                                "iconType": "ICON_TYPE_EMPTY"
-                              },
-                              "availability": {
-                                "nextCloseTime": "2026-05-17 12:00:00",
-                                "opened": true
-                              },
-                              "badges": {},
-                              "aggregatedDiscountInfoV3": {
-                                "header": "15% OFF",
-                                "subHeader": "UPTO ₹80",
-                                "logoCtx": {
-                                  "text": "BENEFITS"
-                                }
-                              },
-                              "externalRatings": {
-                                "aggregatedRating": {
-                                  "rating": "--"
-                                }
-                              },
-                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
-                            },
-                            "analytics": {},
-                            "cta": {}
-                          },
-                          {
-                            "info": {
-                              "id": "765906",
-                              "name": "Mistimukh Multi Cuisine Restaurant",
-                              "city": "1",
-                              "slugs": {
-                                "restaurant": "mistimukh-multi-cuisine-restaurant-r.t.-nagar-r.t.-nagar"
-                              },
-                              "cloudinaryImageId": "d2b3bd562cdd433230fbd5cc305e3d65",
-                              "locality": "CIL Layout",
-                              "areaName": "Sanjay Nagar, New BEL Road",
-                              "costForTwo": "₹250 for two",
-                              "cuisines": [
-                                "Bengali"
-                              ],
-                              "avgRating": 3.7,
-                              "feeDetails": {
-                                "restaurantId": "765906",
-                                "title": "Delivery Charge",
-                                "amount": "0"
-                              },
-                              "totalRatingsString": "165",
-                              "sla": {
-                                "deliveryTime": 51,
-                                "minDeliveryTime": 50,
-                                "maxDeliveryTime": 60,
-                                "serviceability": "SERVICEABLE",
-                                "slaString": "50-60 MINS",
-                                "lastMileTravelString": "8.4 km",
-                                "iconType": "ICON_TYPE_EMPTY"
-                              },
-                              "availability": {
-                                "nextCloseTime": "2026-05-17 12:00:00",
-                                "opened": true
-                              },
-                              "badges": {},
-                              "aggregatedDiscountInfoV3": {
-                                "header": "₹40 OFF",
-                                "subHeader": "ABOVE ₹499",
-                                "discountTag": "FLAT DEAL",
-                                "logoCtx": {
-                                  "text": "BENEFITS"
-                                }
-                              },
-                              "externalRatings": {
-                                "aggregatedRating": {
-                                  "rating": "--"
-                                }
-                              },
-                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
-                            },
-                            "analytics": {},
-                            "cta": {}
-                          },
-                          {
-                            "info": {
-                              "id": "982318",
-                              "name": "Himalayan Delights",
-                              "city": "1",
-                              "slugs": {
-                                "restaurant": "himalayan-delights-sanjay-nagar,-new-bel-road-sanjay-nagar,-new-bel-road"
-                              },
-                              "cloudinaryImageId": "RX_THUMBNAIL/IMAGES/VENDOR/2024/10/29/aefb3299-2f7d-460e-ab6c-2b078ac0bf83_982318.jpg",
-                              "locality": "Sanjay Nagar, New BEL Road",
-                              "areaName": "Sanjay Nagar, New BEL Road",
-                              "costForTwo": "₹250 for two",
-                              "cuisines": [
-                                "South Indian"
-                              ],
-                              "avgRating": 3.1,
-                              "feeDetails": {
-                                "restaurantId": "982318",
-                                "title": "Delivery Charge",
-                                "amount": "0"
-                              },
-                              "totalRatingsString": "30",
-                              "sla": {
-                                "deliveryTime": 52,
-                                "minDeliveryTime": 50,
-                                "maxDeliveryTime": 60,
-                                "serviceability": "SERVICEABLE",
-                                "slaString": "50-60 MINS",
-                                "lastMileTravelString": "8.4 km",
-                                "iconType": "ICON_TYPE_EMPTY"
-                              },
-                              "availability": {
-                                "nextCloseTime": "2026-05-17 12:00:00",
-                                "opened": true
-                              },
-                              "badges": {},
-                              "aggregatedDiscountInfoV3": {
-                                "header": "₹40 OFF",
-                                "subHeader": "ABOVE ₹499",
-                                "discountTag": "FLAT DEAL",
-                                "logoCtx": {
-                                  "text": "BENEFITS"
-                                }
-                              },
-                              "externalRatings": {
-                                "aggregatedRating": {
-                                  "rating": "--"
-                                }
-                              },
-                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
-                            },
-                            "analytics": {},
-                            "cta": {}
-                          },
-                          {
-                            "info": {
-                              "id": "244818",
-                              "name": "Food Court",
-                              "city": "1",
-                              "slugs": {
-                                "restaurant": "food-court-kammanahalli/kalyan-nagar-kammanahalli/kalyan-nagar"
-                              },
-                              "cloudinaryImageId": "7cc3561cf8c0eb971ac1609f21207ea1",
-                              "locality": "Hbr Layout",
-                              "areaName": "Kalyan Nagar",
-                              "costForTwo": "₹200 for two",
-                              "cuisines": [
-                                "Beverages",
-                                "Biryani",
-                                "Chinese",
-                                "North Indian"
-                              ],
-                              "avgRating": 3.6,
-                              "feeDetails": {
-                                "restaurantId": "244818",
-                                "title": "Delivery Charge",
-                                "amount": "0"
-                              },
-                              "totalRatingsString": "1.0K+",
-                              "sla": {
-                                "deliveryTime": 41,
-                                "minDeliveryTime": 40,
-                                "maxDeliveryTime": 45,
-                                "serviceability": "SERVICEABLE",
-                                "slaString": "40-45 MINS",
-                                "lastMileTravelString": "10.0 km",
-                                "iconType": "ICON_TYPE_EMPTY"
-                              },
-                              "availability": {
-                                "nextCloseTime": "2026-05-24 00:00:00",
-                                "opened": true
-                              },
-                              "badges": {},
-                              "aggregatedDiscountInfoV3": {
-                                "header": "ITEMS",
-                                "subHeader": "AT ₹129",
-                                "logoCtx": {
-                                  "text": "BENEFITS"
-                                }
-                              },
-                              "externalRatings": {
-                                "aggregatedRating": {
-                                  "rating": "--"
-                                }
-                              },
-                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
-                            },
-                            "analytics": {},
-                            "cta": {}
-                          },
-                          {
-                            "info": {
-                              "id": "1037944",
-                              "name": "Ascot Finny Dining",
-                              "city": "1",
-                              "slugs": {
-                                "restaurant": "ascot-finny-dining-sanjay-nagar,-new-bel-road-sanjay-nagar,-new-bel-road"
-                              },
-                              "cloudinaryImageId": "RX_THUMBNAIL/IMAGES/VENDOR/2025/1/31/4ca8717b-6159-4b4c-a698-8c065867c4f1_1037944.jpg",
-                              "locality": "Sanjay Nagar, New BEL Road",
-                              "areaName": "Sanjay Nagar, New BEL Road",
-                              "costForTwo": "₹400 for two",
-                              "cuisines": [
-                                "North Indian"
-                              ],
-                              "avgRating": 3.4,
-                              "feeDetails": {
-                                "restaurantId": "1037944",
-                                "title": "Delivery Charge",
-                                "amount": "0"
-                              },
-                              "totalRatingsString": "88",
-                              "sla": {
-                                "deliveryTime": 46,
-                                "minDeliveryTime": 45,
-                                "maxDeliveryTime": 50,
-                                "serviceability": "SERVICEABLE",
-                                "slaString": "45-50 MINS",
-                                "lastMileTravelString": "8.4 km",
-                                "iconType": "ICON_TYPE_EMPTY"
-                              },
-                              "availability": {
-                                "nextCloseTime": "2026-05-17 12:00:00",
-                                "opened": true
-                              },
-                              "badges": {},
-                              "aggregatedDiscountInfoV3": {
-                                "header": "15% OFF",
-                                "subHeader": "UPTO ₹100",
-                                "logoCtx": {
-                                  "text": "BENEFITS"
-                                }
-                              },
-                              "externalRatings": {
-                                "aggregatedRating": {
-                                  "rating": "--"
-                                }
-                              },
-                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
-                            },
-                            "analytics": {},
-                            "cta": {}
-                          },
-                          {
-                            "info": {
-                              "id": "835520",
-                              "name": "Peacock Restaurant",
-                              "city": "1",
-                              "slugs": {
-                                "restaurant": "peacock-restaurant-r.t.-nagar-r.t.-nagar"
-                              },
-                              "cloudinaryImageId": "91222694cefcbc8ba2de4779f6b147ef",
-                              "locality": "Cholanayakanahalli",
-                              "areaName": "Sanjay Nagar, New BEL Road",
-                              "costForTwo": "₹399 for two",
-                              "cuisines": [
-                                "Indian"
-                              ],
-                              "avgRating": 3,
-                              "feeDetails": {
-                                "restaurantId": "835520",
-                                "title": "Delivery Charge",
-                                "amount": "0"
-                              },
-                              "totalRatingsString": "65",
-                              "sla": {
-                                "deliveryTime": 52,
-                                "minDeliveryTime": 50,
-                                "maxDeliveryTime": 60,
-                                "serviceability": "SERVICEABLE",
-                                "slaString": "50-60 MINS",
-                                "lastMileTravelString": "8.4 km",
-                                "iconType": "ICON_TYPE_EMPTY"
-                              },
-                              "availability": {
-                                "nextCloseTime": "2026-05-17 12:00:00",
-                                "opened": true
-                              },
-                              "badges": {},
-                              "aggregatedDiscountInfoV3": {
-                                "header": "₹40 OFF",
-                                "subHeader": "ABOVE ₹499",
-                                "discountTag": "FLAT DEAL",
-                                "logoCtx": {
-                                  "text": "BENEFITS"
-                                }
-                              },
-                              "externalRatings": {
-                                "aggregatedRating": {
-                                  "rating": "--"
-                                }
-                              },
-                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
-                            },
-                            "analytics": {},
-                            "cta": {}
-                          },
-                          {
-                            "info": {
-                              "id": "982317",
-                              "name": "The Curry House",
-                              "city": "1",
-                              "slugs": {
-                                "restaurant": "the-curry-house-sanjay-nagar,-new-bel-road-sanjay-nagar,-new-bel-road"
-                              },
-                              "cloudinaryImageId": "RX_THUMBNAIL/IMAGES/VENDOR/2024/10/29/3815297b-dd3e-43c5-83e5-42860f04ad16_982317.jpg",
-                              "locality": "Sanjay Nagar, New BEL Road",
-                              "areaName": "Sanjay Nagar, New BEL Road",
-                              "costForTwo": "₹250 for two",
-                              "cuisines": [
-                                "North Indian"
-                              ],
-                              "avgRating": 3.1,
-                              "feeDetails": {
-                                "restaurantId": "982317",
-                                "title": "Delivery Charge",
-                                "amount": "0"
-                              },
-                              "totalRatingsString": "7",
-                              "sla": {
-                                "deliveryTime": 48,
-                                "minDeliveryTime": 45,
-                                "maxDeliveryTime": 50,
-                                "serviceability": "SERVICEABLE",
-                                "slaString": "45-50 MINS",
-                                "lastMileTravelString": "8.4 km",
-                                "iconType": "ICON_TYPE_EMPTY"
-                              },
-                              "availability": {
-                                "nextCloseTime": "2026-05-17 12:00:00",
-                                "opened": true
-                              },
-                              "badges": {},
-                              "aggregatedDiscountInfoV3": {
-                                "header": "₹40 OFF",
-                                "subHeader": "ABOVE ₹499",
-                                "discountTag": "FLAT DEAL",
-                                "logoCtx": {
-                                  "text": "BENEFITS"
-                                }
-                              },
-                              "externalRatings": {
-                                "aggregatedRating": {
-                                  "rating": "--"
-                                }
-                              },
-                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
-                            },
-                            "analytics": {},
-                            "cta": {}
-                          },
-                          {
-                            "info": {
-                              "id": "835438",
-                              "name": "Tandoori Plaza",
-                              "city": "1",
-                              "slugs": {
-                                "restaurant": "tandoori-plaza-r.t.-nagar-r.t.-nagar"
-                              },
-                              "cloudinaryImageId": "4cdbb2ee13432d4926e47238abbe4d40",
-                              "locality": "Cholanayakanahalli",
-                              "areaName": "R.T. Nagar",
-                              "costForTwo": "₹399 for two",
-                              "cuisines": [
-                                "Chinese"
-                              ],
-                              "avgRating": 2.8,
-                              "feeDetails": {
-                                "restaurantId": "835438",
-                                "title": "Delivery Charge",
-                                "amount": "0"
-                              },
-                              "totalRatingsString": "71",
-                              "sla": {
-                                "deliveryTime": 49,
-                                "minDeliveryTime": 45,
-                                "maxDeliveryTime": 50,
-                                "serviceability": "SERVICEABLE",
-                                "slaString": "45-50 MINS",
-                                "lastMileTravelString": "8.4 km",
-                                "iconType": "ICON_TYPE_EMPTY"
-                              },
-                              "availability": {
-                                "nextCloseTime": "2026-05-17 12:00:00",
-                                "opened": true
-                              },
-                              "badges": {},
-                              "aggregatedDiscountInfoV3": {
-                                "header": "₹40 OFF",
-                                "subHeader": "ABOVE ₹499",
-                                "discountTag": "FLAT DEAL",
-                                "logoCtx": {
-                                  "text": "BENEFITS"
-                                }
-                              },
-                              "externalRatings": {
-                                "aggregatedRating": {
-                                  "rating": "--"
-                                }
-                              },
-                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
-                            },
-                            "analytics": {},
-                            "cta": {}
-                          },
-                          {
-                            "info": {
-                              "id": "1019121",
-                              "name": "The Silken Spoon",
-                              "city": "1",
-                              "slugs": {
-                                "restaurant": "the-silken-spoon-sanjay-nagar,-new-bel-road-sanjay-nagar,-new-bel-road"
-                              },
-                              "cloudinaryImageId": "RX_THUMBNAIL/IMAGES/VENDOR/2024/12/31/5c0b0dc9-2801-411e-8882-f98cbc9b2340_1019121.jpg",
-                              "locality": "Sanjay Nagar, New BEL Road",
-                              "areaName": "Sanjay Nagar, New BEL Road",
-                              "costForTwo": "₹300 for two",
-                              "cuisines": [
-                                "Biryani"
-                              ],
-                              "avgRating": 3.6,
-                              "feeDetails": {
-                                "restaurantId": "1019121",
-                                "title": "Delivery Charge",
-                                "amount": "0"
-                              },
-                              "totalRatingsString": "26",
-                              "sla": {
-                                "deliveryTime": 50,
-                                "minDeliveryTime": 50,
-                                "maxDeliveryTime": 60,
-                                "serviceability": "SERVICEABLE",
-                                "slaString": "50-60 MINS",
-                                "lastMileTravelString": "8.4 km",
-                                "iconType": "ICON_TYPE_EMPTY"
-                              },
-                              "availability": {
-                                "nextCloseTime": "2026-05-17 12:00:00",
-                                "opened": true
-                              },
-                              "badges": {},
-                              "aggregatedDiscountInfoV3": {
-                                "header": "₹40 OFF",
-                                "subHeader": "ABOVE ₹499",
-                                "discountTag": "FLAT DEAL",
-                                "logoCtx": {
-                                  "text": "BENEFITS"
-                                }
-                              },
-                              "externalRatings": {
-                                "aggregatedRating": {
-                                  "rating": "--"
-                                }
-                              },
-                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
-                            },
-                            "analytics": {},
-                            "cta": {}
-                          },
-                          {
-                            "info": {
-                              "id": "838060",
-                              "name": "JW Marriott Shawarma",
-                              "city": "1",
-                              "slugs": {
-                                "restaurant": "jw-marriott-shawarma-r.t.-nagar-r.t.-nagar"
-                              },
-                              "cloudinaryImageId": "5c7cdae4eacdbd9a2bfd72925fc2972b",
-                              "locality": "Cholanayakanahalli",
-                              "areaName": "R.T. Nagar",
-                              "costForTwo": "₹300 for two",
-                              "cuisines": [
-                                "Indian"
-                              ],
-                              "avgRating": 3.3,
-                              "feeDetails": {
-                                "restaurantId": "838060",
-                                "title": "Delivery Charge",
-                                "amount": "0"
-                              },
-                              "totalRatingsString": "46",
-                              "sla": {
-                                "deliveryTime": 50,
-                                "minDeliveryTime": 50,
-                                "maxDeliveryTime": 60,
-                                "serviceability": "SERVICEABLE",
-                                "slaString": "50-60 MINS",
-                                "lastMileTravelString": "8.4 km",
-                                "iconType": "ICON_TYPE_EMPTY"
-                              },
-                              "availability": {
-                                "nextCloseTime": "2026-05-17 12:00:00",
-                                "opened": true
-                              },
-                              "badges": {},
-                              "aggregatedDiscountInfoV3": {
-                                "header": "ITEMS",
-                                "subHeader": "AT ₹129",
-                                "logoCtx": {
-                                  "text": "BENEFITS"
-                                }
-                              },
-                              "externalRatings": {
-                                "aggregatedRating": {
-                                  "rating": "--"
-                                }
-                              },
-                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
-                            },
-                            "analytics": {},
-                            "cta": {}
-                          },
-                          {
-                            "info": {
-                              "id": "115730",
-                              "name": "Biryani Khazana",
-                              "city": "1",
-                              "slugs": {
-                                "restaurant": "biryani-khazana-bengaluru-karnataka-indiranagar"
-                              },
-                              "cloudinaryImageId": "oupd4meraf2luhhkwvt1",
-                              "locality": "1st Stage",
-                              "areaName": "Indiranagar",
-                              "costForTwo": "₹250 for two",
-                              "cuisines": [
-                                "Biryani"
-                              ],
-                              "avgRating": 3.9,
-                              "feeDetails": {
-                                "restaurantId": "115730",
-                                "title": "Delivery Charge",
-                                "amount": "0"
-                              },
-                              "totalRatingsString": "1.5K+",
-                              "sla": {
-                                "deliveryTime": 39,
-                                "minDeliveryTime": 35,
-                                "maxDeliveryTime": 40,
-                                "serviceability": "SERVICEABLE",
-                                "slaString": "35-40 MINS",
-                                "lastMileTravelString": "6.3 km",
-                                "iconType": "ICON_TYPE_EMPTY"
-                              },
-                              "availability": {
-                                "nextCloseTime": "2026-05-24 00:00:00",
-                                "opened": true
-                              },
-                              "badges": {},
-                              "aggregatedDiscountInfoV3": {
-                                "header": "ITEMS",
-                                "subHeader": "AT ₹90",
-                                "logoCtx": {
-                                  "text": "BENEFITS"
-                                }
-                              },
-                              "externalRatings": {
-                                "aggregatedRating": {
-                                  "rating": "--"
-                                }
-                              },
-                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
-                            },
-                            "analytics": {},
-                            "cta": {}
-                          },
-                          {
-                            "info": {
-                              "id": "281594",
-                              "name": "La Utsav - Grand Mercure",
-                              "city": "1",
-                              "slugs": {
-                                "restaurant": "la-utsav-cv-raman-nagar-cv-raman-nagar"
-                              },
-                              "cloudinaryImageId": "ntzyipblaiub3usrm6ik",
-                              "locality": "Old Madras Road",
-                              "areaName": "Old Madras Road",
-                              "costForTwo": "₹900 for two",
-                              "cuisines": [
-                                "Indian",
-                                "Chinese",
-                                "Desserts"
-                              ],
-                              "avgRating": 2.3,
-                              "feeDetails": {
-                                "restaurantId": "281594",
-                                "title": "Delivery Charge",
-                                "amount": "0"
-                              },
-                              "totalRatingsString": "16",
-                              "sla": {
-                                "deliveryTime": 43,
-                                "minDeliveryTime": 40,
-                                "maxDeliveryTime": 45,
-                                "serviceability": "SERVICEABLE",
-                                "slaString": "40-45 MINS",
-                                "lastMileTravelString": "8.7 km",
-                                "iconType": "ICON_TYPE_EMPTY"
-                              },
-                              "availability": {
-                                "nextCloseTime": "2026-05-24 00:00:00",
-                                "opened": true
-                              },
-                              "aggregatedDiscountInfo": {},
-                              "badges": {},
-                              "aggregatedDiscountInfoV2": {},
-                              "externalRatings": {
-                                "aggregatedRating": {
-                                  "rating": "4.3",
-                                  "ratingCount": "230"
-                                },
-                                "source": "GOOGLE",
-                                "sourceIconImageId": "v1704440323/google_ratings/rating_google_tag"
-                              },
-                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
-                            },
-                            "analytics": {},
-                            "cta": {}
-                          }
-                        ],
-                        "cta": {},
-                        "id": "56861",
-                        "theme": "SEARCH_SIMILAR_RESTAURANTS"
-                      }
+                  "favourite": {
+                    "entityLotte": {
+                      "frequencyCapping": 2,
+                      "image": "favourite-image",
+                      "lotteFiles": [
+                        {
+                          "type": "LOTTIE_TYPE_FAVOURITE",
+                          "lotte": "favourite-lottie"
+                        },
+                        {
+                          "type": "LOTTIE_TYPE_NON_FAVOURITE",
+                          "lotte": "non-favourite-lottie"
+                        }
+                      ]
+                    },
+                    "accessibility": {
+                      "altText": "favourite alt text",
+                      "altTextCta": "favourite alt text cta"
                     }
+                  },
+                  "share": {
+                    "entityLotte": {
+                      "frequencyCapping": 3,
+                      "image": "share-image",
+                      "lotteFiles": [
+                        {
+                          "type": "LOTTIE_TYPE_SHARE",
+                          "lotte": "share-lottie"
+                        }
+                      ]
+                    },
+                    "shareUrl": "Hey, I think you will love Barbeque Nation, Garuda Mall, Ashok Nagar, Bangalore on Swiggy Dineout https://swiggy.onelink.me/BVRZ?af_dp=swiggydiners%3A%2F%2Fdetails%2F302699%3Fsource%3Dsharing Happy dining!",
+                    "accessibility": {
+                      "altText": "share alt text",
+                      "altTextCta": "share alt text cta"
+                    }
+                  },
+                  "entityAttributes": {
+                    "restaurantEntityAttributes": {
+                      "outlets": {},
+                      "cuisines": [
+                        "BBQ",
+                        "Grill"
+                      ],
+                      "costForTwo": "₹2000 for two"
+                    }
+                  }
+                },
+                "masthead": {
+                  "files": [
+                    {
+                      "type": "IMAGE",
+                      "id": "2025-06-21T07:06:18.522",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2025/6/21/fcad25a3-8741-4d01-9be1-566fa2a3737b_BarCounter023a31ad41909f4472ba712e1c2a16864f.JPG"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2025-06-21T07:06:22.068",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2025/6/21/1696f254-f8aa-44a0-8712-dbc6c58d3fb1_Ambience05a3b4bb9410d6440a87466e994312d284.JPG"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2025-06-21T07:06:23.305",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2025/6/21/2d254c00-f3c6-47ca-895d-4c2815ac48da_Buffet01a742125d8f7c49b1a97714bdcec4132d.JPG"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2025-06-21T07:06:23.648",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2025/6/21/79dcb9cf-a02d-46ef-a34b-21764854fe2e_Buffet020656ca8d67914236ba9b72528aee13c0.JPG"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2025-06-21T07:06:23.277",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2025/6/21/f6f4418c-4a7a-4c0b-89c2-c86a998e9aa7_Ambience01178af519d39746f38f10eb7fe723ce24.JPG"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2025-06-21T07:06:24.044",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2025/6/21/10d116dc-a1a5-44fa-877d-03bf6807a343_Chatcounterf4a79c1e81d14043b05019efd02e9034.JPG"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2025-06-21T07:06:24.503",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2025/6/21/d4f775ad-d9b2-4489-ba19-fd0e29b285d5_Buffet04f99bef66ea254ac8ae3a0a0a873dbfc5.JPG"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2025-06-21T07:06:24.778",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2025/6/21/747ccd30-4eda-4486-bca3-2de9a1d5e2ab_Ambience040b975a0e9fca4ea9a413aa9b3cff170a.JPG"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2025-06-21T07:06:24.941",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2025/6/21/eec30df6-7a92-42e1-a166-010fb612f4bb_Concerge3550d9bd82d04aa5b350279b87a5cdda.JPG"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2025-06-21T07:06:25.023",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2025/6/21/28dd80e2-f88b-4d78-abc0-525c661735c4_Ambience078053e9a4e9fd47f48eebe4fbb7ff470b.JPG"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2025-06-21T07:06:25.029",
+                      "url": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2025/6/21/381f92ee-b81b-48fc-b390-6c0ab83289d2_Ambience105b4ea0bda71b46b89f5f67c3b79cb7bd.JPG"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-04-24T16:03:28.042",
+                      "name": "Dish",
+                      "url": "v1682350864/e40b024a4405a687e4f353f46b60d3ba.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-04-24T16:03:28.093",
+                      "name": "Dish",
+                      "url": "v1682350864/627b8dfc85726c704693fe494fe26abd.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-04-24T16:03:28.687",
+                      "name": "Dish",
+                      "url": "v1682350865/69eeb18deaee8f3f81a5ef5ff09d9b37.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-04-24T16:03:28.718",
+                      "name": "Dish",
+                      "url": "v1682350865/784776b904986c2b08903687a29a48fd.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-04-24T16:03:28.825",
+                      "name": "Dish",
+                      "url": "v1682350865/3d3130a07907c15780f510830c751617.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-04-24T16:03:28.836",
+                      "name": "Dish",
+                      "url": "v1682350865/bf8b94dd393d5ba443f8b026f14d6b27.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-04-24T16:03:28.937",
+                      "name": "Dish",
+                      "url": "v1682350864/7fd8b5ed1403349df938b230ddb01ae6.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-04-24T16:03:28.967",
+                      "name": "Dish",
+                      "url": "v1682350864/830f5a817cc4a0b53be67446b0068b9d.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-04-24T16:03:29.078",
+                      "name": "Dish",
+                      "url": "v1682350864/9da005daaceda613306423be3268ac89.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-04-24T16:05:10.034",
+                      "name": "Dish",
+                      "url": "v1682350925/c875d5f72f3a7072e24b6b168681bd19.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-04-24T16:05:10.039",
+                      "name": "Dish",
+                      "url": "v1682350925/8cbe9f0ce455ff36246badfdb7032181.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-04-24T16:05:10.067",
+                      "name": "Dish",
+                      "url": "v1682350925/acf8b319d6be05065b09a62d1f9a8425.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-04-24T16:05:10.083",
+                      "name": "Dish",
+                      "url": "v1682350925/6687aa7d2668840034fc23d10df160fb.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-04-24T16:05:10.268",
+                      "name": "Dish",
+                      "url": "v1682350925/ced780a4f64e95b7d21593f80626d009.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-04-24T16:05:10.280",
+                      "name": "Dish",
+                      "url": "v1682350925/95df01e364403fe345640201169486a4.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-04-24T16:05:10.406",
+                      "name": "Dish",
+                      "url": "v1682350975/0b8a5e5de2b9b59ce1d8f766b9246538.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-04-24T16:05:10.410",
+                      "name": "Dish",
+                      "url": "v1682350975/d5683ed6789476661d0bb90348c866dd.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-04-24T16:05:10.421",
+                      "name": "Dish",
+                      "url": "v1682350926/e39bb019451e7f5c9743d190478ef7b3.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-04-24T16:05:10.440",
+                      "name": "Dish",
+                      "url": "v1682350926/683ffc7acec91bfce3e230641da83a69.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-04-24T16:05:10.474",
+                      "name": "Dish",
+                      "url": "v1682350926/e3c4c01a7e2594b59bed9a31d05e2341.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-04-24T16:07:13.132",
+                      "name": "Dish",
+                      "url": "v1682350926/be5eb844755e66b755effcfeee336032.jpg"
+                    }
+                  ],
+                  "cta": {
+                    "link": "swiggydiners://gallery/302699",
+                    "type": "DEEPLINK"
+                  },
+                  "cornerRadius": {
+                    "bottomLeft": 24,
+                    "bottomRight": 24
+                  },
+                  "autoScrollConfig": {
+                    "isScrollEnabled": true,
+                    "autoScrollDuration": 3,
+                    "autoScrollResetDuration": 5
+                  }
+                }
+              }
+            }
+          },
+          {
+            "card": {
+              "card": {
+                "@type": "type.googleapis.com/swiggy.presentation.dinersone.v1.RestaurantHighlights",
+                "title": "Popular dishes",
+                "element": [
+                  "Cajun Potatoes",
+                  "BBQ Prawns",
+                  "Fish Pakoda",
+                  "Pan Kulfi",
+                  "Mutton Seekh"
+                ],
+                "content": [
+                  {
+                    "info": "Cajun Potatoes",
+                    "icon": "dineout/details/popular_dishes.png"
+                  },
+                  {
+                    "info": "BBQ Prawns",
+                    "icon": "dineout/details/popular_dishes.png"
+                  },
+                  {
+                    "info": "Fish Pakoda",
+                    "icon": "dineout/details/popular_dishes.png"
+                  },
+                  {
+                    "info": "Pan Kulfi",
+                    "icon": "dineout/details/popular_dishes.png"
+                  },
+                  {
+                    "info": "Mutton Seekh",
+                    "icon": "dineout/details/popular_dishes.png"
+                  }
+                ],
+                "rowCount": 2,
+                "colCount": 2,
+                "scrollAnchor": {
+                  "id": "menu"
+                }
+              }
+            }
+          },
+          {
+            "card": {
+              "card": {
+                "@type": "type.googleapis.com/swiggy.gandalf.widgets.v2.StaggeredGrid",
+                "info": [
+                  {
+                    "imageCardInfo": {
+                      "id": "2025-06-21T07:06:18.522",
+                      "imageId": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2025/6/21/fcad25a3-8741-4d01-9be1-566fa2a3737b_BarCounter023a31ad41909f4472ba712e1c2a16864f.JPG",
+                      "action": {
+                        "link": "swiggydiners://fullScreenGallery/302699?imageId=DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2025/6/21/fcad25a3-8741-4d01-9be1-566fa2a3737b_BarCounter023a31ad41909f4472ba712e1c2a16864f.JPG&apiCall=true",
+                        "type": "DEEPLINK"
+                      },
+                      "analytics": {
+                        "screenName": "DO-Detail",
+                        "context": "{\"photo_id\":\"2025-06-21T07:06:18.522\",\"click_position\":1,\"click_on_indicator_+\":false}",
+                        "objectValue": "302699",
+                        "clickObjectName": "photos"
+                      }
+                    },
+                    "style": {
+                      "width": 0.611,
+                      "height": 0.586,
+                      "left": 0.0333
+                    },
+                    "mediaItemCornerRadius": {
+                      "topLeft": 16,
+                      "topRight": 16,
+                      "bottomLeft": 16,
+                      "bottomRight": 16
+                    }
+                  },
+                  {
+                    "imageCardInfo": {
+                      "id": "2025-06-21T07:06:22.068",
+                      "imageId": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2025/6/21/1696f254-f8aa-44a0-8712-dbc6c58d3fb1_Ambience05a3b4bb9410d6440a87466e994312d284.JPG",
+                      "action": {
+                        "link": "swiggydiners://fullScreenGallery/302699?imageId=DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2025/6/21/1696f254-f8aa-44a0-8712-dbc6c58d3fb1_Ambience05a3b4bb9410d6440a87466e994312d284.JPG&apiCall=true",
+                        "type": "DEEPLINK"
+                      },
+                      "analytics": {
+                        "screenName": "DO-Detail",
+                        "context": "{\"photo_id\":\"2025-06-21T07:06:22.068\",\"click_position\":2,\"click_on_indicator_+\":false}",
+                        "objectValue": "302699",
+                        "clickObjectName": "photos"
+                      }
+                    },
+                    "style": {
+                      "width": 0.288,
+                      "height": 0.277,
+                      "left": 0.675
+                    },
+                    "mediaItemCornerRadius": {
+                      "topLeft": 16,
+                      "topRight": 16,
+                      "bottomLeft": 16,
+                      "bottomRight": 16
+                    }
+                  },
+                  {
+                    "imageCardInfo": {
+                      "id": "2025-06-21T07:06:23.305",
+                      "imageId": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2025/6/21/2d254c00-f3c6-47ca-895d-4c2815ac48da_Buffet01a742125d8f7c49b1a97714bdcec4132d.JPG",
+                      "action": {
+                        "link": "swiggydiners://fullScreenGallery/302699?imageId=DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2025/6/21/2d254c00-f3c6-47ca-895d-4c2815ac48da_Buffet01a742125d8f7c49b1a97714bdcec4132d.JPG&apiCall=true",
+                        "type": "DEEPLINK"
+                      },
+                      "analytics": {
+                        "screenName": "DO-Detail",
+                        "context": "{\"photo_id\":\"2025-06-21T07:06:23.305\",\"click_position\":3,\"click_on_indicator_+\":false}",
+                        "objectValue": "302699",
+                        "clickObjectName": "photos"
+                      }
+                    },
+                    "style": {
+                      "width": 0.288,
+                      "height": 0.277,
+                      "top": 0.307,
+                      "left": 0.675
+                    },
+                    "mediaItemCornerRadius": {
+                      "topLeft": 16,
+                      "topRight": 16,
+                      "bottomLeft": 16,
+                      "bottomRight": 16
+                    }
+                  },
+                  {
+                    "imageCardInfo": {
+                      "id": "2025-06-21T07:06:23.648",
+                      "imageId": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2025/6/21/79dcb9cf-a02d-46ef-a34b-21764854fe2e_Buffet020656ca8d67914236ba9b72528aee13c0.JPG",
+                      "action": {
+                        "link": "swiggydiners://fullScreenGallery/302699?imageId=DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2025/6/21/79dcb9cf-a02d-46ef-a34b-21764854fe2e_Buffet020656ca8d67914236ba9b72528aee13c0.JPG&apiCall=true",
+                        "type": "DEEPLINK"
+                      },
+                      "analytics": {
+                        "screenName": "DO-Detail",
+                        "context": "{\"photo_id\":\"2025-06-21T07:06:23.648\",\"click_position\":4,\"click_on_indicator_+\":false}",
+                        "objectValue": "302699",
+                        "clickObjectName": "photos"
+                      }
+                    },
+                    "style": {
+                      "width": 0.288,
+                      "height": 0.277,
+                      "top": 0.618,
+                      "left": 0.0333
+                    },
+                    "mediaItemCornerRadius": {
+                      "topLeft": 16,
+                      "topRight": 16,
+                      "bottomLeft": 16,
+                      "bottomRight": 16
+                    }
+                  },
+                  {
+                    "imageCardInfo": {
+                      "id": "2025-06-21T07:06:23.277",
+                      "imageId": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2025/6/21/f6f4418c-4a7a-4c0b-89c2-c86a998e9aa7_Ambience01178af519d39746f38f10eb7fe723ce24.JPG",
+                      "action": {
+                        "link": "swiggydiners://fullScreenGallery/302699?imageId=DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2025/6/21/f6f4418c-4a7a-4c0b-89c2-c86a998e9aa7_Ambience01178af519d39746f38f10eb7fe723ce24.JPG&apiCall=true",
+                        "type": "DEEPLINK"
+                      },
+                      "analytics": {
+                        "screenName": "DO-Detail",
+                        "context": "{\"photo_id\":\"2025-06-21T07:06:23.277\",\"click_position\":5,\"click_on_indicator_+\":false}",
+                        "objectValue": "302699",
+                        "clickObjectName": "photos"
+                      }
+                    },
+                    "style": {
+                      "width": 0.288,
+                      "height": 0.277,
+                      "top": 0.618,
+                      "left": 0.357
+                    },
+                    "mediaItemCornerRadius": {
+                      "topLeft": 16,
+                      "topRight": 16,
+                      "bottomLeft": 16,
+                      "bottomRight": 16
+                    }
+                  },
+                  {
+                    "imageCardInfo": {
+                      "id": "2025-06-21T07:06:24.044",
+                      "imageId": "DINEOUT_ALL_RESTAURANTS/IMAGES/RESTAURANT_IMAGE_SERVICE/2025/6/21/10d116dc-a1a5-44fa-877d-03bf6807a343_Chatcounterf4a79c1e81d14043b05019efd02e9034.JPG",
+                      "action": {
+                        "link": "swiggydiners://gallery/302699",
+                        "type": "DEEPLINK"
+                      },
+                      "analytics": {
+                        "screenName": "DO-Detail",
+                        "context": "{\"photo_id\":\"2025-06-21T07:06:24.044\",\"click_position\":6,\"click_on_indicator_+\":true}",
+                        "objectValue": "302699",
+                        "clickObjectName": "photos"
+                      }
+                    },
+                    "style": {
+                      "width": 0.288,
+                      "height": 0.277,
+                      "top": 0.618,
+                      "left": 0.675
+                    },
+                    "overlay": {
+                      "textInfo": {
+                        "info": "+26",
+                        "color": "white",
+                        "font": "FONT_NAME_V2_SUBHEADING1_NEUTRAL_BOLD"
+                      },
+                      "backgroundColor": "#9902060C"
+                    },
+                    "mediaItemCornerRadius": {
+                      "topLeft": 16,
+                      "topRight": 16,
+                      "bottomLeft": 16,
+                      "bottomRight": 16
+                    }
+                  }
+                ],
+                "layout": {
+                  "widgetPadding": {
+                    "bottom": 12
+                  },
+                  "scrollBar": {
+                    "width": 54,
+                    "height": 4
+                  },
+                  "widgetTheme": {
+                    "defaultMode": {
+                      "backgroundColour": "#FFFFFF",
+                      "theme": "THEME_TYPE_LIGHT",
+                      "themeVariant": "THEME_VARIANT_DEFAULT"
+                    },
+                    "darkMode": {
+                      "backgroundColour": "#FFFFFF",
+                      "theme": "THEME_TYPE_DARK",
+                      "themeVariant": "THEME_VARIANT_DEFAULT"
+                    }
+                  }
+                },
+                "id": "dineoutRdpHexaPhotosWidget",
+                "header": {
+                  "title": "Photos",
+                  "headerStyling": {
+                    "padding": {
+                      "left": 16,
+                      "top": 24,
+                      "bottom": 8
+                    },
+                    "titleFontName": "FONT_NAME_BODY_B1_BOLD"
+                  },
+                  "analytics": {
+                    "screenName": "DO-Detail",
+                    "context": "{\"photo_count\":32,\"photos_shown_count\":6,\"photo_ids\":[\"2025-06-21T07:06:18.522\",\"2025-06-21T07:06:22.068\",\"2025-06-21T07:06:23.305\",\"2025-06-21T07:06:23.648\",\"2025-06-21T07:06:23.277\",\"2025-06-21T07:06:24.044\",\"2025-06-21T07:06:24.503\",\"2025-06-21T07:06:24.778\",\"2025-06-21T07:06:24.941\",\"2025-06-21T07:06:25.023\",\"2025-06-21T07:06:25.029\",\"2023-04-24T16:03:28.042\",\"2023-04-24T16:03:28.093\",\"2023-04-24T16:03:28.687\",\"2023-04-24T16:03:28.718\",\"2023-04-24T16:03:28.825\",\"2023-04-24T16:03:28.836\",\"2023-04-24T16:03:28.937\",\"2023-04-24T16:03:28.967\",\"2023-04-24T16:03:29.078\",\"2023-04-24T16:05:10.034\",\"2023-04-24T16:05:10.039\",\"2023-04-24T16:05:10.067\",\"2023-04-24T16:05:10.083\",\"2023-04-24T16:05:10.268\",\"2023-04-24T16:05:10.280\",\"2023-04-24T16:05:10.406\",\"2023-04-24T16:05:10.410\",\"2023-04-24T16:05:10.421\",\"2023-04-24T16:05:10.440\",\"2023-04-24T16:05:10.474\",\"2023-04-24T16:07:13.132\"]}",
+                    "objectValue": "302699",
+                    "impressionObjectName": "photos"
+                  },
+                  "collapseConfig": {
+                    "enabled": true,
+                    "collapseIcon": "chevron_down_12",
+                    "expandIcon": "chevron_up_12"
+                  }
+                },
+                "scrollAnchor": {
+                  "id": "photos"
+                }
+              }
+            }
+          },
+          {
+            "card": {
+              "card": {
+                "@type": "type.googleapis.com/swiggy.presentation.dinersone.v1.RestaurantHighlights",
+                "title": "Amenities (4)",
+                "element": [
+                  "Alcohol served",
+                  "Reservation available",
+                  "Parking available",
+                  "Valet parking"
+                ],
+                "content": [
+                  {
+                    "info": "Alcohol served",
+                    "icon": "dineout/details/rx_highlight_star.png"
+                  },
+                  {
+                    "info": "Reservation available",
+                    "icon": "dineout/details/rx_highlight_star.png"
+                  },
+                  {
+                    "info": "Parking available",
+                    "icon": "dineout/details/rx_highlight_star.png"
+                  },
+                  {
+                    "info": "Valet parking",
+                    "icon": "dineout/details/rx_highlight_star.png"
+                  }
+                ],
+                "rowCount": 2,
+                "colCount": 2,
+                "scrollAnchor": {
+                  "id": "about"
+                }
+              }
+            }
+          },
+          {
+            "card": {
+              "card": {
+                "@type": "type.googleapis.com/swiggy.gandalf.widgets.v2.TextInfoWidget",
+                "title": {
+                  "info": "Location",
+                  "color": "text_color_highest_emphasis"
+                },
+                "description": {
+                  "info": "2.6 km • 4th floor, 56, Garuda mall, Commissariat Rd, Ashok Nagar, Bengaluru, Karnataka 560025",
+                  "color": "text_color_high_emphasis",
+                  "font": "FONT_NAME_BODY_B2_REG"
+                },
+                "iconUrl": "dineout/details/direction.png",
+                "cta": {
+                  "link": "https://www.google.com/maps/dir/?api=1&origin=12.9716,77.5946&destination=12.970361157215743,77.61015838484657&travelmode=driving",
+                  "text": "MAP_DEEPLINK",
+                  "type": "MAPS_DIRECTION"
+                },
+                "scrollAnchor": {
+                  "id": "about"
+                },
+                "metaInfo": {
+                  "lat": "12.970361157215743",
+                  "lng": "77.61015838484657",
+                  "showMap": "true"
+                }
+              }
+            }
+          },
+          {
+            "card": {
+              "card": {
+                "@type": "type.googleapis.com/swiggy.presentation.dinersone.v1.CtaList",
+                "ctas": [
+                  {
+                    "link": "swiggydiners://login",
+                    "text": "Login to avail offer & pay",
+                    "type": "primary",
+                    "metaInfo": {}
                   }
                 ]
               }
             }
           }
-        }
-      ],
-      "firstOffsetRequest": true
-    },
-    "tid": "517c4d12-5e2b-497c-8b09-2c9d71ee2e55",
-    "sid": "re66a4e5a6c-9063-4a1c-8283-a7d17683d",
-    "deviceId": "fb48fd63-21c9-a381-a0fc-4883fcc3a552",
-    "csrfToken": "caNozYQqcrCr-or5nrF1dSgvFkiQucMH_I2EFDio"
+        ],
+        "firstOffsetRequest": true
+      }
+    }
   }
 }

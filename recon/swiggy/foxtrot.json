@@ -9,77 +9,9 @@
       ],
       "eazyDinerSlug": "foxtrot-gastropub-marathahalli-east-bengaluru-652608"
     },
-    "found": true,
-    "offerSummary": [
-      "firstOffsetRequest"
-    ]
+    "found": false,
+    "error": "Restaurant not found in food-delivery search results",
+    "offerSummary": []
   },
-  "raw": {
-    "statusCode": 0,
-    "data": {
-      "statusMessage": "done successfully",
-      "cards": [
-        {
-          "card": {
-            "card": {
-              "@type": "type.googleapis.com/swiggy.gandalf.widgets.v2.Navigation",
-              "tab": [
-                {
-                  "id": "RESTAURANT",
-                  "title": "Restaurants",
-                  "selected": true,
-                  "analytics": {
-                    "screenName": "explore",
-                    "context": "{\"tid\":\"undefined\",\"query\":\"Foxtrot\"}",
-                    "objectValue": "RESTAURANT",
-                    "clickObjectName": "click-tab"
-                  },
-                  "selectedBgColor": "#1B1E24",
-                  "unselectedBgColor": "#FFFFFF",
-                  "selectedTextColor": "#BFFFFFFF",
-                  "unselectedTextColor": "#9902060C",
-                  "selectedBorderColor": "#1B1E24",
-                  "unselectedBorderColor": "#E2E2E7"
-                },
-                {
-                  "id": "DISH",
-                  "title": "Dishes",
-                  "analytics": {
-                    "screenName": "explore",
-                    "context": "{\"tid\":\"undefined\",\"query\":\"Foxtrot\"}",
-                    "objectValue": "DISH",
-                    "clickObjectName": "click-tab"
-                  },
-                  "selectedBgColor": "#1B1E24",
-                  "unselectedBgColor": "#FFFFFF",
-                  "selectedTextColor": "#BFFFFFFF",
-                  "unselectedTextColor": "#9902060C",
-                  "selectedBorderColor": "#1B1E24",
-                  "unselectedBorderColor": "#E2E2E7"
-                }
-              ],
-              "meta": {
-                "orderable": "true",
-                "correctedQuery": "",
-                "suggestionType": "",
-                "queryIntent": "RESTAURANT"
-              }
-            }
-          }
-        },
-        {
-          "groupedCard": {
-            "cardGroupMap": {
-              "RESTAURANT": {}
-            }
-          }
-        }
-      ],
-      "firstOffsetRequest": true
-    },
-    "tid": "3770c524-badd-4b4e-affc-22bf10699d22",
-    "sid": "re62146bb07-d324-4c32-a51d-ad586666c",
-    "deviceId": "f1809aa4-1801-153c-aee5-1a76482862dc",
-    "csrfToken": "thvV4Im0nttx-7bYL_zg_GWn95v3-lP0LeJLC79k"
-  }
+  "raw": null
 }

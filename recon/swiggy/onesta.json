@@ -5,1864 +5,1266 @@
       "name": "Onesta",
       "area": "Koramangala",
       "districtSlugs": [
-        "onesta-koramangala-5th-block-bangalore"
+        "onesta-1-bommanahalli-bangalore",
+        "onesta-1-electronic-city-bangalore",
+        "onesta-1-mahadevapura-bangalore",
+        "onesta-1-marathahalli-bangalore",
+        "onesta-2-electronic-city-bangalore",
+        "onesta-aecs-layout-bangalore",
+        "onesta-bannerghatta-road-bangalore",
+        "onesta-basaveshwara-nagar-bangalore",
+        "onesta-hebbal-bangalore",
+        "onesta-hsr",
+        "onesta-indiranagar-bangalore",
+        "onesta-jp-nagar",
+        "onesta-kammanahalli",
+        "onesta-kanakapura-road-bangalore",
+        "onesta-koramangala-4th-block-bangalore",
+        "onesta-koramangala-5th-block-bangalore",
+        "onesta-mahadevapura-bangalore",
+        "onesta-new-bel-road",
+        "onesta-rajarajeshwari-nagar",
+        "onesta-yelahanka"
       ]
     },
     "found": true,
     "offerSummary": [
-      "aggregatedDiscountInfo",
-      "aggregatedDiscountInfoV2",
-      "showEoOffer",
-      "aggregatedDiscountInfoV3",
-      "50% OFF",
-      "discountTag",
-      "FLAT DEAL",
-      "10% OFF",
-      "UPTO ₹40"
+      "[addon] Flat 10% off* — use HDFCINFINIA",
+      "[addon] Flat 10% off* — use HDFCCCEMI",
+      "[addon] Flat 10% off* — use HDFCDINERS",
+      "[addon] Flat ₹200 off — use HDFCCARDS",
+      "[addon] Cashback ₹50 — use MBKDINEUPI",
+      "[addon] Cashback ₹50 — use MBKDINE",
+      "[addon] Cashback ₹50 — use POPUPI",
+      "[addon] Cashback 10%* — Swiggy HDFC Bank Credit Card",
+      "[addon] Cashback 5%* — Swiggy Ornge HDFC Bank Credit Card"
     ]
   },
   "raw": {
-    "statusCode": 0,
-    "data": {
-      "statusMessage": "done successfully",
-      "cards": [
-        {
-          "card": {
+    "restaurantId": "401186",
+    "detail": {
+      "requestId": "014e4f3a-e4fa-490a-a89d-b6843cc7295d",
+      "apiTime": "2026-05-17T16:08:07.586719332Z",
+      "success": {
+        "statusMessage": "done successfully",
+        "cards": [
+          {
             "card": {
-              "@type": "type.googleapis.com/swiggy.gandalf.widgets.v2.Navigation",
-              "tab": [
-                {
-                  "id": "RESTAURANT",
-                  "title": "Restaurants",
-                  "selected": true,
-                  "analytics": {
-                    "screenName": "explore",
-                    "context": "{\"tid\":\"undefined\",\"query\":\"Onesta\"}",
-                    "objectValue": "RESTAURANT",
-                    "clickObjectName": "click-tab"
-                  },
-                  "selectedBgColor": "#1B1E24",
-                  "unselectedBgColor": "#FFFFFF",
-                  "selectedTextColor": "#BFFFFFFF",
-                  "unselectedTextColor": "#9902060C",
-                  "selectedBorderColor": "#1B1E24",
-                  "unselectedBorderColor": "#E2E2E7"
-                },
-                {
-                  "id": "DISH",
-                  "title": "Dishes",
-                  "analytics": {
-                    "screenName": "explore",
-                    "context": "{\"tid\":\"undefined\",\"query\":\"Onesta\"}",
-                    "objectValue": "DISH",
-                    "clickObjectName": "click-tab"
-                  },
-                  "selectedBgColor": "#1B1E24",
-                  "unselectedBgColor": "#FFFFFF",
-                  "selectedTextColor": "#BFFFFFFF",
-                  "unselectedTextColor": "#9902060C",
-                  "selectedBorderColor": "#1B1E24",
-                  "unselectedBorderColor": "#E2E2E7"
-                }
-              ],
-              "meta": {
-                "orderable": "false",
-                "correctedQuery": "",
-                "suggestionType": "",
-                "queryIntent": "RESTAURANT"
-              }
-            }
-          }
-        },
-        {
-          "groupedCard": {
-            "cardGroupMap": {
-              "RESTAURANT": {
-                "cards": [
-                  {
-                    "card": {
-                      "card": {
-                        "@type": "type.googleapis.com/swiggy.presentation.food.v2.Restaurant",
-                        "info": {
-                          "id": "655141",
-                          "name": "Onesta",
-                          "city": "1",
-                          "slugs": {
-                            "restaurant": "onesta-malleshwaram-malleshwaram",
-                            "city": "bangalore"
-                          },
-                          "cloudinaryImageId": "6e6533685160fdcb8393da739f86634d",
-                          "address": "Onesta , Third Floor ,Food Court ,Mantri Square,No.1,Sampige Road, Bbmp North,Bangalore,Karnataka 560003",
-                          "locality": "Sampige Road",
-                          "areaName": "Malleshwaram",
-                          "costForTwo": "20000",
-                          "costForTwoMessage": "₹200 FOR TWO",
-                          "cuisines": [
-                            "Italian",
-                            "Desserts",
-                            "Pizzas"
-                          ],
-                          "avgRating": 4,
-                          "feeDetails": {},
-                          "parentId": "11785",
-                          "avgRatingString": "4.0",
-                          "totalRatingsString": "959",
-                          "sla": {
-                            "serviceability": "NON_SERVICEABLE",
-                            "rainMode": "RAIN_MODE_DEFAULT",
-                            "iconType": "ICON_TYPE_EMPTY"
-                          },
-                          "availability": {
-                            "restaurantClosedMeta": {
-                              "title": "UNAVAILABLE",
-                              "subtitle": "AT YOUR LOCATION"
-                            }
-                          },
-                          "aggregatedDiscountInfo": {
-                            "visible": true
-                          },
-                          "badges": {},
-                          "unorderableMessage": "Does not deliver to selected location",
-                          "aggregatedDiscountInfoV2": {
-                            "visible": true
-                          },
-                          "ratingSlab": "RATING_SLAB_4",
-                          "availabilityServiceabilityMessage": "Does not deliver to your location",
-                          "orderabilityCommunication": {
-                            "title": {
-                              "text": "UNAVAILABLE"
-                            },
-                            "subTitle": {
-                              "text": "FOR DELIVERY"
-                            },
-                            "message": {
-                              "text": "Outside the outlet's delivery area",
-                              "textColour": "negative"
-                            },
-                            "customIcon": {
-                              "bgGradientColorStart": "#F64C41",
-                              "bgGradientColorEnd": "#E53554"
-                            },
-                            "commsStyling": {}
-                          },
-                          "cartOrderabilityNudgeBanner": {
-                            "parameters": {},
-                            "presentation": {}
-                          },
-                          "externalRatings": {
-                            "aggregatedRating": {
-                              "rating": "3.7",
-                              "ratingCount": "48"
-                            },
-                            "source": "GOOGLE",
-                            "sourceIconImageId": "v1704440323/google_ratings/rating_google_tag"
-                          },
-                          "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY",
-                          "featuredSectionInfo": {},
-                          "showEoOffer": true,
-                          "priceComparisonComms": {}
+              "card": {
+                "@type": "type.googleapis.com/swiggy.presentation.dinersone.v1.EntityInfoWithMasthead",
+                "id": "401186",
+                "info": {
+                  "name": "Onesta",
+                  "locationInfo": {
+                    "distanceString": "5.9 km",
+                    "navigationUrl": "https://www.google.com/maps/dir/?api=1&origin=12.9716,77.5946&destination=12.978657,77.64357999999993&travelmode=driving",
+                    "lat": "12.978657",
+                    "long": "77.64357999999993",
+                    "city": {
+                      "name": "Bangalore"
+                    },
+                    "formattedAddress": "Indiranagar, Bangalore",
+                    "additionalInfo": {
+                      "cta": {
+                        "link": "swiggydiners://collectiondetails/DINEOUT_BRAND_OUTLETS?tags=layout_dineout_brand_outlets&metaMap=%7B%22brandId%22%3A%2211785%22%2C%22restaurant_id%22%3A%22401186%22%2C%22sourcePage%22%3A%22RDP%22%7D&header_title=Outlets",
+                        "text": "outlets",
+                        "type": "DEEPLINK",
+                        "metaInfo": {
+                          "ctaImage": "dineout/details/red_arrow_down.png"
                         },
                         "analytics": {
-                          "screenName": "explore",
-                          "context": "{\"tid\":\"undefined\",\"grid\":\"fa3cb3f4-a891-4f0e-ab8d-6d78b8c1daf8\",\"queryUniqueId\":\"undefined\",\"query\":\"Onesta\"}",
-                          "objectValue": "655141",
-                          "impressionObjectName": "impression-restaurant",
-                          "clickObjectName": "click-restaurant"
-                        },
-                        "ctaWithParams": {
-                          "text": "This Restaurant is no longer available for ordering",
-                          "type": "TEXT",
-                          "params": {
-                            "qrEnabled": "false",
-                            "restaurant_id": "655141",
-                            "query": "Onesta",
-                            "sourceSessionId": "re615148c4a-f2c9-4cbb-9cb4-c5f1aa97c",
-                            "source": "SEARCH",
-                            "isSld": "false",
-                            "sourceRequestId": "00000000000000000000000000000000"
-                          }
+                          "screenName": "DO-Detail",
+                          "context": "{\"restId\":\"401186\"}",
+                          "objectValue": "outlet_switcher_dropdown",
+                          "impressionObjectName": "entity_info_masthead",
+                          "clickObjectName": "entity_info_masthead"
                         }
+                      }
+                    },
+                    "displayAreaName": "Indiranagar"
+                  },
+                  "timingsInfo": {
+                    "status": "Open",
+                    "message": "till 11PM",
+                    "outletTiming": {
+                      "infoList": [
+                        {
+                          "title": "Monday",
+                          "subtitle": "11AM - 11PM",
+                          "titleColor": "text_high_emphasis",
+                          "subtitleColor": "text_high_emphasis"
+                        },
+                        {
+                          "title": "Tuesday",
+                          "subtitle": "11AM - 11PM",
+                          "titleColor": "text_high_emphasis",
+                          "subtitleColor": "text_high_emphasis"
+                        },
+                        {
+                          "title": "Wednesday",
+                          "subtitle": "11AM - 11PM",
+                          "titleColor": "text_high_emphasis",
+                          "subtitleColor": "text_high_emphasis"
+                        },
+                        {
+                          "title": "Thursday",
+                          "subtitle": "11AM - 11PM",
+                          "titleColor": "text_high_emphasis",
+                          "subtitleColor": "text_high_emphasis"
+                        },
+                        {
+                          "title": "Friday",
+                          "subtitle": "11AM - 11PM",
+                          "titleColor": "text_high_emphasis",
+                          "subtitleColor": "text_high_emphasis"
+                        },
+                        {
+                          "title": "Saturday",
+                          "subtitle": "11AM - 11PM",
+                          "titleColor": "text_high_emphasis",
+                          "subtitleColor": "text_high_emphasis"
+                        },
+                        {
+                          "title": "Today",
+                          "subtitle": "11AM - 11PM",
+                          "titleColor": "primary",
+                          "subtitleColor": "primary"
+                        }
+                      ],
+                      "title": "Outlet timings"
+                    },
+                    "styleInfo": {
+                      "titleColor": "positive",
+                      "subtitleColor": "text_color_low_emphasis"
+                    }
+                  },
+                  "callDetail": {
+                    "title": "Trying to reach the outlet?",
+                    "style": {
+                      "cornerRadius": {
+                        "topLeft": 16,
+                        "topRight": 16
+                      },
+                      "backgroundColour": "#F0F0F5"
+                    },
+                    "actions": [
+                      {
+                        "link": "dailer-app?phone=9513736291",
+                        "text": "9513736291",
+                        "type": "DIALER",
+                        "metaInfo": {
+                          "ctaImage": "dineout/details/call_no_bg.png"
+                        }
+                      }
+                    ]
+                  },
+                  "ratingsInfo": {
+                    "value": "4.1",
+                    "description": "9K ratings",
+                    "count": 9200,
+                    "countDescription": "9K+ Google ratings",
+                    "icon": "dineout/details/google_tag.png",
+                    "style": "RATING_STYLE_V2"
+                  },
+                  "typeInfo": {
+                    "type": "ENTITY_TYPE_RESTAURANT",
+                    "restaurantType": "RESTAURANT_TYPE_PARTICIPATING"
+                  },
+                  "style": {
+                    "backgroundColour": "#FFFFFF",
+                    "cornerRadius": {
+                      "topLeft": 16,
+                      "topRight": 16,
+                      "bottomLeft": 16,
+                      "bottomRight": 16
+                    },
+                    "animationConfig": {
+                      "type": "ANIMATION_TYPE_ENTRY_PUSH_DOWN",
+                      "startDelay": 250,
+                      "duration": 100,
+                      "interpolator": "INTERPOLATOR_LINEAR"
+                    },
+                    "dimension": {
+                      "width": {
+                        "type": "TYPE_RELATIVE",
+                        "value": 1,
+                        "reference": "RELATIVE_DIMENSION_REFERENCE_DEVICE_WIDTH"
+                      },
+                      "height": {
+                        "type": "TYPE_RELATIVE",
+                        "value": 0.778,
+                        "reference": "RELATIVE_DIMENSION_REFERENCE_WIDTH"
                       }
                     }
                   },
+                  "favourite": {
+                    "entityLotte": {
+                      "frequencyCapping": 2,
+                      "image": "favourite-image",
+                      "lotteFiles": [
+                        {
+                          "type": "LOTTIE_TYPE_FAVOURITE",
+                          "lotte": "favourite-lottie"
+                        },
+                        {
+                          "type": "LOTTIE_TYPE_NON_FAVOURITE",
+                          "lotte": "non-favourite-lottie"
+                        }
+                      ]
+                    },
+                    "accessibility": {
+                      "altText": "favourite alt text",
+                      "altTextCta": "favourite alt text cta"
+                    }
+                  },
+                  "share": {
+                    "entityLotte": {
+                      "frequencyCapping": 3,
+                      "image": "share-image",
+                      "lotteFiles": [
+                        {
+                          "type": "LOTTIE_TYPE_SHARE",
+                          "lotte": "share-lottie"
+                        }
+                      ]
+                    },
+                    "shareUrl": "Hey, I think you will love Onesta, Indiranagar, Bangalore on Swiggy Dineout https://swiggy.onelink.me/BVRZ?af_dp=swiggydiners%3A%2F%2Fdetails%2F401186%3Fsource%3Dsharing Happy dining!",
+                    "accessibility": {
+                      "altText": "share alt text",
+                      "altTextCta": "share alt text cta"
+                    }
+                  },
+                  "entityAttributes": {
+                    "restaurantEntityAttributes": {
+                      "outlets": {},
+                      "cuisines": [
+                        "Pizza",
+                        "Beverages"
+                      ],
+                      "costForTwo": "₹800 for two"
+                    }
+                  },
+                  "callout": {
+                    "badge": {
+                      "backgroundColor": "#FFFFFF",
+                      "icon": {
+                        "creativeId": "dineout/dineoutrewards/DC_Mnemonic.png"
+                      },
+                      "animationConfig": {
+                        "type": "ANIMATION_TYPE_EASE_IN"
+                      },
+                      "borderGradient": [
+                        "#2B885B",
+                        "#FFFFFF"
+                      ]
+                    },
+                    "info": {
+                      "info": "Earn & Redeem 2X DineCash",
+                      "color": "sub_brands_dine_cash_primary",
+                      "font": "FONT_NAME_V2_BODY3_NEUTRAL_BOLD"
+                    },
+                    "background": "#E9FFF4",
+                    "animationConfig": {
+                      "type": "ANIMATION_TYPE_ENTRY_SLIDE_LEFT_RIGHT"
+                    }
+                  }
+                },
+                "masthead": {
+                  "files": [
+                    {
+                      "type": "IMAGE",
+                      "id": "2022-08-18T02:31:42.787",
+                      "name": "ambience",
+                      "url": "v1660789905/jrwcddcfkyt4fiyrfatd.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2022-08-18T02:31:47.077",
+                      "name": "ambience",
+                      "url": "v1660789909/hgrzel4cmwwdh7pgopu8.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2022-08-18T02:31:50.967",
+                      "name": "ambience",
+                      "url": "v1660789913/wzmg0iqbl1bpbnuvrfn5.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2022-08-18T02:31:55.051",
+                      "name": "ambience",
+                      "url": "v1660789918/hn93hnqsqp4hu0tllez0.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2022-08-18T02:32:42.973",
+                      "url": "v1660789965/yxurqq07huvbgssipl22.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2022-08-18T02:32:46.976",
+                      "url": "v1660789969/mngbuwbmwlsljwpuazsd.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2022-08-18T02:32:50.764",
+                      "url": "v1660789973/ndfpnzfoiy7w0m8gd0r8.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2022-08-18T02:32:54.489",
+                      "url": "v1660789977/jq76em8tu2bb5hppklbn.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2022-08-18T02:32:59.089",
+                      "url": "v1660789981/wv3ofskixufyls7d2vqf.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2022-08-18T02:33:02.629",
+                      "url": "v1660789985/ywrfdveuogv0mstdzogo.jpg"
+                    }
+                  ],
+                  "cta": {
+                    "link": "swiggydiners://gallery/401186",
+                    "type": "DEEPLINK"
+                  },
+                  "cornerRadius": {
+                    "bottomLeft": 24,
+                    "bottomRight": 24
+                  },
+                  "autoScrollConfig": {
+                    "isScrollEnabled": true,
+                    "autoScrollDuration": 3,
+                    "autoScrollResetDuration": 5
+                  }
+                }
+              }
+            }
+          },
+          {
+            "card": {
+              "card": {
+                "@type": "type.googleapis.com/swiggy.presentation.dinersone.v1.DealAndOfferInfo",
+                "dayWiseOfferInfo": [
                   {
-                    "card": {
-                      "card": {
-                        "@type": "type.googleapis.com/swiggy.presentation.food.v2.RestaurantCollection",
-                        "title": "More results like this",
-                        "restaurants": [
-                          {
-                            "info": {
-                              "id": "10582",
-                              "name": "Pizza Hut",
-                              "city": "1",
-                              "slugs": {
-                                "restaurant": "pizza-hut-hosur-main-road-koramangala"
-                              },
-                              "cloudinaryImageId": "RX_THUMBNAIL/IMAGES/VENDOR/2026/2/12/77cce0e2-9d15-4c7e-831f-8080b5870841_10582.JPG",
-                              "locality": "Maruti Nagar",
-                              "areaName": "Maruti Nagar",
-                              "costForTwo": "₹300 for two",
-                              "cuisines": [
-                                "Pizzas"
-                              ],
-                              "avgRating": 4.1,
-                              "feeDetails": {
-                                "restaurantId": "10582",
-                                "title": "Delivery Charge",
-                                "amount": "0"
-                              },
-                              "totalRatingsString": "13K+",
-                              "sla": {
-                                "deliveryTime": 39,
-                                "minDeliveryTime": 35,
-                                "maxDeliveryTime": 40,
-                                "serviceability": "SERVICEABLE",
-                                "slaString": "35-40 MINS",
-                                "lastMileTravelString": "6.9 km",
-                                "iconType": "ICON_TYPE_EMPTY"
-                              },
-                              "availability": {
-                                "nextCloseTime": "2026-05-17 07:00:00",
-                                "opened": true
-                              },
-                              "badges": {},
-                              "aggregatedDiscountInfoV3": {
-                                "header": "50% OFF",
-                                "discountTag": "FLAT DEAL"
-                              },
-                              "externalRatings": {
-                                "aggregatedRating": {
-                                  "rating": "4.8",
-                                  "ratingCount": "1.9K+"
+                    "segment": {
+                      "id": "OFFERS_FOR_YOU",
+                      "title": "Offers for you",
+                      "isSelected": true,
+                      "analyticsInfo": {
+                        "screenName": "DO-Detail",
+                        "context": "{\"offer_day\":\"offers_for_you\"}",
+                        "objectValue": "401186",
+                        "impressionObjectName": "offer_day"
+                      }
+                    },
+                    "tabsOfferInfo": {
+                      "offersTab": [
+                        {
+                          "tabInfo": {
+                            "id": "PREBOOK",
+                            "title": "Pre-booking offers",
+                            "isSelected": true,
+                            "analyticsInfo": {
+                              "screenName": "DO-Detail",
+                              "context": "{\"offer_type\":\"deals\",\"offer_title\":\"Pre-booking offers\"}",
+                              "objectValue": "401186",
+                              "clickObjectName": "offer_panel_offer_tab_click"
+                            }
+                          },
+                          "tabOffers": {
+                            "offers": [
+                              {
+                                "type": "Pre-Book",
+                                "title": "Flat 50% off on Total Bill",
+                                "cta": {
+                                  "link": "swiggydiners://login",
+                                  "text": "LOGIN TO BUY DEALS",
+                                  "type": "primary"
                                 },
-                                "source": "GOOGLE",
-                                "sourceIconImageId": "v1704440323/google_ratings/rating_google_tag"
-                              },
-                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
-                            },
-                            "analytics": {},
-                            "cta": {}
-                          },
-                          {
-                            "info": {
-                              "id": "1016710",
-                              "name": "La Pino'z Pizza",
-                              "city": "1",
-                              "slugs": {
-                                "restaurant": "la-pinoz-pizza-indiranagar-marathahalli"
-                              },
-                              "cloudinaryImageId": "RX_THUMBNAIL/IMAGES/VENDOR/2024/12/29/ae211d87-7b26-4f52-ae62-4fa6e1ce4529_1016710.jpg",
-                              "locality": "Indira Nagar",
-                              "areaName": "Indiranagar",
-                              "costForTwo": "₹250 for two",
-                              "cuisines": [
-                                "Pizzas",
-                                "Pastas",
-                                "Italian",
-                                "Desserts",
-                                "Beverages"
-                              ],
-                              "avgRating": 4.3,
-                              "feeDetails": {
-                                "restaurantId": "1016710",
-                                "title": "Delivery Charge",
-                                "amount": "0"
-                              },
-                              "totalRatingsString": "1.8K+",
-                              "sla": {
-                                "deliveryTime": 48,
-                                "minDeliveryTime": 45,
-                                "maxDeliveryTime": 50,
-                                "serviceability": "SERVICEABLE",
-                                "slaString": "45-50 MINS",
-                                "lastMileTravelString": "7.2 km",
-                                "iconType": "ICON_TYPE_EMPTY"
-                              },
-                              "availability": {
-                                "nextCloseTime": "2026-05-17 10:00:00",
-                                "opened": true
-                              },
-                              "aggregatedDiscountInfo": {},
-                              "badges": {},
-                              "aggregatedDiscountInfoV2": {},
-                              "externalRatings": {
-                                "aggregatedRating": {
-                                  "rating": "--"
-                                }
-                              },
-                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
-                            },
-                            "analytics": {},
-                            "cta": {}
-                          },
-                          {
-                            "info": {
-                              "id": "657064",
-                              "name": "Pizza House",
-                              "city": "1",
-                              "slugs": {
-                                "restaurant": "pizza-house-kammanahalli/kalyan-nagar-kammanahalli/kalyan-nagar"
-                              },
-                              "cloudinaryImageId": "d57061840c856db9f90602bb146cd477",
-                              "locality": "AM Road, Sulthangunta",
-                              "areaName": "Shivaji Nagar",
-                              "costForTwo": "₹400 for two",
-                              "cuisines": [
-                                "Pizzas"
-                              ],
-                              "avgRating": 3.7,
-                              "feeDetails": {
-                                "restaurantId": "657064",
-                                "title": "Delivery Charge",
-                                "amount": "0"
-                              },
-                              "totalRatingsString": "341",
-                              "sla": {
-                                "deliveryTime": 46,
-                                "minDeliveryTime": 45,
-                                "maxDeliveryTime": 55,
-                                "serviceability": "SERVICEABLE",
-                                "slaString": "45-55 MINS",
-                                "lastMileTravelString": "3.5 km",
-                                "iconType": "ICON_TYPE_EMPTY"
-                              },
-                              "availability": {
-                                "nextCloseTime": "2026-05-24 00:00:00",
-                                "opened": true
-                              },
-                              "badges": {},
-                              "aggregatedDiscountInfoV3": {
-                                "header": "10% OFF",
-                                "subHeader": "UPTO ₹40",
-                                "logoCtx": {
-                                  "text": "BENEFITS"
-                                }
-                              },
-                              "externalRatings": {
-                                "aggregatedRating": {
-                                  "rating": "--"
-                                }
-                              },
-                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
-                            },
-                            "analytics": {},
-                            "cta": {}
-                          },
-                          {
-                            "info": {
-                              "id": "583172",
-                              "name": "Pizza Party",
-                              "city": "1",
-                              "slugs": {
-                                "restaurant": "pub-g-m-pizza-indiranagar-indiranagar"
-                              },
-                              "cloudinaryImageId": "cjmua3ulhheyp93th1qy",
-                              "locality": "18th C Main, HAL 2nd Stage",
-                              "areaName": "indranagar",
-                              "costForTwo": "₹150 for two",
-                              "cuisines": [
-                                "Pizzas"
-                              ],
-                              "avgRating": 4.6,
-                              "feeDetails": {
-                                "restaurantId": "583172",
-                                "title": "Delivery Charge",
-                                "amount": "0"
-                              },
-                              "totalRatingsString": "52",
-                              "sla": {
-                                "deliveryTime": 52,
-                                "minDeliveryTime": 50,
-                                "maxDeliveryTime": 60,
-                                "serviceability": "SERVICEABLE",
-                                "slaString": "50-60 MINS",
-                                "lastMileTravelString": "7.4 km",
-                                "iconType": "ICON_TYPE_EMPTY"
-                              },
-                              "availability": {
-                                "nextCloseTime": "2026-05-17 23:59:00",
-                                "opened": true
-                              },
-                              "aggregatedDiscountInfo": {},
-                              "badges": {},
-                              "aggregatedDiscountInfoV2": {},
-                              "externalRatings": {
-                                "aggregatedRating": {
-                                  "rating": "--"
-                                }
-                              },
-                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
-                            },
-                            "analytics": {},
-                            "cta": {}
-                          },
-                          {
-                            "info": {
-                              "id": "480488",
-                              "name": "High Ultra Express Pizza",
-                              "city": "1",
-                              "slugs": {
-                                "restaurant": "high-ultra-express-pizza-indiranagar-indiranagar"
-                              },
-                              "cloudinaryImageId": "ackkhgq1m74vknebpxf0",
-                              "locality": "18th C Main, HAL 2nd Stage",
-                              "areaName": "indranagar ",
-                              "costForTwo": "₹200 for two",
-                              "cuisines": [
-                                "Pizzas"
-                              ],
-                              "avgRating": 3.7,
-                              "feeDetails": {
-                                "restaurantId": "480488",
-                                "title": "Delivery Charge",
-                                "amount": "0"
-                              },
-                              "totalRatingsString": "104",
-                              "sla": {
-                                "deliveryTime": 47,
-                                "minDeliveryTime": 45,
-                                "maxDeliveryTime": 50,
-                                "serviceability": "SERVICEABLE",
-                                "slaString": "45-50 MINS",
-                                "lastMileTravelString": "7.4 km",
-                                "iconType": "ICON_TYPE_EMPTY"
-                              },
-                              "availability": {
-                                "nextCloseTime": "2026-05-24 00:00:00",
-                                "opened": true
-                              },
-                              "aggregatedDiscountInfo": {},
-                              "badges": {},
-                              "aggregatedDiscountInfoV2": {},
-                              "externalRatings": {
-                                "aggregatedRating": {
-                                  "rating": "--"
-                                }
-                              },
-                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
-                            },
-                            "analytics": {},
-                            "cta": {}
-                          },
-                          {
-                            "info": {
-                              "id": "559737",
-                              "name": "crunch pizza 24/7",
-                              "city": "1",
-                              "slugs": {
-                                "restaurant": "fresh-crunch-pizza-indiranagar-indiranagar"
-                              },
-                              "cloudinaryImageId": "ojsvhtrmvqprjp8etfqg",
-                              "locality": "18th C Main, HAL 2nd Stage",
-                              "areaName": " indranagar ",
-                              "costForTwo": "₹400 for two",
-                              "cuisines": [
-                                "Pizzas",
-                                "Burgers"
-                              ],
-                              "avgRating": 4.6,
-                              "feeDetails": {
-                                "restaurantId": "559737",
-                                "title": "Delivery Charge",
-                                "amount": "0"
-                              },
-                              "totalRatingsString": "57",
-                              "sla": {
-                                "deliveryTime": 53,
-                                "minDeliveryTime": 50,
-                                "maxDeliveryTime": 60,
-                                "serviceability": "SERVICEABLE",
-                                "slaString": "50-60 MINS",
-                                "lastMileTravelString": "7.4 km",
-                                "iconType": "ICON_TYPE_EMPTY"
-                              },
-                              "availability": {
-                                "nextCloseTime": "2026-05-17 23:59:00",
-                                "opened": true
-                              },
-                              "aggregatedDiscountInfo": {},
-                              "badges": {},
-                              "aggregatedDiscountInfoV2": {},
-                              "externalRatings": {
-                                "aggregatedRating": {
-                                  "rating": "--"
-                                }
-                              },
-                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
-                            },
-                            "analytics": {},
-                            "cta": {}
-                          },
-                          {
-                            "info": {
-                              "id": "430620",
-                              "name": "Joey's pizza delivery",
-                              "city": "1",
-                              "slugs": {
-                                "restaurant": "joey's-pizza-24\\7-indiranagar-indiranagar"
-                              },
-                              "cloudinaryImageId": "qmxth2yq9e8eihjt3ucw",
-                              "locality": "18th C Main, HAL 2nd Stage",
-                              "areaName": "indranagar",
-                              "costForTwo": "₹250 for two",
-                              "cuisines": [
-                                "Italian"
-                              ],
-                              "avgRating": 4.4,
-                              "feeDetails": {
-                                "restaurantId": "430620",
-                                "title": "Delivery Charge",
-                                "amount": "0"
-                              },
-                              "totalRatingsString": "364",
-                              "sla": {
-                                "deliveryTime": 50,
-                                "minDeliveryTime": 45,
-                                "maxDeliveryTime": 50,
-                                "serviceability": "SERVICEABLE",
-                                "slaString": "45-50 MINS",
-                                "lastMileTravelString": "7.4 km",
-                                "iconType": "ICON_TYPE_EMPTY"
-                              },
-                              "availability": {
-                                "nextCloseTime": "2026-05-17 23:59:00",
-                                "opened": true
-                              },
-                              "aggregatedDiscountInfo": {},
-                              "badges": {},
-                              "aggregatedDiscountInfoV2": {},
-                              "externalRatings": {
-                                "aggregatedRating": {
-                                  "rating": "--"
-                                }
-                              },
-                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
-                            },
-                            "analytics": {},
-                            "cta": {}
-                          },
-                          {
-                            "info": {
-                              "id": "657599",
-                              "name": "Pizza Town",
-                              "city": "1",
-                              "slugs": {
-                                "restaurant": "pizza-town-kammanahalli/kalyan-nagar-kammanahalli/kalyan-nagar"
-                              },
-                              "cloudinaryImageId": "21e7e5e45176da8b791c06a0ea555246",
-                              "locality": "AM Road, Sulthangunta",
-                              "areaName": "Shivaji Nagar",
-                              "costForTwo": "₹400 for two",
-                              "cuisines": [
-                                "Pizzas"
-                              ],
-                              "avgRating": 4,
-                              "feeDetails": {
-                                "restaurantId": "657599",
-                                "title": "Delivery Charge",
-                                "amount": "0"
-                              },
-                              "totalRatingsString": "161",
-                              "sla": {
-                                "deliveryTime": 40,
-                                "minDeliveryTime": 40,
-                                "maxDeliveryTime": 45,
-                                "serviceability": "SERVICEABLE",
-                                "slaString": "40-45 MINS",
-                                "lastMileTravelString": "3.5 km",
-                                "iconType": "ICON_TYPE_EMPTY"
-                              },
-                              "availability": {
-                                "nextCloseTime": "2026-05-23 00:00:00",
-                                "opened": true
-                              },
-                              "badges": {},
-                              "aggregatedDiscountInfoV3": {
-                                "header": "10% OFF",
-                                "subHeader": "UPTO ₹40",
-                                "logoCtx": {
-                                  "text": "BENEFITS"
-                                }
-                              },
-                              "externalRatings": {
-                                "aggregatedRating": {
-                                  "rating": "--"
-                                }
-                              },
-                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
-                            },
-                            "analytics": {},
-                            "cta": {}
-                          },
-                          {
-                            "info": {
-                              "id": "417711",
-                              "name": "Crunch Pizza Express Delivery",
-                              "city": "1",
-                              "slugs": {
-                                "restaurant": "crunch-pizza-express-delivery-indiranagar-indiranagar"
-                              },
-                              "cloudinaryImageId": "ryr4wdduipdymkltj64q",
-                              "locality": "18th C Main, HAL 2nd Stage",
-                              "areaName": "indranagar",
-                              "costForTwo": "₹300 for two",
-                              "cuisines": [
-                                "Italian",
-                                "Pizzas"
-                              ],
-                              "avgRating": 4.4,
-                              "feeDetails": {
-                                "restaurantId": "417711",
-                                "title": "Delivery Charge",
-                                "amount": "0"
-                              },
-                              "totalRatingsString": "362",
-                              "sla": {
-                                "deliveryTime": 48,
-                                "minDeliveryTime": 45,
-                                "maxDeliveryTime": 50,
-                                "serviceability": "SERVICEABLE",
-                                "slaString": "45-50 MINS",
-                                "lastMileTravelString": "7.4 km",
-                                "iconType": "ICON_TYPE_EMPTY"
-                              },
-                              "availability": {
-                                "nextCloseTime": "2026-05-17 23:59:00",
-                                "opened": true
-                              },
-                              "aggregatedDiscountInfo": {},
-                              "badges": {},
-                              "aggregatedDiscountInfoV2": {},
-                              "externalRatings": {
-                                "aggregatedRating": {
-                                  "rating": "--"
-                                }
-                              },
-                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
-                            },
-                            "analytics": {},
-                            "cta": {}
-                          },
-                          {
-                            "info": {
-                              "id": "1033274",
-                              "name": "Pizza Palette",
-                              "city": "1",
-                              "slugs": {
-                                "restaurant": "pizza-palette-arekere-arekere"
-                              },
-                              "cloudinaryImageId": "RX_THUMBNAIL/IMAGES/VENDOR/2025/1/24/3039a49b-f3d3-499a-bd96-291d0a3b1630_1033274.JPG",
-                              "locality": "Arekempanahalli Jayanagar",
-                              "areaName": "Mavallipura",
-                              "costForTwo": "₹200 for two",
-                              "cuisines": [
-                                "Bakery",
-                                "Beverages",
-                                "Pizzas",
-                                "Burgers"
-                              ],
-                              "avgRating": 4.3,
-                              "feeDetails": {
-                                "restaurantId": "1033274",
-                                "title": "Delivery Charge",
-                                "amount": "0"
-                              },
-                              "totalRatingsString": "6",
-                              "sla": {
-                                "deliveryTime": 38,
-                                "minDeliveryTime": 35,
-                                "maxDeliveryTime": 40,
-                                "serviceability": "SERVICEABLE",
-                                "slaString": "35-40 MINS",
-                                "lastMileTravelString": "4.3 km",
-                                "iconType": "ICON_TYPE_EMPTY"
-                              },
-                              "availability": {
-                                "nextCloseTime": "2026-05-17 23:00:00",
-                                "opened": true
-                              },
-                              "badges": {},
-                              "aggregatedDiscountInfoV3": {
-                                "header": "₹100 OFF",
-                                "subHeader": "ABOVE ₹499",
-                                "discountTag": "FLAT DEAL",
-                                "logoCtx": {
-                                  "text": "BENEFITS"
-                                }
-                              },
-                              "externalRatings": {
-                                "aggregatedRating": {
-                                  "rating": "--"
-                                }
-                              },
-                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
-                            },
-                            "analytics": {},
-                            "cta": {}
-                          },
-                          {
-                            "info": {
-                              "id": "50710",
-                              "name": "Wood Fire Pizza",
-                              "city": "1",
-                              "slugs": {
-                                "restaurant": "woodfire-pizza-indiranagar-indiranagar"
-                              },
-                              "cloudinaryImageId": "ocx9ixmjekwtw7a0crwr",
-                              "locality": "Subbanna Palya",
-                              "areaName": "Kammanahalli/Kalyan Nagar",
-                              "costForTwo": "₹400 for two",
-                              "cuisines": [
-                                "Italian",
-                                "Pizzas",
-                                "Pastas",
-                                "Beverages",
-                                "American",
-                                "Desserts",
-                                "Snacks"
-                              ],
-                              "avgRating": 4.1,
-                              "feeDetails": {
-                                "restaurantId": "50710",
-                                "title": "Delivery Charge",
-                                "amount": "0"
-                              },
-                              "totalRatingsString": "2.4K+",
-                              "sla": {
-                                "deliveryTime": 53,
-                                "minDeliveryTime": 50,
-                                "maxDeliveryTime": 60,
-                                "serviceability": "SERVICEABLE",
-                                "slaString": "50-60 MINS",
-                                "lastMileTravelString": "8.3 km",
-                                "iconType": "ICON_TYPE_EMPTY"
-                              },
-                              "availability": {
-                                "nextCloseTime": "2026-05-24 00:00:00",
-                                "opened": true
-                              },
-                              "badges": {},
-                              "aggregatedDiscountInfoV3": {
-                                "header": "ITEMS",
-                                "subHeader": "AT ₹89",
-                                "logoCtx": {
-                                  "text": "BENEFITS"
-                                }
-                              },
-                              "externalRatings": {
-                                "aggregatedRating": {
-                                  "rating": "--"
-                                }
-                              },
-                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
-                            },
-                            "analytics": {},
-                            "cta": {}
-                          },
-                          {
-                            "info": {
-                              "id": "403216",
-                              "name": "Burger It Up",
-                              "city": "1",
-                              "slugs": {
-                                "restaurant": "burger-it-up-central-bangalore-central-bangalore"
-                              },
-                              "cloudinaryImageId": "ja1zrans2vibycwmcccn",
-                              "locality": "Millars Road",
-                              "areaName": "R.T. Nagar",
-                              "costForTwo": "₹150 for two",
-                              "cuisines": [
-                                "Burgers",
-                                "Beverages",
-                                "Desserts",
-                                "American",
-                                "Cafe"
-                              ],
-                              "avgRating": 3.6,
-                              "feeDetails": {
-                                "restaurantId": "403216",
-                                "title": "Delivery Charge",
-                                "amount": "0"
-                              },
-                              "totalRatingsString": "215",
-                              "sla": {
-                                "deliveryTime": 43,
-                                "minDeliveryTime": 40,
-                                "maxDeliveryTime": 45,
-                                "serviceability": "SERVICEABLE",
-                                "slaString": "40-45 MINS",
-                                "lastMileTravelString": "4.1 km",
-                                "iconType": "ICON_TYPE_EMPTY"
-                              },
-                              "availability": {
-                                "nextCloseTime": "2026-05-18 03:00:00",
-                                "opened": true
-                              },
-                              "badges": {},
-                              "aggregatedDiscountInfoV3": {
-                                "header": "ITEMS",
-                                "subHeader": "AT ₹69"
-                              },
-                              "externalRatings": {
-                                "aggregatedRating": {
-                                  "rating": "--"
-                                }
-                              },
-                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
-                            },
-                            "analytics": {},
-                            "cta": {}
-                          },
-                          {
-                            "info": {
-                              "id": "1136024",
-                              "name": "The ZZ Bistro",
-                              "city": "1",
-                              "slugs": {
-                                "restaurant": "the-zz-bistro-sanjay-nagar,-new-bel-road-sanjay-nagar,-new-bel-road"
-                              },
-                              "cloudinaryImageId": "RX_THUMBNAIL/IMAGES/VENDOR/2025/8/11/b9c2367a-7cbe-4ff9-a505-3726681445a0_1136024 (1).jpg",
-                              "locality": "MANORAYANAPALYA",
-                              "areaName": "RT Nagar",
-                              "costForTwo": "₹400 for two",
-                              "cuisines": [
-                                "Chinese",
-                                "Beverages",
-                                "Cafe"
-                              ],
-                              "avgRating": 4.2,
-                              "feeDetails": {
-                                "restaurantId": "1136024",
-                                "title": "Delivery Charge",
-                                "amount": "0"
-                              },
-                              "totalRatingsString": "38",
-                              "sla": {
-                                "deliveryTime": 48,
-                                "minDeliveryTime": 45,
-                                "maxDeliveryTime": 50,
-                                "serviceability": "SERVICEABLE",
-                                "slaString": "45-50 MINS",
-                                "lastMileTravelString": "7.3 km",
-                                "iconType": "ICON_TYPE_EMPTY"
-                              },
-                              "availability": {
-                                "nextCloseTime": "2026-05-17 23:45:00",
-                                "opened": true
-                              },
-                              "badges": {},
-                              "aggregatedDiscountInfoV3": {
-                                "header": "ITEMS",
-                                "subHeader": "AT ₹89",
-                                "logoCtx": {
-                                  "text": "BENEFITS"
-                                }
-                              },
-                              "externalRatings": {
-                                "aggregatedRating": {
-                                  "rating": "4.7",
-                                  "ratingCount": "62"
+                                "isAvailable": true,
+                                "analytics": {
+                                  "screenName": "DO-Detail",
+                                  "context": "{\"offer_type\":\"Pre-Book\",\"offer_title\":\"Flat 50% off on Total Bill\",\"offer_subtext\":\"\",\"special_callout\":\"dineout/OneExclusive.png\",\"offer_position\":1,\"offer_count\":3}",
+                                  "objectValue": "401186",
+                                  "impressionObjectName": "offer_panel_offer_item_impression",
+                                  "clickObjectName": "offer_panel_offer_item_click"
                                 },
-                                "source": "GOOGLE",
-                                "sourceIconImageId": "v1704440323/google_ratings/rating_google_tag"
-                              },
-                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
-                            },
-                            "analytics": {},
-                            "cta": {}
-                          },
-                          {
-                            "info": {
-                              "id": "903490",
-                              "name": "Cremeux Pizza & Bakery Cafe",
-                              "city": "1",
-                              "slugs": {
-                                "restaurant": "cremeux-btm-btm"
-                              },
-                              "cloudinaryImageId": "RX_THUMBNAIL/IMAGES/VENDOR/2024/9/11/8441e1eb-9b96-4bb1-b544-c39d38698b55_903490.jpg",
-                              "locality": "7th Cross Rd, NS Palya",
-                              "areaName": "BTM Layout",
-                              "costForTwo": "₹600 for two",
-                              "cuisines": [
-                                "Cakes",
-                                "Cake",
-                                "pizza",
-                                "Bakery",
-                                "Pastas",
-                                "sandwich",
-                                "Desserts",
-                                "Italian",
-                                "Beverages",
-                                "Cakes & Pastries"
-                              ],
-                              "avgRating": 4.2,
-                              "feeDetails": {
-                                "restaurantId": "903490",
-                                "title": "Delivery Charge",
-                                "amount": "0"
-                              },
-                              "totalRatingsString": "1.3K+",
-                              "sla": {
-                                "deliveryTime": 44,
-                                "minDeliveryTime": 40,
-                                "maxDeliveryTime": 45,
-                                "serviceability": "SERVICEABLE",
-                                "slaString": "40-45 MINS",
-                                "lastMileTravelString": "8.8 km",
-                                "iconType": "ICON_TYPE_EMPTY"
-                              },
-                              "availability": {
-                                "nextCloseTime": "2026-05-20 00:00:00",
-                                "opened": true
-                              },
-                              "badges": {},
-                              "aggregatedDiscountInfoV3": {
-                                "header": "ITEMS",
-                                "subHeader": "AT ₹42",
-                                "logoCtx": {
-                                  "text": "BENEFITS"
-                                }
-                              },
-                              "externalRatings": {
-                                "aggregatedRating": {
-                                  "rating": "--"
-                                }
-                              },
-                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
-                            },
-                            "analytics": {},
-                            "cta": {}
-                          },
-                          {
-                            "info": {
-                              "id": "658363",
-                              "name": "Pizza Box",
-                              "city": "1",
-                              "slugs": {
-                                "restaurant": "pizza-box-kammanahalli/kalyan-nagar-kammanahalli/kalyan-nagar"
-                              },
-                              "cloudinaryImageId": "21e7e5e45176da8b791c06a0ea555246",
-                              "locality": "AM Road, Sulthangunta",
-                              "areaName": "Shivaji Nagar",
-                              "costForTwo": "₹400 for two",
-                              "cuisines": [
-                                "Pizzas"
-                              ],
-                              "avgRating": 3.9,
-                              "feeDetails": {
-                                "restaurantId": "658363",
-                                "title": "Delivery Charge",
-                                "amount": "0"
-                              },
-                              "totalRatingsString": "141",
-                              "sla": {
-                                "deliveryTime": 43,
-                                "minDeliveryTime": 40,
-                                "maxDeliveryTime": 45,
-                                "serviceability": "SERVICEABLE",
-                                "slaString": "40-45 MINS",
-                                "lastMileTravelString": "3.5 km",
-                                "iconType": "ICON_TYPE_EMPTY"
-                              },
-                              "availability": {
-                                "nextCloseTime": "2026-05-18 00:01:00",
-                                "opened": true
-                              },
-                              "badges": {},
-                              "aggregatedDiscountInfoV3": {
-                                "header": "10% OFF",
-                                "subHeader": "UPTO ₹40",
-                                "logoCtx": {
-                                  "text": "BENEFITS"
-                                }
-                              },
-                              "externalRatings": {
-                                "aggregatedRating": {
-                                  "rating": "--"
-                                }
-                              },
-                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
-                            },
-                            "analytics": {},
-                            "cta": {}
-                          },
-                          {
-                            "info": {
-                              "id": "460878",
-                              "name": "Kutty's Pizzeria",
-                              "city": "1",
-                              "slugs": {
-                                "restaurant": "kutty's-pizzeria-banaswadi-banaswadi"
-                              },
-                              "cloudinaryImageId": "fazimgukkzmonlo3krp6",
-                              "locality": "Subbannaiah Palya",
-                              "areaName": "Lingrajapuram",
-                              "costForTwo": "₹300 for two",
-                              "cuisines": [
-                                "Pizzas"
-                              ],
-                              "avgRating": 3.7,
-                              "feeDetails": {
-                                "restaurantId": "460878",
-                                "title": "Delivery Charge",
-                                "amount": "0"
-                              },
-                              "totalRatingsString": "51",
-                              "sla": {
-                                "deliveryTime": 50,
-                                "minDeliveryTime": 50,
-                                "maxDeliveryTime": 60,
-                                "serviceability": "SERVICEABLE",
-                                "slaString": "50-60 MINS",
-                                "lastMileTravelString": "8.5 km",
-                                "iconType": "ICON_TYPE_EMPTY"
-                              },
-                              "availability": {
-                                "nextCloseTime": "2026-05-24 00:00:00",
-                                "opened": true
-                              },
-                              "badges": {},
-                              "aggregatedDiscountInfoV3": {
-                                "header": "ITEMS",
-                                "subHeader": "AT ₹99",
-                                "logoCtx": {
-                                  "text": "BENEFITS"
-                                }
-                              },
-                              "externalRatings": {
-                                "aggregatedRating": {
-                                  "rating": "--"
-                                }
-                              },
-                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
-                            },
-                            "analytics": {},
-                            "cta": {}
-                          },
-                          {
-                            "info": {
-                              "id": "768277",
-                              "name": "Fresh Pizza",
-                              "city": "1",
-                              "slugs": {
-                                "restaurant": "fresh-pizza-kammanahalli/kalyan-nagar-kammanahalli/kalyan-nagar"
-                              },
-                              "cloudinaryImageId": "a1b474576d7b2801cfd53a77475d5cbe",
-                              "locality": "Jayalakshmi School Rd",
-                              "areaName": "Kammanahalli/Kalyan Nagar",
-                              "costForTwo": "₹350 for two",
-                              "cuisines": [
-                                "Pizzas",
-                                "Burgers",
-                                "Snacks",
-                                "Beverages"
-                              ],
-                              "avgRating": 3.8,
-                              "feeDetails": {
-                                "restaurantId": "768277",
-                                "title": "Delivery Charge",
-                                "amount": "0"
-                              },
-                              "totalRatingsString": "12",
-                              "sla": {
-                                "deliveryTime": 61,
-                                "minDeliveryTime": 60,
-                                "maxDeliveryTime": 70,
-                                "serviceability": "SERVICEABLE",
-                                "slaString": "60-70 MINS",
-                                "lastMileTravelString": "8.5 km",
-                                "iconType": "ICON_TYPE_EMPTY"
-                              },
-                              "availability": {
-                                "nextCloseTime": "2026-05-24 00:00:00",
-                                "opened": true
-                              },
-                              "badges": {},
-                              "aggregatedDiscountInfoV3": {
-                                "header": "ITEMS",
-                                "subHeader": "AT ₹79",
-                                "logoCtx": {
-                                  "text": "BENEFITS"
-                                }
-                              },
-                              "externalRatings": {
-                                "aggregatedRating": {
-                                  "rating": "--"
-                                }
-                              },
-                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
-                            },
-                            "analytics": {},
-                            "cta": {}
-                          },
-                          {
-                            "info": {
-                              "id": "156540",
-                              "name": "Pizza Theatre",
-                              "city": "1",
-                              "slugs": {
-                                "restaurant": "pizza-theatre-test-prod-area"
-                              },
-                              "cloudinaryImageId": "j5n3wfeldydxn2k93vgz",
-                              "locality": "Subbanna Palya",
-                              "areaName": "Kammanahalli/Kalyan Nagar",
-                              "costForTwo": "₹400 for two",
-                              "cuisines": [
-                                "Italian",
-                                "American",
-                                "Desserts",
-                                "Beverages",
-                                "Pastas",
-                                "Continental"
-                              ],
-                              "avgRating": 4.1,
-                              "feeDetails": {
-                                "restaurantId": "156540",
-                                "title": "Delivery Charge",
-                                "amount": "0"
-                              },
-                              "totalRatingsString": "385",
-                              "sla": {
-                                "deliveryTime": 54,
-                                "minDeliveryTime": 50,
-                                "maxDeliveryTime": 60,
-                                "serviceability": "SERVICEABLE",
-                                "slaString": "50-60 MINS",
-                                "lastMileTravelString": "8.3 km",
-                                "iconType": "ICON_TYPE_EMPTY"
-                              },
-                              "availability": {
-                                "nextCloseTime": "2026-05-24 00:00:00",
-                                "opened": true
-                              },
-                              "badges": {},
-                              "aggregatedDiscountInfoV3": {
-                                "header": "ITEMS",
-                                "subHeader": "AT ₹129",
-                                "logoCtx": {
-                                  "text": "BENEFITS"
-                                }
-                              },
-                              "externalRatings": {
-                                "aggregatedRating": {
-                                  "rating": "--"
-                                }
-                              },
-                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
-                            },
-                            "analytics": {},
-                            "cta": {}
-                          },
-                          {
-                            "info": {
-                              "id": "423459",
-                              "name": "Boston Pizzeria",
-                              "city": "1",
-                              "slugs": {
-                                "restaurant": "boston-pizzeria-banaswadi-banaswadi"
-                              },
-                              "cloudinaryImageId": "rhh1p1v0c4kqgspwygrp",
-                              "locality": "Subbannaiah Palya",
-                              "areaName": "Lingrajapuram",
-                              "costForTwo": "₹300 for two",
-                              "cuisines": [
-                                "Pizzas"
-                              ],
-                              "avgRating": 4.1,
-                              "feeDetails": {
-                                "restaurantId": "423459",
-                                "title": "Delivery Charge",
-                                "amount": "0"
-                              },
-                              "totalRatingsString": "237",
-                              "sla": {
-                                "deliveryTime": 49,
-                                "minDeliveryTime": 45,
-                                "maxDeliveryTime": 55,
-                                "serviceability": "SERVICEABLE",
-                                "slaString": "45-55 MINS",
-                                "lastMileTravelString": "8.5 km",
-                                "iconType": "ICON_TYPE_EMPTY"
-                              },
-                              "availability": {
-                                "nextCloseTime": "2026-05-24 00:00:00",
-                                "opened": true
-                              },
-                              "badges": {},
-                              "aggregatedDiscountInfoV3": {
-                                "header": "ITEMS",
-                                "subHeader": "AT ₹99",
-                                "logoCtx": {
-                                  "text": "BENEFITS"
-                                }
-                              },
-                              "externalRatings": {
-                                "aggregatedRating": {
-                                  "rating": "--"
-                                }
-                              },
-                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
-                            },
-                            "analytics": {},
-                            "cta": {}
-                          },
-                          {
-                            "info": {
-                              "id": "389687",
-                              "name": "Crispy Cluck",
-                              "city": "1",
-                              "slugs": {
-                                "restaurant": "6360929194-indiranagar-indiranagar"
-                              },
-                              "cloudinaryImageId": "RX_THUMBNAIL/IMAGES/VENDOR/2025/6/20/042fcf6e-2356-421a-be99-8308a9f24c2d_389687 (1).jpg",
-                              "locality": "Hal 2nd Stage",
-                              "areaName": "Indiranagar",
-                              "costForTwo": "₹150 for two",
-                              "cuisines": [
-                                "American",
-                                "Burgers",
-                                "Fast Food"
-                              ],
-                              "avgRating": 3.6,
-                              "feeDetails": {
-                                "restaurantId": "389687",
-                                "title": "Delivery Charge",
-                                "amount": "0"
-                              },
-                              "totalRatingsString": "299",
-                              "sla": {
-                                "deliveryTime": 44,
-                                "minDeliveryTime": 40,
-                                "maxDeliveryTime": 45,
-                                "serviceability": "SERVICEABLE",
-                                "slaString": "40-45 MINS",
-                                "lastMileTravelString": "7.4 km",
-                                "iconType": "ICON_TYPE_EMPTY"
-                              },
-                              "availability": {
-                                "nextCloseTime": "2026-05-18 00:00:00",
-                                "opened": true
-                              },
-                              "badges": {},
-                              "aggregatedDiscountInfoV3": {
-                                "header": "30% OFF",
-                                "subHeader": "UPTO ₹75",
-                                "logoCtx": {
-                                  "text": "BENEFITS"
-                                }
-                              },
-                              "externalRatings": {
-                                "aggregatedRating": {
-                                  "rating": "--"
-                                }
-                              },
-                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
-                            },
-                            "analytics": {},
-                            "cta": {}
-                          },
-                          {
-                            "info": {
-                              "id": "818791",
-                              "name": "Pizza Bake House",
-                              "city": "1",
-                              "slugs": {
-                                "restaurant": "pizza-bake-house-vijayanagar-vijayanagar"
-                              },
-                              "cloudinaryImageId": "4a7299b3bff1f8d9ec4399e11483f9fd",
-                              "locality": "Rpc Layout",
-                              "areaName": "Attiguppe",
-                              "costForTwo": "₹500 for two",
-                              "cuisines": [
-                                "Pizzas",
-                                "Burgers",
-                                "Fast Food"
-                              ],
-                              "avgRating": 3.5,
-                              "feeDetails": {
-                                "restaurantId": "818791",
-                                "title": "Delivery Charge",
-                                "amount": "0"
-                              },
-                              "totalRatingsString": "30",
-                              "sla": {
-                                "deliveryTime": 43,
-                                "minDeliveryTime": 40,
-                                "maxDeliveryTime": 45,
-                                "serviceability": "SERVICEABLE",
-                                "slaString": "40-45 MINS",
-                                "lastMileTravelString": "7.5 km",
-                                "iconType": "ICON_TYPE_EMPTY"
-                              },
-                              "availability": {
-                                "nextCloseTime": "2026-05-17 23:00:00",
-                                "opened": true
-                              },
-                              "badges": {},
-                              "aggregatedDiscountInfoV3": {
-                                "header": "ITEMS",
-                                "subHeader": "AT ₹149",
-                                "logoCtx": {
-                                  "text": "BENEFITS"
-                                }
-                              },
-                              "externalRatings": {
-                                "aggregatedRating": {
-                                  "rating": "--"
-                                }
-                              },
-                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
-                            },
-                            "analytics": {},
-                            "cta": {}
-                          },
-                          {
-                            "info": {
-                              "id": "424153",
-                              "name": "Kuttyz Pizza",
-                              "city": "1",
-                              "slugs": {
-                                "restaurant": "kuttyz-pizza-banaswadi-banaswadi"
-                              },
-                              "cloudinaryImageId": "vexlujnihyvephlw5ecx",
-                              "locality": "Subbannaiah Palya",
-                              "areaName": "Lingrajapuram",
-                              "costForTwo": "₹400 for two",
-                              "cuisines": [
-                                "Pizzas"
-                              ],
-                              "avgRating": 3.5,
-                              "feeDetails": {
-                                "restaurantId": "424153",
-                                "title": "Delivery Charge",
-                                "amount": "0"
-                              },
-                              "totalRatingsString": "37",
-                              "sla": {
-                                "deliveryTime": 47,
-                                "minDeliveryTime": 45,
-                                "maxDeliveryTime": 50,
-                                "serviceability": "SERVICEABLE",
-                                "slaString": "45-50 MINS",
-                                "lastMileTravelString": "8.5 km",
-                                "iconType": "ICON_TYPE_EMPTY"
-                              },
-                              "availability": {
-                                "nextCloseTime": "2026-05-24 00:00:00",
-                                "opened": true
-                              },
-                              "badges": {},
-                              "aggregatedDiscountInfoV3": {
-                                "header": "ITEMS",
-                                "subHeader": "AT ₹89",
-                                "logoCtx": {
-                                  "text": "BENEFITS"
-                                }
-                              },
-                              "externalRatings": {
-                                "aggregatedRating": {
-                                  "rating": "--"
-                                }
-                              },
-                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
-                            },
-                            "analytics": {},
-                            "cta": {}
-                          },
-                          {
-                            "info": {
-                              "id": "558068",
-                              "name": "Pizza 99",
-                              "city": "1",
-                              "slugs": {
-                                "restaurant": "pizza@99-basaveshwaranagar-basaveshwaranagar"
-                              },
-                              "cloudinaryImageId": "wkrucpjnjo56buc4h2in",
-                              "locality": "3rd stage",
-                              "areaName": "Rajajinagar",
-                              "costForTwo": "₹300 for two",
-                              "cuisines": [
-                                "Pizzas"
-                              ],
-                              "avgRating": 2.8,
-                              "feeDetails": {
-                                "restaurantId": "558068",
-                                "title": "Delivery Charge",
-                                "amount": "0"
-                              },
-                              "totalRatingsString": "3",
-                              "sla": {
-                                "deliveryTime": 43,
-                                "minDeliveryTime": 40,
-                                "maxDeliveryTime": 45,
-                                "serviceability": "SERVICEABLE",
-                                "slaString": "40-45 MINS",
-                                "lastMileTravelString": "7.3 km",
-                                "iconType": "ICON_TYPE_EMPTY"
-                              },
-                              "availability": {
-                                "nextCloseTime": "2026-05-17 23:00:00",
-                                "opened": true
-                              },
-                              "aggregatedDiscountInfo": {},
-                              "badges": {},
-                              "aggregatedDiscountInfoV2": {},
-                              "externalRatings": {
-                                "aggregatedRating": {
-                                  "rating": "--"
-                                }
-                              },
-                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
-                            },
-                            "analytics": {},
-                            "cta": {}
-                          },
-                          {
-                            "info": {
-                              "id": "822257",
-                              "name": "The Cubano Express",
-                              "city": "1",
-                              "slugs": {
-                                "restaurant": "the-cubano-express-hsr-hsr"
-                              },
-                              "cloudinaryImageId": "10099994d51aaaa5bd92b253af10fcf4",
-                              "locality": "Sector 6",
-                              "areaName": "HSR",
-                              "costForTwo": "₹249 for two",
-                              "cuisines": [
-                                "Spanish",
-                                "Burgers",
-                                "Fast Food",
-                                "Snacks",
-                                "Beverages"
-                              ],
-                              "avgRating": 4.8,
-                              "feeDetails": {
-                                "restaurantId": "822257",
-                                "title": "Delivery Charge",
-                                "amount": "0"
-                              },
-                              "totalRatingsString": "10",
-                              "sla": {
-                                "deliveryTime": 49,
-                                "minDeliveryTime": 45,
-                                "maxDeliveryTime": 50,
-                                "serviceability": "SERVICEABLE",
-                                "slaString": "45-50 MINS",
-                                "lastMileTravelString": "8.6 km",
-                                "iconType": "ICON_TYPE_EMPTY"
-                              },
-                              "availability": {
-                                "nextCloseTime": "2026-05-24 00:00:00",
-                                "opened": true
-                              },
-                              "aggregatedDiscountInfo": {},
-                              "badges": {},
-                              "aggregatedDiscountInfoV2": {},
-                              "externalRatings": {
-                                "aggregatedRating": {
-                                  "rating": "--"
-                                }
-                              },
-                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
-                            },
-                            "analytics": {},
-                            "cta": {}
-                          },
-                          {
-                            "info": {
-                              "id": "702130",
-                              "name": "Bombay Burgers",
-                              "city": "1",
-                              "slugs": {
-                                "restaurant": "bombay-burger's-indiranagar-indiranagar"
-                              },
-                              "cloudinaryImageId": "e230317f0b669033935ee35ceb4592ef",
-                              "locality": "Indiranagar",
-                              "areaName": "Shanthinagara",
-                              "costForTwo": "₹800 for two",
-                              "cuisines": [
-                                "Burgers",
-                                "Snacks",
-                                "Chinese",
-                                "Beverages"
-                              ],
-                              "avgRating": 3.4,
-                              "feeDetails": {
-                                "restaurantId": "702130",
-                                "title": "Delivery Charge",
-                                "amount": "0"
-                              },
-                              "totalRatingsString": "31",
-                              "sla": {
-                                "deliveryTime": 45,
-                                "minDeliveryTime": 45,
-                                "maxDeliveryTime": 50,
-                                "serviceability": "SERVICEABLE",
-                                "slaString": "45-50 MINS",
-                                "lastMileTravelString": "7.4 km",
-                                "iconType": "ICON_TYPE_EMPTY"
-                              },
-                              "availability": {
-                                "nextCloseTime": "2026-05-17 23:59:00",
-                                "opened": true
-                              },
-                              "aggregatedDiscountInfo": {},
-                              "badges": {
-                                "imageBadges": [
+                                "textInfo": {
+                                  "info": "Flat 50% off on Total Bill"
+                                },
+                                "offerTheme": {
+                                  "logo": "dineout/details/discountwidget/One_Exclusive_upd.png"
+                                },
+                                "offerCallout": [
                                   {
-                                    "imageId": "v1695133679/badges/Pure_Veg111.png",
-                                    "description": "pureveg"
+                                    "logo": "dineout/OneExclusive.png"
                                   }
                                 ]
                               },
-                              "aggregatedDiscountInfoV2": {},
-                              "externalRatings": {
-                                "aggregatedRating": {
-                                  "rating": "--"
-                                }
-                              },
-                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
-                            },
-                            "analytics": {},
-                            "cta": {}
-                          },
-                          {
-                            "info": {
-                              "id": "348993",
-                              "name": "Cheezy Pizza",
-                              "city": "1",
-                              "slugs": {
-                                "restaurant": "cheezy-pizza-banaswadi-banaswadi"
-                              },
-                              "cloudinaryImageId": "iidrnnzamn2tpkxrlxbg",
-                              "locality": "subbanapalya",
-                              "areaName": "Kammanahalli",
-                              "costForTwo": "₹350 for two",
-                              "cuisines": [
-                                "Italian"
-                              ],
-                              "avgRating": 4,
-                              "feeDetails": {
-                                "restaurantId": "348993",
-                                "title": "Delivery Charge",
-                                "amount": "0"
-                              },
-                              "totalRatingsString": "127",
-                              "sla": {
-                                "deliveryTime": 48,
-                                "minDeliveryTime": 45,
-                                "maxDeliveryTime": 50,
-                                "serviceability": "SERVICEABLE",
-                                "slaString": "45-50 MINS",
-                                "lastMileTravelString": "8.5 km",
-                                "iconType": "ICON_TYPE_EMPTY"
-                              },
-                              "availability": {
-                                "nextCloseTime": "2026-05-24 00:00:00",
-                                "opened": true
-                              },
-                              "badges": {},
-                              "aggregatedDiscountInfoV3": {
-                                "header": "ITEMS",
-                                "subHeader": "AT ₹129",
-                                "logoCtx": {
-                                  "text": "BENEFITS"
-                                }
-                              },
-                              "externalRatings": {
-                                "aggregatedRating": {
-                                  "rating": "--"
-                                }
-                              },
-                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
-                            },
-                            "analytics": {},
-                            "cta": {}
-                          },
-                          {
-                            "info": {
-                              "id": "964444",
-                              "name": "Little Food",
-                              "city": "1",
-                              "slugs": {
-                                "restaurant": "little-food-btm-btm"
-                              },
-                              "cloudinaryImageId": "RX_THUMBNAIL/IMAGES/VENDOR/2024/9/27/f9fdb4db-b2c7-48a9-bd93-93fd6a27c8d2_964444.jpg",
-                              "locality": "Taverekere main road",
-                              "areaName": "BTM",
-                              "costForTwo": "₹200 for two",
-                              "cuisines": [
-                                "sandwich",
-                                "Momos",
-                                "Indian",
-                                "Fast Food"
-                              ],
-                              "feeDetails": {
-                                "restaurantId": "964444",
-                                "title": "Delivery Charge",
-                                "amount": "0"
-                              },
-                              "sla": {
-                                "deliveryTime": 40,
-                                "minDeliveryTime": 35,
-                                "maxDeliveryTime": 40,
-                                "serviceability": "SERVICEABLE",
-                                "slaString": "35-40 MINS",
-                                "lastMileTravelString": "7.1 km",
-                                "iconType": "ICON_TYPE_EMPTY"
-                              },
-                              "availability": {
-                                "nextCloseTime": "2026-05-17 23:59:00",
-                                "opened": true
-                              },
-                              "aggregatedDiscountInfo": {},
-                              "badges": {},
-                              "aggregatedDiscountInfoV2": {},
-                              "externalRatings": {
-                                "aggregatedRating": {
-                                  "rating": "--"
-                                }
-                              },
-                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
-                            },
-                            "analytics": {},
-                            "cta": {}
-                          },
-                          {
-                            "info": {
-                              "id": "389140",
-                              "name": "Brownie Bites",
-                              "city": "1",
-                              "slugs": {
-                                "restaurant": "brownie-bites-basaveshwaranagar-basaveshwaranagar"
-                              },
-                              "cloudinaryImageId": "RX_THUMBNAIL/IMAGES/VENDOR/2025/2/26/8cb3ff35-c0fb-45a3-bbd3-0555885550c3_389140.jpg",
-                              "locality": "Rajajinagar",
-                              "areaName": "Rajajinagar",
-                              "costForTwo": "₹400 for two",
-                              "cuisines": [
-                                "Chinese",
-                                "Continental",
-                                "Beverages"
-                              ],
-                              "avgRating": 3.8,
-                              "feeDetails": {
-                                "restaurantId": "389140",
-                                "title": "Delivery Charge",
-                                "amount": "0"
-                              },
-                              "totalRatingsString": "144",
-                              "sla": {
-                                "deliveryTime": 50,
-                                "minDeliveryTime": 45,
-                                "maxDeliveryTime": 55,
-                                "serviceability": "SERVICEABLE",
-                                "slaString": "45-55 MINS",
-                                "lastMileTravelString": "5.7 km",
-                                "iconType": "ICON_TYPE_EMPTY"
-                              },
-                              "availability": {
-                                "nextCloseTime": "2026-05-24 00:00:00",
-                                "opened": true
-                              },
-                              "aggregatedDiscountInfo": {},
-                              "badges": {},
-                              "aggregatedDiscountInfoV2": {},
-                              "externalRatings": {
-                                "aggregatedRating": {
-                                  "rating": "1.6",
-                                  "ratingCount": "5"
+                              {
+                                "type": "Pre-Book",
+                                "title": "Flat 30% off on Total Bill",
+                                "cta": {
+                                  "link": "swiggydiners://login",
+                                  "text": "LOGIN TO BUY DEALS",
+                                  "type": "primary"
                                 },
-                                "source": "GOOGLE",
-                                "sourceIconImageId": "v1704440323/google_ratings/rating_google_tag"
+                                "isAvailable": true,
+                                "analytics": {
+                                  "screenName": "DO-Detail",
+                                  "context": "{\"offer_type\":\"Pre-Book\",\"offer_title\":\"Flat 30% off on Total Bill\",\"offer_subtext\":\"\",\"special_callout\":\"dineout/OneExclusive.png\",\"offer_position\":2,\"offer_count\":3}",
+                                  "objectValue": "401186",
+                                  "impressionObjectName": "offer_panel_offer_item_impression",
+                                  "clickObjectName": "offer_panel_offer_item_click"
+                                },
+                                "textInfo": {
+                                  "info": "Flat 30% off on Total Bill"
+                                },
+                                "offerTheme": {
+                                  "logo": "dineout/details/discountwidget/One_Exclusive_upd.png"
+                                },
+                                "offerCallout": [
+                                  {
+                                    "logo": "dineout/OneExclusive.png"
+                                  }
+                                ]
                               },
-                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
-                            },
-                            "analytics": {},
-                            "cta": {}
-                          },
-                          {
-                            "info": {
-                              "id": "769431",
-                              "name": "Ghar ki Maggi",
-                              "city": "1",
-                              "slugs": {
-                                "restaurant": "ghar-ki-maggi-indiranagar-indiranagar"
-                              },
-                              "cloudinaryImageId": "dc38d3a97912823df9cc22b8ace83eda",
-                              "locality": "Indiranagar",
-                              "areaName": "Indiranagar",
-                              "costForTwo": "₹250 for two",
-                              "cuisines": [
-                                "Chinese"
-                              ],
-                              "avgRating": 3.5,
-                              "feeDetails": {
-                                "restaurantId": "769431",
-                                "title": "Delivery Charge",
-                                "amount": "0"
-                              },
-                              "totalRatingsString": "13",
-                              "sla": {
-                                "deliveryTime": 40,
-                                "minDeliveryTime": 35,
-                                "maxDeliveryTime": 40,
-                                "serviceability": "SERVICEABLE",
-                                "slaString": "35-40 MINS",
-                                "lastMileTravelString": "7.4 km",
-                                "iconType": "ICON_TYPE_EMPTY"
-                              },
-                              "availability": {
-                                "nextCloseTime": "2026-05-17 11:59:00",
-                                "opened": true
-                              },
-                              "aggregatedDiscountInfo": {},
-                              "badges": {},
-                              "aggregatedDiscountInfoV2": {},
-                              "externalRatings": {
-                                "aggregatedRating": {
-                                  "rating": "--"
-                                }
-                              },
-                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
-                            },
-                            "analytics": {},
-                            "cta": {}
-                          },
-                          {
-                            "info": {
-                              "id": "151430",
-                              "name": "Midnight Pizza And Food",
-                              "city": "1",
-                              "slugs": {
-                                "restaurant": "midnight-pizza-and-food-na-indiranagar"
-                              },
-                              "cloudinaryImageId": "RX_THUMBNAIL/IMAGES/VENDOR/2025/1/16/dab4800b-aad2-4e91-89c3-b0003ae17f58_151430 (1).jpg",
-                              "locality": "1st Stage",
-                              "areaName": "Indiranagar",
-                              "costForTwo": "₹200 for two",
-                              "cuisines": [
-                                "Biryani",
-                                "Mughlai",
-                                "Fast Food"
-                              ],
-                              "avgRating": 4.1,
-                              "feeDetails": {
-                                "restaurantId": "151430",
-                                "title": "Delivery Charge",
-                                "amount": "0"
-                              },
-                              "totalRatingsString": "578",
-                              "sla": {
-                                "deliveryTime": 41,
-                                "minDeliveryTime": 40,
-                                "maxDeliveryTime": 45,
-                                "serviceability": "SERVICEABLE",
-                                "slaString": "40-45 MINS",
-                                "lastMileTravelString": "6.3 km",
-                                "iconType": "ICON_TYPE_EMPTY"
-                              },
-                              "availability": {
-                                "nextCloseTime": "2026-05-23 00:00:00",
-                                "opened": true
-                              },
-                              "badges": {},
-                              "aggregatedDiscountInfoV3": {
-                                "header": "30% OFF",
-                                "subHeader": "UPTO ₹75",
-                                "logoCtx": {
-                                  "text": "BENEFITS"
-                                }
-                              },
-                              "externalRatings": {
-                                "aggregatedRating": {
-                                  "rating": "--"
-                                }
-                              },
-                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
-                            },
-                            "analytics": {},
-                            "cta": {}
-                          },
-                          {
-                            "info": {
-                              "id": "1346876",
-                              "name": "Chill Out cafe",
-                              "city": "1",
-                              "slugs": {
-                                "restaurant": "chill-out-cafe-vijayanagar-vijayanagar"
-                              },
-                              "cloudinaryImageId": "rest_image/c79545f0-f56d-11e9-b791-06585e0038e8Wednesday_23_October_2019__13_49id215723.jpg",
-                              "locality": "Vijayanagar",
-                              "areaName": "Vijayanagar",
-                              "costForTwo": "₹346 for two",
-                              "cuisines": [
-                                "Snacks",
-                                "Home Food",
-                                "Healthy Food",
-                                "Fast Food",
-                                "Cafe",
-                                "Pizzas",
-                                "Indian"
-                              ],
-                              "avgRating": 3.1,
-                              "feeDetails": {
-                                "restaurantId": "1346876",
-                                "title": "Delivery Charge",
-                                "amount": "0"
-                              },
-                              "totalRatingsString": "24",
-                              "sla": {
-                                "deliveryTime": 46,
-                                "minDeliveryTime": 45,
-                                "maxDeliveryTime": 50,
-                                "serviceability": "SERVICEABLE",
-                                "slaString": "45-50 MINS",
-                                "lastMileTravelString": "7.0 km",
-                                "iconType": "ICON_TYPE_EMPTY"
-                              },
-                              "availability": {
-                                "nextCloseTime": "2026-05-17 07:00:00",
-                                "opened": true
-                              },
-                              "badges": {},
-                              "aggregatedDiscountInfoV3": {
-                                "header": "ITEMS",
-                                "subHeader": "AT ₹99",
-                                "logoCtx": {
-                                  "text": "BENEFITS"
-                                }
-                              },
-                              "externalRatings": {
-                                "aggregatedRating": {
-                                  "rating": "--"
-                                }
-                              },
-                              "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY"
-                            },
-                            "analytics": {},
-                            "cta": {}
+                              {
+                                "type": "Pre-Book",
+                                "title": "Flat 20% off on Total Bill",
+                                "cta": {
+                                  "link": "swiggydiners://login",
+                                  "text": "LOGIN TO BUY DEALS",
+                                  "type": "primary"
+                                },
+                                "isAvailable": true,
+                                "analytics": {
+                                  "screenName": "DO-Detail",
+                                  "context": "{\"offer_type\":\"Pre-Book\",\"offer_title\":\"Flat 20% off on Total Bill\",\"offer_subtext\":\"\",\"special_callout\":\"dineout/OneExclusive.png\",\"offer_position\":3,\"offer_count\":3}",
+                                  "objectValue": "401186",
+                                  "impressionObjectName": "offer_panel_offer_item_impression",
+                                  "clickObjectName": "offer_panel_offer_item_click"
+                                },
+                                "textInfo": {
+                                  "info": "Flat 20% off on Total Bill"
+                                },
+                                "offerTheme": {
+                                  "logo": "dineout/details/discountwidget/One_Exclusive_upd.png"
+                                },
+                                "offerCallout": [
+                                  {
+                                    "logo": "dineout/OneExclusive.png"
+                                  }
+                                ]
+                              }
+                            ],
+                            "dotScrollBar": {
+                              "activeColor": "#FF5200",
+                              "inactiveColor": "#02060C",
+                              "activeSize": 6,
+                              "inactiveMediumSize": 4,
+                              "inactiveSmallSize": 4,
+                              "dotSpacing": 4,
+                              "windowSize": 5
+                            }
                           }
-                        ],
-                        "cta": {},
-                        "id": "56861",
-                        "theme": "SEARCH_SIMILAR_RESTAURANTS"
+                        }
+                      ],
+                      "tabStyle": {
+                        "selectedBgColor": "color_background_primary_inverse",
+                        "unselectedBgColor": "color_background_secondary",
+                        "selectedTextColor": "text_color_highest_emphasis_inverse",
+                        "unselectedTextColor": "text_highest_emphasis",
+                        "selectedBorderColor": "white",
+                        "unselectedBorderColor": "black",
+                        "selectTitleFont": "FONT_NAME_V2_BODY2_NEUTRAL_BOLD",
+                        "unselectTitleFont": "FONT_NAME_V2_BODY2_NEUTRAL_MEDIUM",
+                        "selectSubTitleFont": "FONT_NAME_HEADER_H3",
+                        "unselectSubTitleFont": "FONT_NAME_HEADER_H4",
+                        "singleTabTitleFont": "FONT_NAME_HEADER_H4",
+                        "singleTabBgColor": "grey"
+                      },
+                      "cornerRadius": {
+                        "topLeft": 30,
+                        "topRight": 30,
+                        "bottomLeft": 30,
+                        "bottomRight": 30
+                      },
+                      "tabCornerRadius": {
+                        "topLeft": 10,
+                        "topRight": 30,
+                        "bottomLeft": 30,
+                        "bottomRight": 10
+                      }
+                    },
+                    "addOnOffer": {
+                      "title": "ADD-ON OFFERS",
+                      "offers": [
+                        {
+                          "title": "Flat 10% off*",
+                          "tnc": {
+                            "title": "Offer terms & conditions",
+                            "texts": [
+                              "Apply the coupon code HDFCINFINIA to avail the offer",
+                              "Applicable twice per user per calendar month",
+                              "User will get a maximum discount of ₹500 per transaction",
+                              "Offer is available only for HDFC Bank Infinia Credit Cardholders",
+                              "Transaction amount (amount after deduction of restaurant discounts) of ₹3500 or more payable using an HDFC Bank Infinia Credit Card are eligible for the discount",
+                              "Other T&Cs may apply"
+                            ]
+                          },
+                          "description": "use HDFCINFINIA",
+                          "secondarySubtext": {
+                            "title": "Use coupon code HDFCINFINIA | Avail on final payable amount of ₹3500 or more"
+                          },
+                          "offerLogo": {
+                            "logo": "MARKETING_BANNERS/IMAGES/OFFERS/2026/4/27/a89c7389-3b12-43e8-a0ca-f345638a66c7_"
+                          },
+                          "analytics": {
+                            "screenName": "DO-Detail",
+                            "context": "{\"additional_offer_title\":\"Flat 10% off*\",\"additional_offer_subtitle\":\"use HDFCINFINIA\",\"additional_offer_type\":\"addon\",\"additional_offer_position\":1,\"additional_offer_count\":9}",
+                            "objectValue": "401186",
+                            "impressionObjectName": "offer_panel_addon_offer_item_impression",
+                            "clickObjectName": "offer_panel_addon_offer_item_click"
+                          }
+                        },
+                        {
+                          "title": "Flat 10% off*",
+                          "tnc": {
+                            "title": "Offer terms & conditions",
+                            "texts": [
+                              "Apply the coupon code HDFCCCEMI to avail the offer",
+                              "Applicable once per user per calendar month",
+                              "User will get a maximum discount of ₹500 per transaction",
+                              "Offer is available only for HDFC Bank Credit Card EMI transactions",
+                              "Transaction amount (amount after deduction of restaurant discounts) of ₹3500 or more payable using HDFC Bank Credit Card EMI payment are eligible for the discount",
+                              "The offer is an instant discount and will be provided upfront at the time of purchase",
+                              "Refer the given link for detailed terms and conditions of EMI transactions - hdfcbank.com/personal/borrow/popular-loans/easy-emi/easyemi-on-consumer-durables",
+                              "Other T&Cs may apply"
+                            ]
+                          },
+                          "description": "use HDFCCCEMI",
+                          "secondarySubtext": {
+                            "title": "Use coupon code HDFCCCEMI | Avail on final payable amount of ₹3500 or more"
+                          },
+                          "offerLogo": {
+                            "logo": "MARKETING_BANNERS/IMAGES/OFFERS/2026/4/29/171de65d-20a5-43a4-ad76-91765635391c_"
+                          },
+                          "analytics": {
+                            "screenName": "DO-Detail",
+                            "context": "{\"additional_offer_title\":\"Flat 10% off*\",\"additional_offer_subtitle\":\"use HDFCCCEMI\",\"additional_offer_type\":\"addon\",\"additional_offer_position\":2,\"additional_offer_count\":9}",
+                            "objectValue": "401186",
+                            "impressionObjectName": "offer_panel_addon_offer_item_impression",
+                            "clickObjectName": "offer_panel_addon_offer_item_click"
+                          }
+                        },
+                        {
+                          "title": "Flat 10% off*",
+                          "tnc": {
+                            "title": "Offer terms & conditions",
+                            "texts": [
+                              "Apply the coupon code HDFCDINERS to avail the offer",
+                              "Applicable twice per user per calendar month",
+                              "User will get a maximum discount of ₹400 per transaction",
+                              "Offer is available only for HDFC Bank Diners Club Black/Biz Black Credit Cardholders",
+                              "Transaction amount (amount after deduction of restaurant discounts) of ₹3000 or more payable using HDFC Bank Diners Club Black/Biz Black Credit Card are eligible for the discount",
+                              "Other T&Cs may apply"
+                            ]
+                          },
+                          "description": "use HDFCDINERS",
+                          "secondarySubtext": {
+                            "title": "Use coupon code HDFCDINERS | Avail on final payable amount of ₹3000 or more"
+                          },
+                          "offerLogo": {
+                            "logo": "MARKETING_BANNERS/IMAGES/OFFERS/2026/4/27/a2d19ccb-7b28-4786-aca8-d990ef69e4cc_"
+                          },
+                          "analytics": {
+                            "screenName": "DO-Detail",
+                            "context": "{\"additional_offer_title\":\"Flat 10% off*\",\"additional_offer_subtitle\":\"use HDFCDINERS\",\"additional_offer_type\":\"addon\",\"additional_offer_position\":3,\"additional_offer_count\":9}",
+                            "objectValue": "401186",
+                            "impressionObjectName": "offer_panel_addon_offer_item_impression",
+                            "clickObjectName": "offer_panel_addon_offer_item_click"
+                          }
+                        },
+                        {
+                          "title": "Flat ₹200 off",
+                          "tnc": {
+                            "title": "Offer terms & conditions",
+                            "texts": [
+                              "Apply the coupon code HDFCCARDS to avail the offer",
+                              "Applicable twice per user per calendar month",
+                              "User wili get a flat ₹200 discount per transaction",
+                              "Offer is available for all HDFC Bank Credit Cardholders except HDFC Bank Infinia & Diners Club Black Credit Cards",
+                              "Not valid on Swiggy HDFC Bank Credit Card",
+                              "Transaction amount (amount after deduction of restaurant discounts) of ₹2000 or more payable using HDFC Bank Credit Card are eligible for the discount",
+                              "Other T&Cs may apply"
+                            ]
+                          },
+                          "description": "use HDFCCARDS",
+                          "secondarySubtext": {
+                            "title": "Use coupon code HDFCCARDS | Avail on final payable amount of ₹2000 or more"
+                          },
+                          "offerLogo": {
+                            "logo": "MARKETING_BANNERS/IMAGES/OFFERS/2026/4/27/b9217d65-e29a-476f-9d42-f9fd19f8d1cf_"
+                          },
+                          "analytics": {
+                            "screenName": "DO-Detail",
+                            "context": "{\"additional_offer_title\":\"Flat ₹200 off\",\"additional_offer_subtitle\":\"use HDFCCARDS\",\"additional_offer_type\":\"addon\",\"additional_offer_position\":4,\"additional_offer_count\":9}",
+                            "objectValue": "401186",
+                            "impressionObjectName": "offer_panel_addon_offer_item_impression",
+                            "clickObjectName": "offer_panel_addon_offer_item_click"
+                          }
+                        },
+                        {
+                          "title": "Cashback ₹50",
+                          "tnc": {
+                            "title": "Offer terms & conditions",
+                            "texts": [
+                              "Apply the coupon code MBKDINEUPI to avail the offer",
+                              "Applicable once per user during the offer period",
+                              "Transaction amount (amount after deduction of restaurant discounts) of ₹1500 or more payable using MobiKwik UPI are eligible for cashback",
+                              "Cashback can be claimed through a Scratch card on the MobiKwik app in the rewards section & the Scratch card will be valid for 7 days only",
+                              "Other T&Cs may apply"
+                            ]
+                          },
+                          "description": "use MBKDINEUPI",
+                          "secondarySubtext": {
+                            "title": "Use coupon code MBKDINEUPI | Avail on final payable amount of ₹1500 or more"
+                          },
+                          "offerLogo": {
+                            "logo": "MARKETING_BANNERS/IMAGES/OFFERS/2026/4/27/ac59c31b-d38d-484d-96a9-92b330794aa9_"
+                          },
+                          "analytics": {
+                            "screenName": "DO-Detail",
+                            "context": "{\"additional_offer_title\":\"Cashback ₹50\",\"additional_offer_subtitle\":\"use MBKDINEUPI\",\"additional_offer_type\":\"addon\",\"additional_offer_position\":5,\"additional_offer_count\":9}",
+                            "objectValue": "401186",
+                            "impressionObjectName": "offer_panel_addon_offer_item_impression",
+                            "clickObjectName": "offer_panel_addon_offer_item_click"
+                          }
+                        },
+                        {
+                          "title": "Cashback ₹50",
+                          "tnc": {
+                            "title": "Offer terms & conditions",
+                            "texts": [
+                              "Apply the coupon code MBKDINE to avail the offer",
+                              "Applicable once per user during the offer period",
+                              "Transaction amount (amount after deduction of restaurant discounts) of ₹1500 or more payable using MobiKwik Wallet are eligible for cashback",
+                              "Cashback can be claimed through a Scratch card on the MobiKwik app in the rewards section & the Scratch card will be valid for 7 days only",
+                              "Other T&Cs may apply"
+                            ]
+                          },
+                          "description": "use MBKDINE",
+                          "secondarySubtext": {
+                            "title": "Use coupon code MBKDINE | Avail on final payable amount of ₹1500 or more"
+                          },
+                          "offerLogo": {
+                            "logo": "MARKETING_BANNERS/IMAGES/OFFERS/2026/4/27/e72241b7-4f46-4c50-b56f-b0696f450fc1_"
+                          },
+                          "analytics": {
+                            "screenName": "DO-Detail",
+                            "context": "{\"additional_offer_title\":\"Cashback ₹50\",\"additional_offer_subtitle\":\"use MBKDINE\",\"additional_offer_type\":\"addon\",\"additional_offer_position\":6,\"additional_offer_count\":9}",
+                            "objectValue": "401186",
+                            "impressionObjectName": "offer_panel_addon_offer_item_impression",
+                            "clickObjectName": "offer_panel_addon_offer_item_click"
+                          }
+                        },
+                        {
+                          "title": "Cashback ₹50",
+                          "tnc": {
+                            "title": "Offer terms & conditions",
+                            "texts": [
+                              "Apply the coupon code POPUPI to avail the offer",
+                              "Applicable once per user during the offer period",
+                              "Transaction amount (amount after deduction of restaurant discounts) of ₹999 or more payable using POP UPI are eligible for cashback",
+                              "The customer will redeem POP Coins for cashback",
+                              "The customer will get cashback in their POP Cashback Zone",
+                              "Other T&Cs may apply"
+                            ]
+                          },
+                          "description": "use POPUPI",
+                          "secondarySubtext": {
+                            "title": "Use coupon code POPUPI | Avail on final payable amount of ₹999 or more"
+                          },
+                          "offerLogo": {
+                            "logo": "MARKETING_BANNERS/IMAGES/OFFERS/2026/5/6/f0e1f551-8392-490b-b744-c33aa0a17477_"
+                          },
+                          "analytics": {
+                            "screenName": "DO-Detail",
+                            "context": "{\"additional_offer_title\":\"Cashback ₹50\",\"additional_offer_subtitle\":\"use POPUPI\",\"additional_offer_type\":\"addon\",\"additional_offer_position\":7,\"additional_offer_count\":9}",
+                            "objectValue": "401186",
+                            "impressionObjectName": "offer_panel_addon_offer_item_impression",
+                            "clickObjectName": "offer_panel_addon_offer_item_click"
+                          }
+                        },
+                        {
+                          "title": "Cashback 10%*",
+                          "tnc": {
+                            "title": "Offer terms & conditions",
+                            "texts": [
+                              "Valid only on Swiggy HDFC Bank Credit Card or Swiggy Blck HDFC Bank Credit Card",
+                              "Monthly cashback limit of ₹1500 on Swiggy spends",
+                              "Cashback will be processed in the next statement cycle",
+                              "Other T&Cs may apply"
+                            ]
+                          },
+                          "description": "Swiggy HDFC Bank Credit Card",
+                          "secondarySubtext": {
+                            "title": "Avail on final payable amount of ₹249 or more"
+                          },
+                          "offerLogo": {
+                            "logo": "MARKETING_BANNERS/IMAGES/OFFERS/2026/4/28/05619bca-252d-4dd1-b136-26f43f54b68d_"
+                          },
+                          "analytics": {
+                            "screenName": "DO-Detail",
+                            "context": "{\"additional_offer_title\":\"Cashback 10%*\",\"additional_offer_subtitle\":\"Swiggy HDFC Bank Credit Card\",\"additional_offer_type\":\"addon\",\"additional_offer_position\":8,\"additional_offer_count\":9}",
+                            "objectValue": "401186",
+                            "impressionObjectName": "offer_panel_addon_offer_item_impression",
+                            "clickObjectName": "offer_panel_addon_offer_item_click"
+                          }
+                        },
+                        {
+                          "title": "Cashback 5%*",
+                          "tnc": {
+                            "title": "Offer terms & conditions",
+                            "texts": [
+                              "Valid only on Swiggy Ornge HDFC Bank Credit Card",
+                              "Applicable on a minimum net transaction value of ₹249",
+                              "Monthly cashback limit of ₹1500 on Swiggy spends",
+                              "Cashback will be processed in the next statement cycle",
+                              "Other T&Cs may apply"
+                            ]
+                          },
+                          "description": "Swiggy Ornge HDFC Bank Credit Card",
+                          "secondarySubtext": {
+                            "title": "Avail on final payable amount of ₹249 or more"
+                          },
+                          "offerLogo": {
+                            "logo": "MARKETING_BANNERS/IMAGES/OFFERS/2026/3/16/1526a46c-c05f-4c13-86bf-142fdec229ad_"
+                          },
+                          "analytics": {
+                            "screenName": "DO-Detail",
+                            "context": "{\"additional_offer_title\":\"Cashback 5%*\",\"additional_offer_subtitle\":\"Swiggy Ornge HDFC Bank Credit Card\",\"additional_offer_type\":\"addon\",\"additional_offer_position\":9,\"additional_offer_count\":9}",
+                            "objectValue": "401186",
+                            "impressionObjectName": "offer_panel_addon_offer_item_impression",
+                            "clickObjectName": "offer_panel_addon_offer_item_click"
+                          }
+                        }
+                      ],
+                      "dotScrollBar": {
+                        "activeColor": "#FF5200",
+                        "inactiveColor": "#02060C",
+                        "activeSize": 4,
+                        "inactiveMediumSize": 3,
+                        "inactiveSmallSize": 3,
+                        "dotSpacing": 4,
+                        "windowSize": 3
+                      },
+                      "autoScrollConfig": {
+                        "isScrollEnabled": true,
+                        "autoScrollDuration": 3,
+                        "autoScrollResetDuration": 3
+                      }
+                    },
+                    "dineCashInfo": {
+                      "offers": [
+                        {
+                          "title": "20% cashback",
+                          "cta": {
+                            "link": "swiggydiners://login",
+                            "text": "LOGIN TO PAY BILL",
+                            "type": "primary"
+                          },
+                          "description": "on every bill payment",
+                          "isAvailable": true,
+                          "offerLogo": {
+                            "logo": "dineout/dineoutrewards/DC_Mnemonic.png"
+                          },
+                          "analytics": {
+                            "screenName": "DO-Detail",
+                            "context": "{\"additional_offer_title\":\"20% cashback\",\"additional_offer_subtitle\":\"on every bill payment\",\"additional_offer_type\":\"dinecash\",\"additional_offer_position\":1,\"additional_offer_count\":1}",
+                            "objectValue": "401186",
+                            "impressionObjectName": "offer_panel_dinecash_offer_item_impression",
+                            "clickObjectName": "offer_panel_dinecash_offer_item_click"
+                          },
+                          "offerTheme": {
+                            "logo": "dineout/details/discountwidget/DineCashSplit.png"
+                          },
+                          "offerTooltip": {
+                            "title": {
+                              "info": "Flat 20% Cashback",
+                              "color": "text_highest_emphasis",
+                              "font": "FONT_NAME_V2_BODY1_NEUTRAL_BOLD"
+                            },
+                            "description": {
+                              "info": "Earn & use 2X DineCash at select restaurants",
+                              "color": "text_low_emphasis",
+                              "font": "FONT_NAME_V2_OVERLINE_MEDIUM"
+                            },
+                            "iconImage": "dineout/loyalty/dinecashTooltip2XIcon.png",
+                            "frequency": {
+                              "entityId": "rdp-dinecash-tooltip-1",
+                              "maxCount": 3,
+                              "cappingInfo": {
+                                "cappingEnabled": true,
+                                "cappingMode": "VIEW"
+                              }
+                            },
+                            "analytics": {
+                              "screenName": "DO-Detail",
+                              "context": "{\"subtitle\":\"Earn \\u0026 use 2X DineCash at select restaurants\",\"title\":\"Flat 20% Cashback\"}",
+                              "objectValue": "401186",
+                              "impressionObjectName": "impression-tooltip",
+                              "clickObjectName": "cross-tooltip"
+                            }
+                          }
+                        }
+                      ],
+                      "nudge": {
+                        "content": {
+                          "contentBlock": {
+                            "subtext": {
+                              "info": "Earn & Redeem 2X DineCash",
+                              "color": "text_color_highest_emphasis_inverse",
+                              "font": "FONT_NAME_V2_OVERLINE_NEUTRAL_MEDIUM"
+                            },
+                            "icon": {
+                              "url": "dineout/loyalty/DC2XRDP.png",
+                              "position": "POSITION_CENTER_LEFT",
+                              "width": {
+                                "value": 70
+                              },
+                              "height": {
+                                "value": 10
+                              }
+                            },
+                            "containerStyle": {
+                              "width": 32,
+                              "height": 32,
+                              "cornerRadius": {
+                                "bottomLeft": 20,
+                                "bottomRight": 20
+                              },
+                              "background": {
+                                "color": "#2E644A",
+                                "backgroundColor": "#00FF00"
+                              },
+                              "chevron": {
+                                "chevronType": "CHEVRON_TYPE_ARROW",
+                                "position": "POSITION_TOP_LEFT",
+                                "color": "#2E644A"
+                              }
+                            },
+                            "position": "POSITION_TOP",
+                            "subtextIcon": {
+                              "url": "dineout/loyalty/infoFilled.png",
+                              "position": "POSITION_CENTER_RIGHT",
+                              "width": {
+                                "value": 16
+                              },
+                              "height": {
+                                "value": 16
+                              }
+                            },
+                            "textIconSeparator": true
+                          }
+                        },
+                        "position": "POSITION_TOP",
+                        "analytics": {
+                          "screenName": "DO-Detail",
+                          "context": "{\"rest_id\":\"401186\",\"banner_text\":\"Earn \\u0026 Redeem 2X DineCash\",\"cashback_perc\":\"20\",\"cashback_available\":\"0\"}",
+                          "objectValue": "cashback-benefit-callout",
+                          "impressionObjectName": "cashback-callout"
+                        },
+                        "cta": {
+                          "link": "swiggy://externalWidget?banner_type=IMAGE&card_type=HALF_CARD&url=dineout/DO_SF/Dc2xHC.png&ratio=0.830556&dismissable=true&backgroundTransparency=false&auto_dismiss=true",
+                          "type": "DEEPLINK"
+                        }
                       }
                     }
+                  }
+                ],
+                "gradientStyle": {
+                  "colours": [
+                    "#F0FCF7",
+                    "#EBF8F3"
+                  ],
+                  "gradientAngle": 270
+                },
+                "headerStyle": {
+                  "padding": {
+                    "bottom": 8
+                  },
+                  "titleColor": "text_color_highest_emphasis",
+                  "titleFontName": "FONT_NAME_BODY_B1_MED"
+                },
+                "padding": {
+                  "left": 12,
+                  "top": 24,
+                  "right": 12
+                },
+                "type": "DEAL_AND_OFFER_INFO_TYPE_PILL_TAB_V2",
+                "scrollAnchor": {
+                  "id": "offer"
+                }
+              }
+            }
+          },
+          {
+            "card": {
+              "card": {
+                "@type": "type.googleapis.com/swiggy.presentation.dinersone.v1.RestaurantHighlights",
+                "title": "Popular dishes",
+                "element": [
+                  "Tiramisu, Nutella Falls",
+                  "Rice bowl",
+                  "Naanizza",
+                  "chicken ",
+                  "overload pizza",
+                  "overload pizza"
+                ],
+                "content": [
+                  {
+                    "info": "Tiramisu, Nutella Falls",
+                    "icon": "dineout/details/popular_dishes.png"
+                  },
+                  {
+                    "info": "Rice bowl",
+                    "icon": "dineout/details/popular_dishes.png"
+                  },
+                  {
+                    "info": "Naanizza",
+                    "icon": "dineout/details/popular_dishes.png"
+                  },
+                  {
+                    "info": "chicken ",
+                    "icon": "dineout/details/popular_dishes.png"
+                  },
+                  {
+                    "info": "overload pizza",
+                    "icon": "dineout/details/popular_dishes.png"
+                  },
+                  {
+                    "info": "overload pizza",
+                    "icon": "dineout/details/popular_dishes.png"
+                  }
+                ],
+                "rowCount": 3,
+                "colCount": 2,
+                "scrollAnchor": {
+                  "id": "menu"
+                }
+              }
+            }
+          },
+          {
+            "card": {
+              "card": {
+                "@type": "type.googleapis.com/swiggy.gandalf.widgets.v2.StaggeredGrid",
+                "info": [
+                  {
+                    "imageCardInfo": {
+                      "id": "2022-08-18T02:31:42.787",
+                      "imageId": "v1660789905/jrwcddcfkyt4fiyrfatd.jpg",
+                      "action": {
+                        "link": "swiggydiners://fullScreenGallery/401186?imageId=v1660789905/jrwcddcfkyt4fiyrfatd.jpg&apiCall=true",
+                        "type": "DEEPLINK"
+                      },
+                      "analytics": {
+                        "screenName": "DO-Detail",
+                        "context": "{\"photo_id\":\"2022-08-18T02:31:42.787\",\"click_position\":1,\"click_on_indicator_+\":false}",
+                        "objectValue": "401186",
+                        "clickObjectName": "photos"
+                      }
+                    },
+                    "style": {
+                      "width": 0.611,
+                      "height": 0.586,
+                      "left": 0.0333
+                    },
+                    "mediaItemCornerRadius": {
+                      "topLeft": 16,
+                      "topRight": 16,
+                      "bottomLeft": 16,
+                      "bottomRight": 16
+                    }
+                  },
+                  {
+                    "imageCardInfo": {
+                      "id": "2022-08-18T02:31:47.077",
+                      "imageId": "v1660789909/hgrzel4cmwwdh7pgopu8.jpg",
+                      "action": {
+                        "link": "swiggydiners://fullScreenGallery/401186?imageId=v1660789909/hgrzel4cmwwdh7pgopu8.jpg&apiCall=true",
+                        "type": "DEEPLINK"
+                      },
+                      "analytics": {
+                        "screenName": "DO-Detail",
+                        "context": "{\"photo_id\":\"2022-08-18T02:31:47.077\",\"click_position\":2,\"click_on_indicator_+\":false}",
+                        "objectValue": "401186",
+                        "clickObjectName": "photos"
+                      }
+                    },
+                    "style": {
+                      "width": 0.288,
+                      "height": 0.277,
+                      "left": 0.675
+                    },
+                    "mediaItemCornerRadius": {
+                      "topLeft": 16,
+                      "topRight": 16,
+                      "bottomLeft": 16,
+                      "bottomRight": 16
+                    }
+                  },
+                  {
+                    "imageCardInfo": {
+                      "id": "2022-08-18T02:31:50.967",
+                      "imageId": "v1660789913/wzmg0iqbl1bpbnuvrfn5.jpg",
+                      "action": {
+                        "link": "swiggydiners://fullScreenGallery/401186?imageId=v1660789913/wzmg0iqbl1bpbnuvrfn5.jpg&apiCall=true",
+                        "type": "DEEPLINK"
+                      },
+                      "analytics": {
+                        "screenName": "DO-Detail",
+                        "context": "{\"photo_id\":\"2022-08-18T02:31:50.967\",\"click_position\":3,\"click_on_indicator_+\":false}",
+                        "objectValue": "401186",
+                        "clickObjectName": "photos"
+                      }
+                    },
+                    "style": {
+                      "width": 0.288,
+                      "height": 0.277,
+                      "top": 0.307,
+                      "left": 0.675
+                    },
+                    "mediaItemCornerRadius": {
+                      "topLeft": 16,
+                      "topRight": 16,
+                      "bottomLeft": 16,
+                      "bottomRight": 16
+                    }
+                  },
+                  {
+                    "imageCardInfo": {
+                      "id": "2022-08-18T02:31:55.051",
+                      "imageId": "v1660789918/hn93hnqsqp4hu0tllez0.jpg",
+                      "action": {
+                        "link": "swiggydiners://fullScreenGallery/401186?imageId=v1660789918/hn93hnqsqp4hu0tllez0.jpg&apiCall=true",
+                        "type": "DEEPLINK"
+                      },
+                      "analytics": {
+                        "screenName": "DO-Detail",
+                        "context": "{\"photo_id\":\"2022-08-18T02:31:55.051\",\"click_position\":4,\"click_on_indicator_+\":false}",
+                        "objectValue": "401186",
+                        "clickObjectName": "photos"
+                      }
+                    },
+                    "style": {
+                      "width": 0.288,
+                      "height": 0.277,
+                      "top": 0.618,
+                      "left": 0.0333
+                    },
+                    "mediaItemCornerRadius": {
+                      "topLeft": 16,
+                      "topRight": 16,
+                      "bottomLeft": 16,
+                      "bottomRight": 16
+                    }
+                  },
+                  {
+                    "imageCardInfo": {
+                      "id": "2022-08-18T02:32:42.973",
+                      "imageId": "v1660789965/yxurqq07huvbgssipl22.jpg",
+                      "action": {
+                        "link": "swiggydiners://fullScreenGallery/401186?imageId=v1660789965/yxurqq07huvbgssipl22.jpg&apiCall=true",
+                        "type": "DEEPLINK"
+                      },
+                      "analytics": {
+                        "screenName": "DO-Detail",
+                        "context": "{\"photo_id\":\"2022-08-18T02:32:42.973\",\"click_position\":5,\"click_on_indicator_+\":false}",
+                        "objectValue": "401186",
+                        "clickObjectName": "photos"
+                      }
+                    },
+                    "style": {
+                      "width": 0.288,
+                      "height": 0.277,
+                      "top": 0.618,
+                      "left": 0.357
+                    },
+                    "mediaItemCornerRadius": {
+                      "topLeft": 16,
+                      "topRight": 16,
+                      "bottomLeft": 16,
+                      "bottomRight": 16
+                    }
+                  },
+                  {
+                    "imageCardInfo": {
+                      "id": "2022-08-18T02:32:46.976",
+                      "imageId": "v1660789969/mngbuwbmwlsljwpuazsd.jpg",
+                      "action": {
+                        "link": "swiggydiners://gallery/401186",
+                        "type": "DEEPLINK"
+                      },
+                      "analytics": {
+                        "screenName": "DO-Detail",
+                        "context": "{\"photo_id\":\"2022-08-18T02:32:46.976\",\"click_position\":6,\"click_on_indicator_+\":true}",
+                        "objectValue": "401186",
+                        "clickObjectName": "photos"
+                      }
+                    },
+                    "style": {
+                      "width": 0.288,
+                      "height": 0.277,
+                      "top": 0.618,
+                      "left": 0.675
+                    },
+                    "overlay": {
+                      "textInfo": {
+                        "info": "+4",
+                        "color": "white",
+                        "font": "FONT_NAME_V2_SUBHEADING1_NEUTRAL_BOLD"
+                      },
+                      "backgroundColor": "#9902060C"
+                    },
+                    "mediaItemCornerRadius": {
+                      "topLeft": 16,
+                      "topRight": 16,
+                      "bottomLeft": 16,
+                      "bottomRight": 16
+                    }
+                  }
+                ],
+                "layout": {
+                  "widgetPadding": {
+                    "bottom": 12
+                  },
+                  "scrollBar": {
+                    "width": 54,
+                    "height": 4
+                  },
+                  "widgetTheme": {
+                    "defaultMode": {
+                      "backgroundColour": "#FFFFFF",
+                      "theme": "THEME_TYPE_LIGHT",
+                      "themeVariant": "THEME_VARIANT_DEFAULT"
+                    },
+                    "darkMode": {
+                      "backgroundColour": "#FFFFFF",
+                      "theme": "THEME_TYPE_DARK",
+                      "themeVariant": "THEME_VARIANT_DEFAULT"
+                    }
+                  }
+                },
+                "id": "dineoutRdpHexaPhotosWidget",
+                "header": {
+                  "title": "Photos",
+                  "headerStyling": {
+                    "padding": {
+                      "left": 16,
+                      "top": 24,
+                      "bottom": 8
+                    },
+                    "titleFontName": "FONT_NAME_BODY_B1_BOLD"
+                  },
+                  "analytics": {
+                    "screenName": "DO-Detail",
+                    "context": "{\"photo_count\":10,\"photos_shown_count\":6,\"photo_ids\":[\"2022-08-18T02:31:42.787\",\"2022-08-18T02:31:47.077\",\"2022-08-18T02:31:50.967\",\"2022-08-18T02:31:55.051\",\"2022-08-18T02:32:42.973\",\"2022-08-18T02:32:46.976\",\"2022-08-18T02:32:50.764\",\"2022-08-18T02:32:54.489\",\"2022-08-18T02:32:59.089\",\"2022-08-18T02:33:02.629\"]}",
+                    "objectValue": "401186",
+                    "impressionObjectName": "photos"
+                  },
+                  "collapseConfig": {
+                    "enabled": true,
+                    "collapseIcon": "chevron_down_12",
+                    "expandIcon": "chevron_up_12"
+                  }
+                },
+                "scrollAnchor": {
+                  "id": "photos"
+                }
+              }
+            }
+          },
+          {
+            "card": {
+              "card": {
+                "@type": "type.googleapis.com/swiggy.presentation.dinersone.v1.RestaurantHighlights",
+                "title": "Amenities (2)",
+                "element": [
+                  "Parking available",
+                  "SwiggyPay accepted"
+                ],
+                "content": [
+                  {
+                    "info": "Parking available",
+                    "icon": "dineout/details/rx_highlight_star.png"
+                  },
+                  {
+                    "info": "SwiggyPay accepted",
+                    "icon": "dineout/details/rx_highlight_star.png"
+                  }
+                ],
+                "rowCount": 2,
+                "colCount": 1,
+                "scrollAnchor": {
+                  "id": "about"
+                }
+              }
+            }
+          },
+          {
+            "card": {
+              "card": {
+                "@type": "type.googleapis.com/swiggy.gandalf.widgets.v2.TextInfoWidget",
+                "title": {
+                  "info": "Location",
+                  "color": "text_color_highest_emphasis"
+                },
+                "description": {
+                  "info": "5.9 km • 501, Vsr, Cmh Road, Bangalore -38",
+                  "color": "text_color_high_emphasis",
+                  "font": "FONT_NAME_BODY_B2_REG"
+                },
+                "iconUrl": "dineout/details/direction.png",
+                "cta": {
+                  "link": "https://www.google.com/maps/dir/?api=1&origin=12.9716,77.5946&destination=12.978657,77.64357999999993&travelmode=driving",
+                  "text": "MAP_DEEPLINK",
+                  "type": "MAPS_DIRECTION"
+                },
+                "scrollAnchor": {
+                  "id": "about"
+                },
+                "metaInfo": {
+                  "showMap": "true",
+                  "lat": "12.978657",
+                  "lng": "77.64357999999993"
+                }
+              }
+            }
+          },
+          {
+            "card": {
+              "card": {
+                "@type": "type.googleapis.com/swiggy.presentation.dinersone.v1.CtaList",
+                "ctas": [
+                  {
+                    "link": "swiggydiners://login",
+                    "text": "Login to avail offer & pay",
+                    "type": "primary",
+                    "metaInfo": {}
                   }
                 ]
               }
             }
           }
-        }
-      ],
-      "firstOffsetRequest": true
-    },
-    "tid": "d85c753c-1430-4e8f-8351-db4f3ccf3b73",
-    "sid": "re615148c4a-f2c9-4cbb-9cb4-c5f1aa97c",
-    "deviceId": "7fbaff87-a860-cf34-edee-f82743b760f9",
-    "csrfToken": "RAkK437QEaEl-26alG38tTu_JxvM99X6dd9fOlJY"
+        ],
+        "firstOffsetRequest": true
+      }
+    }
   }
 }

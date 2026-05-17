@@ -11,667 +11,670 @@
       "eazyDinerSlug": "toit-indiranagar-330151"
     },
     "found": true,
-    "offerSummary": [
-      "aggregatedDiscountInfo",
-      "aggregatedDiscountInfoV2",
-      "showEoOffer",
-      "firstOffsetRequest"
-    ]
+    "offerSummary": []
   },
   "raw": {
-    "statusCode": 0,
-    "data": {
-      "statusMessage": "done successfully",
-      "cards": [
-        {
-          "card": {
+    "restaurantId": "263261",
+    "detail": {
+      "requestId": "8d20a6ba-861d-4aad-98f7-2c43c8824528",
+      "apiTime": "2026-05-17T16:06:45.686136578Z",
+      "success": {
+        "statusMessage": "done successfully",
+        "cards": [
+          {
             "card": {
-              "@type": "type.googleapis.com/swiggy.gandalf.widgets.v2.Navigation",
-              "tab": [
-                {
-                  "id": "RESTAURANT",
-                  "title": "Restaurants",
-                  "selected": true,
-                  "analytics": {
-                    "screenName": "explore",
-                    "context": "{\"tid\":\"undefined\",\"query\":\"Toit Brewpub\"}",
-                    "objectValue": "RESTAURANT",
-                    "clickObjectName": "click-tab"
+              "card": {
+                "@type": "type.googleapis.com/swiggy.presentation.dinersone.v1.EntityInfoWithMasthead",
+                "id": "263261",
+                "info": {
+                  "name": "Toit",
+                  "locationInfo": {
+                    "distanceString": "5.7 km",
+                    "navigationUrl": "https://www.google.com/maps/dir/?api=1&origin=12.9716,77.5946&destination=12.9793933,77.6405&travelmode=driving",
+                    "lat": "12.9793933",
+                    "long": "77.6405",
+                    "city": {
+                      "name": "Bangalore"
+                    },
+                    "formattedAddress": "Indiranagar, Bangalore",
+                    "additionalInfo": {
+                      "cta": {
+                        "link": "swiggydiners://collectiondetails/DINEOUT_BRAND_OUTLETS?tags=layout_dineout_brand_outlets&metaMap=%7B%22brandId%22%3A%2221013%22%2C%22restaurant_id%22%3A%22263261%22%2C%22sourcePage%22%3A%22RDP%22%7D&header_title=Outlets",
+                        "text": "outlets",
+                        "type": "DEEPLINK",
+                        "metaInfo": {
+                          "ctaImage": "dineout/details/red_arrow_down.png"
+                        },
+                        "analytics": {
+                          "screenName": "DO-Detail",
+                          "context": "{\"restId\":\"263261\"}",
+                          "objectValue": "outlet_switcher_dropdown",
+                          "impressionObjectName": "entity_info_masthead",
+                          "clickObjectName": "entity_info_masthead"
+                        }
+                      }
+                    },
+                    "displayAreaName": "Indiranagar"
                   },
-                  "selectedBgColor": "#1B1E24",
-                  "unselectedBgColor": "#FFFFFF",
-                  "selectedTextColor": "#BFFFFFFF",
-                  "unselectedTextColor": "#9902060C",
-                  "selectedBorderColor": "#1B1E24",
-                  "unselectedBorderColor": "#E2E2E7"
+                  "timingsInfo": {
+                    "status": "Open",
+                    "message": "till 1AM",
+                    "outletTiming": {
+                      "infoList": [
+                        {
+                          "title": "Monday",
+                          "subtitle": "8:30AM - 1AM",
+                          "titleColor": "text_high_emphasis",
+                          "subtitleColor": "text_high_emphasis"
+                        },
+                        {
+                          "title": "Tuesday",
+                          "subtitle": "8:30AM - 1AM",
+                          "titleColor": "text_high_emphasis",
+                          "subtitleColor": "text_high_emphasis"
+                        },
+                        {
+                          "title": "Wednesday",
+                          "subtitle": "8:30AM - 1AM",
+                          "titleColor": "text_high_emphasis",
+                          "subtitleColor": "text_high_emphasis"
+                        },
+                        {
+                          "title": "Thursday",
+                          "subtitle": "8:30AM - 1AM",
+                          "titleColor": "text_high_emphasis",
+                          "subtitleColor": "text_high_emphasis"
+                        },
+                        {
+                          "title": "Friday",
+                          "subtitle": "8:30AM - 1AM",
+                          "titleColor": "text_high_emphasis",
+                          "subtitleColor": "text_high_emphasis"
+                        },
+                        {
+                          "title": "Saturday",
+                          "subtitle": "8:30AM - 1AM",
+                          "titleColor": "text_high_emphasis",
+                          "subtitleColor": "text_high_emphasis"
+                        },
+                        {
+                          "title": "Today",
+                          "subtitle": "8:30AM - 1AM",
+                          "titleColor": "primary",
+                          "subtitleColor": "primary"
+                        }
+                      ],
+                      "title": "Outlet timings"
+                    },
+                    "styleInfo": {
+                      "titleColor": "positive",
+                      "subtitleColor": "text_color_low_emphasis"
+                    }
+                  },
+                  "callDetail": {
+                    "title": "Trying to reach the outlet?",
+                    "style": {
+                      "cornerRadius": {
+                        "topLeft": 16,
+                        "topRight": 16
+                      },
+                      "backgroundColour": "#F0F0F5"
+                    },
+                    "actions": [
+                      {
+                        "link": "dailer-app?phone=9019713388",
+                        "text": "9019713388",
+                        "type": "DIALER",
+                        "metaInfo": {
+                          "ctaImage": "dineout/details/call_no_bg.png"
+                        }
+                      }
+                    ]
+                  },
+                  "ratingsInfo": {
+                    "value": "4.5",
+                    "description": "61K ratings",
+                    "count": 61585,
+                    "countDescription": "61K+ Google ratings",
+                    "icon": "dineout/details/google_tag.png",
+                    "style": "RATING_STYLE_V2"
+                  },
+                  "typeInfo": {
+                    "type": "ENTITY_TYPE_RESTAURANT",
+                    "restaurantType": "RESTAURANT_TYPE_NON_PARTICIPATING"
+                  },
+                  "style": {
+                    "backgroundColour": "#FFFFFF",
+                    "cornerRadius": {
+                      "topLeft": 16,
+                      "topRight": 16,
+                      "bottomLeft": 16,
+                      "bottomRight": 16
+                    },
+                    "animationConfig": {
+                      "type": "ANIMATION_TYPE_ENTRY_PUSH_DOWN",
+                      "startDelay": 250,
+                      "duration": 100,
+                      "interpolator": "INTERPOLATOR_LINEAR"
+                    },
+                    "dimension": {
+                      "width": {
+                        "type": "TYPE_RELATIVE",
+                        "value": 1,
+                        "reference": "RELATIVE_DIMENSION_REFERENCE_DEVICE_WIDTH"
+                      },
+                      "height": {
+                        "type": "TYPE_RELATIVE",
+                        "value": 0.778,
+                        "reference": "RELATIVE_DIMENSION_REFERENCE_WIDTH"
+                      }
+                    }
+                  },
+                  "favourite": {
+                    "entityLotte": {
+                      "frequencyCapping": 2,
+                      "image": "favourite-image",
+                      "lotteFiles": [
+                        {
+                          "type": "LOTTIE_TYPE_FAVOURITE",
+                          "lotte": "favourite-lottie"
+                        },
+                        {
+                          "type": "LOTTIE_TYPE_NON_FAVOURITE",
+                          "lotte": "non-favourite-lottie"
+                        }
+                      ]
+                    },
+                    "accessibility": {
+                      "altText": "favourite alt text",
+                      "altTextCta": "favourite alt text cta"
+                    }
+                  },
+                  "share": {
+                    "entityLotte": {
+                      "frequencyCapping": 3,
+                      "image": "share-image",
+                      "lotteFiles": [
+                        {
+                          "type": "LOTTIE_TYPE_SHARE",
+                          "lotte": "share-lottie"
+                        }
+                      ]
+                    },
+                    "shareUrl": "Hey, I think you will love Toit, Indiranagar, Bangalore on Swiggy Dineout https://swiggy.onelink.me/BVRZ?af_dp=swiggydiners%3A%2F%2Fdetails%2F263261%3Fsource%3Dsharing Happy dining!",
+                    "accessibility": {
+                      "altText": "share alt text",
+                      "altTextCta": "share alt text cta"
+                    }
+                  },
+                  "entityAttributes": {
+                    "restaurantEntityAttributes": {
+                      "outlets": {},
+                      "cuisines": [
+                        "Continental",
+                        "Fast Food"
+                      ],
+                      "costForTwo": "₹1800 for two"
+                    }
+                  }
                 },
-                {
-                  "id": "DISH",
-                  "title": "Dishes",
-                  "analytics": {
-                    "screenName": "explore",
-                    "context": "{\"tid\":\"undefined\",\"query\":\"Toit Brewpub\"}",
-                    "objectValue": "DISH",
-                    "clickObjectName": "click-tab"
+                "masthead": {
+                  "files": [
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-08-09T10:10:24.876",
+                      "name": "int-1.jpg",
+                      "url": "v1691575826/63e1673bc50e0933fb2a59c1f5ce65de.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-08-09T10:10:28.672",
+                      "name": "4.jpg",
+                      "url": "v1691575829/bb04fb23485aa9976d02886333c172cc.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-08-09T10:10:32.791",
+                      "name": "int-6.jpg",
+                      "url": "v1691575835/7015d4f49b570e3b3cef801a3eb539a8.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-08-09T10:10:38.453",
+                      "name": "int-2.jpg",
+                      "url": "v1691575839/9ffb8691375b53f3e942c7d017a9b4b7.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-08-09T10:10:42.716",
+                      "name": "2.jpg",
+                      "url": "v1691575844/67172bb747467d2135bb29b777d1e5f6.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-08-09T10:10:47.597",
+                      "name": "int-3.jpg",
+                      "url": "v1691575848/8d30f53ae32927cbc8e60436e2d92f5d.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-08-09T10:10:51.513",
+                      "name": "1.jpg",
+                      "url": "v1691575852/027547a5b03e769c4fd526123b229bd0.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-08-09T10:10:55.275",
+                      "name": "3.jpg",
+                      "url": "v1691575856/6f7a7fbfbb86b9f74e5eecdae3a2ef03.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-08-09T10:10:59.028",
+                      "name": "int-4.jpg",
+                      "url": "v1691575860/ccc8022548e6915f3767caa6a42d384e.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-08-09T10:11:04.075",
+                      "name": "int-5.jpg",
+                      "url": "v1691575865/b95a9eadea9423d9c175d7fd3ffedbd5.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-08-09T10:12:09.791",
+                      "name": "7.jpg",
+                      "url": "v1691575931/75ab41dad4f830d9161158e07adea8e6.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-08-09T10:12:14.750",
+                      "name": "8.jpg",
+                      "url": "v1691575936/a0968615e63dce83f110f95afd28086f.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-08-09T10:12:18.459",
+                      "name": "6.jpg",
+                      "url": "v1691575939/8e11e58e4f6afa33939f47cf35df3c02.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-08-09T10:12:22.133",
+                      "name": "9.jpg",
+                      "url": "v1691575943/c26aac4f641639dbae9895d8be978f5e.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2023-08-09T10:12:25.878",
+                      "name": "5.JPG",
+                      "url": "v1691575947/4d5742550fe0c05058b3e553fb55dea9.jpg"
+                    }
+                  ],
+                  "cta": {
+                    "link": "swiggydiners://gallery/263261",
+                    "type": "DEEPLINK"
                   },
-                  "selectedBgColor": "#1B1E24",
-                  "unselectedBgColor": "#FFFFFF",
-                  "selectedTextColor": "#BFFFFFFF",
-                  "unselectedTextColor": "#9902060C",
-                  "selectedBorderColor": "#1B1E24",
-                  "unselectedBorderColor": "#E2E2E7"
+                  "cornerRadius": {
+                    "bottomLeft": 24,
+                    "bottomRight": 24
+                  },
+                  "autoScrollConfig": {
+                    "isScrollEnabled": true,
+                    "autoScrollDuration": 3,
+                    "autoScrollResetDuration": 5
+                  }
                 }
-              ],
-              "meta": {
-                "orderable": "true",
-                "correctedQuery": "",
-                "suggestionType": "",
-                "queryIntent": "RESTAURANT"
               }
             }
-          }
-        },
-        {
-          "groupedCard": {
-            "cardGroupMap": {
-              "RESTAURANT": {
-                "cards": [
+          },
+          {
+            "card": {
+              "card": {
+                "@type": "type.googleapis.com/swiggy.presentation.dinersone.v1.RestaurantHighlights",
+                "title": "Popular dishes",
+                "element": [
+                  "Beef Lasagna",
+                  "Stuffed Zucchini"
+                ],
+                "content": [
                   {
-                    "card": {
-                      "card": {
-                        "@type": "type.googleapis.com/swiggy.presentation.food.v2.Restaurant",
-                        "info": {
-                          "id": "263261",
-                          "name": "Toit",
-                          "city": "1",
-                          "slugs": {
-                            "restaurant": "toit-central-bangalore-central-bangalore",
-                            "city": "bangalore"
-                          },
-                          "cloudinaryImageId": "gvlu8pqongufuvaplc6z",
-                          "address": "298, 100 Feet Rd, Near Kfc Restaurant, Indira Nagar Ii Stage, Stage 1, Indiranagar, Bengaluru, Karnataka 560038",
-                          "locality": "Indiranagar",
-                          "areaName": "Indiranagar",
-                          "costForTwo": "100000",
-                          "costForTwoMessage": "₹1000 FOR TWO",
-                          "cuisines": [
-                            "American",
-                            "Italian",
-                            "Pastas",
-                            "Pizzas"
-                          ],
-                          "avgRating": 4.5,
-                          "feeDetails": {},
-                          "parentId": "21013",
-                          "avgRatingString": "4.5",
-                          "totalRatingsString": "4.9K+",
-                          "sla": {
-                            "deliveryTime": 155,
-                            "minDeliveryTime": 153,
-                            "maxDeliveryTime": 163,
-                            "lastMileTravel": 6.3,
-                            "serviceability": "SERVICEABLE",
-                            "rainMode": "RAIN_MODE_NONE",
-                            "slaString": "153-163 MINS",
-                            "lastMileTravelString": "6.3 km",
-                            "iconType": "ICON_TYPE_EMPTY"
-                          },
-                          "availability": {
-                            "nextOpenTimeMessage": "Opens next at 8:30 am, today",
-                            "restaurantClosedMeta": {
-                              "title": "CLOSED",
-                              "subtitle": "FOR NOW"
-                            }
-                          },
-                          "aggregatedDiscountInfo": {
-                            "visible": true
-                          },
-                          "badges": {
-                            "imageBadges": [
-                              {
-                                "imageId": "newg.png",
-                                "description": "Gourmet"
-                              }
-                            ]
-                          },
-                          "sld": true,
-                          "unorderableMessage": "Opens next at 8:30 am, today",
-                          "aggregatedDiscountInfoV2": {
-                            "visible": true
-                          },
-                          "ratingSlab": "RATING_SLAB_5",
-                          "availabilityServiceabilityMessage": "Currently closed for delivery. Opens next at 8:30 am, today",
-                          "orderabilityCommunication": {
-                            "title": {
-                              "text": "CURRENTLY"
-                            },
-                            "subTitle": {
-                              "text": "CLOSED"
-                            },
-                            "message": {
-                              "text": "Opens today at 8:30 AM",
-                              "textColour": "primary"
-                            },
-                            "customIcon": {
-                              "bgGradientColorStart": "#EB8322",
-                              "bgGradientColorEnd": "#EE5803"
-                            },
-                            "commsStyling": {}
-                          },
-                          "cartOrderabilityNudgeBanner": {
-                            "parameters": {},
-                            "presentation": {}
-                          },
-                          "externalRatings": {
-                            "aggregatedRating": {
-                              "rating": "4.5",
-                              "ratingCount": "61K+"
-                            },
-                            "source": "GOOGLE",
-                            "sourceIconImageId": "v1704440323/google_ratings/rating_google_tag"
-                          },
-                          "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY",
-                          "featuredSectionInfo": {
-                            "sectionTitle": "More"
-                          },
-                          "showEoOffer": true,
-                          "priceComparisonComms": {}
-                        },
-                        "analytics": {
-                          "screenName": "explore",
-                          "context": "{\"tid\":\"undefined\",\"grid\":\"e8f57487-15fc-420b-bbdb-f5d920bba7dc\",\"queryUniqueId\":\"undefined\",\"query\":\"Toit Brewpub\"}",
-                          "objectValue": "263261",
-                          "impressionObjectName": "impression-restaurant-sld",
-                          "clickObjectName": "click-restaurant-sld"
-                        },
-                        "ctaWithParams": {
-                          "link": "swiggy://menu",
-                          "type": "DEEPLINK",
-                          "params": {
-                            "restaurant_id": "263261",
-                            "query": "Toit Brewpub",
-                            "sourceSessionId": "re6cf818770-41a6-4c32-b049-3144e8f46",
-                            "source": "SEARCH",
-                            "isSld": "true",
-                            "sourceRequestId": "00000000000000000000000000000000",
-                            "qrEnabled": "false"
-                          }
-                        }
+                    "info": "Beef Lasagna",
+                    "icon": "dineout/details/popular_dishes.png"
+                  },
+                  {
+                    "info": "Stuffed Zucchini",
+                    "icon": "dineout/details/popular_dishes.png"
+                  }
+                ],
+                "rowCount": 2,
+                "colCount": 1,
+                "scrollAnchor": {
+                  "id": "menu"
+                }
+              }
+            }
+          },
+          {
+            "card": {
+              "card": {
+                "@type": "type.googleapis.com/swiggy.gandalf.widgets.v2.StaggeredGrid",
+                "info": [
+                  {
+                    "imageCardInfo": {
+                      "id": "2023-08-09T10:10:24.876",
+                      "imageId": "v1691575826/63e1673bc50e0933fb2a59c1f5ce65de.jpg",
+                      "action": {
+                        "link": "swiggydiners://fullScreenGallery/263261?imageId=v1691575826/63e1673bc50e0933fb2a59c1f5ce65de.jpg&apiCall=true",
+                        "type": "DEEPLINK"
+                      },
+                      "analytics": {
+                        "screenName": "DO-Detail",
+                        "context": "{\"photo_id\":\"2023-08-09T10:10:24.876\",\"click_position\":1,\"click_on_indicator_+\":false}",
+                        "objectValue": "263261",
+                        "clickObjectName": "photos"
                       }
+                    },
+                    "style": {
+                      "width": 0.611,
+                      "height": 0.586,
+                      "left": 0.0333
+                    },
+                    "mediaItemCornerRadius": {
+                      "topLeft": 16,
+                      "topRight": 16,
+                      "bottomLeft": 16,
+                      "bottomRight": 16
                     }
                   },
                   {
-                    "card": {
-                      "card": {
-                        "@type": "type.googleapis.com/swiggy.presentation.food.v2.Restaurant",
-                        "info": {
-                          "id": "438141",
-                          "name": "The Balcony Bar",
-                          "city": "1",
-                          "slugs": {
-                            "restaurant": "the-balcony-bar-indiranagar-indiranagar-2",
-                            "city": "bangalore"
-                          },
-                          "cloudinaryImageId": "fnikxbu5oej4eivdiqod",
-                          "address": "1St Floor, No.303, 100 Feet Road, Indiranagar, Binamangala, Bengaluru (Bangalore) Urban, Karnataka",
-                          "locality": "Indiranagar",
-                          "areaName": "Indiranagar",
-                          "costForTwo": "75000",
-                          "costForTwoMessage": "₹750 FOR TWO",
-                          "cuisines": [
-                            "Chinese",
-                            "Pastas"
-                          ],
-                          "avgRating": 4,
-                          "feeDetails": {},
-                          "parentId": "262646",
-                          "avgRatingString": "4.0",
-                          "totalRatingsString": "24",
-                          "sla": {
-                            "deliveryTime": 47,
-                            "minDeliveryTime": 45,
-                            "maxDeliveryTime": 50,
-                            "lastMileTravel": 6.3,
-                            "serviceability": "SERVICEABLE",
-                            "rainMode": "RAIN_MODE_NONE",
-                            "slaString": "45-50 MINS",
-                            "lastMileTravelString": "6.3 km",
-                            "iconType": "ICON_TYPE_EMPTY"
-                          },
-                          "availability": {
-                            "nextOpenTimeMessage": "Opens next at 12:30 pm, today",
-                            "restaurantClosedMeta": {
-                              "title": "CLOSED",
-                              "subtitle": "FOR NOW"
-                            }
-                          },
-                          "aggregatedDiscountInfo": {
-                            "visible": true
-                          },
-                          "badges": {},
-                          "unorderableMessage": "Opens next at 12:30 pm, today",
-                          "aggregatedDiscountInfoV2": {
-                            "visible": true
-                          },
-                          "ratingSlab": "RATING_SLAB_4",
-                          "availabilityServiceabilityMessage": "Currently closed for delivery. Opens next at 12:30 pm, today",
-                          "orderabilityCommunication": {
-                            "title": {
-                              "text": "CURRENTLY"
-                            },
-                            "subTitle": {
-                              "text": "CLOSED"
-                            },
-                            "message": {
-                              "text": "Opens today at 12:30 PM",
-                              "textColour": "primary"
-                            },
-                            "customIcon": {
-                              "bgGradientColorStart": "#EB8322",
-                              "bgGradientColorEnd": "#EE5803"
-                            },
-                            "commsStyling": {}
-                          },
-                          "cartOrderabilityNudgeBanner": {
-                            "parameters": {},
-                            "presentation": {}
-                          },
-                          "externalRatings": {
-                            "aggregatedRating": {
-                              "rating": "4.0",
-                              "ratingCount": "5.2K+"
-                            },
-                            "source": "GOOGLE",
-                            "sourceIconImageId": "v1704440323/google_ratings/rating_google_tag"
-                          },
-                          "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY",
-                          "featuredSectionInfo": {
-                            "sectionTitle": "More"
-                          },
-                          "showEoOffer": true,
-                          "priceComparisonComms": {}
-                        },
-                        "analytics": {
-                          "screenName": "explore",
-                          "context": "{\"tid\":\"undefined\",\"grid\":\"e8f57487-15fc-420b-bbdb-f5d920bba7dc\",\"queryUniqueId\":\"undefined\",\"query\":\"Toit Brewpub\"}",
-                          "objectValue": "438141",
-                          "impressionObjectName": "impression-restaurant",
-                          "clickObjectName": "click-restaurant"
-                        },
-                        "ctaWithParams": {
-                          "link": "swiggy://menu",
-                          "type": "DEEPLINK",
-                          "params": {
-                            "restaurant_id": "438141",
-                            "query": "Toit Brewpub",
-                            "sourceSessionId": "re6cf818770-41a6-4c32-b049-3144e8f46",
-                            "source": "SEARCH",
-                            "isSld": "false",
-                            "sourceRequestId": "00000000000000000000000000000000",
-                            "qrEnabled": "false"
-                          }
-                        }
+                    "imageCardInfo": {
+                      "id": "2023-08-09T10:10:28.672",
+                      "imageId": "v1691575829/bb04fb23485aa9976d02886333c172cc.jpg",
+                      "action": {
+                        "link": "swiggydiners://fullScreenGallery/263261?imageId=v1691575829/bb04fb23485aa9976d02886333c172cc.jpg&apiCall=true",
+                        "type": "DEEPLINK"
+                      },
+                      "analytics": {
+                        "screenName": "DO-Detail",
+                        "context": "{\"photo_id\":\"2023-08-09T10:10:28.672\",\"click_position\":2,\"click_on_indicator_+\":false}",
+                        "objectValue": "263261",
+                        "clickObjectName": "photos"
                       }
+                    },
+                    "style": {
+                      "width": 0.288,
+                      "height": 0.277,
+                      "left": 0.675
+                    },
+                    "mediaItemCornerRadius": {
+                      "topLeft": 16,
+                      "topRight": 16,
+                      "bottomLeft": 16,
+                      "bottomRight": 16
                     }
                   },
                   {
-                    "card": {
-                      "card": {
-                        "@type": "type.googleapis.com/swiggy.presentation.food.v2.Restaurant",
-                        "info": {
-                          "id": "14360",
-                          "name": "Plan B",
-                          "city": "1",
-                          "slugs": {
-                            "restaurant": "plan-b-brigade-road-central-bangalore",
-                            "city": "bangalore"
-                          },
-                          "cloudinaryImageId": "cgegcurjvfk83vtgmckc",
-                          "address": "Planb,  No 148 & 149, St Thomas Building, Brigade Rd, Ashok Nagar, Bengaluru, Karnataka 560025.",
-                          "locality": "Ashok Nagar",
-                          "areaName": "Central Bangalore",
-                          "costForTwo": "120000",
-                          "costForTwoMessage": "₹1200 FOR TWO",
-                          "cuisines": [
-                            "American"
-                          ],
-                          "avgRating": 4.3,
-                          "feeDetails": {},
-                          "parentId": "2212",
-                          "avgRatingString": "4.3",
-                          "totalRatingsString": "3.2K+",
-                          "sla": {
-                            "deliveryTime": 32,
-                            "minDeliveryTime": 30,
-                            "maxDeliveryTime": 35,
-                            "lastMileTravel": 1.9,
-                            "serviceability": "SERVICEABLE",
-                            "rainMode": "RAIN_MODE_NONE",
-                            "slaString": "30-35 MINS",
-                            "lastMileTravelString": "1.9 km",
-                            "iconType": "ICON_TYPE_EMPTY"
-                          },
-                          "availability": {
-                            "nextOpenTimeMessage": "Opens next at 12 noon, today",
-                            "restaurantClosedMeta": {
-                              "title": "CLOSED",
-                              "subtitle": "FOR NOW"
-                            }
-                          },
-                          "aggregatedDiscountInfo": {
-                            "visible": true
-                          },
-                          "badges": {
-                            "imageBadges": [
-                              {
-                                "imageId": "newg.png",
-                                "description": "Gourmet"
-                              }
-                            ]
-                          },
-                          "unorderableMessage": "Opens next at 12 noon, today",
-                          "aggregatedDiscountInfoV2": {
-                            "visible": true
-                          },
-                          "ratingSlab": "RATING_SLAB_5",
-                          "availabilityServiceabilityMessage": "Currently closed for delivery. Opens next at 12 noon, today",
-                          "orderabilityCommunication": {
-                            "title": {
-                              "text": "CURRENTLY"
-                            },
-                            "subTitle": {
-                              "text": "CLOSED"
-                            },
-                            "message": {
-                              "text": "Opens today at 12:00 PM",
-                              "textColour": "primary"
-                            },
-                            "customIcon": {
-                              "bgGradientColorStart": "#EB8322",
-                              "bgGradientColorEnd": "#EE5803"
-                            },
-                            "commsStyling": {}
-                          },
-                          "cartOrderabilityNudgeBanner": {
-                            "parameters": {},
-                            "presentation": {}
-                          },
-                          "externalRatings": {
-                            "aggregatedRating": {
-                              "rating": "4.1",
-                              "ratingCount": "5.0K+"
-                            },
-                            "source": "GOOGLE",
-                            "sourceIconImageId": "v1704440323/google_ratings/rating_google_tag"
-                          },
-                          "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY",
-                          "featuredSectionInfo": {
-                            "sectionTitle": "More"
-                          },
-                          "showEoOffer": true,
-                          "priceComparisonComms": {}
-                        },
-                        "analytics": {
-                          "screenName": "explore",
-                          "context": "{\"tid\":\"undefined\",\"grid\":\"e8f57487-15fc-420b-bbdb-f5d920bba7dc\",\"queryUniqueId\":\"undefined\",\"query\":\"Toit Brewpub\"}",
-                          "objectValue": "14360",
-                          "impressionObjectName": "impression-restaurant",
-                          "clickObjectName": "click-restaurant"
-                        },
-                        "ctaWithParams": {
-                          "link": "swiggy://menu",
-                          "type": "DEEPLINK",
-                          "params": {
-                            "restaurant_id": "14360",
-                            "query": "Toit Brewpub",
-                            "sourceSessionId": "re6cf818770-41a6-4c32-b049-3144e8f46",
-                            "source": "SEARCH",
-                            "isSld": "false",
-                            "sourceRequestId": "00000000000000000000000000000000",
-                            "qrEnabled": "false"
-                          }
-                        }
+                    "imageCardInfo": {
+                      "id": "2023-08-09T10:10:32.791",
+                      "imageId": "v1691575835/7015d4f49b570e3b3cef801a3eb539a8.jpg",
+                      "action": {
+                        "link": "swiggydiners://fullScreenGallery/263261?imageId=v1691575835/7015d4f49b570e3b3cef801a3eb539a8.jpg&apiCall=true",
+                        "type": "DEEPLINK"
+                      },
+                      "analytics": {
+                        "screenName": "DO-Detail",
+                        "context": "{\"photo_id\":\"2023-08-09T10:10:32.791\",\"click_position\":3,\"click_on_indicator_+\":false}",
+                        "objectValue": "263261",
+                        "clickObjectName": "photos"
                       }
+                    },
+                    "style": {
+                      "width": 0.288,
+                      "height": 0.277,
+                      "top": 0.307,
+                      "left": 0.675
+                    },
+                    "mediaItemCornerRadius": {
+                      "topLeft": 16,
+                      "topRight": 16,
+                      "bottomLeft": 16,
+                      "bottomRight": 16
                     }
                   },
                   {
-                    "card": {
-                      "card": {
-                        "@type": "type.googleapis.com/swiggy.presentation.food.v2.Restaurant",
-                        "info": {
-                          "id": "517163",
-                          "name": "Big Barrel Brewpub",
-                          "city": "1",
-                          "slugs": {
-                            "restaurant": "big-barrel-rajarajeshwari-nagar-rajarajeshwari-nagar-2",
-                            "city": "bangalore"
-                          },
-                          "cloudinaryImageId": "fckukq6msji4a43tu5xp",
-                          "address": "Number 199/20/1/A 2Nd And 3Rd Floor Kengeri Channasandra Road Ganakullu Rr Nagar Bangalore 560060",
-                          "locality": "Channasandra Road",
-                          "areaName": "Rajarajeshwari Nagar",
-                          "costForTwo": "30000",
-                          "costForTwoMessage": "₹300 FOR TWO",
-                          "cuisines": [
-                            "North Indian",
-                            "Chinese",
-                            "Biryani",
-                            "Italian"
-                          ],
-                          "avgRating": 4.3,
-                          "feeDetails": {},
-                          "parentId": "516535",
-                          "avgRatingString": "4.3",
-                          "totalRatingsString": "62",
-                          "sla": {
-                            "deliveryTime": 366,
-                            "minDeliveryTime": 363,
-                            "maxDeliveryTime": 373,
-                            "lastMileTravel": 14.4,
-                            "serviceability": "SERVICEABLE",
-                            "rainMode": "RAIN_MODE_NONE",
-                            "slaString": "363-373 MINS",
-                            "lastMileTravelString": "14.4 km",
-                            "iconType": "ICON_TYPE_EMPTY"
-                          },
-                          "availability": {
-                            "nextOpenTimeMessage": "Opens next at 12 noon, today",
-                            "restaurantClosedMeta": {
-                              "title": "CLOSED",
-                              "subtitle": "FOR NOW"
-                            }
-                          },
-                          "aggregatedDiscountInfo": {
-                            "visible": true
-                          },
-                          "badges": {},
-                          "sld": true,
-                          "unorderableMessage": "Opens next at 12 noon, today",
-                          "aggregatedDiscountInfoV2": {
-                            "visible": true
-                          },
-                          "ratingSlab": "RATING_SLAB_5",
-                          "availabilityServiceabilityMessage": "Currently closed for delivery. Opens next at 12 noon, today",
-                          "orderabilityCommunication": {
-                            "title": {
-                              "text": "CURRENTLY"
-                            },
-                            "subTitle": {
-                              "text": "CLOSED"
-                            },
-                            "message": {
-                              "text": "Opens today at 12:00 PM",
-                              "textColour": "primary"
-                            },
-                            "customIcon": {
-                              "bgGradientColorStart": "#EB8322",
-                              "bgGradientColorEnd": "#EE5803"
-                            },
-                            "commsStyling": {}
-                          },
-                          "cartOrderabilityNudgeBanner": {
-                            "parameters": {},
-                            "presentation": {}
-                          },
-                          "externalRatings": {
-                            "aggregatedRating": {
-                              "rating": "4.4",
-                              "ratingCount": "6.2K+"
-                            },
-                            "source": "GOOGLE",
-                            "sourceIconImageId": "v1704440323/google_ratings/rating_google_tag"
-                          },
-                          "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY",
-                          "featuredSectionInfo": {
-                            "sectionTitle": "More"
-                          },
-                          "showEoOffer": true,
-                          "priceComparisonComms": {}
-                        },
-                        "analytics": {
-                          "screenName": "explore",
-                          "context": "{\"tid\":\"undefined\",\"grid\":\"e8f57487-15fc-420b-bbdb-f5d920bba7dc\",\"queryUniqueId\":\"undefined\",\"query\":\"Toit Brewpub\"}",
-                          "objectValue": "517163",
-                          "impressionObjectName": "impression-restaurant-sld",
-                          "clickObjectName": "click-restaurant-sld"
-                        },
-                        "ctaWithParams": {
-                          "link": "swiggy://menu",
-                          "type": "DEEPLINK",
-                          "params": {
-                            "sourceSessionId": "re6cf818770-41a6-4c32-b049-3144e8f46",
-                            "source": "SEARCH",
-                            "isSld": "true",
-                            "sourceRequestId": "00000000000000000000000000000000",
-                            "qrEnabled": "false",
-                            "restaurant_id": "517163",
-                            "query": "Toit Brewpub"
-                          }
-                        }
+                    "imageCardInfo": {
+                      "id": "2023-08-09T10:10:38.453",
+                      "imageId": "v1691575839/9ffb8691375b53f3e942c7d017a9b4b7.jpg",
+                      "action": {
+                        "link": "swiggydiners://fullScreenGallery/263261?imageId=v1691575839/9ffb8691375b53f3e942c7d017a9b4b7.jpg&apiCall=true",
+                        "type": "DEEPLINK"
+                      },
+                      "analytics": {
+                        "screenName": "DO-Detail",
+                        "context": "{\"photo_id\":\"2023-08-09T10:10:38.453\",\"click_position\":4,\"click_on_indicator_+\":false}",
+                        "objectValue": "263261",
+                        "clickObjectName": "photos"
                       }
+                    },
+                    "style": {
+                      "width": 0.288,
+                      "height": 0.277,
+                      "top": 0.618,
+                      "left": 0.0333
+                    },
+                    "mediaItemCornerRadius": {
+                      "topLeft": 16,
+                      "topRight": 16,
+                      "bottomLeft": 16,
+                      "bottomRight": 16
                     }
                   },
                   {
-                    "card": {
-                      "card": {
-                        "@type": "type.googleapis.com/swiggy.presentation.food.v2.Restaurant",
-                        "info": {
-                          "id": "1067424",
-                          "name": "King Chill Kitchen",
-                          "city": "1",
-                          "slugs": {
-                            "restaurant": "king-chill-kitchen-koramangala-koramangala",
-                            "city": "bangalore"
-                          },
-                          "cloudinaryImageId": "RX_THUMBNAIL/IMAGES/VENDOR/2025/3/26/a421a66b-4e5f-4d5b-8b18-67ee7b82b395_1067424.jpg",
-                          "address": "Shop No : 00 , Floor :  , 7TH CROSS, RA ROAD, EJIPURA, Vivek nagar , ",
-                          "locality": "Koramangala",
-                          "areaName": "Koramangala",
-                          "costForTwo": "30000",
-                          "costForTwoMessage": "₹300 FOR TWO",
-                          "cuisines": [
-                            "Fast Food"
-                          ],
-                          "avgRating": 4.1,
-                          "feeDetails": {},
-                          "parentId": "620238",
-                          "avgRatingString": "4.1",
-                          "totalRatingsString": "6",
-                          "sla": {
-                            "deliveryTime": 30,
-                            "minDeliveryTime": 30,
-                            "maxDeliveryTime": 35,
-                            "lastMileTravel": 5,
-                            "serviceability": "SERVICEABLE",
-                            "rainMode": "RAIN_MODE_NONE",
-                            "slaString": "30-35 MINS",
-                            "lastMileTravelString": "5.0 km",
-                            "iconType": "ICON_TYPE_EMPTY"
-                          },
-                          "availability": {
-                            "nextOpenTimeMessage": "Opens next at 1 pm, today",
-                            "restaurantClosedMeta": {
-                              "title": "CLOSED",
-                              "subtitle": "FOR NOW"
-                            }
-                          },
-                          "aggregatedDiscountInfo": {
-                            "visible": true
-                          },
-                          "badges": {},
-                          "unorderableMessage": "Opens next at 1 pm, today",
-                          "aggregatedDiscountInfoV2": {
-                            "visible": true
-                          },
-                          "ratingSlab": "RATING_SLAB_5",
-                          "availabilityServiceabilityMessage": "Currently closed for delivery. Opens next at 1 pm, today",
-                          "orderabilityCommunication": {
-                            "title": {
-                              "text": "CURRENTLY"
-                            },
-                            "subTitle": {
-                              "text": "CLOSED"
-                            },
-                            "message": {
-                              "text": "Opens today at 1:00 PM",
-                              "textColour": "primary"
-                            },
-                            "customIcon": {
-                              "bgGradientColorStart": "#EB8322",
-                              "bgGradientColorEnd": "#EE5803"
-                            },
-                            "commsStyling": {}
-                          },
-                          "cartOrderabilityNudgeBanner": {
-                            "parameters": {},
-                            "presentation": {}
-                          },
-                          "externalRatings": {
-                            "aggregatedRating": {
-                              "rating": "--"
-                            }
-                          },
-                          "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY",
-                          "featuredSectionInfo": {
-                            "sectionTitle": "More"
-                          },
-                          "showEoOffer": true,
-                          "priceComparisonComms": {}
-                        },
-                        "analytics": {
-                          "screenName": "explore",
-                          "context": "{\"tid\":\"undefined\",\"grid\":\"e8f57487-15fc-420b-bbdb-f5d920bba7dc\",\"queryUniqueId\":\"undefined\",\"query\":\"Toit Brewpub\"}",
-                          "objectValue": "1067424",
-                          "impressionObjectName": "impression-restaurant",
-                          "clickObjectName": "click-restaurant"
-                        },
-                        "ctaWithParams": {
-                          "link": "swiggy://menu",
-                          "type": "DEEPLINK",
-                          "params": {
-                            "sourceSessionId": "re6cf818770-41a6-4c32-b049-3144e8f46",
-                            "source": "SEARCH",
-                            "isSld": "false",
-                            "sourceRequestId": "00000000000000000000000000000000",
-                            "qrEnabled": "false",
-                            "restaurant_id": "1067424",
-                            "query": "Toit Brewpub"
-                          }
-                        }
+                    "imageCardInfo": {
+                      "id": "2023-08-09T10:10:42.716",
+                      "imageId": "v1691575844/67172bb747467d2135bb29b777d1e5f6.jpg",
+                      "action": {
+                        "link": "swiggydiners://fullScreenGallery/263261?imageId=v1691575844/67172bb747467d2135bb29b777d1e5f6.jpg&apiCall=true",
+                        "type": "DEEPLINK"
+                      },
+                      "analytics": {
+                        "screenName": "DO-Detail",
+                        "context": "{\"photo_id\":\"2023-08-09T10:10:42.716\",\"click_position\":5,\"click_on_indicator_+\":false}",
+                        "objectValue": "263261",
+                        "clickObjectName": "photos"
                       }
+                    },
+                    "style": {
+                      "width": 0.288,
+                      "height": 0.277,
+                      "top": 0.618,
+                      "left": 0.357
+                    },
+                    "mediaItemCornerRadius": {
+                      "topLeft": 16,
+                      "topRight": 16,
+                      "bottomLeft": 16,
+                      "bottomRight": 16
                     }
+                  },
+                  {
+                    "imageCardInfo": {
+                      "id": "2023-08-09T10:10:47.597",
+                      "imageId": "v1691575848/8d30f53ae32927cbc8e60436e2d92f5d.jpg",
+                      "action": {
+                        "link": "swiggydiners://gallery/263261",
+                        "type": "DEEPLINK"
+                      },
+                      "analytics": {
+                        "screenName": "DO-Detail",
+                        "context": "{\"photo_id\":\"2023-08-09T10:10:47.597\",\"click_position\":6,\"click_on_indicator_+\":true}",
+                        "objectValue": "263261",
+                        "clickObjectName": "photos"
+                      }
+                    },
+                    "style": {
+                      "width": 0.288,
+                      "height": 0.277,
+                      "top": 0.618,
+                      "left": 0.675
+                    },
+                    "overlay": {
+                      "textInfo": {
+                        "info": "+9",
+                        "color": "white",
+                        "font": "FONT_NAME_V2_SUBHEADING1_NEUTRAL_BOLD"
+                      },
+                      "backgroundColor": "#9902060C"
+                    },
+                    "mediaItemCornerRadius": {
+                      "topLeft": 16,
+                      "topRight": 16,
+                      "bottomLeft": 16,
+                      "bottomRight": 16
+                    }
+                  }
+                ],
+                "layout": {
+                  "widgetPadding": {
+                    "bottom": 12
+                  },
+                  "scrollBar": {
+                    "width": 54,
+                    "height": 4
+                  },
+                  "widgetTheme": {
+                    "defaultMode": {
+                      "backgroundColour": "#FFFFFF",
+                      "theme": "THEME_TYPE_LIGHT",
+                      "themeVariant": "THEME_VARIANT_DEFAULT"
+                    },
+                    "darkMode": {
+                      "backgroundColour": "#FFFFFF",
+                      "theme": "THEME_TYPE_DARK",
+                      "themeVariant": "THEME_VARIANT_DEFAULT"
+                    }
+                  }
+                },
+                "id": "dineoutRdpHexaPhotosWidget",
+                "header": {
+                  "title": "Photos",
+                  "headerStyling": {
+                    "padding": {
+                      "left": 16,
+                      "top": 24,
+                      "bottom": 8
+                    },
+                    "titleFontName": "FONT_NAME_BODY_B1_BOLD"
+                  },
+                  "analytics": {
+                    "screenName": "DO-Detail",
+                    "context": "{\"photo_count\":15,\"photos_shown_count\":6,\"photo_ids\":[\"2023-08-09T10:10:24.876\",\"2023-08-09T10:10:28.672\",\"2023-08-09T10:10:32.791\",\"2023-08-09T10:10:38.453\",\"2023-08-09T10:10:42.716\",\"2023-08-09T10:10:47.597\",\"2023-08-09T10:10:51.513\",\"2023-08-09T10:10:55.275\",\"2023-08-09T10:10:59.028\",\"2023-08-09T10:11:04.075\",\"2023-08-09T10:12:09.791\",\"2023-08-09T10:12:14.750\",\"2023-08-09T10:12:18.459\",\"2023-08-09T10:12:22.133\",\"2023-08-09T10:12:25.878\"]}",
+                    "objectValue": "263261",
+                    "impressionObjectName": "photos"
+                  },
+                  "collapseConfig": {
+                    "enabled": true,
+                    "collapseIcon": "chevron_down_12",
+                    "expandIcon": "chevron_up_12"
+                  }
+                },
+                "scrollAnchor": {
+                  "id": "photos"
+                }
+              }
+            }
+          },
+          {
+            "card": {
+              "card": {
+                "@type": "type.googleapis.com/swiggy.presentation.dinersone.v1.RestaurantHighlights",
+                "title": "Amenities (5)",
+                "element": [
+                  "Alcohol served",
+                  "Parking available",
+                  "Free wifi",
+                  "Pet friendly",
+                  "Smoking area"
+                ],
+                "content": [
+                  {
+                    "info": "Alcohol served",
+                    "icon": "dineout/details/rx_highlight_star.png"
+                  },
+                  {
+                    "info": "Parking available",
+                    "icon": "dineout/details/rx_highlight_star.png"
+                  },
+                  {
+                    "info": "Free wifi",
+                    "icon": "dineout/details/rx_highlight_star.png"
+                  },
+                  {
+                    "info": "Pet friendly",
+                    "icon": "dineout/details/rx_highlight_star.png"
+                  },
+                  {
+                    "info": "Smoking area",
+                    "icon": "dineout/details/rx_highlight_star.png"
+                  }
+                ],
+                "rowCount": 2,
+                "colCount": 2,
+                "scrollAnchor": {
+                  "id": "about"
+                }
+              }
+            }
+          },
+          {
+            "card": {
+              "card": {
+                "@type": "type.googleapis.com/swiggy.gandalf.widgets.v2.TextInfoWidget",
+                "title": {
+                  "info": "Location",
+                  "color": "text_color_highest_emphasis"
+                },
+                "description": {
+                  "info": "5.7 km • 298, 100 Feet Rd, Near Kfc Restaurant, Indira Nagar Ii Stage, Stage 1, Indiranagar, Bengaluru, Karnataka 560038",
+                  "color": "text_color_high_emphasis",
+                  "font": "FONT_NAME_BODY_B2_REG"
+                },
+                "iconUrl": "dineout/details/direction.png",
+                "cta": {
+                  "link": "https://www.google.com/maps/dir/?api=1&origin=12.9716,77.5946&destination=12.9793933,77.6405&travelmode=driving",
+                  "text": "MAP_DEEPLINK",
+                  "type": "MAPS_DIRECTION"
+                },
+                "scrollAnchor": {
+                  "id": "about"
+                },
+                "metaInfo": {
+                  "showMap": "true",
+                  "lat": "12.9793933",
+                  "lng": "77.6405"
+                }
+              }
+            }
+          },
+          {
+            "card": {
+              "card": {
+                "@type": "type.googleapis.com/swiggy.presentation.dinersone.v1.CtaList",
+                "ctas": [
+                  {
+                    "link": "swiggydiners://login",
+                    "text": "Login to avail offer & pay",
+                    "type": "primary",
+                    "metaInfo": {}
                   }
                 ]
               }
             }
           }
-        }
-      ],
-      "firstOffsetRequest": true
-    },
-    "tid": "9026897d-bb12-4994-bcae-44625efcbf5f",
-    "sid": "re6cf818770-41a6-4c32-b049-3144e8f46",
-    "deviceId": "5a7e3540-0889-5999-4bf9-e2c7eae1ae2c",
-    "csrfToken": "x5jZmO57gTnl-6-fGlxVaYJcAftALpuyWNShOKlc"
+        ],
+        "firstOffsetRequest": true
+      }
+    }
   }
 }

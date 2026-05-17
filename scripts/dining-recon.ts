@@ -205,53 +205,119 @@ function extractDistrictOffers(rscText: string): string[] {
 }
 
 // ── Swiggy ───────────────────────────────────────────────────────────
-// Swiggy Dineout's internal restaurant search.
+// Two-step approach:
+//   1. Food-delivery search (/dapi/restaurants/search/v3) → find the restaurant
+//      card matching r.name → extract Swiggy restaurant ID.
+//   2. Dineout detail (disc.swiggy.com/api/v1/dinersone-restaurant/json) with
+//      lat/lng as headers → parse DealAndOfferInfo for real Swiggy Dineout
+//      bank/payment add-on offers.
+//
+// Why food-delivery search for the ID? Swiggy Dineout's own search endpoint
+// (disc.swiggy.com/api/seo/getListing POST) is 503 from outside. The food-delivery
+// search returns the same restaurant IDs, and those IDs work on the Dineout
+// detail endpoint — confirmed for Toit (263261) and Byg Brewski (781599).
 
 async function reconSwiggy(r: ReconRestaurant): Promise<ReconResult> {
   const base: ReconResult = { restaurant: r, platform: "swiggy", found: false, raw: null, offerSummary: [] };
   try {
-    // Swiggy Dineout search
+    // Step 1: food-delivery search to get restaurant ID
     const searchUrl = `https://www.swiggy.com/dapi/restaurants/search/v3?lat=12.9716&lng=77.5946&str=${encodeURIComponent(r.name)}&trackingId=undefined&submitAction=ENTER&queryUniqueId=undefined`;
     const searchRes = await guestFetch(searchUrl, {
-      headers: {
-        "Referer": "https://www.swiggy.com/dineout",
-        "Content-Type": "application/json",
-      },
+      headers: { "Referer": "https://www.swiggy.com/" },
     });
 
     if (!searchRes.ok) {
-      // Try dineout-specific search endpoint
-      const dineoutSearchUrl = `https://www.swiggy.com/dapi/dineout/search?lat=12.9716&lng=77.5946&query=${encodeURIComponent(r.name)}`;
-      const fallbackRes = await guestFetch(dineoutSearchUrl, {
-        headers: { "Referer": "https://www.swiggy.com/dineout" },
-      });
-      if (!fallbackRes.ok) {
-        return { ...base, error: `Search HTTP ${searchRes.status} / fallback ${fallbackRes.status}` };
-      }
-      const fallback = await fallbackRes.json();
-      return { ...base, found: true, raw: fallback, offerSummary: extractSwiggyOffers(fallback) };
+      return { ...base, error: `Food-delivery search HTTP ${searchRes.status}` };
     }
 
-    const searchBody = await searchRes.json();
-    const offers = extractSwiggyOffers(searchBody);
+    const searchBody = await searchRes.json() as Record<string, unknown>;
+    const restaurantId = extractSwiggyRestaurantId(searchBody, r.name);
 
-    return { ...base, found: true, raw: searchBody, offerSummary: offers };
+    if (!restaurantId) {
+      return { ...base, error: "Restaurant not found in food-delivery search results" };
+    }
+
+    // Step 2: Dineout detail endpoint
+    const detailUrl = `https://disc.swiggy.com/api/v1/dinersone-restaurant/json?restaurantId=${restaurantId}`;
+    const detailRes = await guestFetch(detailUrl, {
+      headers: {
+        "latitude": "12.9716",
+        "longitude": "77.5946",
+        "Referer": "https://www.swiggy.com/dineout",
+        "Origin": "https://www.swiggy.com",
+      },
+    });
+
+    if (!detailRes.ok) {
+      return { ...base, error: `Dineout detail HTTP ${detailRes.status} (restaurantId=${restaurantId})` };
+    }
+
+    const detailBody = await detailRes.json() as Record<string, unknown>;
+    const offers = extractSwiggyDineoutOffers(detailBody);
+    const found = (detailBody.success !== undefined) && !("error" in detailBody);
+
+    return { ...base, found, raw: { restaurantId, detail: detailBody }, offerSummary: offers };
   } catch (e) {
     return { ...base, error: String(e) };
   }
 }
 
-function extractSwiggyOffers(body: unknown): string[] {
-  const offers: string[] = [];
-  if (typeof body !== "object" || body === null) return offers;
+// Extract the Swiggy restaurant ID from food-delivery search by matching restaurant name.
+function extractSwiggyRestaurantId(body: Record<string, unknown>, targetName: string): string | null {
   const str = JSON.stringify(body);
+  // Food-delivery cards: @type .../food.v2.Restaurant with info.{id, name}
+  const cardMatches = str.matchAll(/"@type":"[^"]*food\.v2\.Restaurant"[^}]{0,200}"id":"(\d+)"[^}]{0,200}"name":"([^"]+)"/g);
+  const nameNorm = targetName.toLowerCase().replace(/[^a-z0-9]/g, "");
 
-  // Pull any strings that look like discount offers.
-  const discountMatches = str.match(/"[^"]*(?:off|discount|prebook|pre-book|walk.?in|flat|upto|up to)[^"]*"/gi) ?? [];
-  for (const m of discountMatches.slice(0, 20)) {
-    const clean = m.replace(/^"|"$/g, "").trim();
-    if (clean.length > 4 && clean.length < 120) {
-      offers.push(clean);
+  for (const m of cardMatches) {
+    const [, id, name] = m;
+    const norm = name.toLowerCase().replace(/[^a-z0-9]/g, "");
+    if (norm.includes(nameNorm) || nameNorm.includes(norm)) return id;
+  }
+
+  // Fallback: reverse order search (name before id in some card shapes)
+  const revMatches = str.matchAll(/"name":"([^"]+)"[^}]{0,200}"id":"(\d+)"/g);
+  for (const m of revMatches) {
+    const [, name, id] = m;
+    const norm = name.toLowerCase().replace(/[^a-z0-9]/g, "");
+    if (norm.includes(nameNorm) || nameNorm.includes(norm)) return id;
+  }
+
+  return null;
+}
+
+// Extract Swiggy Dineout offers from the detail endpoint response.
+// Primary source: DealAndOfferInfo.dayWiseOfferInfo[].addOnOffer.offers[].{title, description}
+function extractSwiggyDineoutOffers(body: Record<string, unknown>): string[] {
+  const offers: string[] = [];
+  const cards = ((body.success as Record<string, unknown> | undefined)?.cards ?? []) as Array<Record<string, unknown>>;
+
+  for (const c of cards) {
+    const card = (c.card as Record<string, unknown>)?.card as Record<string, unknown> | undefined;
+    if (!card) continue;
+    const type = (card["@type"] as string | undefined) ?? "";
+    if (!type.includes("DealAndOfferInfo")) continue;
+
+    const dayWise = (card.dayWiseOfferInfo as Array<Record<string, unknown>>) ?? [];
+    for (const day of dayWise) {
+      // Add-on offers (bank/payment card discounts)
+      const addOnOffers = ((day.addOnOffer as Record<string, unknown> | undefined)?.offers ?? []) as Array<Record<string, unknown>>;
+      for (const offer of addOnOffers) {
+        const title = (offer.title as string | undefined)?.trim();
+        const desc = (offer.description as string | undefined)?.trim();
+        if (title) {
+          offers.push(desc ? `[addon] ${title} — ${desc}` : `[addon] ${title}`);
+        }
+      }
+      // Tab-based offers (pre-booking / walk-in) if present
+      const tabs = ((day.tabsOfferInfo as Record<string, unknown> | undefined)?.tabs ?? []) as Array<Record<string, unknown>>;
+      for (const tab of tabs) {
+        const tabTitle = (tab.title as string | undefined) ?? "";
+        for (const offer of ((tab.offers ?? []) as Array<Record<string, unknown>>)) {
+          const title = (offer.title as string | undefined)?.trim();
+          if (title) offers.push(`[${tabTitle.toLowerCase() || "tab"}] ${title}`);
+        }
+      }
     }
   }
   return [...new Set(offers)];

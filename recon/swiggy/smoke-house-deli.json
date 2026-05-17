@@ -5,215 +5,533 @@
       "name": "Smoke House Deli",
       "area": "Indiranagar",
       "districtSlugs": [
-        "smoke-house-deli-indiranagar-bangalore"
+        "smoke-house-deli-indiranagar-bangalore",
+        "smoke-house-deli-lavelle-road",
+        "smoke-house-deli-whitefield-bangalore",
+        "the-drawing-room-by-smoke-house-deli-indiranagar-bangalore"
       ],
       "eazyDinerSlug": "smoke-house-deli-lavelle-road-335752"
     },
     "found": true,
-    "offerSummary": [
-      "aggregatedDiscountInfo",
-      "aggregatedDiscountInfoV2",
-      "showEoOffer",
-      "firstOffsetRequest"
-    ]
+    "offerSummary": []
   },
   "raw": {
-    "statusCode": 0,
-    "data": {
-      "statusMessage": "done successfully",
-      "cards": [
-        {
-          "card": {
+    "restaurantId": "10238",
+    "detail": {
+      "requestId": "39a99a90-f02e-4ca2-a11f-9c6d54c51829",
+      "apiTime": "2026-05-17T16:08:14.980960236Z",
+      "success": {
+        "statusMessage": "done successfully",
+        "cards": [
+          {
             "card": {
-              "@type": "type.googleapis.com/swiggy.gandalf.widgets.v2.Navigation",
-              "tab": [
-                {
-                  "id": "RESTAURANT",
-                  "title": "Restaurants",
-                  "selected": true,
-                  "analytics": {
-                    "screenName": "explore",
-                    "context": "{\"tid\":\"undefined\",\"query\":\"Smoke House Deli\"}",
-                    "objectValue": "RESTAURANT",
-                    "clickObjectName": "click-tab"
-                  },
-                  "selectedBgColor": "#1B1E24",
-                  "unselectedBgColor": "#FFFFFF",
-                  "selectedTextColor": "#BFFFFFFF",
-                  "unselectedTextColor": "#9902060C",
-                  "selectedBorderColor": "#1B1E24",
-                  "unselectedBorderColor": "#E2E2E7"
-                },
-                {
-                  "id": "DISH",
-                  "title": "Dishes",
-                  "analytics": {
-                    "screenName": "explore",
-                    "context": "{\"tid\":\"undefined\",\"query\":\"Smoke House Deli\"}",
-                    "objectValue": "DISH",
-                    "clickObjectName": "click-tab"
-                  },
-                  "selectedBgColor": "#1B1E24",
-                  "unselectedBgColor": "#FFFFFF",
-                  "selectedTextColor": "#BFFFFFFF",
-                  "unselectedTextColor": "#9902060C",
-                  "selectedBorderColor": "#1B1E24",
-                  "unselectedBorderColor": "#E2E2E7"
-                }
-              ],
-              "meta": {
-                "queryIntent": "RESTAURANT",
-                "orderable": "false",
-                "correctedQuery": "",
-                "suggestionType": ""
-              }
-            }
-          }
-        },
-        {
-          "groupedCard": {
-            "cardGroupMap": {
-              "RESTAURANT": {
-                "cards": [
-                  {
-                    "card": {
-                      "card": {
-                        "@type": "type.googleapis.com/swiggy.presentation.food.v2.Restaurant",
-                        "info": {
-                          "id": "10238",
-                          "name": "Smoke House Deli",
-                          "city": "1",
-                          "slugs": {
-                            "restaurant": "smoke-house-deli-lavelle-road-central-bangalore",
-                            "city": "bangalore"
-                          },
-                          "cloudinaryImageId": "zzkjr3jcrl1pqop1pybu",
-                          "address": "52 & 53, Ground Floor, Lavelle Road, Bangalore",
-                          "locality": "Lavelle Road",
-                          "areaName": "Central Bangalore",
-                          "costForTwo": "80000",
-                          "costForTwoMessage": "₹800 FOR TWO",
-                          "cuisines": [
-                            "Italian",
-                            "Continental",
-                            "Fast Food",
-                            "Salads",
-                            "Healthy Food",
-                            "Pizzas",
-                            "Desserts"
-                          ],
-                          "avgRating": 4.6,
-                          "feeDetails": {},
-                          "parentId": "874",
-                          "avgRatingString": "4.6",
-                          "totalRatingsString": "19K+",
-                          "sla": {
-                            "deliveryTime": 167,
-                            "minDeliveryTime": 167,
-                            "maxDeliveryTime": 177,
-                            "lastMileTravel": 0.4,
-                            "serviceability": "SERVICEABLE",
-                            "rainMode": "RAIN_MODE_NONE",
-                            "slaString": "167-177 MINS",
-                            "lastMileTravelString": "0.4 km",
-                            "iconType": "ICON_TYPE_EMPTY"
-                          },
-                          "availability": {
-                            "nextOpenTimeMessage": "Opens next at 9 am, today",
-                            "restaurantClosedMeta": {
-                              "title": "CLOSED",
-                              "subtitle": "FOR NOW"
-                            }
-                          },
-                          "aggregatedDiscountInfo": {
-                            "visible": true
-                          },
-                          "badges": {
-                            "imageBadges": [
-                              {
-                                "imageId": "Health%20Hub/RX%20BADGE/BADGE2.png",
-                                "description": "EatRight"
-                              },
-                              {
-                                "imageId": "newg.png",
-                                "description": "Gourmet"
-                              }
-                            ]
-                          },
-                          "unorderableMessage": "Opens next at 9 am, today",
-                          "aggregatedDiscountInfoV2": {
-                            "visible": true
-                          },
-                          "ratingSlab": "RATING_SLAB_5",
-                          "availabilityServiceabilityMessage": "Currently closed for delivery. Opens next at 9 am, today",
-                          "orderabilityCommunication": {
-                            "title": {
-                              "text": "CURRENTLY"
-                            },
-                            "subTitle": {
-                              "text": "CLOSED"
-                            },
-                            "message": {
-                              "text": "Opens today at 9:00 AM",
-                              "textColour": "primary"
-                            },
-                            "customIcon": {
-                              "bgGradientColorStart": "#EB8322",
-                              "bgGradientColorEnd": "#EE5803"
-                            },
-                            "commsStyling": {}
-                          },
-                          "cartOrderabilityNudgeBanner": {
-                            "parameters": {},
-                            "presentation": {}
-                          },
-                          "externalRatings": {
-                            "aggregatedRating": {
-                              "rating": "4.3",
-                              "ratingCount": "5.1K+"
-                            },
-                            "source": "GOOGLE",
-                            "sourceIconImageId": "v1704440323/google_ratings/rating_google_tag"
-                          },
-                          "ratingsDisplayPreference": "RATINGS_DISPLAY_PREFERENCE_SHOW_SWIGGY",
-                          "featuredSectionInfo": {},
-                          "showEoOffer": true,
-                          "priceComparisonComms": {}
+              "card": {
+                "@type": "type.googleapis.com/swiggy.presentation.dinersone.v1.EntityInfoWithMasthead",
+                "id": "10238",
+                "info": {
+                  "name": "Smoke House Deli Lavelle Road",
+                  "locationInfo": {
+                    "distanceString": "0.5 km",
+                    "navigationUrl": "https://www.google.com/maps/dir/?api=1&origin=12.9716,77.5946&destination=12.971642,77.59834799999999&travelmode=driving",
+                    "lat": "12.971642",
+                    "long": "77.59834799999999",
+                    "city": {
+                      "name": "Bangalore"
+                    },
+                    "formattedAddress": "Central Bangalore, Bangalore",
+                    "additionalInfo": {
+                      "cta": {
+                        "link": "swiggydiners://collectiondetails/DINEOUT_BRAND_OUTLETS?tags=layout_dineout_brand_outlets&metaMap=%7B%22brandId%22%3A%22874%22%2C%22restaurant_id%22%3A%2210238%22%2C%22sourcePage%22%3A%22RDP%22%7D&header_title=Outlets",
+                        "text": "outlets",
+                        "type": "DEEPLINK",
+                        "metaInfo": {
+                          "ctaImage": "dineout/details/red_arrow_down.png"
                         },
                         "analytics": {
-                          "screenName": "explore",
-                          "context": "{\"tid\":\"undefined\",\"grid\":\"6d83b827-2b5e-4acf-85e3-95800252edbd\",\"queryUniqueId\":\"undefined\",\"query\":\"Smoke House Deli\"}",
-                          "objectValue": "10238",
-                          "impressionObjectName": "impression-restaurant",
-                          "clickObjectName": "click-restaurant"
-                        },
-                        "ctaWithParams": {
-                          "link": "swiggy://menu",
-                          "type": "DEEPLINK",
-                          "params": {
-                            "source": "SEARCH",
-                            "isSld": "false",
-                            "sourceRequestId": "00000000000000000000000000000000",
-                            "qrEnabled": "false",
-                            "restaurant_id": "10238",
-                            "query": "Smoke House Deli",
-                            "sourceSessionId": "re68862c638-341e-41ce-96cf-4bd241a1f"
-                          }
+                          "screenName": "DO-Detail",
+                          "context": "{\"restId\":\"10238\"}",
+                          "objectValue": "outlet_switcher_dropdown",
+                          "impressionObjectName": "entity_info_masthead",
+                          "clickObjectName": "entity_info_masthead"
                         }
                       }
+                    },
+                    "displayAreaName": "Central Bangalore"
+                  },
+                  "timingsInfo": {
+                    "outletTiming": {
+                      "infoList": [
+                        {
+                          "title": "Monday",
+                          "subtitle": "9AM - 11:30PM",
+                          "titleColor": "text_high_emphasis",
+                          "subtitleColor": "text_high_emphasis"
+                        },
+                        {
+                          "title": "Tuesday",
+                          "subtitle": "9AM - 11:30PM",
+                          "titleColor": "text_high_emphasis",
+                          "subtitleColor": "text_high_emphasis"
+                        },
+                        {
+                          "title": "Wednesday",
+                          "subtitle": "9AM - 11:30PM",
+                          "titleColor": "text_high_emphasis",
+                          "subtitleColor": "text_high_emphasis"
+                        },
+                        {
+                          "title": "Thursday",
+                          "subtitle": "9AM - 11:30PM",
+                          "titleColor": "text_high_emphasis",
+                          "subtitleColor": "text_high_emphasis"
+                        },
+                        {
+                          "title": "Friday",
+                          "subtitle": "9AM - 11:30PM",
+                          "titleColor": "text_high_emphasis",
+                          "subtitleColor": "text_high_emphasis"
+                        },
+                        {
+                          "title": "Saturday",
+                          "subtitle": "9AM - 11:30PM",
+                          "titleColor": "text_high_emphasis",
+                          "subtitleColor": "text_high_emphasis"
+                        },
+                        {
+                          "title": "Today",
+                          "subtitle": "9AM - 11:30PM",
+                          "titleColor": "primary",
+                          "subtitleColor": "primary"
+                        }
+                      ],
+                      "title": "Outlet timings"
+                    },
+                    "styleInfo": {
+                      "titleColor": "negative",
+                      "subtitleColor": "text_color_low_emphasis"
                     }
+                  },
+                  "callDetail": {
+                    "title": "Trying to reach the outlet?",
+                    "style": {
+                      "cornerRadius": {
+                        "topLeft": 16,
+                        "topRight": 16
+                      },
+                      "backgroundColour": "#F0F0F5"
+                    },
+                    "actions": [
+                      {
+                        "link": "dailer-app?phone=9740167130",
+                        "text": "9740167130",
+                        "type": "DIALER",
+                        "metaInfo": {
+                          "ctaImage": "dineout/details/call_no_bg.png"
+                        }
+                      }
+                    ]
+                  },
+                  "ratingsInfo": {
+                    "value": "4.3",
+                    "description": "5K ratings",
+                    "count": 5154,
+                    "countDescription": "5K+ Google ratings",
+                    "icon": "dineout/details/google_tag.png",
+                    "style": "RATING_STYLE_V2"
+                  },
+                  "typeInfo": {
+                    "type": "ENTITY_TYPE_RESTAURANT",
+                    "restaurantType": "RESTAURANT_TYPE_NON_PARTICIPATING"
+                  },
+                  "style": {
+                    "backgroundColour": "#FFFFFF",
+                    "cornerRadius": {
+                      "topLeft": 16,
+                      "topRight": 16,
+                      "bottomLeft": 16,
+                      "bottomRight": 16
+                    },
+                    "animationConfig": {
+                      "type": "ANIMATION_TYPE_ENTRY_PUSH_DOWN",
+                      "startDelay": 250,
+                      "duration": 100,
+                      "interpolator": "INTERPOLATOR_LINEAR"
+                    },
+                    "dimension": {
+                      "width": {
+                        "type": "TYPE_RELATIVE",
+                        "value": 1,
+                        "reference": "RELATIVE_DIMENSION_REFERENCE_DEVICE_WIDTH"
+                      },
+                      "height": {
+                        "type": "TYPE_RELATIVE",
+                        "value": 0.778,
+                        "reference": "RELATIVE_DIMENSION_REFERENCE_WIDTH"
+                      }
+                    }
+                  },
+                  "favourite": {
+                    "entityLotte": {
+                      "frequencyCapping": 2,
+                      "image": "favourite-image",
+                      "lotteFiles": [
+                        {
+                          "type": "LOTTIE_TYPE_FAVOURITE",
+                          "lotte": "favourite-lottie"
+                        },
+                        {
+                          "type": "LOTTIE_TYPE_NON_FAVOURITE",
+                          "lotte": "non-favourite-lottie"
+                        }
+                      ]
+                    },
+                    "accessibility": {
+                      "altText": "favourite alt text",
+                      "altTextCta": "favourite alt text cta"
+                    }
+                  },
+                  "share": {
+                    "entityLotte": {
+                      "frequencyCapping": 3,
+                      "image": "share-image",
+                      "lotteFiles": [
+                        {
+                          "type": "LOTTIE_TYPE_SHARE",
+                          "lotte": "share-lottie"
+                        }
+                      ]
+                    },
+                    "shareUrl": "Hey, I think you will love Smoke House Deli Lavelle Road, Central Bangalore, Bangalore on Swiggy Dineout https://swiggy.onelink.me/BVRZ?af_dp=swiggydiners%3A%2F%2Fdetails%2F10238%3Fsource%3Dsharing Happy dining!",
+                    "accessibility": {
+                      "altText": "share alt text",
+                      "altTextCta": "share alt text cta"
+                    }
+                  },
+                  "entityAttributes": {
+                    "restaurantEntityAttributes": {
+                      "outlets": {},
+                      "cuisines": [
+                        "Continental",
+                        "Italian"
+                      ],
+                      "costForTwo": "₹2500 for two"
+                    }
+                  }
+                },
+                "masthead": {
+                  "files": [
+                    {
+                      "type": "IMAGE",
+                      "id": "2024-01-25T20:30:43.427",
+                      "name": "a57c74dcd0564fd6a77bd64b8f91783d jpg",
+                      "url": "v1706214644/6c9d1f4b919ee398666dbe246f80beff.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2024-01-25T20:30:52.731",
+                      "name": "112c549c1ec483b163436c3e376c85b4 jpg",
+                      "url": "v1706214653/aa931294968a3c88f0f8dc1aa63d1f80.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2024-01-25T20:30:55.823",
+                      "name": "4ebbbb14a676f5130226ef5296fd229c jpg",
+                      "url": "v1706214656/84083ce4b9a5a6e00848a49207224123.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2024-01-25T20:30:58.636",
+                      "name": "6371545053504a8c81b175b4518ea2a6 jpg",
+                      "url": "v1706214659/0fc86056cb74d06b24b7f0f13d0eadcc.jpg"
+                    },
+                    {
+                      "type": "IMAGE",
+                      "id": "2024-01-25T20:31:01.675",
+                      "name": "ab4b07baf56aad6b0682b16c4b1b445a jpg",
+                      "url": "v1706214662/cfcd93e84ca5cd6bd4cb3fca1587a249.jpg"
+                    }
+                  ],
+                  "cta": {
+                    "link": "swiggydiners://gallery/10238",
+                    "type": "DEEPLINK"
+                  },
+                  "cornerRadius": {
+                    "bottomLeft": 24,
+                    "bottomRight": 24
+                  },
+                  "autoScrollConfig": {
+                    "isScrollEnabled": true,
+                    "autoScrollDuration": 3,
+                    "autoScrollResetDuration": 5
+                  }
+                }
+              }
+            }
+          },
+          {
+            "card": {
+              "card": {
+                "@type": "type.googleapis.com/swiggy.presentation.dinersone.v1.RestaurantHighlights",
+                "title": "Popular dishes",
+                "element": [
+                  "Grilled Sandwiches"
+                ],
+                "content": [
+                  {
+                    "info": "Grilled Sandwiches",
+                    "icon": "dineout/details/popular_dishes.png"
+                  }
+                ],
+                "rowCount": 1,
+                "colCount": 1,
+                "scrollAnchor": {
+                  "id": "menu"
+                }
+              }
+            }
+          },
+          {
+            "card": {
+              "card": {
+                "@type": "type.googleapis.com/swiggy.gandalf.widgets.v2.StaggeredGrid",
+                "info": [
+                  {
+                    "imageCardInfo": {
+                      "id": "2024-01-25T20:30:43.427",
+                      "imageId": "v1706214644/6c9d1f4b919ee398666dbe246f80beff.jpg",
+                      "action": {
+                        "link": "swiggydiners://fullScreenGallery/10238?imageId=v1706214644/6c9d1f4b919ee398666dbe246f80beff.jpg&apiCall=true",
+                        "type": "DEEPLINK"
+                      },
+                      "analytics": {
+                        "screenName": "DO-Detail",
+                        "context": "{\"photo_id\":\"2024-01-25T20:30:43.427\",\"click_position\":1,\"click_on_indicator_+\":false}",
+                        "objectValue": "10238",
+                        "clickObjectName": "photos"
+                      }
+                    },
+                    "style": {
+                      "width": 0.611,
+                      "height": 0.586,
+                      "left": 0.0333
+                    },
+                    "mediaItemCornerRadius": {
+                      "topLeft": 16,
+                      "topRight": 16,
+                      "bottomLeft": 16,
+                      "bottomRight": 16
+                    }
+                  },
+                  {
+                    "imageCardInfo": {
+                      "id": "2024-01-25T20:30:52.731",
+                      "imageId": "v1706214653/aa931294968a3c88f0f8dc1aa63d1f80.jpg",
+                      "action": {
+                        "link": "swiggydiners://fullScreenGallery/10238?imageId=v1706214653/aa931294968a3c88f0f8dc1aa63d1f80.jpg&apiCall=true",
+                        "type": "DEEPLINK"
+                      },
+                      "analytics": {
+                        "screenName": "DO-Detail",
+                        "context": "{\"photo_id\":\"2024-01-25T20:30:52.731\",\"click_position\":2,\"click_on_indicator_+\":false}",
+                        "objectValue": "10238",
+                        "clickObjectName": "photos"
+                      }
+                    },
+                    "style": {
+                      "width": 0.288,
+                      "height": 0.277,
+                      "left": 0.675
+                    },
+                    "mediaItemCornerRadius": {
+                      "topLeft": 16,
+                      "topRight": 16,
+                      "bottomLeft": 16,
+                      "bottomRight": 16
+                    }
+                  },
+                  {
+                    "imageCardInfo": {
+                      "id": "2024-01-25T20:30:55.823",
+                      "imageId": "v1706214656/84083ce4b9a5a6e00848a49207224123.jpg",
+                      "action": {
+                        "link": "swiggydiners://fullScreenGallery/10238?imageId=v1706214656/84083ce4b9a5a6e00848a49207224123.jpg&apiCall=true",
+                        "type": "DEEPLINK"
+                      },
+                      "analytics": {
+                        "screenName": "DO-Detail",
+                        "context": "{\"photo_id\":\"2024-01-25T20:30:55.823\",\"click_position\":3,\"click_on_indicator_+\":false}",
+                        "objectValue": "10238",
+                        "clickObjectName": "photos"
+                      }
+                    },
+                    "style": {
+                      "width": 0.288,
+                      "height": 0.277,
+                      "top": 0.307,
+                      "left": 0.675
+                    },
+                    "mediaItemCornerRadius": {
+                      "topLeft": 16,
+                      "topRight": 16,
+                      "bottomLeft": 16,
+                      "bottomRight": 16
+                    }
+                  },
+                  {
+                    "imageCardInfo": {
+                      "id": "2024-01-25T20:30:58.636",
+                      "imageId": "v1706214659/0fc86056cb74d06b24b7f0f13d0eadcc.jpg",
+                      "action": {
+                        "link": "swiggydiners://fullScreenGallery/10238?imageId=v1706214659/0fc86056cb74d06b24b7f0f13d0eadcc.jpg&apiCall=true",
+                        "type": "DEEPLINK"
+                      },
+                      "analytics": {
+                        "screenName": "DO-Detail",
+                        "context": "{\"photo_id\":\"2024-01-25T20:30:58.636\",\"click_position\":4,\"click_on_indicator_+\":false}",
+                        "objectValue": "10238",
+                        "clickObjectName": "photos"
+                      }
+                    },
+                    "style": {
+                      "width": 0.288,
+                      "height": 0.277,
+                      "top": 0.618,
+                      "left": 0.0333
+                    },
+                    "mediaItemCornerRadius": {
+                      "topLeft": 16,
+                      "topRight": 16,
+                      "bottomLeft": 16,
+                      "bottomRight": 16
+                    }
+                  },
+                  {
+                    "imageCardInfo": {
+                      "id": "2024-01-25T20:31:01.675",
+                      "imageId": "v1706214662/cfcd93e84ca5cd6bd4cb3fca1587a249.jpg",
+                      "action": {
+                        "link": "swiggydiners://fullScreenGallery/10238?imageId=v1706214662/cfcd93e84ca5cd6bd4cb3fca1587a249.jpg&apiCall=true",
+                        "type": "DEEPLINK"
+                      },
+                      "analytics": {
+                        "screenName": "DO-Detail",
+                        "context": "{\"photo_id\":\"2024-01-25T20:31:01.675\",\"click_position\":5,\"click_on_indicator_+\":false}",
+                        "objectValue": "10238",
+                        "clickObjectName": "photos"
+                      }
+                    },
+                    "style": {
+                      "width": 0.288,
+                      "height": 0.277,
+                      "top": 0.618,
+                      "left": 0.357
+                    },
+                    "mediaItemCornerRadius": {
+                      "topLeft": 16,
+                      "topRight": 16,
+                      "bottomLeft": 16,
+                      "bottomRight": 16
+                    }
+                  }
+                ],
+                "layout": {
+                  "widgetPadding": {
+                    "bottom": 12
+                  },
+                  "scrollBar": {
+                    "width": 54,
+                    "height": 4
+                  },
+                  "widgetTheme": {
+                    "defaultMode": {
+                      "backgroundColour": "#FFFFFF",
+                      "theme": "THEME_TYPE_LIGHT",
+                      "themeVariant": "THEME_VARIANT_DEFAULT"
+                    },
+                    "darkMode": {
+                      "backgroundColour": "#FFFFFF",
+                      "theme": "THEME_TYPE_DARK",
+                      "themeVariant": "THEME_VARIANT_DEFAULT"
+                    }
+                  }
+                },
+                "id": "dineoutRdpPentaPhotosWidget",
+                "header": {
+                  "title": "Photos",
+                  "headerStyling": {
+                    "padding": {
+                      "left": 16,
+                      "top": 24,
+                      "bottom": 8
+                    },
+                    "titleFontName": "FONT_NAME_BODY_B1_BOLD"
+                  },
+                  "analytics": {
+                    "screenName": "DO-Detail",
+                    "context": "{\"photo_count\":5,\"photos_shown_count\":5,\"photo_ids\":[\"2024-01-25T20:30:43.427\",\"2024-01-25T20:30:52.731\",\"2024-01-25T20:30:55.823\",\"2024-01-25T20:30:58.636\",\"2024-01-25T20:31:01.675\"]}",
+                    "objectValue": "10238",
+                    "impressionObjectName": "photos"
+                  },
+                  "collapseConfig": {
+                    "enabled": true,
+                    "collapseIcon": "chevron_down_12",
+                    "expandIcon": "chevron_up_12"
+                  }
+                },
+                "scrollAnchor": {
+                  "id": "photos"
+                }
+              }
+            }
+          },
+          {
+            "card": {
+              "card": {
+                "@type": "type.googleapis.com/swiggy.gandalf.widgets.v2.TextInfoWidget",
+                "title": {
+                  "info": "Location",
+                  "color": "text_color_highest_emphasis"
+                },
+                "description": {
+                  "info": "0.5 km • 52 & 53, Ground Floor, Lavelle Road, Bangalore",
+                  "color": "text_color_high_emphasis",
+                  "font": "FONT_NAME_BODY_B2_REG"
+                },
+                "iconUrl": "dineout/details/direction.png",
+                "cta": {
+                  "link": "https://www.google.com/maps/dir/?api=1&origin=12.9716,77.5946&destination=12.971642,77.59834799999999&travelmode=driving",
+                  "text": "MAP_DEEPLINK",
+                  "type": "MAPS_DIRECTION"
+                },
+                "scrollAnchor": {
+                  "id": "about"
+                },
+                "metaInfo": {
+                  "lat": "12.971642",
+                  "lng": "77.59834799999999",
+                  "showMap": "true"
+                }
+              }
+            }
+          },
+          {
+            "card": {
+              "card": {
+                "@type": "type.googleapis.com/swiggy.presentation.dinersone.v1.CtaList",
+                "ctas": [
+                  {
+                    "link": "swiggydiners://login",
+                    "text": "Login to avail offer & pay",
+                    "type": "primary",
+                    "metaInfo": {}
                   }
                 ]
               }
             }
           }
-        }
-      ],
-      "firstOffsetRequest": true
-    },
-    "tid": "5e970941-44b7-4b9b-b4b5-65cf370d00d4",
-    "sid": "re68862c638-341e-41ce-96cf-4bd241a1f",
-    "deviceId": "7638f963-e919-ec04-82c5-64905050f4e2",
-    "csrfToken": "KrW5L6a1mNjm-q529zmrpcdnQ459eV_GoUa89VdA"
+        ],
+        "firstOffsetRequest": true
+      }
+    }
   }
 }
