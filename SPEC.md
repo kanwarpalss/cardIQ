@@ -95,9 +95,9 @@ Gmail → Parser → `enrichAmount()` → Supabase → Dashboard
 | 8 DiningTab.tsx + nav wiring | ✅ Done (re-auth banner removed, prebook/walk-in split added) |
 | 9 scripts/dining-recon.ts — guest scrape ~30 restaurants × 3 platforms, dump JSON | ✅ Done (29/30 Swiggy, 28/30 District, 21/30 EazyDiner) |
 | 10 docs/DINING_OFFER_TAXONOMY.md — analyze recon dumps, define offer type schema | ✅ Done |
-| 11 Migration 012 — add booking_type + revise offer_type enum per taxonomy | ⏳ Pending |
-| 12 Per-platform scrapers (zomato, swiggy, eazydiner) | ⏳ Pending |
-| 13 dining-scrape.ts orchestrator | ⏳ Pending |
+| 11 Migration 012 — add booking_type + revise offer_type enum per taxonomy | ✅ Done |
+| 12 Per-platform scrapers (zomato, swiggy, eazydiner) | ✅ Done |
+| 13 dining-scrape.ts orchestrator | ✅ Done (10-restaurant demo; extend to full 30 next) |
 | 14 GitHub Action weekly cron | ⏳ Pending |
 | 15 Manual-link review widget | ⏳ Pending |
 
@@ -164,12 +164,11 @@ npm run dining:recon -- --platform zomato --slug toit   # single test
 
 *(Updated 2026-05-17)*
 
-- **Chunk 10 complete:** `docs/DINING_OFFER_TAXONOMY.md` written and all 3 open questions resolved from recon data.
-- **Key finding — Swiggy has prebook deals:** `tabsOfferInfo.offersTab[].tabOffers.offers[]` contains restaurant-specific pre-booking % discounts for 5/29 restaurants. The scraper must parse BOTH `addOnOffer` (addon/cashback) AND `tabsOfferInfo.offersTab` (prebook). `prebook_pct` now covers District + Swiggy.
-- **Key finding — District `allOffers` is prebook-only:** Confirmed from recon data. No walk-in offers in `allOffers`; all walk-in deals are in `bankOffers`.
-- **Decision — store bank_card + addon_coupon:** Raw capture; filter in UI per §6 ranking. Don't discard at scrape time.
-- **Next: Chunk 11** — Migration 012: `ALTER TABLE dining_offers ADD COLUMN offer_type TEXT, ADD COLUMN booking_type TEXT CHECK (booking_type IN ('prebook', 'walkin', 'either'))`. Then chunk 12: build the three production scrapers using the now-complete taxonomy spec.
-- Tests: 152/152 passing, tsc clean. Migrations 011 + 012 not yet applied to Supabase.
+- **Chunks 11–13 complete:** Migration 012 applied, production scrapers built, demo scrape run for 10 restaurants — 316 offers in Supabase. DiningTab is now showing real live data.
+- **Scrapers:** `src/lib/dining/scrapers/{district,swiggy,eazydiner}.ts` — typed, pure functions. Orchestrator: `scripts/dining-scrape.ts` (10-restaurant demo; supports `--slug` and `--dry-run`).
+- **Key parser notes:** Swiggy parses BOTH `addOnOffer` (walkin coupons) AND `tabsOfferInfo.offersTab` (prebook deals). District parses `allOffers` (prebook) and `bankOffers` (walkin bank cards).
+- **Next:** Extend `scripts/dining-scrape.ts` to cover all 30 restaurants (add remaining targets to the list), then wire up GitHub Action cron for weekly refresh.
+- Tests: 152/152 passing, tsc clean. Migrations 011 + 012 applied.
 
 ---
 
