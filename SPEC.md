@@ -122,13 +122,11 @@ Gmail → Parser → `enrichAmount()` → Supabase → Dashboard
 ## 6. Current State
 
 - 152 tests passing (74 core + 78 dining), tsc clean
-- **Auth infrastructure deleted** — no sessions, no Playwright, no re-auth banner
-- `dining-login.ts`, `dining-verify-session.ts`, `sessions.ts` removed; `Platform` type moved to `src/lib/dining/types.ts`
-- `DiningTab.tsx` updated: re-auth banner gone, prebook/walk-in offer split added to UI
-- **Recon complete** — 29/30 Swiggy, 28/30 District, 21/30 EazyDiner. All data in `recon/`
-- **Taxonomy doc written** — `docs/DINING_OFFER_TAXONOMY.md` defines offer_type enum, booking_type enum, scraper rules
-- Migration `011_drop_dining_sessions.sql` created (not yet applied)
-- Migration `012` not yet written — add `offer_type` + `booking_type` columns to `dining_offers`
+- **All 30 restaurants scraped and live in Supabase** — 475 offers (35 prebook, 562 bank_card, 68+85 Swiggy coupons/cashback, 28 payeazy, etc.)
+- **Payment offers catalog built** — `src/data/platform-payment-offers.ts` contains all 68 platform-wide offers (9 Swiggy + 31 EazyDiner + 28 District), written once, referenced by UI
+- **DiningTab updated** — Payment Offers accordion at top (expandable per platform with full T&Cs), per-restaurant badges showing which platform payment offers they accept, per-platform cells now show only restaurant-specific offers (prebook deals, buffets)
+- **Scraper extended to all 30** — `scripts/dining-scrape.ts` now covers all 30 restaurants with correct Swiggy IDs from actual API (not placeholders)
+- DB: 30 restaurants, 86 listings (30 District + 35 Swiggy + 21 EazyDiner)
 
 ---
 
@@ -162,13 +160,13 @@ npm run dining:recon -- --platform zomato --slug toit   # single test
 
 ## 9. Session Handoff Notes
 
-*(Updated 2026-05-17)*
+*(Updated 2026-05-18)*
 
-- **Chunks 11–13 complete:** Migration 012 applied, production scrapers built, demo scrape run for 10 restaurants — 316 offers in Supabase. DiningTab is now showing real live data.
-- **Scrapers:** `src/lib/dining/scrapers/{district,swiggy,eazydiner}.ts` — typed, pure functions. Orchestrator: `scripts/dining-scrape.ts` (10-restaurant demo; supports `--slug` and `--dry-run`).
-- **Key parser notes:** Swiggy parses BOTH `addOnOffer` (walkin coupons) AND `tabsOfferInfo.offersTab` (prebook deals). District parses `allOffers` (prebook) and `bankOffers` (walkin bank cards).
-- **Next:** Extend `scripts/dining-scrape.ts` to cover all 30 restaurants (add remaining targets to the list), then wire up GitHub Action cron for weekly refresh.
-- Tests: 152/152 passing, tsc clean. Migrations 011 + 012 applied.
+- **Payment offers centralized:** `src/data/platform-payment-offers.ts` — 68 offers (9 Swiggy with full T&Cs, 31 EazyDiner bank offers sourced from eazydiner.com/payeazy, 28 District bank offers from recon union). Single source of truth, never duplicated per restaurant.
+- **DiningTab UI updated:** Payment Offers accordion at top (3 expandable platform cards), per-restaurant participation badges (District ✓ / Swiggy ✓ / EazyDiner ✓), per-platform cells now clean of platform-wide offers.
+- **All 30 restaurants live:** `scripts/dining-scrape.ts` fully extended — correct Swiggy IDs from API, precise coords. DB has 30 restaurants / 86 listings / 791 offers total.
+- **EazyDiner offers discovery:** Their bank/card offers (HSBC 30%, Axis 30%, IDFC ₹1000 off, etc.) live at eazydiner.com/payeazy, NOT in the restaurant API endpoint. Now fully catalogued.
+- **Next:** Wire GitHub Action weekly cron for automated scrape refresh.
 
 ---
 

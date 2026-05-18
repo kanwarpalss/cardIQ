@@ -1,6 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { getOffersByPlatform } from "../data/platform-payment-offers";
+import type { PlatformPaymentOffer } from "../data/platform-payment-offers";
 
 // ────────────────────────────────────────────────────────────────────
 // Types — mirror what /api/dining/search returns
@@ -47,21 +49,22 @@ interface Restaurant {
 }
 
 // ────────────────────────────────────────────────────────────────────
-// Platform display config — one source of truth for color + label
+// Platform display config
 // ────────────────────────────────────────────────────────────────────
 
 const PLATFORM_META: Record<Platform, { label: string; color: string; bg: string }> = {
-  zomato:    { label: "Zomato",    color: "#ef4444", bg: "rgba(239,68,68,0.12)" },
-  swiggy:    { label: "Swiggy",    color: "#f59e0b", bg: "rgba(245,158,11,0.12)" },
-  eazydiner: { label: "EazyDiner", color: "#22c55e", bg: "rgba(34,197,94,0.12)" },
+  zomato:    { label: "District",   color: "#ef4444", bg: "rgba(239,68,68,0.12)" },
+  swiggy:    { label: "Swiggy",     color: "#f59e0b", bg: "rgba(245,158,11,0.12)" },
+  eazydiner: { label: "EazyDiner",  color: "#22c55e", bg: "rgba(34,197,94,0.12)" },
 };
 
 const PLATFORMS: Platform[] = ["zomato", "swiggy", "eazydiner"];
 
-const BOOKING_TYPE_LABEL: Record<string, string> = {
-  prebook: "Prebook",
-  walkin: "Walk-in",
-  either: "",
+// Payment offer participation types, keyed by offer_type value
+const PAYMENT_OFFER_TYPES: Record<Platform, string[]> = {
+  zomato:    ["bank_card"],
+  swiggy:    ["addon_coupon", "addon_cashback"],
+  eazydiner: ["payeazy"],
 };
 
 // ────────────────────────────────────────────────────────────────────
@@ -105,9 +108,12 @@ export default function DiningTab() {
       <div>
         <h1 className="font-serif text-2xl text-mist">Dining</h1>
         <p className="text-sm text-mist/50 mt-1">
-          Find restaurants across Zomato Dining Out, Swiggy Dineout, and EazyDiner — best offer wins.
+          Find restaurants across District (Zomato), Swiggy Dineout, and EazyDiner — best offer wins.
         </p>
       </div>
+
+      {/* ── Payment Offers Catalog ──────────────────────────────────── */}
+      <PaymentOffersCatalog />
 
       {/* ── Search box ─────────────────────────────────────────────── */}
       <div className="relative">
@@ -155,11 +161,153 @@ export default function DiningTab() {
 }
 
 // ────────────────────────────────────────────────────────────────────
-// Sub-components
+// Payment Offers Catalog
+// ────────────────────────────────────────────────────────────────────
+
+function PaymentOffersCatalog() {
+  const [openPlatform, setOpenPlatform] = useState<Platform | null>(null);
+
+  return (
+    <div className="rounded-xl border border-wire bg-surface overflow-hidden">
+      <div className="px-4 py-3 border-b border-wire flex items-center gap-2">
+        <span className="text-xs font-medium text-gold uppercase tracking-wide">Payment Offers</span>
+        <span className="text-xs text-mist/40">— apply at checkout, independent of restaurant deals</span>
+      </div>
+      <div className="divide-y divide-wire">
+        {PLATFORMS.map((p) => (
+          <PlatformOfferAccordion
+            key={p}
+            platform={p}
+            isOpen={openPlatform === p}
+            onToggle={() => setOpenPlatform(openPlatform === p ? null : p)}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function PlatformOfferAccordion({
+  platform,
+  isOpen,
+  onToggle,
+}: {
+  platform: Platform;
+  isOpen: boolean;
+  onToggle: () => void;
+}) {
+  const meta = PLATFORM_META[platform];
+  const offers = getOffersByPlatform(platform);
+  const noteByPlatform: Record<Platform, string> = {
+    zomato:    "Available at participating restaurants — subset varies per restaurant",
+    swiggy:    "All 9 offers available at every participating restaurant",
+    eazydiner: "Pay via PayEazy in the EazyDiner app — bank offers apply on top of or instead of the base 25% off",
+  };
+
+  return (
+    <div>
+      <button
+        onClick={onToggle}
+        className="w-full flex items-center justify-between px-4 py-3 hover:bg-hover/20 transition-colors text-left"
+      >
+        <div className="flex items-center gap-3">
+          <span className="text-sm font-medium" style={{ color: meta.color }}>{meta.label}</span>
+          <span className="text-xs text-mist/40">{offers.length} payment offers</span>
+        </div>
+        <svg
+          className="w-4 h-4 text-mist/40 transition-transform"
+          style={{ transform: isOpen ? "rotate(180deg)" : undefined }}
+          fill="none" viewBox="0 0 16 16" stroke="currentColor" strokeWidth={2}
+        >
+          <path d="M4 6l4 4 4-4" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      </button>
+
+      {isOpen && (
+        <div className="px-4 pb-4 space-y-2">
+          <p className="text-xs text-mist/40 mb-3">{noteByPlatform[platform]}</p>
+          {offers.map((offer) => (
+            <OfferRow key={offer.id} offer={offer} />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function OfferRow({ offer }: { offer: PlatformPaymentOffer }) {
+  const [expanded, setExpanded] = useState(false);
+  const hasTerms = offer.terms.length > 0;
+
+  return (
+    <div className="rounded-lg border border-wire/60 bg-ink/20 px-3 py-2">
+      <div className="flex items-start justify-between gap-2">
+        <div className="min-w-0 flex-1">
+          <div className="flex items-baseline gap-2 flex-wrap">
+            <span className="text-xs font-medium text-mist">{offer.headline}</span>
+            {offer.coupon_code && (
+              <span className="text-2xs font-mono bg-gold/10 text-gold px-1.5 py-0.5 rounded">
+                {offer.coupon_code}
+              </span>
+            )}
+          </div>
+          <div className="text-xs text-mist/50 mt-0.5 truncate">{offer.card_name}</div>
+          <div className="flex flex-wrap gap-3 mt-1 text-2xs text-mist/40">
+            {offer.min_bill != null && <span>Min ₹{offer.min_bill.toLocaleString("en-IN")}</span>}
+            {offer.max_discount != null && offer.discount_type !== "flat" && (
+              <span>Max ₹{offer.max_discount.toLocaleString("en-IN")} off</span>
+            )}
+            {offer.usage_limit && <span>{offer.usage_limit}</span>}
+          </div>
+        </div>
+        <div className="shrink-0 text-right">
+          <div className="text-xs font-semibold text-mist">
+            {offer.discount_type === "flat"
+              ? `₹${offer.discount_value} off`
+              : offer.discount_type === "cashback"
+              ? `${offer.discount_value}% cashback`
+              : `${offer.discount_value}% off`}
+          </div>
+          {hasTerms && (
+            <button
+              onClick={() => setExpanded(!expanded)}
+              className="text-2xs text-mist/40 hover:text-mist/70 mt-0.5"
+            >
+              {expanded ? "Less" : "T&Cs"}
+            </button>
+          )}
+        </div>
+      </div>
+
+      {expanded && hasTerms && (
+        <ul className="mt-2 space-y-0.5 border-t border-wire/40 pt-2">
+          {offer.terms.map((t, i) => (
+            <li key={i} className="text-2xs text-mist/50 flex gap-1.5">
+              <span className="shrink-0 text-mist/30">•</span>
+              <span>{t}</span>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
+
+// ────────────────────────────────────────────────────────────────────
+// Restaurant cards
 // ────────────────────────────────────────────────────────────────────
 
 function RestaurantCard({ restaurant: r }: { restaurant: Restaurant }) {
   const bestPct = r.best_discount_pct;
+
+  // Determine which platforms this restaurant accepts payment offers on
+  const paymentBadges: Platform[] = PLATFORMS.filter((p) => {
+    const listing = r.listings.find((x) => x.platform === p);
+    if (!listing) return false;
+    const paymentTypes = PAYMENT_OFFER_TYPES[p];
+    return listing.offers.some((o) => o.offer_type && paymentTypes.includes(o.offer_type));
+  });
+
   return (
     <div className="rounded-xl border border-wire bg-surface hover:bg-hover/30 transition-colors p-4">
       <div className="flex items-start justify-between gap-4">
@@ -194,6 +342,25 @@ function RestaurantCard({ restaurant: r }: { restaurant: Restaurant }) {
         </div>
       )}
 
+      {/* Payment offer participation badges */}
+      {paymentBadges.length > 0 && (
+        <div className="mt-2 flex flex-wrap gap-1.5 items-center">
+          <span className="text-2xs text-mist/30">Payment offers:</span>
+          {paymentBadges.map((p) => {
+            const meta = PLATFORM_META[p];
+            return (
+              <span
+                key={p}
+                className="text-2xs px-2 py-0.5 rounded-full border"
+                style={{ color: meta.color, borderColor: `${meta.color}40`, background: meta.bg }}
+              >
+                {meta.label} ✓
+              </span>
+            );
+          })}
+        </div>
+      )}
+
       {r.listings.length === 0 && (
         <div className="mt-3 text-xs text-mist/30">No listings yet — scrape hasn't run.</div>
       )}
@@ -212,16 +379,21 @@ function PlatformOfferCell({ platform, listing }: { platform: Platform; listing?
     );
   }
 
-  // Split offers into prebook vs walk-in; fall back to showing top offer if unclassified.
-  const prebookOffers = listing.offers.filter((o) => o.booking_type === "prebook");
-  const walkinOffers = listing.offers.filter((o) => o.booking_type === "walkin");
-  const otherOffers = listing.offers.filter((o) => !o.booking_type || o.booking_type === "either");
+  // Show only restaurant-specific offers (prebook deals, buffets, restaurant discounts)
+  // Platform-wide payment offers are shown in the catalog above, not repeated here
+  const paymentTypes = PAYMENT_OFFER_TYPES[platform];
+  const restaurantOffers = listing.offers.filter(
+    (o) => !o.offer_type || !paymentTypes.includes(o.offer_type),
+  );
+  const prebookOffers = restaurantOffers.filter((o) => o.booking_type === "prebook");
+  const walkinOffers = restaurantOffers.filter((o) => o.booking_type === "walkin");
+  const otherOffers = restaurantOffers.filter((o) => !o.booking_type || o.booking_type === "either");
 
   const sections: { label: string; offer: Offer }[] = [
     ...prebookOffers.slice(0, 1).map((o) => ({ label: "Prebook", offer: o })),
     ...walkinOffers.slice(0, 1).map((o) => ({ label: "Walk-in", offer: o })),
     ...(prebookOffers.length === 0 && walkinOffers.length === 0
-      ? otherOffers.slice(0, 1).map((o) => ({ label: BOOKING_TYPE_LABEL[o.booking_type ?? ""] ?? "", offer: o }))
+      ? otherOffers.slice(0, 1).map((o) => ({ label: "", offer: o }))
       : []),
   ];
 
@@ -269,8 +441,8 @@ function PlatformOfferCell({ platform, listing }: { platform: Platform; listing?
           ))}
         </div>
       ) : (
-        <div className="text-xs text-mist/70 truncate" title={topHeadline ?? undefined}>
-          {topHeadline}
+        <div className="text-xs text-mist/70">
+          {topHeadline ?? "Listed — no deals scraped yet"}
         </div>
       )}
     </a>
