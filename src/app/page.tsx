@@ -18,7 +18,6 @@ const TAB_ICONS: Record<Tab, React.ReactNode> = {
     </svg>
   ),
   Dining: (
-    // Fork + knife — semantic, matches the gold/serif aesthetic per L25.
     <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 16 16" stroke="currentColor" strokeWidth={1.8}>
       <path d="M5 2v5a1 1 0 0 1-2 0V2M4 7v7" strokeLinecap="round"/>
       <path d="M11 2v12M9 2c0 2 0 4 2 5" strokeLinecap="round"/>
@@ -49,36 +48,37 @@ export default function Home() {
   return (
     <div className="min-h-screen flex flex-col bg-ink">
       {/* ── Top navigation ─────────────────────────────────────────────── */}
-      <header className="sticky top-0 z-40 border-b border-wire bg-ink/90 backdrop-blur-md">
+      <header className="sticky top-0 z-40 border-b border-wire bg-ink/95 backdrop-blur-sm">
         <div className="max-w-6xl mx-auto px-6 h-14 flex items-center gap-6">
 
           {/* Wordmark */}
-          <div className="flex items-center gap-2 shrink-0">
+          <div className="flex items-center gap-2.5 shrink-0">
             <div className="w-7 h-7 rounded-lg bg-gold-shimmer flex items-center justify-center shadow-glow-gold">
-              <svg className="w-3.5 h-3.5 text-ink" fill="none" viewBox="0 0 16 16" stroke="currentColor" strokeWidth={2.2}>
+              {/* Icon must stay dark regardless of theme — it sits on amber gradient */}
+              <svg className="w-3.5 h-3.5" style={{ color: "#1C1100" }} fill="none" viewBox="0 0 16 16" stroke="currentColor" strokeWidth={2.2}>
                 <rect x="1" y="4" width="14" height="10" rx="2"/>
                 <path d="M1 7h14" strokeLinecap="square"/>
-                <circle cx="4.5" cy="11" r="1" fill="#070b14" stroke="none"/>
+                <circle cx="4.5" cy="11" r="1" fill="#1C1100" stroke="none"/>
               </svg>
             </div>
-            <span className="font-serif font-semibold text-lg text-gold tracking-tight">CardIQ</span>
+            <span className="font-serif font-semibold text-[1.15rem] text-gold tracking-tight">CardIQ</span>
           </div>
 
           {/* Tab pills */}
-          <nav className="flex gap-1 flex-1">
+          <nav className="flex gap-0.5 flex-1">
             {TABS.map((t) => {
               const active = tab === t;
               return (
                 <button
                   key={t}
                   onClick={() => setTab(t)}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
+                  className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-sm font-medium transition-all ${
                     active
-                      ? "bg-surface text-gold border border-gold/20 shadow-card"
-                      : "text-mist/50 hover:text-mist hover:bg-surface/50"
+                      ? "bg-surface text-gold border border-rim shadow-card"
+                      : "text-mist/40 hover:text-mist/70 hover:bg-raised"
                   }`}
                 >
-                  <span className={active ? "text-gold" : "text-mist/40"}>{TAB_ICONS[t]}</span>
+                  <span className={active ? "text-gold" : "text-mist/35"}>{TAB_ICONS[t]}</span>
                   {t}
                 </button>
               );
@@ -88,7 +88,7 @@ export default function Home() {
           {/* Sign out */}
           <button
             onClick={signOut}
-            className="text-xs text-mist/30 hover:text-mist/70 transition-colors shrink-0"
+            className="text-xs text-mist/30 hover:text-mist/60 transition-colors shrink-0"
           >
             Sign out
           </button>

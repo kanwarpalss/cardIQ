@@ -5,31 +5,31 @@ export default {
   theme: {
     extend: {
       colors: {
-        // ── Depth layers (lightest last) ────────────────────────────
-        ink:     "#070b14",   // deepest background
-        surface: "#0f1422",   // card / panel
-        raised:  "#161d30",   // elevated elements, dropdowns
-        hover:   "#1c2438",   // interactive hover state
+        // ── Depth layers — light editorial palette ──────────────────
+        ink:     "#FAFAF8",   // page background — warm cream paper
+        surface: "#FFFFFF",   // card / panel — pure white
+        raised:  "#F3F2EE",   // elevated elements — warm off-white
+        hover:   "#ECEAE5",   // interactive hover state
 
-        // ── Borders (white-alpha so they always sit cleanly on any layer) ──
-        wire: "rgba(255,255,255,0.06)",   // hairline — section dividers
-        rim:  "rgba(255,255,255,0.11)",   // visible border
+        // ── Borders (dark-alpha so they sit cleanly on any light layer) ─
+        wire: "rgba(0,0,0,0.07)",    // hairline — section dividers
+        rim:  "rgba(0,0,0,0.13)",    // visible border
 
-        // ── Text (warm white — same warmth as wealth dashboard) ─────
-        mist: "#ede9e0",
+        // ── Text — warm near-black on cream ─────────────────────────
+        mist: "#1C1917",   // primary text
 
-        // ── Brand accent ────────────────────────────────────────────
-        gold:    "#e0b44a",   // richer, deeper champagne gold
+        // ── Brand accent — deeper amber for excellent contrast on white
+        gold: "#B45309",   // Tailwind amber-700: punchy, readable, unmistakably gold
 
         // ── Status ──────────────────────────────────────────────────
-        emerald:  "#22c55e",
-        ruby:     "#ef4444",
-        sapphire: "#3b82f6",
-        amber:    "#f59e0b",
+        emerald:  "#059669",   // darker green — AA contrast on white
+        ruby:     "#DC2626",   // red — AA contrast on white
+        sapphire: "#2563EB",   // blue
+        amber:    "#D97706",   // amber (distinct from gold)
 
-        // ── Legacy aliases (so old classes don't break mid-refactor) ─
-        panel: "#0f1422",
-        line:  "rgba(255,255,255,0.06)",
+        // ── Legacy aliases ──────────────────────────────────────────
+        panel: "#FFFFFF",
+        line:  "rgba(0,0,0,0.07)",
       },
       fontFamily: {
         sans:  ["'Inter'", "ui-sans-serif", "system-ui"],
@@ -39,16 +39,23 @@ export default {
         "2xs": ["0.65rem", { lineHeight: "1rem" }],
       },
       boxShadow: {
-        "glow-gold": "0 0 24px rgba(224,180,74,0.12)",
-        "card":      "0 4px 24px rgba(0,0,0,0.5), 0 1px 3px rgba(0,0,0,0.3)",
-        "dropdown":  "0 8px 40px rgba(0,0,0,0.6), 0 2px 8px rgba(0,0,0,0.4)",
+        "glow-gold": "0 0 20px rgba(180,83,9,0.12)",
+        "card":      "0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.05)",
+        "card-hover":"0 2px 8px rgba(0,0,0,0.08), 0 8px 24px rgba(0,0,0,0.08)",
+        "dropdown":  "0 4px 24px rgba(0,0,0,0.10), 0 1px 4px rgba(0,0,0,0.06)",
+        "focus":     "0 0 0 3px rgba(180,83,9,0.15)",
       },
       backgroundImage: {
-        "gold-shimmer": "linear-gradient(135deg, #e0b44a 0%, #c9983a 50%, #e8c060 100%)",
-        "surface-gradient": "linear-gradient(160deg, #0f1422 0%, #111828 100%)",
+        "gold-shimmer":     "linear-gradient(135deg, #D97706 0%, #B45309 50%, #F59E0B 100%)",
+        "surface-gradient": "linear-gradient(160deg, #FFFFFF 0%, #FAFAF8 100%)",
+        "ink-gradient":     "linear-gradient(180deg, #FAFAF8 0%, #F5F4F0 100%)",
       },
       animation: {
         "spin-slow": "spin 2s linear infinite",
+        "fade-in":   "fadeIn 0.2s ease-out",
+      },
+      keyframes: {
+        fadeIn: { "0%": { opacity: "0", transform: "translateY(4px)" }, "100%": { opacity: "1", transform: "translateY(0)" } },
       },
     },
   },

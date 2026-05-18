@@ -165,9 +165,9 @@ export default function DiningTab() {
       {/* ── Header ─────────────────────────────────────────────────── */}
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h1 className="font-serif text-2xl text-mist">Dining</h1>
-          <p className="text-sm text-mist/50 mt-1">
-            Find restaurants across District (Zomato), Swiggy Dineout, and EazyDiner — best offer wins.
+          <h1 className="font-serif text-3xl font-semibold text-mist tracking-tight">Dining</h1>
+          <p className="text-sm text-mist/45 mt-1">
+            Best offer across District, Swiggy Dineout &amp; EazyDiner — at a glance.
           </p>
         </div>
         {reviewLoaded && reviewTotal > 0 && (
@@ -203,8 +203,9 @@ export default function DiningTab() {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search Toit, Truffles, Glen's Bakehouse…"
-          className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-surface border border-wire focus:border-gold/40
-                     focus:outline-none text-mist placeholder:text-mist/30 text-sm"
+          className="w-full pl-10 pr-4 py-3 rounded-xl bg-surface border border-rim shadow-card
+                     focus:border-gold/50 focus:shadow-focus focus:outline-none
+                     text-mist placeholder:text-mist/30 text-sm"
           aria-label="Search restaurants"
         />
       </div>
@@ -648,8 +649,8 @@ function ReviewPairRow({
           onClick={() => decide("same")}
           disabled={deciding !== null}
           className="px-3 py-1.5 rounded-lg text-xs font-medium transition-colors
-                     bg-emerald-500/10 text-emerald-400 border border-emerald-500/20
-                     hover:bg-emerald-500/20 disabled:opacity-40"
+                     bg-emerald/8 text-emerald border border-emerald/20
+                     hover:bg-emerald/15 disabled:opacity-40"
         >
           {deciding === "same" ? "Saved ✓" : "Same restaurant"}
         </button>
@@ -657,8 +658,8 @@ function ReviewPairRow({
           onClick={() => decide("different")}
           disabled={deciding !== null}
           className="px-3 py-1.5 rounded-lg text-xs font-medium transition-colors
-                     bg-ruby/10 text-ruby border border-ruby/20
-                     hover:bg-ruby/20 disabled:opacity-40"
+                     bg-ruby/8 text-ruby border border-ruby/20
+                     hover:bg-ruby/15 disabled:opacity-40"
         >
           {deciding === "different" ? "Saved ✓" : "Different restaurant"}
         </button>

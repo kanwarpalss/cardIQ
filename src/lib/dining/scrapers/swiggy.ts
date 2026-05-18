@@ -20,6 +20,10 @@ export async function scrapeSwiggy(
   swiggyDineoutId: string,
 ): Promise<ScrapedOffer[]> {
   const id = swiggyDineoutId;
+  // IDs stored by dining-discover.ts are verified dineout IDs.
+  // IDs in the original hand-curated list were also manually verified.
+  // If an unverified food-delivery ID slips through, scrapeSwiggy returns []
+  // gracefully (the dineout endpoint returns a valid 200 with no offer cards).
   if (!id) return [];
 
   const url = `https://disc.swiggy.com/api/v1/dinersone-restaurant/json?restaurantId=${id}`;

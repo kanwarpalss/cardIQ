@@ -23,6 +23,10 @@ const BANGALORE_LAT = 12.9716;
 const BANGALORE_LNG = 77.5946;
 
 // Markers that prove an ID is dineout-valid (not just food-delivery).
+// CRITICAL: Swiggy has two separate ID namespaces — food-delivery IDs and
+// Dineout IDs. The food-delivery search API returns food-delivery IDs.
+// These MUST be verified against the dineout API before being stored.
+// An unverified ID stored in dining_listings will silently return 0 offers.
 const DINEOUT_MARKERS = ["DealAndOfferInfo", "dayWiseOfferInfo", "tabsOfferInfo"];
 
 interface CanonicalLite {

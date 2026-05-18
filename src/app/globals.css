@@ -9,8 +9,8 @@
 *, *::before, *::after { box-sizing: border-box; }
 
 html, body {
-  background: #070b14;
-  color: #ede9e0;
+  background: #FAFAF8;
+  color: #1C1917;
   font-family: 'Inter', ui-sans-serif, system-ui;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -19,21 +19,21 @@ html, body {
 /* Tabular numerals everywhere — makes financial figures align perfectly */
 body { font-variant-numeric: tabular-nums; }
 
-/* ── Scrollbars ─────────────────────────────────────────────────────────── */
+/* ── Scrollbars — light minimal ─────────────────────────────────────────── */
 ::-webkit-scrollbar       { width: 5px; height: 5px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.14); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.24); }
 
 /* ── Focus rings ────────────────────────────────────────────────────────── */
 :focus-visible {
-  outline: 2px solid rgba(224,180,74,0.6);
+  outline: 2px solid rgba(180,83,9,0.45);
   outline-offset: 2px;
   border-radius: 4px;
 }
 
 /* ── Selection ──────────────────────────────────────────────────────────── */
-::selection { background: rgba(224,180,74,0.25); }
+::selection { background: rgba(180,83,9,0.15); }
 
 /* ── Smooth transitions on interactive elements ─────────────────────────── */
 button, a, input, select, textarea {
@@ -42,21 +42,37 @@ button, a, input, select, textarea {
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* ── Gold shimmer text utility ──────────────────────────────────────────── */
+/* ── Gold shimmer text — deeper amber for light background ──────────────── */
 .text-gold-shimmer {
-  background: linear-gradient(135deg, #e0b44a 0%, #c9983a 50%, #e8c060 100%);
+  background: linear-gradient(135deg, #D97706 0%, #B45309 50%, #F59E0B 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
-/* ── Glass card surface ─────────────────────────────────────────────────── */
+/* ── Frosted card surface — light edition ───────────────────────────────── */
 .glass {
-  background: rgba(15, 20, 34, 0.7);
+  background: rgba(255, 255, 255, 0.80);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255,255,255,0.08);
+  border: 1px solid rgba(0,0,0,0.08);
 }
 
 /* ── Thin horizontal rule ───────────────────────────────────────────────── */
-hr.wire { border: none; border-top: 1px solid rgba(255,255,255,0.06); }
+hr.wire { border: none; border-top: 1px solid rgba(0,0,0,0.07); }
+
+/* ── Editorial section label ────────────────────────────────────────────── */
+.label-caps {
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #B45309;
+}
+
+/* ── Number emphasis ────────────────────────────────────────────────────── */
+.num-hero {
+  font-family: 'Playfair Display', ui-serif;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
