@@ -133,11 +133,13 @@ Gmail → Parser → `enrichAmount()` → Supabase → Dashboard
 ## 6. Current State
 
 - **174 tests passing** (74 core + 78 dining + 22 discover), tsc clean
-- **All 30 original restaurants** scraped and live in Supabase — 791 offers total
-- **Discovery pipeline built** — `npm run dining:discover` populates DB with all Bangalore restaurants: District (27K outlets → ~5-8K canonicals) + EazyDiner (~2,100) + Swiggy bootstrap (~30-50% coverage)
-- **dining-scrape.ts is now DB-driven** — reads targets from Supabase, no more hardcoded 30-restaurant array; handles both old `platform:` prefix and new bare-slug format
-- **GitHub Action has 2 jobs**: `discover` (Phase 1, ~20 min) runs first, then `scrape` (up to 6h)
-- **Migration 013 not yet applied to Supabase** — run `./scripts/db.sh push` before first `npm run dining:discover`
+- **All 30 original restaurants** live in Supabase — 791 offers total
+- **Discovery pipeline live** — `npm run dining:discover --phase=1` running (first full city pass); District found 27,542 unique outlet slugs; EazyDiner ~2,100 with lat/lng
+- **Migrations 013 + 014 applied** — PostGIS, pg_trgm, spatial index, dedupe queue all live in Supabase
+- **dining-scrape.ts DB-driven** — loads from `dining_listings`, strips old `platform:` prefix, handles multi-outlet chains
+- **Manual-link review widget live** — `GET/POST /api/dining/review`, "Link review (N)" button in DiningTab header
+- **UI overhauled to light editorial theme** — semantic token flip: dark navy → warm cream, all 174 tests still passing
+- **Shell alias system** — `~/.zshrc` + `~/.local-apps.sh` created; `apps` command shows all; `cardiq-dev` starts server + opens browser; `whatsup` opens Mac Mini via Tailscale
 
 ---
 
@@ -148,7 +150,9 @@ Gmail → Parser → `enrichAmount()` → Supabase → Dashboard
 | Walmart network blocks Supabase Cloud, jsdelivr CDN, Frankfurter | Ongoing — use Eagle WiFi or hotspot |
 | fawazahmed0 FX only goes back to 2024-03-06 | Accepted — older exotic-currency txns fall back to today's rate |
 | No mobile-optimised UI | Not planned for v1 |
-| Migration 013 not yet applied to Supabase | Run `./scripts/db.sh push` before `npm run dining:discover` |
+| Migrations 013 + 014 applied ✅ | — |
+| WhatsUp pm2 process errored on Mac Mini | Investigate separately — unrelated to cardIQ |
+| `CARDIQ_VERCEL` placeholder in `~/.local-apps.sh` | Fill in actual Vercel URL from vercel.com/dashboard |
 | Swiggy Dineout: `tabsOfferInfo.offersTab` prebook deals require Swiggy login to redeem | Data is guest-readable; display the offer, note "Login to buy" in UI |
 
 ---
@@ -180,13 +184,13 @@ npm run dining:recon                     # all 30 original restaurants × 3 plat
 
 ## 9. Session Handoff Notes
 
-*(Updated 2026-05-19)*
+*(Updated 2026-05-19 — end of session)*
 
-- **Discovery pipeline shipped:** `npm run dining:discover` now ready to pull all Bangalore restaurants from District (sitemap, 27K outlets) + EazyDiner (HTML NEXT_DATA, ~2,100). Run Phase 1 in ~15 min; Phase 2 (Swiggy bootstrap) takes hours for the full city.
-- **dining-scrape.ts is DB-driven:** No more hardcoded 30-restaurant list — reads from `dining_listings`. Handles multi-outlet chains (all District slugs per restaurant scraped as one call). Works with existing 30 restaurants immediately.
-- **GitHub Action updated:** 2-job pipeline — `discover` (Phase 1, 20-min timeout) triggers first, then `scrape` (6-hour ceiling). Add `NEXT_PUBLIC_SUPABASE_URL` + `SUPABASE_SERVICE_ROLE_KEY` as GitHub repo secrets to activate.
-- **Migration 013 pending apply:** PostGIS + pg_trgm + spatial index. Run `./scripts/db.sh push` before `npm run dining:discover`.
-- **Next:** Manual-link review widget (Chunk 15/surfacing `attach_for_review` pairs from DB) + DiningTab UI overhaul for search/browse at scale.
+- **Discovery running:** `npm run dining:discover --phase=1` was left running. District found 27,542 unique slugs — ingestion loop was writing to DB. Let it finish before starting Phase 2 (Swiggy) or a full re-scrape.
+- **All chunks complete:** Migrations 013+014 applied, discovery libs + orchestrator built + tested, DB-driven scrape, manual-link review widget (API + UI), full light-theme UI overhaul, shell alias system.
+- **Swiggy ID namespace:** food-delivery IDs ≠ dineout IDs. Discovery verifies each via the dineout API before storing. Documented in `discover/swiggy.ts` and `scrapers/swiggy.ts`. Never skip the verify step.
+- **Shell aliases:** `~/.zshrc` + `~/.local-apps.sh` created on KP's laptop. Fill in `CARDIQ_VERCEL` with the real Vercel URL. Run `apps` anywhere to see the registry.
+- **Next session:** (1) Check discovery run completed; (2) run Phase 2 Swiggy bootstrap if desired; (3) investigate WhatsUp pm2 errored on Mac Mini; (4) push to Vercel to see live light-theme UI.
 
 ---
 
