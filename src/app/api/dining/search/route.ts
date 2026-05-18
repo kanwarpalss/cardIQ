@@ -23,22 +23,29 @@ export async function GET(req: NextRequest) {
 
   // Fetch matching restaurants. We deliberately don't filter by user_id
   // — restaurant + offer data is global (see migration 010 design notes).
+  // Require at least 2 chars to search — prevents loading all 5K+ restaurants on empty query.
+  if (q.length > 0 && q.length < 2) {
+    return NextResponse.json({ restaurants: [], total: 0, limited: false });
+  }
+
   let query = supabase
     .from("dining_restaurants")
-    .select("id, canonical_name, area, city, cuisines, price_for_two, lat, lng, last_seen_at")
+    .select("id, canonical_name, area, city, cuisines, price_for_two, lat, lng, last_seen_at", { count: "exact" })
     .eq("city", "Bangalore")
     .order("canonical_name", { ascending: true })
     .limit(limit);
 
-  if (q.length > 0) {
+  if (q.length >= 2) {
     query = query.ilike("canonical_name", `%${q}%`);
   }
 
-  const { data: restaurants, error } = await query;
+  const { data: restaurants, error, count } = await query;
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
   if (!restaurants || restaurants.length === 0) {
-    return NextResponse.json({ restaurants: [] });
+    return NextResponse.json({ restaurants: [], total: 0, limited: false });
   }
+  const total = count ?? restaurants.length;
+  const limited = restaurants.length < total;
 
   const restaurantIds = restaurants.map((r) => r.id);
 
@@ -112,5 +119,5 @@ export async function GET(req: NextRequest) {
     return a.canonical_name.localeCompare(b.canonical_name);
   });
 
-  return NextResponse.json({ restaurants: out });
+  return NextResponse.json({ restaurants: out, total, limited });
 }

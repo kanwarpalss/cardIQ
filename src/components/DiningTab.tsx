@@ -92,12 +92,16 @@ export default function DiningTab() {
   const [restaurants, setRestaurants] = useState<Restaurant[] | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [resultTotal, setResultTotal] = useState<number | null>(null);
+  const [resultLimited, setResultLimited] = useState(false);
   const [showReview, setShowReview] = useState(false);
   const [reviewPairs, setReviewPairs] = useState<ReviewPair[]>([]);
   const [reviewTotal, setReviewTotal] = useState(0);
   const [reviewLoaded, setReviewLoaded] = useState(false);
 
   useEffect(() => {
+    // Don't fire on empty or single-char query — wait for 2+ chars.
+    if (query.length === 1) return;
     const timer = setTimeout(() => {
       void searchRestaurants(query);
     }, 250);
@@ -120,6 +124,8 @@ export default function DiningTab() {
       }
       const data = await res.json();
       setRestaurants(data.restaurants ?? []);
+      setResultTotal(data.total ?? null);
+      setResultLimited(data.limited ?? false);
     } catch (e) {
       setError(e instanceof Error ? e.message : String(e));
     } finally {
@@ -204,6 +210,13 @@ export default function DiningTab() {
       </div>
 
       {/* ── Results ────────────────────────────────────────────────── */}
+      {/* Prompt when nothing typed yet */}
+      {!loading && query.length === 0 && restaurants === null && (
+        <div className="text-center py-12 text-mist/40 text-sm">
+          Type a restaurant name to search — or type 2+ characters to browse.
+        </div>
+      )}
+
       {loading && <div className="text-center text-mist/40 text-sm py-8">Searching…</div>}
 
       {error && (
@@ -218,6 +231,19 @@ export default function DiningTab() {
 
       {!loading && !error && restaurants && restaurants.length > 0 && (
         <div className="space-y-3">
+          {/* Result count row */}
+          <div className="flex items-center justify-between text-xs text-mist/30 px-1">
+            <span>
+              {resultTotal !== null
+                ? resultLimited
+                  ? `Showing top ${restaurants.length} of ${resultTotal.toLocaleString()} matches`
+                  : `${resultTotal.toLocaleString()} restaurant${resultTotal !== 1 ? "s" : ""}`
+                : `${restaurants.length} result${restaurants.length !== 1 ? "s" : ""}`}
+            </span>
+            {resultLimited && (
+              <span className="text-mist/25">Refine your search to see more</span>
+            )}
+          </div>
           {restaurants.map((r) => (
             <RestaurantCard key={r.id} restaurant={r} />
           ))}
@@ -673,14 +699,14 @@ function EmptyState({ query }: { query: string }) {
     return (
       <div className="text-center py-12 text-mist/40 text-sm">
         <div>No restaurants match &ldquo;{query}&rdquo;.</div>
-        <div className="mt-1 text-xs">Try a shorter query — or the scraper may not have run yet.</div>
+        <div className="mt-1 text-xs">Try a shorter query, or run <code className="font-mono text-mist/40">npm run dining:discover</code> to expand the database.</div>
       </div>
     );
   }
   return (
     <div className="text-center py-12 text-mist/40 text-sm">
-      <div>No restaurants scraped yet.</div>
-      <div className="mt-1 text-xs">Run the scraper on the Mac, or wait for the weekly cron.</div>
+      <div>No restaurants in the database yet.</div>
+      <div className="mt-1 text-xs">Run <code className="font-mono text-mist/40">npm run dining:discover -- --phase=1</code> to populate.</div>
     </div>
   );
 }
