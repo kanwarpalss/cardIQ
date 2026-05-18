@@ -1,0 +1,42 @@
+name: Weekly Dining Scrape
+
+on:
+  schedule:
+    # Every Sunday at 02:00 UTC = 07:30 IST
+    - cron: '0 2 * * 0'
+  workflow_dispatch:
+    # Allows manual trigger from GitHub Actions UI → "Run workflow" button
+
+jobs:
+  scrape:
+    name: Scrape dining offers (30 restaurants × 3 platforms)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run dining scrape
+        run: npm run dining:scrape
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+
+      - name: Upload scrape log on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: scrape-log
+          path: /tmp/dining-scrape-*.log
+          if-no-files-found: ignore
+          retention-days: 7
