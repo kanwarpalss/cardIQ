@@ -7,18 +7,19 @@ const BANGALORE_LNG = "77.5946";
 /**
  * Scrape Swiggy Dineout for one restaurant.
  *
- * Step 1: Resolve restaurant ID — use swiggyDineoutId when available,
- *         otherwise fall back to food-delivery search.
- * Step 2: Fetch disc.swiggy.com/api/v1/dinersone-restaurant/json.
- *         Parse two sections:
- *         - addOnOffer.offers[]       → addon_coupon / addon_cashback (walkin)
- *         - tabsOfferInfo.offersTab[] → prebook_pct (prebook)
+ * Requires an explicit swiggyDineoutId — the Dineout restaurant ID from
+ * disc.swiggy.com (NOT the food-delivery ID; they share IDs in most cases
+ * but diverge for multi-outlet chains like Tiger Trail).
+ *
+ * Fetches disc.swiggy.com/api/v1/dinersone-restaurant/json and parses:
+ *   - addOnOffer.offers[]       → addon_coupon / addon_cashback (walkin, platform-wide)
+ *   - tabsOfferInfo.offersTab[] → prebook_pct (prebook, restaurant-specific)
  */
 export async function scrapeSwiggy(
   restaurantName: string,
-  swiggyDineoutId?: string,
+  swiggyDineoutId: string,
 ): Promise<ScrapedOffer[]> {
-  const id = swiggyDineoutId ?? await resolveSwiggyId(restaurantName);
+  const id = swiggyDineoutId;
   if (!id) return [];
 
   const url = `https://disc.swiggy.com/api/v1/dinersone-restaurant/json?restaurantId=${id}`;
@@ -43,33 +44,6 @@ export async function scrapeSwiggy(
   return parseSwiggyOffers(body);
 }
 
-async function resolveSwiggyId(name: string): Promise<string | null> {
-  const url = `https://www.swiggy.com/dapi/restaurants/search/v3?lat=${BANGALORE_LAT}&lng=${BANGALORE_LNG}&str=${encodeURIComponent(name)}&trackingId=undefined&submitAction=ENTER&queryUniqueId=undefined`;
-  const res = await diningFetchWithBackoff(url, {
-    headers: { Referer: "https://www.swiggy.com/" },
-  });
-  if (res.kind !== "ok") return null;
-
-  let body: Record<string, unknown>;
-  try {
-    body = JSON.parse(res.body) as Record<string, unknown>;
-  } catch {
-    return null;
-  }
-
-  const str = JSON.stringify(body);
-  const nameNorm = name.toLowerCase().replace(/[^a-z0-9]/g, "");
-
-  for (const m of str.matchAll(/"@type":"[^"]*food\.v2\.Restaurant"[^}]{0,200}"id":"(\d+)"[^}]{0,200}"name":"([^"]+)"/g)) {
-    const norm = m[2].toLowerCase().replace(/[^a-z0-9]/g, "");
-    if (norm.includes(nameNorm) || nameNorm.includes(norm)) return m[1];
-  }
-  for (const m of str.matchAll(/"name":"([^"]+)"[^}]{0,200}"id":"(\d+)"/g)) {
-    const norm = m[1].toLowerCase().replace(/[^a-z0-9]/g, "");
-    if (norm.includes(nameNorm) || nameNorm.includes(norm)) return m[2];
-  }
-  return null;
-}
 
 function parseSwiggyOffers(body: Record<string, unknown>): ScrapedOffer[] {
   const offers: ScrapedOffer[] = [];

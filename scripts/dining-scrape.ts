@@ -78,9 +78,9 @@ const TARGETS: ScrapeTarget[] = [
     slug: "tiger-trail",
     name: "Tiger Trail",
     area: "Jayamahal",
-    lat: 12.9573, lng: 77.6437,
+    lat: 12.9969, lng: 77.5829,
     districtSlugs: ["tiger-trail-regenta-place-shivajinagar-bangalore"],
-    swiggyDineoutId: "25281",
+    swiggyDineoutId: "581549",   // Regenta Place outlet (HAL Airport = 25281, wrong location)
     eazyDinerSlug: "tiger-trail-ramada-bangalore-shivajinagar-330037",
   },
   {
@@ -443,8 +443,10 @@ async function main() {
       errors++;
     }
 
-    // Swiggy
-    if (target.swiggyDineoutId || target.name) {
+    // Swiggy — only attempt when an explicit Dineout ID is configured.
+    // The food-delivery fallback resolver was removed: it used a different ID namespace
+    // and silently returned wrong outlets (e.g. Tiger Trail HAL Airport vs Regenta Place).
+    if (target.swiggyDineoutId) {
       try {
         const offers = await scrapeSwiggy(target.name, target.swiggyDineoutId);
         results.push({ platform: "swiggy", offers });
