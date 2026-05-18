@@ -82,28 +82,35 @@ Gmail → Parser → `enrichAmount()` → Supabase → Dashboard
 - D4: Headline + full terms text (expandable in UI)
 - D5: Red banner in Dining tab on expiry
 
-### Build status (as of 2026-05-17)
+### Build status (as of 2026-05-19)
 | Chunk | Status |
 |---|---|
 | 1 Schema migration (010_dining_schema.sql) | ✅ Done |
 | 2 normalize.ts + tests (35 tests) | ✅ Done |
 | 3 http.ts + tests (24 tests) | ✅ Done |
 | 4 dedupe.ts + tests (19 tests) | ✅ Done |
-| 5 ~~dining-login.ts~~ | ✅ Deleted — no auth needed (all platforms guest-accessible) |
+| 5 ~~dining-login.ts~~ | ✅ Deleted — no auth needed |
 | 6 ~~dining-verify-session.ts~~ | ✅ Deleted |
 | 7 API route: search | ✅ Done |
-| 8 DiningTab.tsx + nav wiring | ✅ Done (re-auth banner removed, prebook/walk-in split added) |
-| 9 scripts/dining-recon.ts — guest scrape ~30 restaurants × 3 platforms, dump JSON | ✅ Done (29/30 Swiggy, 28/30 District, 21/30 EazyDiner) |
-| 10 docs/DINING_OFFER_TAXONOMY.md — analyze recon dumps, define offer type schema | ✅ Done |
-| 11 Migration 012 — add booking_type + revise offer_type enum per taxonomy | ✅ Done |
-| 12 Per-platform scrapers (zomato, swiggy, eazydiner) | ✅ Done |
-| 13 dining-scrape.ts orchestrator | ✅ Done (10-restaurant demo; extend to full 30 next) |
-| 14 GitHub Action weekly cron | ⏳ Pending |
-| 15 Manual-link review widget | ⏳ Pending |
+| 8 DiningTab.tsx + nav wiring | ✅ Done |
+| 9 scripts/dining-recon.ts | ✅ Done |
+| 10 docs/DINING_OFFER_TAXONOMY.md | ✅ Done |
+| 11 Migration 012 — booking_type | ✅ Done |
+| 12 Per-platform scrapers (district, swiggy, eazydiner) | ✅ Done |
+| 13 dining-scrape.ts orchestrator (30 restaurants) | ✅ Done |
+| 14 GitHub Action weekly cron | ✅ Done (2-job: discover + scrape) |
+| NEW Migration 013 — PostGIS + pg_trgm + spatial indexes | ✅ Done |
+| NEW Discovery libs (district sitemap, eazydiner HTML, swiggy search) | ✅ Done — 22 tests |
+| NEW dining-discover.ts orchestrator | ✅ Done |
+| NEW dining-scrape.ts DB-driven (replaces hardcoded 30) | ✅ Done |
+| 15 Manual-link review widget | ⏳ Next |
+| 16 DiningTab UI — search/browse at scale | ⏳ Next |
 
-**Next action:** Run `npm run dining:recon` after recon script is built. Dumps JSON to `recon/` folder, generates `recon/SUMMARY.md`. We analyze, define taxonomy, then build production scrapers.
-
-**Offer type requirement:** Both `prebooking` and `walkin` offers shown per platform. Migration 012 adds `booking_type` to `dining_offers` once taxonomy is confirmed from real data.
+**Discovery architecture (locked 2026-05-19):**
+- District: public sitemap → 27K Bangalore outlet URLs → ~5-8K canonical restaurants
+- EazyDiner: paginated HTML NEXT_DATA → ~2,100 restaurants with lat/lng
+- Swiggy: no bulk listing API; bootstrapped via name-search per canonical + dineout-ID verify
+- Swiggy coverage: ~30-50% of canonicals; rest handled by manual-link widget
 
 ---
 
@@ -116,17 +123,21 @@ Gmail → Parser → `enrichAmount()` → Supabase → Dashboard
 | 2026-05 | GitHub Action for weekly scrape | Vercel cron | Playwright on Vercel is painful (binary size, cold starts) |
 | 2026-05 | jsonb for raw payloads | Supabase Storage | Simpler for v1; revisit at 50KB+ per restaurant |
 | 2026-05 | Swiggy scraped as guest (no login) | Stored session | All offers (pre-booking + walk-in) visible without auth — confirmed manually |
+| 2026-05-19 | District discovery via sitemap (not HTML crawl) | Paginating listing pages | Sitemap is explicitly published, 27K Bangalore URLs, no rate-limit concern |
+| 2026-05-19 | EazyDiner discovery via www HTML (not force.eazydiner.com API) | API host | force.eazydiner.com has Disallow:/ in robots; www host is Allow:/ |
+| 2026-05-19 | Swiggy: no bulk discovery; bootstrap from D+ED canonicals | Guessing bulk listing endpoint | All dapi variants tested; dineout listing API is gated. Search+verify gets ~30-50% coverage |
+| 2026-05-19 | Weekly-only scrape cadence (no hot/warm/cold tiers) | Tiered per-restaurant frequency | YAGNI — weekly is fine to start; tiers add complexity without proven need |
 
 ---
 
 ## 6. Current State
 
-- 152 tests passing (74 core + 78 dining), tsc clean
-- **All 30 restaurants scraped and live in Supabase** — 475 offers (35 prebook, 562 bank_card, 68+85 Swiggy coupons/cashback, 28 payeazy, etc.)
-- **Payment offers catalog built** — `src/data/platform-payment-offers.ts` contains all 68 platform-wide offers (9 Swiggy + 31 EazyDiner + 28 District), written once, referenced by UI
-- **DiningTab updated** — Payment Offers accordion at top (expandable per platform with full T&Cs), per-restaurant badges showing which platform payment offers they accept, per-platform cells now show only restaurant-specific offers (prebook deals, buffets)
-- **Scraper extended to all 30** — `scripts/dining-scrape.ts` now covers all 30 restaurants with correct Swiggy IDs from actual API (not placeholders)
-- DB: 30 restaurants, 86 listings (30 District + 35 Swiggy + 21 EazyDiner)
+- **174 tests passing** (74 core + 78 dining + 22 discover), tsc clean
+- **All 30 original restaurants** scraped and live in Supabase — 791 offers total
+- **Discovery pipeline built** — `npm run dining:discover` populates DB with all Bangalore restaurants: District (27K outlets → ~5-8K canonicals) + EazyDiner (~2,100) + Swiggy bootstrap (~30-50% coverage)
+- **dining-scrape.ts is now DB-driven** — reads targets from Supabase, no more hardcoded 30-restaurant array; handles both old `platform:` prefix and new bare-slug format
+- **GitHub Action has 2 jobs**: `discover` (Phase 1, ~20 min) runs first, then `scrape` (up to 6h)
+- **Migration 013 not yet applied to Supabase** — run `./scripts/db.sh push` before first `npm run dining:discover`
 
 ---
 
@@ -137,7 +148,7 @@ Gmail → Parser → `enrichAmount()` → Supabase → Dashboard
 | Walmart network blocks Supabase Cloud, jsdelivr CDN, Frankfurter | Ongoing — use Eagle WiFi or hotspot |
 | fawazahmed0 FX only goes back to 2024-03-06 | Accepted — older exotic-currency txns fall back to today's rate |
 | No mobile-optimised UI | Not planned for v1 |
-| Migrations 011 + 012 not yet applied to Supabase | Run `./scripts/db.sh push` when ready |
+| Migration 013 not yet applied to Supabase | Run `./scripts/db.sh push` before `npm run dining:discover` |
 | Swiggy Dineout: `tabsOfferInfo.offersTab` prebook deals require Swiggy login to redeem | Data is guest-readable; display the offer, note "Login to buy" in UI |
 
 ---
@@ -147,26 +158,35 @@ Gmail → Parser → `enrichAmount()` → Supabase → Dashboard
 ```bash
 # Must be on Eagle WiFi / hotspot (not Walmart network)
 npm run dev                              # localhost:3000
-npx vitest run                           # 152 tests, all must pass
+npx vitest run                           # 174 tests, all must pass
 npx tsc --noEmit                         # must be clean
-./scripts/db.sh push                     # apply migrations
+./scripts/db.sh push                     # apply migrations (run 013 before discover)
 
-# Dining recon (find correct API endpoints before building scrapers)
-npm run dining:recon                     # all 30 restaurants × 3 platforms
-npm run dining:recon -- --platform zomato --slug toit   # single test
+# First-time discovery (all Bangalore restaurants)
+npm run dining:discover                  # Phase 1 + 2 (~4-6h for Swiggy bootstrap)
+npm run dining:discover -- --phase=1     # Phase 1 only: District + EazyDiner (~15 min)
+npm run dining:discover -- --dry-run     # print counts without writing to DB
+
+# Offer scrape (DB-driven, requires discover to have run first)
+npm run dining:scrape                    # all restaurants
+npm run dining:scrape -- --slug "Toit"  # filter by name
+npm run dining:scrape -- --dry-run      # print only
+
+# Recon (for new offer taxonomy analysis)
+npm run dining:recon                     # all 30 original restaurants × 3 platforms
 ```
 
 ---
 
 ## 9. Session Handoff Notes
 
-*(Updated 2026-05-18)*
+*(Updated 2026-05-19)*
 
-- **Payment offers centralized:** `src/data/platform-payment-offers.ts` — 68 offers (9 Swiggy with full T&Cs, 31 EazyDiner bank offers sourced from eazydiner.com/payeazy, 28 District bank offers from recon union). Single source of truth, never duplicated per restaurant.
-- **DiningTab UI updated:** Payment Offers accordion at top (3 expandable platform cards), per-restaurant participation badges (District ✓ / Swiggy ✓ / EazyDiner ✓), per-platform cells now clean of platform-wide offers.
-- **All 30 restaurants live:** `scripts/dining-scrape.ts` fully extended — correct Swiggy IDs from API, precise coords. DB has 30 restaurants / 86 listings / 791 offers total.
-- **EazyDiner offers discovery:** Their bank/card offers (HSBC 30%, Axis 30%, IDFC ₹1000 off, etc.) live at eazydiner.com/payeazy, NOT in the restaurant API endpoint. Now fully catalogued.
-- **Next:** Wire GitHub Action weekly cron for automated scrape refresh.
+- **Discovery pipeline shipped:** `npm run dining:discover` now ready to pull all Bangalore restaurants from District (sitemap, 27K outlets) + EazyDiner (HTML NEXT_DATA, ~2,100). Run Phase 1 in ~15 min; Phase 2 (Swiggy bootstrap) takes hours for the full city.
+- **dining-scrape.ts is DB-driven:** No more hardcoded 30-restaurant list — reads from `dining_listings`. Handles multi-outlet chains (all District slugs per restaurant scraped as one call). Works with existing 30 restaurants immediately.
+- **GitHub Action updated:** 2-job pipeline — `discover` (Phase 1, 20-min timeout) triggers first, then `scrape` (6-hour ceiling). Add `NEXT_PUBLIC_SUPABASE_URL` + `SUPABASE_SERVICE_ROLE_KEY` as GitHub repo secrets to activate.
+- **Migration 013 pending apply:** PostGIS + pg_trgm + spatial index. Run `./scripts/db.sh push` before `npm run dining:discover`.
+- **Next:** Manual-link review widget (Chunk 15/surfacing `attach_for_review` pairs from DB) + DiningTab UI overhaul for search/browse at scale.
 
 ---
 
