@@ -11,6 +11,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "dining:recon": "tsx scripts/dining-recon.ts",
+    "dining:discover": "tsx scripts/dining-discover.ts",
     "dining:scrape": "tsx scripts/dining-scrape.ts"
   },
   "dependencies": {

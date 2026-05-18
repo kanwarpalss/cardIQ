@@ -1,16 +1,18 @@
 #!/usr/bin/env -S npx tsx
 /**
- * dining-scrape.ts — production scraper and demo runner.
+ * dining-scrape.ts — production offer scraper (DB-driven).
  *
- * Scrapes District.in, Swiggy Dineout, and EazyDiner for a curated
- * list of Bangalore restaurants and writes the results to Supabase.
+ * Loads ALL dining_listings from Supabase (populated by dining-discover.ts),
+ * scrapes fresh offers from District, Swiggy Dineout, and EazyDiner, and
+ * writes results back to dining_offers.
+ *
+ * Run dining-discover.ts first on a fresh install.
  *
  * Usage:
- *   npm run dining:scrape                      # all restaurants
- *   npm run dining:scrape -- --slug hoot       # one restaurant
- *   npm run dining:scrape -- --dry-run         # print only, no DB writes
- *
- * After a successful run, the DiningTab UI will show live offer data.
+ *   npm run dining:scrape                          # all restaurants
+ *   npm run dining:scrape -- --slug "Toit"         # filter by canonical name
+ *   npm run dining:scrape -- --dry-run             # print only, no DB writes
+ *   npm run dining:scrape -- --limit 50            # first N restaurants
  */
 
 import { config } from "dotenv";
@@ -24,8 +26,9 @@ import type { ScrapedOffer } from "../src/lib/dining/types";
 // ── CLI args ─────────────────────────────────────────────────────────
 
 const args = process.argv.slice(2);
-const slugFilter = args.includes("--slug") ? args[args.indexOf("--slug") + 1] : null;
+const nameFilter = args.includes("--slug") ? args[args.indexOf("--slug") + 1] : null;
 const dryRun = args.includes("--dry-run");
+const limitArg = args.includes("--limit") ? parseInt(args[args.indexOf("--limit") + 1], 10) : null;
 
 // ── Supabase client ───────────────────────────────────────────────────
 
@@ -34,343 +37,89 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!,
 );
 
-// ── Restaurant list ───────────────────────────────────────────────────
+// ── Types ─────────────────────────────────────────────────────────────
 
-interface ScrapeTarget {
-  slug: string;
-  name: string;
-  area: string;
-  lat: number;
-  lng: number;
-  districtSlugs: string[];
-  swiggyDineoutId?: string;
-  eazyDinerSlug?: string;
+interface PlatformListing {
+  listingId: string;      // dining_listings.id — used when writing offers
+  platform: "zomato" | "swiggy" | "eazydiner";
+  externalId: string;     // raw from DB (may have "platform:" prefix)
+  url: string;
 }
 
-const TARGETS: ScrapeTarget[] = [
-  // ── Already scraped (10 original) ─────────────────────────────────
-  {
-    slug: "hoot",
-    name: "Hoot",
-    area: "Koramangala",
-    lat: 12.9141, lng: 77.6786,
-    districtSlugs: ["hoot-craftwork-2-0-1-sarjapur-road-bangalore"],
-    swiggyDineoutId: "1152615",
-  },
-  {
-    slug: "onesta",
-    name: "Onesta",
-    area: "Koramangala",
-    lat: 12.9787, lng: 77.6436,
-    districtSlugs: ["onesta-koramangala-5th-block-bangalore"],
-    swiggyDineoutId: "401186",
-  },
-  {
-    slug: "smoke-house-deli",
-    name: "Smoke House Deli",
-    area: "Indiranagar",
-    lat: 12.9656, lng: 77.6413,
-    districtSlugs: ["smoke-house-deli-indiranagar-bangalore"],
-    swiggyDineoutId: "834227",
-    eazyDinerSlug: "smoke-house-deli-lavelle-road-335752",
-  },
-  {
-    slug: "tiger-trail",
-    name: "Tiger Trail",
-    area: "Jayamahal",
-    lat: 12.9969, lng: 77.5829,
-    districtSlugs: ["tiger-trail-regenta-place-shivajinagar-bangalore"],
-    swiggyDineoutId: "581549",   // Regenta Place outlet (HAL Airport = 25281, wrong location)
-    eazyDinerSlug: "tiger-trail-ramada-bangalore-shivajinagar-330037",
-  },
-  {
-    slug: "shiro",
-    name: "Shiro",
-    area: "UB City",
-    lat: 12.9719, lng: 77.5962,
-    districtSlugs: ["shiro-lavelle-road"],
-    swiggyDineoutId: "7341",
-    eazyDinerSlug: "shiro-ub-city-330141",
-  },
-  {
-    slug: "absolute-barbecues",
-    name: "Absolute Barbecues",
-    area: "Koramangala",
-    lat: 12.9347, lng: 77.6158,
-    districtSlugs: ["abs-absolute-barbecues-koramangala-5th-block-bangalore"],
-    swiggyDineoutId: "528133",
-    eazyDinerSlug: "abs-absolute-barbecues-whitefield-east-bengaluru-662250",
-  },
-  {
-    slug: "barbeque-nation",
-    name: "Barbeque Nation",
-    area: "Indiranagar",
-    lat: 12.9704, lng: 77.6102,
-    districtSlugs: ["barbeque-nation-indiranagar"],
-    swiggyDineoutId: "302699",
-    eazyDinerSlug: "barbeque-nation-ascendas-park-square-whitefield-335312",
-  },
-  {
-    slug: "byg-brewski",
-    name: "Byg Brewski",
-    area: "Hennur",
-    lat: 13.0708, lng: 77.6519,
-    districtSlugs: ["byg-brewski-brewing-company-hennur-bangalore"],
-    swiggyDineoutId: "781599",
-    eazyDinerSlug: "byg-brewski-brewing-company-hennur-north-bengaluru-656351",
-  },
-  {
-    slug: "yauatcha",
-    name: "Yauatcha",
-    area: "UB City",
-    lat: 12.9732, lng: 77.6203,
-    districtSlugs: ["yauatcha-mg-road"],
-    swiggyDineoutId: "281835",
-    eazyDinerSlug: "yauatcha-1-mg-road-mall-mg-road-330178",
-  },
-  {
-    slug: "black-pearl",
-    name: "The Black Pearl",
-    area: "Indiranagar",
-    lat: 12.9784, lng: 77.6408,
-    districtSlugs: ["the-black-pearl-indiranagar-bangalore"],
-    swiggyDineoutId: "588676",
-  },
-
-  // ── New restaurants (20 added) ────────────────────────────────────
-  {
-    slug: "blue-tokai",
-    name: "Blue Tokai Coffee",
-    area: "Indiranagar",
-    lat: 12.9719, lng: 77.5942,
-    districtSlugs: ["blue-tokai-coffee-roasters-infantry-road-bangalore"],
-    swiggyDineoutId: "966182",
-    eazyDinerSlug: "blue-tokai-infantry-road-central-bengaluru-683567",
-  },
-  {
-    slug: "communiti",
-    name: "Communiti",
-    area: "Indiranagar",
-    lat: 12.9725, lng: 77.6082,
-    districtSlugs: ["communiti-brigade-road-bangalore"],
-    swiggyDineoutId: "390913",
-  },
-  {
-    slug: "farzi-cafe",
-    name: "Farzi Cafe",
-    area: "UB City",
-    lat: 12.9715, lng: 77.5959,
-    districtSlugs: ["farzi-cafe-lavelle-road"],
-    swiggyDineoutId: "302257",
-    eazyDinerSlug: "farzi-cafe-vittal-mallya-road-337292",
-  },
-  {
-    slug: "fatty-bao",
-    name: "The Fatty Bao",
-    area: "Indiranagar",
-    lat: 12.9704, lng: 77.6453,
-    districtSlugs: ["the-fatty-bao-indiranagar-bangalore"],
-    swiggyDineoutId: "17327",
-    eazyDinerSlug: "the-fatty-bao-lavelle-road-central-bengaluru-682670",
-  },
-  {
-    slug: "flechazo",
-    name: "Flechazo",
-    area: "Indiranagar",
-    lat: 12.9784, lng: 77.6408,
-    districtSlugs: ["flechazo-whitefield-bangalore"],
-    swiggyDineoutId: "775734",
-  },
-  {
-    slug: "foxtrot",
-    name: "Foxtrot",
-    area: "Koramangala",
-    lat: 12.9250, lng: 77.6329,
-    districtSlugs: ["foxtrot-marathahalli-bangalore"],
-    swiggyDineoutId: "157210",
-    eazyDinerSlug: "foxtrot-gastropub-marathahalli-east-bengaluru-652608",
-  },
-  {
-    slug: "glens-bakehouse",
-    name: "Glen's Bakehouse",
-    area: "Koramangala",
-    lat: 12.9700, lng: 77.5974,
-    districtSlugs: ["glen-s-bakehouse-koramangala-6th-block-bangalore"],
-    swiggyDineoutId: "17376",
-    eazyDinerSlug: "glens-bakehouse-indiranagar-331919",
-  },
-  {
-    slug: "karavalli",
-    name: "Karavalli",
-    area: "Residency Road",
-    lat: 12.9719, lng: 77.6089,
-    districtSlugs: ["karavalli-the-gateway-hotel-residency-road"],
-    swiggyDineoutId: "941651",
-    eazyDinerSlug: "karavalli-the-gateway-hotel-residency-road-330289",
-  },
-  {
-    slug: "meghana-foods",
-    name: "Meghana Foods",
-    area: "Koramangala",
-    lat: 12.9726, lng: 77.6091,
-    districtSlugs: ["meghana-foods-koramangala-5th-block"],
-    swiggyDineoutId: "3241",
-    eazyDinerSlug: "meghana-foods-residency-road-334874",
-  },
-  {
-    slug: "misu",
-    name: "Misu",
-    area: "Indiranagar",
-    lat: 12.9755, lng: 77.6026,
-    districtSlugs: ["misu-indiranagar-bangalore"],
-    swiggyDineoutId: "29063",
-  },
-  {
-    slug: "mtr",
-    name: "MTR",
-    area: "Lalbagh",
-    lat: 12.9722, lng: 77.6009,
-    districtSlugs: ["mtr-since-1924-indiranagar-bangalore"],
-    swiggyDineoutId: "49096",
-    eazyDinerSlug: "mtr-1924-st-marks-road-334798",
-  },
-  {
-    slug: "nagarjuna",
-    name: "Nagarjuna",
-    area: "Residency Road",
-    lat: 12.9732, lng: 77.6092,
-    districtSlugs: ["nagarjuna-since-1984-residency-road-bangalore"],
-    swiggyDineoutId: "41100",
-    eazyDinerSlug: "nagarjuna-residency-road-334689",
-  },
-  {
-    slug: "olive-beach",
-    name: "Olive Beach",
-    area: "Sankey Road",
-    lat: 12.9674, lng: 77.6083,
-    districtSlugs: ["olive-beach-richmond-road-bangalore"],
-    swiggyDineoutId: "477654",
-    eazyDinerSlug: "olive-beach-richmond-road-330137",
-  },
-  {
-    slug: "permit-room",
-    name: "The Permit Room",
-    area: "Indiranagar",
-    lat: 12.9705, lng: 77.6105,
-    districtSlugs: ["the-permit-room-indiranagar-bangalore"],
-    swiggyDineoutId: "63024",
-    eazyDinerSlug: "the-permit-room-richmond-town-central-bengaluru-613800",
-  },
-  {
-    slug: "third-wave",
-    name: "Third Wave Coffee",
-    area: "Indiranagar",
-    lat: 12.9720, lng: 77.5981,
-    districtSlugs: ["third-wave-coffee-1-indiranagar-bangalore"],
-    swiggyDineoutId: "533773",
-    eazyDinerSlug: "third-wave-coffee-roasters-koramangala-south-bengaluru-640094",
-  },
-  {
-    slug: "toit",
-    name: "Toit Brewpub",
-    area: "Indiranagar",
-    lat: 12.9792, lng: 77.6408,
-    districtSlugs: ["toit-indiranagar"],
-    swiggyDineoutId: "1271281",
-    eazyDinerSlug: "toit-indiranagar-330151",
-  },
-  {
-    slug: "truffles",
-    name: "Truffles",
-    area: "Koramangala",
-    lat: 12.9718, lng: 77.6010,
-    districtSlugs: ["truffles-koramangala-5th-block"],
-    swiggyDineoutId: "3369",
-    eazyDinerSlug: "truffles-st-marks-road-334765",
-  },
-  {
-    slug: "vidyarthi-bhavan",
-    name: "Vidyarthi Bhavan",
-    area: "Gandhi Bazaar",
-    lat: 12.9452, lng: 77.5715,
-    districtSlugs: ["vidyarthi-bhavan-since-1943-basavanagudi-bangalore"],
-    swiggyDineoutId: "3883",
-  },
-  {
-    // Not on District sitemap, not on EazyDiner; Swiggy only
-    slug: "asia-kitchen",
-    name: "Asia Kitchen",
-    area: "Indiranagar",
-    lat: 12.9752, lng: 77.6039,
-    districtSlugs: [],
-    swiggyDineoutId: "305776",
-  },
-  {
-    // Not on any platform — skipped by scrapers gracefully
-    slug: "indigo-deli",
-    name: "Indigo Deli",
-    area: "Koramangala",
-    lat: 12.9355, lng: 77.6245,
-    districtSlugs: [],
-  },
-];
-
-// ── Types ─────────────────────────────────────────────────────────────
+interface ScrapeTarget {
+  restaurantId: string;
+  name: string;
+  area: string;
+  listings: PlatformListing[];
+}
 
 interface PlatformResult {
   platform: "district" | "swiggy" | "eazydiner";
+  listingId: string;
   offers: ScrapedOffer[];
   error?: string;
 }
 
-// ── DB helpers ────────────────────────────────────────────────────────
+// ── Load targets from DB ──────────────────────────────────────────────
 
-async function upsertRestaurant(t: ScrapeTarget): Promise<string> {
-  const { data, error } = await supabase
-    .from("dining_restaurants")
-    .upsert(
-      {
-        canonical_name: t.name,
-        area: t.area,
-        city: "Bangalore",
-        lat: t.lat,
-        lng: t.lng,
-        last_seen_at: new Date().toISOString(),
-      },
-      { onConflict: "canonical_name,lat,lng" },
-    )
-    .select("id")
-    .single();
-
-  if (error) throw new Error(`upsertRestaurant ${t.name}: ${error.message}`);
-  return data.id as string;
+/**
+ * External IDs were written in two formats:
+ *   Old (pre-discover): "district:hoot", "swiggy:1152615"
+ *   New (from discover): "hoot", "1152615"
+ *
+ * Strip the prefix so scrapers always get the bare key.
+ */
+function stripPlatformPrefix(externalId: string): string {
+  return externalId.replace(/^(district|swiggy|eazydiner|zomato):/, "");
 }
 
-async function upsertListing(
-  restaurantId: string,
-  platform: string,
-  externalId: string,
-  url: string,
-  headlineOffer: string | null,
-): Promise<string> {
-  const { data, error } = await supabase
-    .from("dining_listings")
-    .upsert(
-      {
-        restaurant_id: restaurantId,
-        platform,
-        external_id: externalId,
-        url,
-        headline_offer: headlineOffer,
-        last_scraped_at: new Date().toISOString(),
-      },
-      { onConflict: "platform,external_id" },
-    )
-    .select("id")
-    .single();
+async function loadTargets(): Promise<ScrapeTarget[]> {
+  let q = supabase
+    .from("dining_restaurants")
+    .select(`
+      id, canonical_name, area,
+      dining_listings ( id, platform, external_id, url )
+    `)
+    .eq("city", "Bangalore")
+    .order("canonical_name");
 
-  if (error) throw new Error(`upsertListing ${platform}/${externalId}: ${error.message}`);
-  return data.id as string;
+  if (nameFilter) {
+    q = q.ilike("canonical_name", `%${nameFilter}%`);
+  }
+  if (limitArg) {
+    q = q.limit(limitArg);
+  }
+
+  const { data, error } = await q;
+  if (error) {
+    console.error("Failed to load targets from DB:", error.message);
+    process.exit(1);
+  }
+
+  return (data ?? [])
+    .map((r) => ({
+      restaurantId: r.id as string,
+      name: r.canonical_name as string,
+      area: r.area as string ?? "",
+      listings: ((r.dining_listings as Array<{
+        id: string; platform: string; external_id: string; url: string;
+      }>) ?? []).map((l) => ({
+        listingId: l.id,
+        platform: l.platform as PlatformListing["platform"],
+        externalId: stripPlatformPrefix(l.external_id),
+        url: l.url,
+      })),
+    }))
+    .filter((t) => t.listings.length > 0); // skip restaurants with no platform listings yet
+}
+
+// ── DB write helpers ──────────────────────────────────────────────────
+
+async function updateListingHeadline(listingId: string, headlineOffer: string | null): Promise<void> {
+  await supabase
+    .from("dining_listings")
+    .update({ headline_offer: headlineOffer, last_scraped_at: new Date().toISOString() })
+    .eq("id", listingId);
 }
 
 async function insertOffers(
@@ -396,28 +145,21 @@ async function insertOffers(
 // ── Main ──────────────────────────────────────────────────────────────
 
 async function main() {
-  const targets = slugFilter
-    ? TARGETS.filter((t) => t.slug === slugFilter)
-    : TARGETS;
+  const targets = await loadTargets();
 
   if (targets.length === 0) {
-    console.error(`No target found for slug: ${slugFilter}`);
+    console.error(nameFilter ? `No restaurants found matching: ${nameFilter}` : "No restaurants in DB. Run dining:discover first.");
     process.exit(1);
   }
 
   console.log(`\n🍽  Dining scrape — ${targets.length} restaurant(s)${dryRun ? " [DRY RUN]" : ""}\n`);
 
-  // Create one dining_run row for this entire run
+  // Create one dining_run row for this entire run.
   let runId = "dry-run";
   if (!dryRun) {
     const { data, error } = await supabase
       .from("dining_runs")
-      .insert({
-        platform: "all",
-        city: "Bangalore",
-        kind: "adhoc",
-        status: "running",
-      })
+      .insert({ platform: "all", city: "Bangalore", kind: "adhoc", status: "running" })
       .select("id")
       .single();
     if (error) { console.error("Failed to create dining_run:", error.message); process.exit(1); }
@@ -430,48 +172,61 @@ async function main() {
   for (const target of targets) {
     console.log(`\n── ${target.name} (${target.area}) ──`);
 
-    const results: PlatformResult[] = [];
-
-    // District
-    try {
-      const offers = await scrapeDistrict(target.districtSlugs);
-      results.push({ platform: "district", offers });
-      console.log(`  district:   ${offers.length} offers`);
-    } catch (e) {
-      results.push({ platform: "district", offers: [], error: String(e) });
-      console.log(`  district:   ERROR — ${String(e)}`);
-      errors++;
+    // Group listings by platform.
+    const byPlatform = new Map<string, PlatformListing[]>();
+    for (const l of target.listings) {
+      const key = l.platform === "zomato" ? "district" : l.platform;
+      if (!byPlatform.has(key)) byPlatform.set(key, []);
+      byPlatform.get(key)!.push(l);
     }
 
-    // Swiggy — only attempt when an explicit Dineout ID is configured.
-    // The food-delivery fallback resolver was removed: it used a different ID namespace
-    // and silently returned wrong outlets (e.g. Tiger Trail HAL Airport vs Regenta Place).
-    if (target.swiggyDineoutId) {
+    const results: PlatformResult[] = [];
+
+    // District — aggregate all outlet slugs for this restaurant.
+    const districtListings = byPlatform.get("district") ?? [];
+    if (districtListings.length > 0) {
+      const slugs = districtListings.map((l) => l.externalId).filter(Boolean);
       try {
-        const offers = await scrapeSwiggy(target.name, target.swiggyDineoutId);
-        results.push({ platform: "swiggy", offers });
+        const offers = await scrapeDistrict(slugs);
+        // Attribute offers to the first listing (they share the same canonical).
+        results.push({ platform: "district", listingId: districtListings[0].listingId, offers });
+        console.log(`  district:   ${offers.length} offers (${slugs.length} outlet(s))`);
+      } catch (e) {
+        results.push({ platform: "district", listingId: districtListings[0].listingId, offers: [], error: String(e) });
+        console.log(`  district:   ERROR — ${String(e)}`);
+        errors++;
+      }
+    }
+
+    // Swiggy — first listing only (dineout has one listing per restaurant).
+    const swiggyListing = (byPlatform.get("swiggy") ?? [])[0];
+    if (swiggyListing) {
+      try {
+        const offers = await scrapeSwiggy(target.name, swiggyListing.externalId);
+        results.push({ platform: "swiggy", listingId: swiggyListing.listingId, offers });
         console.log(`  swiggy:     ${offers.length} offers`);
       } catch (e) {
-        results.push({ platform: "swiggy", offers: [], error: String(e) });
+        results.push({ platform: "swiggy", listingId: swiggyListing.listingId, offers: [], error: String(e) });
         console.log(`  swiggy:     ERROR — ${String(e)}`);
         errors++;
       }
     }
 
-    // EazyDiner
-    if (target.eazyDinerSlug) {
+    // EazyDiner — first listing only.
+    const eazyListing = (byPlatform.get("eazydiner") ?? [])[0];
+    if (eazyListing) {
       try {
-        const offers = await scrapeEazyDiner(target.eazyDinerSlug);
-        results.push({ platform: "eazydiner", offers });
+        const offers = await scrapeEazyDiner(eazyListing.externalId);
+        results.push({ platform: "eazydiner", listingId: eazyListing.listingId, offers });
         console.log(`  eazydiner:  ${offers.length} offers`);
       } catch (e) {
-        results.push({ platform: "eazydiner", offers: [], error: String(e) });
+        results.push({ platform: "eazydiner", listingId: eazyListing.listingId, offers: [], error: String(e) });
         console.log(`  eazydiner:  ERROR — ${String(e)}`);
         errors++;
       }
     }
 
-    // Print offer details
+    // Print offers.
     for (const r of results) {
       for (const o of r.offers) {
         const tag = o.booking_type === "prebook" ? "📅" : "💳";
@@ -481,37 +236,23 @@ async function main() {
 
     if (dryRun) continue;
 
-    // Write to DB
-    try {
-      const restaurantId = await upsertRestaurant(target);
-
-      for (const r of results) {
-        if (r.error) continue;
-
-        const externalId =
-          r.platform === "district" ? `district:${target.slug}` :
-          r.platform === "swiggy"   ? `swiggy:${target.swiggyDineoutId ?? target.slug}` :
-                                      `eazydiner:${target.eazyDinerSlug}`;
-        const platformUrl =
-          r.platform === "district" ? `https://www.district.in/dining/bangalore/${target.districtSlugs[0] ?? target.slug}` :
-          r.platform === "swiggy"   ? `https://www.swiggy.com/restaurants/${target.swiggyDineoutId ?? target.slug}/dineout` :
-                                      `https://www.eazydiner.com/bengaluru/${target.eazyDinerSlug}`;
-
-        const bestPrebook = r.offers.filter((o) => o.booking_type === "prebook" && o.discount_pct)
+    // Write to DB.
+    for (const r of results) {
+      if (r.error) continue;
+      try {
+        const bestPrebook = r.offers
+          .filter((o) => o.booking_type === "prebook" && o.discount_pct)
           .sort((a, b) => (b.discount_pct ?? 0) - (a.discount_pct ?? 0))[0];
-        const headlineOffer = bestPrebook?.headline ?? r.offers[0]?.headline ?? null;
-
-        const listingId = await upsertListing(restaurantId, r.platform === "district" ? "zomato" : r.platform, externalId, platformUrl, headlineOffer);
-        await insertOffers(listingId, runId, r.offers);
+        await updateListingHeadline(r.listingId, bestPrebook?.headline ?? r.offers[0]?.headline ?? null);
+        await insertOffers(r.listingId, runId, r.offers);
         totalOffers += r.offers.length;
+      } catch (e) {
+        console.error(`  DB write failed for ${target.name}/${r.platform}: ${e}`);
+        errors++;
       }
-    } catch (e) {
-      console.error(`  DB write failed for ${target.name}: ${e}`);
-      errors++;
     }
   }
 
-  // Mark run complete
   if (!dryRun) {
     await supabase
       .from("dining_runs")

@@ -3,15 +3,58 @@ name: Weekly Dining Scrape
 on:
   schedule:
     # Every Sunday at 02:00 UTC = 07:30 IST
+    # Discovery runs first (Phase 1 only, ~10 min), then offer scrape.
     - cron: '0 2 * * 0'
   workflow_dispatch:
-    # Allows manual trigger from GitHub Actions UI → "Run workflow" button
+    inputs:
+      skip_discovery:
+        description: 'Skip discovery pass (only scrape offers for existing restaurants)'
+        required: false
+        default: 'false'
+        type: choice
+        options: ['false', 'true']
 
 jobs:
-  scrape:
-    name: Scrape dining offers (30 restaurants × 3 platforms)
+  discover:
+    name: Discover new restaurants (District + EazyDiner)
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 20
+    # Skip discovery if manually triggered with skip_discovery=true
+    if: ${{ github.event_name == 'schedule' || github.event.inputs.skip_discovery == 'false' }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run discovery — Phase 1 only (District + EazyDiner)
+        run: npm run dining:discover -- --phase=1
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+
+      - name: Upload discovery log on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: discovery-log
+          path: /tmp/dining-discover-*.log
+          if-no-files-found: ignore
+          retention-days: 7
+
+  scrape:
+    name: Scrape dining offers (all restaurants × 3 platforms)
+    runs-on: ubuntu-latest
+    timeout-minutes: 360   # 6h ceiling — full Bangalore scan can take ~4h
+    needs: discover         # wait for discovery to finish
 
     steps:
       - name: Checkout

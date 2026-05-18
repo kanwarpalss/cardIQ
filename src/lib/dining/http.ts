@@ -23,10 +23,12 @@ export interface FetchOptions {
   method?: "GET" | "POST" | "PUT" | "DELETE";
   /** Per-call timeout in ms. Default 15s. */
   timeoutMs?: number;
+  /** Return raw bytes instead of decoded text. Use for .gz/.zip downloads. */
+  binary?: boolean;
 }
 
 export type FetchOutcome =
-  | { kind: "ok"; status: number; body: string; headers: Headers }
+  | { kind: "ok"; status: number; body: string; bodyBytes?: Uint8Array; headers: Headers }
   | { kind: "rate_limited"; status: number; retryAfterMs?: number }
   | { kind: "blocked"; status: number; reason: "captcha" | "forbidden" | "auth_required" }
   | { kind: "http_error"; status: number; body: string }
@@ -172,6 +174,16 @@ export async function diningFetch(
       const ra = res.headers.get("retry-after");
       const retryAfterMs = ra ? parseRetryAfter(ra) : undefined;
       return { kind: "rate_limited", status, retryAfterMs };
+    }
+
+    if (opts.binary) {
+      const buf = await res.arrayBuffer();
+      const bodyBytes = new Uint8Array(buf);
+      if (status >= 200 && status < 300) {
+        return { kind: "ok", status, body: "", bodyBytes, headers: res.headers };
+      }
+      // For non-2xx, best-effort text for error messages.
+      return { kind: "http_error", status, body: Buffer.from(bodyBytes).toString("utf8").slice(0, 4096) };
     }
 
     const body = await res.text();
