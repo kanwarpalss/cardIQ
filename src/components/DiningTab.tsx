@@ -71,11 +71,31 @@ const PAYMENT_OFFER_TYPES: Record<Platform, string[]> = {
 // Component
 // ────────────────────────────────────────────────────────────────────
 
+// ────────────────────────────────────────────────────────────────────
+// Review queue types
+// ────────────────────────────────────────────────────────────────────
+
+interface ReviewPair {
+  id: string;
+  platform_a: string;
+  external_id_a: string;
+  name_a: string | null;
+  platform_b: string;
+  external_id_b: string;
+  name_b: string | null;
+  reason: string | null;
+  dining_restaurants: { canonical_name: string; area: string | null } | null;
+}
+
 export default function DiningTab() {
   const [query, setQuery] = useState("");
   const [restaurants, setRestaurants] = useState<Restaurant[] | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showReview, setShowReview] = useState(false);
+  const [reviewPairs, setReviewPairs] = useState<ReviewPair[]>([]);
+  const [reviewTotal, setReviewTotal] = useState(0);
+  const [reviewLoaded, setReviewLoaded] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -83,6 +103,11 @@ export default function DiningTab() {
     }, 250);
     return () => clearTimeout(timer);
   }, [query]);
+
+  // Load review count on mount (lightweight — just the total).
+  useEffect(() => {
+    void fetchReviewQueue();
+  }, []);
 
   async function searchRestaurants(q: string) {
     setLoading(true);
@@ -102,14 +127,56 @@ export default function DiningTab() {
     }
   }
 
+  async function fetchReviewQueue() {
+    try {
+      const res = await fetch("/api/dining/review?limit=50");
+      if (!res.ok) return;
+      const data = await res.json();
+      setReviewPairs(data.pairs ?? []);
+      setReviewTotal(data.total ?? 0);
+      setReviewLoaded(true);
+    } catch {
+      // silently ignore — review queue is non-critical
+    }
+  }
+
+  async function handleReviewDecision(queueId: string, decision: "same" | "different") {
+    try {
+      await fetch("/api/dining/review", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ queueId, decision }),
+      });
+      setReviewPairs((prev) => prev.filter((p) => p.id !== queueId));
+      setReviewTotal((prev) => Math.max(0, prev - 1));
+    } catch {
+      // silently ignore
+    }
+  }
+
   return (
     <div className="max-w-6xl mx-auto px-6 py-8 space-y-6">
       {/* ── Header ─────────────────────────────────────────────────── */}
-      <div>
-        <h1 className="font-serif text-2xl text-mist">Dining</h1>
-        <p className="text-sm text-mist/50 mt-1">
-          Find restaurants across District (Zomato), Swiggy Dineout, and EazyDiner — best offer wins.
-        </p>
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <h1 className="font-serif text-2xl text-mist">Dining</h1>
+          <p className="text-sm text-mist/50 mt-1">
+            Find restaurants across District (Zomato), Swiggy Dineout, and EazyDiner — best offer wins.
+          </p>
+        </div>
+        {reviewLoaded && reviewTotal > 0 && (
+          <button
+            onClick={() => setShowReview((v) => !v)}
+            className="shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-gold/30
+                       bg-gold/5 hover:bg-gold/10 transition-colors text-xs text-gold"
+          >
+            <span>🔗</span>
+            <span>Link review</span>
+            <span className="bg-gold/20 text-gold rounded-full px-1.5 py-0.5 text-[10px] font-medium">
+              {reviewTotal}
+            </span>
+          </button>
+        )}
       </div>
 
       {/* ── Payment Offers Catalog ──────────────────────────────────── */}
@@ -155,6 +222,16 @@ export default function DiningTab() {
             <RestaurantCard key={r.id} restaurant={r} />
           ))}
         </div>
+      )}
+
+      {/* ── Link review panel ──────────────────────────────────────── */}
+      {showReview && (
+        <ReviewPanel
+          pairs={reviewPairs}
+          total={reviewTotal}
+          onDecision={handleReviewDecision}
+          onClose={() => setShowReview(false)}
+        />
       )}
     </div>
   );
@@ -448,6 +525,148 @@ function PlatformOfferCell({ platform, listing }: { platform: Platform; listing?
     </a>
   );
 }
+
+// ────────────────────────────────────────────────────────────────────
+// Link Review Panel
+// ────────────────────────────────────────────────────────────────────
+
+function ReviewPanel({
+  pairs,
+  total,
+  onDecision,
+  onClose,
+}: {
+  pairs: ReviewPair[];
+  total: number;
+  onDecision: (id: string, decision: "same" | "different") => void;
+  onClose: () => void;
+}) {
+  return (
+    <div className="rounded-xl border border-gold/30 bg-gold/5 overflow-hidden">
+      {/* Header */}
+      <div className="px-4 py-3 border-b border-gold/20 flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <span className="text-xs font-medium text-gold uppercase tracking-wide">Link Review</span>
+          <span className="text-xs text-mist/40">
+            — {total} pair{total !== 1 ? "s" : ""} where the auto-matcher wasn&apos;t sure
+          </span>
+        </div>
+        <button
+          onClick={onClose}
+          className="text-mist/30 hover:text-mist/60 transition-colors text-xs"
+        >
+          Close
+        </button>
+      </div>
+
+      {pairs.length === 0 ? (
+        <div className="px-4 py-8 text-center text-mist/40 text-sm">
+          All caught up — no pending reviews.
+        </div>
+      ) : (
+        <div className="divide-y divide-gold/10">
+          {pairs.map((pair) => (
+            <ReviewPairRow key={pair.id} pair={pair} onDecision={onDecision} />
+          ))}
+          {total > pairs.length && (
+            <div className="px-4 py-3 text-center text-xs text-mist/30">
+              Showing {pairs.length} of {total} — resolve these to see more.
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function ReviewPairRow({
+  pair,
+  onDecision,
+}: {
+  pair: ReviewPair;
+  onDecision: (id: string, decision: "same" | "different") => void;
+}) {
+  const [deciding, setDeciding] = useState<"same" | "different" | null>(null);
+  const canonical = pair.dining_restaurants;
+
+  async function decide(d: "same" | "different") {
+    setDeciding(d);
+    onDecision(pair.id, d);
+  }
+
+  return (
+    <div className="px-4 py-4">
+      {/* Canonical context */}
+      {canonical && (
+        <p className="text-[11px] text-mist/30 mb-2">
+          Provisional canonical: <span className="text-mist/50">{canonical.canonical_name}</span>
+          {canonical.area && <span className="text-mist/30"> · {canonical.area}</span>}
+        </p>
+      )}
+
+      {/* Pair cards */}
+      <div className="flex items-start gap-3">
+        <ListingChip platform={pair.platform_a} name={pair.name_a} id={pair.external_id_a} />
+        <span className="text-mist/30 text-xs mt-1.5 shrink-0">vs</span>
+        <ListingChip platform={pair.platform_b} name={pair.name_b} id={pair.external_id_b} />
+      </div>
+
+      {/* Reason */}
+      {pair.reason && (
+        <p className="text-[10px] text-mist/25 mt-1.5 font-mono">{pair.reason}</p>
+      )}
+
+      {/* Decision buttons */}
+      <div className="flex gap-2 mt-3">
+        <button
+          onClick={() => decide("same")}
+          disabled={deciding !== null}
+          className="px-3 py-1.5 rounded-lg text-xs font-medium transition-colors
+                     bg-emerald-500/10 text-emerald-400 border border-emerald-500/20
+                     hover:bg-emerald-500/20 disabled:opacity-40"
+        >
+          {deciding === "same" ? "Saved ✓" : "Same restaurant"}
+        </button>
+        <button
+          onClick={() => decide("different")}
+          disabled={deciding !== null}
+          className="px-3 py-1.5 rounded-lg text-xs font-medium transition-colors
+                     bg-ruby/10 text-ruby border border-ruby/20
+                     hover:bg-ruby/20 disabled:opacity-40"
+        >
+          {deciding === "different" ? "Saved ✓" : "Different restaurant"}
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function ListingChip({
+  platform,
+  name,
+  id,
+}: {
+  platform: string;
+  name: string | null;
+  id: string;
+}) {
+  const meta = PLATFORM_META[platform as Platform] ?? { label: platform, color: "#888", bg: "rgba(128,128,128,0.1)" };
+  return (
+    <div
+      className="flex-1 rounded-lg px-3 py-2 border border-wire text-sm min-w-0"
+      style={{ background: meta.bg }}
+    >
+      <div className="text-xs font-medium truncate" style={{ color: meta.color }}>
+        {meta.label}
+      </div>
+      <div className="text-mist text-xs truncate mt-0.5">{name ?? id}</div>
+    </div>
+  );
+}
+
+// ────────────────────────────────────────────────────────────────────
+// Empty state
+// ────────────────────────────────────────────────────────────────────
 
 function EmptyState({ query }: { query: string }) {
   if (query.length > 0) {

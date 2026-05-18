@@ -139,13 +139,31 @@ async function queueForReview(
   incoming: IncomingListing,
   peerPlatform: IncomingListing["platform"],
   peerExternalId: string,
+  canonicalId: string,
+  reason: string,
+  nameA: string,
+  nameB?: string,
 ): Promise<void> {
-  // Stub: write a row to a future `dining_dedupe_queue` table, or just log.
-  // For v1, we log "attach_for_review" pairs — the manual-link widget will
-  // surface them from the DB in a later chunk.
   console.log(
     `    ⚠  REVIEW: ${incoming.platform}::${incoming.externalId} vs ${peerPlatform}::${peerExternalId}`,
   );
+  const { error } = await supabase
+    .from("dining_dedupe_queue")
+    .upsert(
+      {
+        platform_a: incoming.platform,
+        external_id_a: incoming.externalId,
+        name_a: nameA,
+        platform_b: peerPlatform,
+        external_id_b: peerExternalId,
+        name_b: nameB ?? null,
+        canonical_id: canonicalId,
+        reason,
+        status: "pending",
+      },
+      { onConflict: "platform_a,external_id_a,platform_b,external_id_b", ignoreDuplicates: true },
+    );
+  if (error) console.warn("    Could not queue review pair:", error.message);
 }
 
 // ── Dedupe + write one listing ────────────────────────────────────────
@@ -202,10 +220,15 @@ async function ingestListing(
 
     if (action.kind === "attach_for_review") {
       await upsertListing(action.canonicalId, listing);
+      const peer = allCandidates.find((c) => c.id === action.canonicalId);
       await queueForReview(
         incoming,
         action.candidatePair.bPlatform,
         action.candidatePair.bExternalId,
+        action.canonicalId,
+        action.reason,
+        listing.name,
+        peer?.canonicalName,
       );
       return "review";
     }
