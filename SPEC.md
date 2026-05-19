@@ -1,6 +1,6 @@
 # CardIQ — SPEC.md (Source of Truth)
 
-> Last updated: 2026-05-17
+> Last updated: 2026-05-19
 > One user: KP. Solo project. Personal use only. Hosted on Vercel.
 
 ---
@@ -133,13 +133,14 @@ Gmail → Parser → `enrichAmount()` → Supabase → Dashboard
 ## 6. Current State
 
 - **174 tests passing** (74 core + 78 dining + 22 discover), tsc clean
-- **All 30 original restaurants** live in Supabase — 791 offers total
-- **Discovery pipeline live** — `npm run dining:discover --phase=1` running (first full city pass); District found 27,542 unique outlet slugs; EazyDiner ~2,100 with lat/lng
+- **Phase 1 discovery in progress** — `npm run dining:discover --phase=1` running (~8,000/27,542 District slugs ingested as of 2026-05-19); EazyDiner ~2,100 also runs in Phase 1
+- **Phase 2 code complete** — `discoverSwiggyBatch` built + integrated; run `npm run dining:discover -- --platform=swiggy` once Phase 1 finishes
+- **`dining:status` script live** — `npm run dining:status` gives instant DB snapshot (counts by platform, Phase 2 readiness, offer count, review queue, last scrape run)
+- **EazyDiner enrichment live** — `scrapeEazyDiner` now returns `{ offers, cuisines, priceForTwo }`; scrape orchestrator writes these back to `dining_restaurants` so DiningTab shows cuisine tags + price
+- **Codebase pushed to GitHub** — first push to `origin/master`; Vercel auto-deploy triggered for light-theme + all recent work
 - **Migrations 013 + 014 applied** — PostGIS, pg_trgm, spatial index, dedupe queue all live in Supabase
-- **dining-scrape.ts DB-driven** — loads from `dining_listings`, strips old `platform:` prefix, handles multi-outlet chains
 - **Manual-link review widget live** — `GET/POST /api/dining/review`, "Link review (N)" button in DiningTab header
-- **UI overhauled to light editorial theme** — semantic token flip: dark navy → warm cream, all 174 tests still passing
-- **Shell alias system** — `~/.zshrc` + `~/.local-apps.sh` created; `apps` command shows all; `cardiq-dev` starts server + opens browser; `whatsup` opens Mac Mini via Tailscale
+- **Shell alias system** — `~/.zshrc` + `~/.local-apps.sh` created; `apps` command shows all; `cardiq-dev` starts server + opens browser
 
 ---
 
@@ -150,10 +151,10 @@ Gmail → Parser → `enrichAmount()` → Supabase → Dashboard
 | Walmart network blocks Supabase Cloud, jsdelivr CDN, Frankfurter | Ongoing — use Eagle WiFi or hotspot |
 | fawazahmed0 FX only goes back to 2024-03-06 | Accepted — older exotic-currency txns fall back to today's rate |
 | No mobile-optimised UI | Not planned for v1 |
-| Migrations 013 + 014 applied ✅ | — |
 | WhatsUp pm2 process errored on Mac Mini | Investigate separately — unrelated to cardIQ |
-| `CARDIQ_VERCEL` placeholder in `~/.local-apps.sh` | Fill in actual Vercel URL from vercel.com/dashboard |
+| `CARDIQ_VERCEL` placeholder in `~/.local-apps.sh` | Fill in actual Vercel URL from vercel.com/dashboard after Vercel deploy confirms |
 | Swiggy Dineout: `tabsOfferInfo.offersTab` prebook deals require Swiggy login to redeem | Data is guest-readable; display the offer, note "Login to buy" in UI |
+| EazyDiner `cuisines`/`average_cost` field names unconfirmed against live API | `extractCuisines` + `extractPriceForTwo` have multi-key fallbacks; run `dining:scrape -- --dry-run --slug "Toit"` to verify after Phase 1 completes |
 
 ---
 
@@ -176,6 +177,9 @@ npm run dining:scrape                    # all restaurants
 npm run dining:scrape -- --slug "Toit"  # filter by name
 npm run dining:scrape -- --dry-run      # print only
 
+# Status snapshot (counts by platform, Phase 2 readiness, last scrape run)
+npm run dining:status
+
 # Recon (for new offer taxonomy analysis)
 npm run dining:recon                     # all 30 original restaurants × 3 platforms
 ```
@@ -186,11 +190,11 @@ npm run dining:recon                     # all 30 original restaurants × 3 plat
 
 *(Updated 2026-05-19 — end of session)*
 
-- **Discovery running:** `npm run dining:discover --phase=1` was left running. District found 27,542 unique slugs — ingestion loop was writing to DB. Let it finish before starting Phase 2 (Swiggy) or a full re-scrape.
-- **All chunks complete:** Migrations 013+014 applied, discovery libs + orchestrator built + tested, DB-driven scrape, manual-link review widget (API + UI), full light-theme UI overhaul, shell alias system.
-- **Swiggy ID namespace:** food-delivery IDs ≠ dineout IDs. Discovery verifies each via the dineout API before storing. Documented in `discover/swiggy.ts` and `scrapers/swiggy.ts`. Never skip the verify step.
-- **Shell aliases:** `~/.zshrc` + `~/.local-apps.sh` created on KP's laptop. Fill in `CARDIQ_VERCEL` with the real Vercel URL. Run `apps` anywhere to see the registry.
-- **Next session:** (1) Check discovery run completed; (2) run Phase 2 Swiggy bootstrap if desired; (3) investigate WhatsUp pm2 errored on Mac Mini; (4) push to Vercel to see live light-theme UI.
+- **Phase 1 still running:** ~8,000/27,542 District slugs ingested. Let it finish — don't kill or restart. Once done, run `npm run dining:status` to confirm counts, then `npm run dining:discover -- --platform=swiggy` to kick off Phase 2.
+- **Phase 2 code complete:** `discoverSwiggyBatch` is fully wired in `dining-discover.ts`. Phase 2 runs in isolation with `--platform=swiggy` — safe to run while Phase 1 DB rows are still being ingested.
+- **New this session:** `dining:status` script (quick DB snapshot), `scrapeEazyDiner` now returns cuisines + priceForTwo, scrape orchestrator writes them to `dining_restaurants`, full codebase pushed to GitHub (triggers Vercel deploy).
+- **Vercel deploy triggered:** First push to `origin/master`. Check vercel.com/dashboard for deploy status. Once live, fill `CARDIQ_VERCEL` in `~/.local-apps.sh`.
+- **Next session:** (1) Verify Phase 1 completed (`dining:status`); (2) run Phase 2 Swiggy (`--platform=swiggy`); (3) confirm Vercel deploy is live + grab URL; (4) run a dry-run scrape (`--dry-run --slug "Toit"`) to verify EazyDiner cuisine/price field names against live API.
 
 ---
 
