@@ -133,14 +133,14 @@ Gmail → Parser → `enrichAmount()` → Supabase → Dashboard
 ## 6. Current State
 
 - **174 tests passing** (74 core + 78 dining + 22 discover), tsc clean
-- **Phase 1 discovery in progress** — `npm run dining:discover --phase=1` running (~8,000/27,542 District slugs ingested as of 2026-05-19); EazyDiner ~2,100 also runs in Phase 1
-- **Phase 2 code complete** — `discoverSwiggyBatch` built + integrated; run `npm run dining:discover -- --platform=swiggy` once Phase 1 finishes
-- **`dining:status` script live** — `npm run dining:status` gives instant DB snapshot (counts by platform, Phase 2 readiness, offer count, review queue, last scrape run)
-- **EazyDiner enrichment live** — `scrapeEazyDiner` now returns `{ offers, cuisines, priceForTwo }`; scrape orchestrator writes these back to `dining_restaurants` so DiningTab shows cuisine tags + price
-- **Codebase pushed to GitHub** — first push to `origin/master`; Vercel auto-deploy triggered for light-theme + all recent work
-- **Migrations 013 + 014 applied** — PostGIS, pg_trgm, spatial index, dedupe queue all live in Supabase
-- **Manual-link review widget live** — `GET/POST /api/dining/review`, "Link review (N)" button in DiningTab header
-- **Shell alias system** — `~/.zshrc` + `~/.local-apps.sh` created; `apps` command shows all; `cardiq-dev` starts server + opens browser
+- **Phase 1 COMPLETE** — 27,572 District listings (25,740 restaurants) + 2,092 EazyDiner listings (2,067 restaurants) in Supabase
+- **Phase 2 Swiggy RUNNING** — 229 restaurants done, ~26,879 remaining; resume with `npm run dining:discover -- --platform=swiggy`
+- **29,899 total listings in DB** across all platforms
+- **`dining:status` script live + fixed** — pagination bug fixed (was capped at 1,000 rows); now shows real counts
+- **EazyDiner enrichment live** — `scrapeEazyDiner` returns `{ offers, cuisines, priceForTwo }`; scrape orchestrator writes back to `dining_restaurants`
+- **Codebase on GitHub** — pushed to `origin/master`; Vercel auto-deploy triggered
+- **Migrations 013 + 014 applied** — PostGIS, pg_trgm, spatial index, dedupe queue all live
+- **Manual-link review widget live** — `GET/POST /api/dining/review`, "Link review (N)" in DiningTab header
 
 ---
 
@@ -154,7 +154,8 @@ Gmail → Parser → `enrichAmount()` → Supabase → Dashboard
 | WhatsUp pm2 process errored on Mac Mini | Investigate separately — unrelated to cardIQ |
 | `CARDIQ_VERCEL` placeholder in `~/.local-apps.sh` | Fill in actual Vercel URL from vercel.com/dashboard after Vercel deploy confirms |
 | Swiggy Dineout: `tabsOfferInfo.offersTab` prebook deals require Swiggy login to redeem | Data is guest-readable; display the offer, note "Login to buy" in UI |
-| EazyDiner `cuisines`/`average_cost` field names unconfirmed against live API | `extractCuisines` + `extractPriceForTwo` have multi-key fallbacks; run `dining:scrape -- --dry-run --slug "Toit"` to verify after Phase 1 completes |
+| EazyDiner `cuisines`/`average_cost` field names unconfirmed against live API | Multi-key fallbacks in place; run `dining:scrape -- --dry-run --slug "Toit"` to verify |
+| Duplicate canonicals — District slugs all have null lat/lng, bypassing `UNIQUE(name,lat,lng)` | ~27K canonicals contain duplicates (e.g. "Dominos Pizza" ×8). Cleanup pass needed before v1. |
 
 ---
 
@@ -190,11 +191,11 @@ npm run dining:recon                     # all 30 original restaurants × 3 plat
 
 *(Updated 2026-05-19 — end of session)*
 
-- **Phase 1 still running:** ~8,000/27,542 District slugs ingested. Let it finish — don't kill or restart. Once done, run `npm run dining:status` to confirm counts, then `npm run dining:discover -- --platform=swiggy` to kick off Phase 2.
-- **Phase 2 code complete:** `discoverSwiggyBatch` is fully wired in `dining-discover.ts`. Phase 2 runs in isolation with `--platform=swiggy` — safe to run while Phase 1 DB rows are still being ingested.
-- **New this session:** `dining:status` script (quick DB snapshot), `scrapeEazyDiner` now returns cuisines + priceForTwo, scrape orchestrator writes them to `dining_restaurants`, full codebase pushed to GitHub (triggers Vercel deploy).
-- **Vercel deploy triggered:** First push to `origin/master`. Check vercel.com/dashboard for deploy status. Once live, fill `CARDIQ_VERCEL` in `~/.local-apps.sh`.
-- **Next session:** (1) Verify Phase 1 completed (`dining:status`); (2) run Phase 2 Swiggy (`--platform=swiggy`); (3) confirm Vercel deploy is live + grab URL; (4) run a dry-run scrape (`--dry-run --slug "Toit"`) to verify EazyDiner cuisine/price field names against live API.
+- **Phase 2 Swiggy is RUNNING** — started, 229 done, ~26,879 remaining (~12–16h). Let it brew. Don't kill or restart; it's resume-safe.
+- **Phase 1 confirmed complete** — 29,899 total listings in DB (27,572 district + 2,092 eazydiner + 235 swiggy). `dining:status` was showing wrong numbers due to Supabase 1000-row cap bug — now fixed.
+- **Next session priorities:** (1) `npm run dining:status` — confirm Phase 2 final Swiggy count; (2) `npm run dining:scrape -- --dry-run --slug "Toit"` to verify EazyDiner cuisine/price field parsing; (3) confirm Vercel deploy live + fill `CARDIQ_VERCEL`; (4) plan canonical dedup cleanup pass (NULL lat/lng duplicates).
+- **After Phase 2 + verify:** run full `npm run dining:scrape` to populate `dining_offers` — this is when the DiningTab actually comes alive with real offer data.
+- **Key new gotchas documented:** Supabase 1000-row silent cap (always paginate), Postgres NULL unique index bypass (District slugs need geo-aware dedup).
 
 ---
 
