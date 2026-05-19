@@ -2,6 +2,19 @@ import { diningFetchWithBackoff } from "../http";
 import type { ScrapedOffer } from "../types";
 
 /**
+ * Result from scraping EazyDiner for one restaurant.
+ * Includes both offer data and restaurant metadata (cuisines, price)
+ * extracted from the same API response — no extra network call.
+ */
+export interface EazyDinerResult {
+  offers: ScrapedOffer[];
+  /** Cuisine tags, e.g. ["North Indian", "Chinese"]. Empty when API omits them. */
+  cuisines: string[];
+  /** Typical spend for two people in INR. Null when API omits it. */
+  priceForTwo: number | null;
+}
+
+/**
  * Scrape EazyDiner for one restaurant.
  *
  * Endpoint: force.eazydiner.com/web/restaurants/bengaluru/{slug}
@@ -13,10 +26,12 @@ import type { ScrapedOffer } from "../types";
  *   sample_discount_calculator.restaurant_offer → restaurant_discount (prebook)
  *   sample_discount_calculator.payment_offer    → payeazy (walkin)
  *   buffet_deals[]                          → buffet (prebook)
+ *   cuisines / cuisine_names                → EazyDinerResult.cuisines
+ *   average_cost / cost_for_two             → EazyDinerResult.priceForTwo
  */
 export async function scrapeEazyDiner(
   eazyDinerSlug: string,
-): Promise<ScrapedOffer[]> {
+): Promise<EazyDinerResult> {
   const url = `https://force.eazydiner.com/web/restaurants/bengaluru/${eazyDinerSlug}`;
   const res = await diningFetchWithBackoff(url, {
     headers: {
@@ -26,17 +41,21 @@ export async function scrapeEazyDiner(
     },
   });
 
-  if (res.kind !== "ok") return [];
+  if (res.kind !== "ok") return { offers: [], cuisines: [], priceForTwo: null };
 
   let body: Record<string, unknown>;
   try {
     body = JSON.parse(res.body) as Record<string, unknown>;
   } catch {
-    return [];
+    return { offers: [], cuisines: [], priceForTwo: null };
   }
 
   const data = (body.data ?? {}) as Record<string, unknown>;
-  return parseEazyDinerOffers(data);
+  return {
+    offers: parseEazyDinerOffers(data),
+    cuisines: extractCuisines(data),
+    priceForTwo: extractPriceForTwo(data),
+  };
 }
 
 function parseEazyDinerOffers(data: Record<string, unknown>): ScrapedOffer[] {
@@ -117,4 +136,45 @@ function parseEazyDinerOffers(data: Record<string, unknown>): ScrapedOffer[] {
 function extractPct(text: string): number | undefined {
   const m = text.match(/(\d+)%/);
   return m ? parseInt(m[1], 10) : undefined;
+}
+
+/**
+ * Extract cuisine tags from the EazyDiner API response.
+ *
+ * The API uses different keys across restaurant types:
+ *   data.cuisines          → array of strings (most common)
+ *   data.cuisine_names     → comma-separated string (older entries)
+ *   data.tags              → fallback array (may include non-cuisine tags)
+ */
+export function extractCuisines(data: Record<string, unknown>): string[] {
+  const raw = data.cuisines ?? data.cuisine_names;
+  if (Array.isArray(raw)) {
+    return raw
+      .map((c) => (typeof c === "string" ? c.trim() : typeof c === "object" && c !== null ? String((c as Record<string, unknown>).name ?? "").trim() : ""))
+      .filter(Boolean);
+  }
+  if (typeof raw === "string" && raw.trim()) {
+    return raw.split(",").map((c) => c.trim()).filter(Boolean);
+  }
+  return [];
+}
+
+/**
+ * Extract price-for-two from the EazyDiner API response.
+ *
+ * Key priority:
+ *   data.average_cost      → direct INR integer (most common)
+ *   data.cost_for_two      → alternative key
+ *   data.cost_for_one * 2  → fallback when only per-person cost is present
+ */
+export function extractPriceForTwo(data: Record<string, unknown>): number | null {
+  const candidates = [
+    data.average_cost,
+    data.cost_for_two,
+    typeof data.cost_for_one === "number" ? data.cost_for_one * 2 : null,
+  ];
+  for (const v of candidates) {
+    if (typeof v === "number" && v > 0) return Math.round(v);
+  }
+  return null;
 }

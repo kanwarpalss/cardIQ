@@ -22,6 +22,7 @@ import { scrapeDistrict } from "../src/lib/dining/scrapers/district";
 import { scrapeSwiggy } from "../src/lib/dining/scrapers/swiggy";
 import { scrapeEazyDiner } from "../src/lib/dining/scrapers/eazydiner";
 import type { ScrapedOffer } from "../src/lib/dining/types";
+import type { EazyDinerResult } from "../src/lib/dining/scrapers/eazydiner";
 
 // ── CLI args ─────────────────────────────────────────────────────────
 
@@ -114,6 +115,27 @@ async function loadTargets(): Promise<ScrapeTarget[]> {
 }
 
 // ── DB write helpers ──────────────────────────────────────────────────
+
+/**
+ * Write cuisines + price_for_two back to dining_restaurants.
+ * Only updates fields that are actually present — never overwrites with empty.
+ * No-ops if both fields are absent (keeps the existing values untouched).
+ */
+async function updateRestaurantMeta(
+  restaurantId: string,
+  cuisines: string[],
+  priceForTwo: number | null,
+): Promise<void> {
+  const patch: Record<string, unknown> = {};
+  if (cuisines.length > 0) patch.cuisines = cuisines;
+  if (priceForTwo !== null) patch.price_for_two = priceForTwo;
+  if (Object.keys(patch).length === 0) return;
+  const { error } = await supabase
+    .from("dining_restaurants")
+    .update(patch)
+    .eq("id", restaurantId);
+  if (error) console.warn(`  meta update failed for ${restaurantId}: ${error.message}`);
+}
 
 async function updateListingHeadline(listingId: string, headlineOffer: string | null): Promise<void> {
   await supabase
@@ -216,9 +238,17 @@ async function main() {
     const eazyListing = (byPlatform.get("eazydiner") ?? [])[0];
     if (eazyListing) {
       try {
-        const offers = await scrapeEazyDiner(eazyListing.externalId);
-        results.push({ platform: "eazydiner", listingId: eazyListing.listingId, offers });
-        console.log(`  eazydiner:  ${offers.length} offers`);
+        const eazyResult: EazyDinerResult = await scrapeEazyDiner(eazyListing.externalId);
+        results.push({ platform: "eazydiner", listingId: eazyListing.listingId, offers: eazyResult.offers });
+        const metaHint = [
+          eazyResult.cuisines.length > 0 ? eazyResult.cuisines.slice(0, 2).join(", ") : null,
+          eazyResult.priceForTwo != null ? `₹${eazyResult.priceForTwo} for two` : null,
+        ].filter(Boolean).join(" · ");
+        console.log(`  eazydiner:  ${eazyResult.offers.length} offers${metaHint ? `  (${metaHint})` : ""}`);
+        // Write cuisines + price back to dining_restaurants (best-effort — doesn't block offers).
+        if (!dryRun) {
+          await updateRestaurantMeta(target.restaurantId, eazyResult.cuisines, eazyResult.priceForTwo);
+        }
       } catch (e) {
         results.push({ platform: "eazydiner", listingId: eazyListing.listingId, offers: [], error: String(e) });
         console.log(`  eazydiner:  ERROR — ${String(e)}`);
