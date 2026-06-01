@@ -11,3 +11,6 @@ next-env.d.ts
 # Supabase CLI
 supabase/.temp/
 supabase/.branches/
+
+# puppy-context pseudo-cache digest (derived; regenerated on session shutdown)
+CONTEXT.md
