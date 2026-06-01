@@ -1,17 +1,41 @@
 # LEARNINGS.md — what we burned hands on, so we don't again
 
 A living document of bugs surfaced, root causes, and the principles
-extracted. Two halves:
+extracted. Structured in the canonical **three zones** (see
+`~/CODE_PUPPY_SYSTEM.md` → LEARNINGS three-zone structure):
 
-1. **Generic principles** — apply to every project, not just CardIQ.
-2. **CardIQ-specific knowledge** — architecture, conventions, gotchas.
+- **Zone A** — global lessons CardIQ proved (pointers to `AGENTS/NN-*.md`).
+- **Zone B** — CardIQ-specific knowledge (architecture, conventions, gotchas).
+- **Zone C** — generic principles that are promotion *candidates* (smell
+  global, not yet cleared the `puppy-lesson` gate). The `G1`–`G13` anchors
+  here are referenced by commit messages and HANDOFF.md — **do not renumber.**
 
 Read this before touching the code. Add to it when you fix something
 non-obvious.
 
 ---
 
-## Part 1: Generic principles (use everywhere)
+## Zone A — Global lessons CardIQ proved (pointers only)
+
+_None formally promoted to the global playbook from CardIQ yet._ Several
+Zone-C principles below are strong candidates (G1 pagination-caps, G3 DRY
+chokepoints, G8 idempotent migrations, G11 money-is-never-one-number, G13
+Zen). When one clears the `puppy-lesson` promotion gate (2-project breadth
+or severity fast-track), move it here as a pointer:
+
+| Global lesson | Born from (CardIQ bug) | Anchor |
+|---|---|---|
+| _(none yet)_ | | |
+
+> Validate this table any time with `puppy-lesson check-pointers ~/Code/cardIQ`.
+
+---
+
+## Zone C — Generic principles (promotion candidates · formerly "Part 1")
+
+> These apply beyond CardIQ but have **not** been promoted to global. Each is
+> a candidate for `puppy-lesson propose`. `G`-anchors are stable — referenced
+> by commit messages (`fix(sync): … (G1)`) and HANDOFF.md. Do not renumber.
 
 ### G1. Supabase `.select()` defaults to a 1000-row cap
 
@@ -244,7 +268,7 @@ When in doubt:
 
 ---
 
-## Part 2: CardIQ-specific knowledge
+## Zone B — CardIQ-specific knowledge (formerly "Part 2")
 
 ### Architecture at a glance
 
@@ -361,11 +385,15 @@ correct way.**
 ## How to add to this file
 
 When you fix a non-obvious bug:
-1. Add a row to "Bugs we already squashed".
-2. If the root cause maps to a NEW principle, add it to Part 1 with
-   a `### G<N>.` heading.
-3. If it's CardIQ-specific only, expand Part 2.
-4. Commit with a message that references the principle:
+1. Add a row to "Bugs we already squashed" (Zone B).
+2. If the root cause maps to a NEW generic principle, add it to **Zone C**
+   with a `### G<N>.` heading (next number; never reuse).
+3. If it's CardIQ-specific only, expand **Zone B**.
+4. If a Zone-C principle has now bitten a 2nd unrelated project (or is a
+   severe recurring class), run `puppy-lesson propose` to promote it; once
+   accepted, replace it here with a **Zone-A pointer** (keep the CardIQ
+   anecdote, drop the duplicated rule text — this prevents fork rot).
+5. Commit with a message that references the principle:
    `fix(X): … (see LEARNINGS.md G7)`.
 
 The goal: every sharp edge gets dulled exactly once.
