@@ -267,6 +267,7 @@ export async function POST(req: Request) {
 
         const allIds: string[] = [];
         let pageToken: string | undefined;
+        let pageNum = 0;
 
         do {
           const listRes = await gmail.users.messages.list({
@@ -279,6 +280,14 @@ export async function POST(req: Request) {
             if (m.id) allIds.push(m.id);
           }
           pageToken = listRes.data.nextPageToken ?? undefined;
+          pageNum++;
+          // Heartbeat: without this the UI shows a frozen "Scanning…" for the
+          // entire (possibly multi-page) listing phase. Reassure the user that
+          // work is happening by streaming a running count.
+          send(controller, {
+            status: "listing",
+            message: `Scanning Gmail… ${allIds.length} email${allIds.length === 1 ? "" : "s"} found so far (page ${pageNum})`,
+          });
         } while (pageToken);
 
         if (allIds.length === 0) {
@@ -537,7 +546,16 @@ export async function POST(req: Request) {
         send(controller, { status: "done", ...result });
 
       } catch (e) {
-        send(controller, { status: "error", message: (e as Error).message });
+        // Surface a useful message instead of a frozen spinner. The most common
+        // cause is an expired/revoked Google refresh token (Google revokes them
+        // after ~7 days for apps still in "testing" mode) — turn the opaque
+        // `invalid_grant` into something the user can actually act on.
+        const raw = (e as Error).message || String(e);
+        console.error("[gmail/sync] stream error:", raw);
+        const friendly = /invalid_grant|invalid_token|unauthorized|no refresh token/i.test(raw)
+          ? "Gmail access expired. Please sign out and sign in again to re-grant access."
+          : raw;
+        send(controller, { status: "error", message: friendly });
       } finally {
         controller.close();
       }

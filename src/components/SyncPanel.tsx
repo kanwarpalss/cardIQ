@@ -89,13 +89,27 @@ export default function SyncPanel({ onSyncComplete }: Props) {
         const lines = buffer.split("\n");
         buffer = lines.pop() ?? "";
         for (const line of lines.filter(Boolean)) {
+          // Parse defensively: a half-received line is normal NDJSON behaviour
+          // and should be ignored. But a fully-parsed message must be handled
+          // OUTSIDE this try — otherwise a server-sent {status:"error"} would
+          // be swallowed by the parse-error catch and the UI hangs forever.
+          let msg: any;
           try {
-            const msg = JSON.parse(line);
+            msg = JSON.parse(line);
+          } catch {
+            continue; // partial / non-JSON chunk — wait for the rest
+          }
+
+          {
             if (msg.status === "listing") {
-              setProgress("Scanning Gmail for bank emails…");
+              setProgress(msg.message || "Scanning Gmail for bank emails…");
             } else if (msg.status === "syncing") {
-              const pct = msg.total ? Math.round((msg.fetched / msg.total) * 100) : 0;
-              setProgress(`${pct}% · ${msg.fetched}/${msg.total ?? "?"} emails · ${msg.new_txns ?? 0} new transactions`);
+              if (typeof msg.fetched === "number" && msg.total) {
+                const pct = Math.round((msg.fetched / msg.total) * 100);
+                setProgress(`${pct}% · ${msg.fetched}/${msg.total} emails · ${msg.new_txns ?? 0} new transactions`);
+              } else if (msg.message) {
+                setProgress(msg.message);
+              }
             } else if (msg.status === "done") {
               const n    = msg.new_txns ?? 0;
               const errs = (msg.errors as string[] | undefined)?.length ?? 0;
@@ -110,9 +124,9 @@ export default function SyncPanel({ onSyncComplete }: Props) {
               await loadSyncState();
               onSyncComplete();
             } else if (msg.status === "error") {
-              throw new Error(msg.message);
+              throw new Error(msg.message || "Sync failed");
             }
-          } catch { /* partial chunk parse errors are fine */ }
+          }
         }
       }
     } catch (e) {

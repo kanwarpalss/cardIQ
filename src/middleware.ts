@@ -3,7 +3,29 @@ import { NextResponse, type NextRequest } from "next/server";
 
 type CookieToSet = { name: string; value: string; options: CookieOptions };
 
+/** Reject if a promise doesn't settle in time, so a hung Supabase call can't
+ *  freeze navigation. Paused free-tier projects sometimes resolve DNS but
+ *  never answer — without this the request blocks for the full fetch timeout. */
+function withTimeout<T>(p: Promise<T>, ms: number): Promise<T> {
+  return Promise.race([
+    p,
+    new Promise<T>((_, reject) =>
+      setTimeout(() => reject(new Error("timeout")), ms)
+    ),
+  ]);
+}
+
 export async function middleware(request: NextRequest) {
+  const path = request.nextUrl.pathname;
+  const isPublic = path.startsWith("/login") || path.startsWith("/auth");
+
+  // Public routes never need an auth round-trip. Skipping the Supabase call
+  // here keeps /login instant even when the backend is paused/unreachable —
+  // and /auth/callback handles its own session exchange.
+  if (isPublic) {
+    return NextResponse.next({ request });
+  }
+
   let response = NextResponse.next({ request });
 
   const supabase = createServerClient(
@@ -25,26 +47,17 @@ export async function middleware(request: NextRequest) {
     }
   );
 
-  const path = request.nextUrl.pathname;
-  const isPublic = path.startsWith("/login") || path.startsWith("/auth");
-
   let user = null;
   try {
-    ({ data: { user } } = await supabase.auth.getUser());
+    ({ data: { user } } = await withTimeout(supabase.auth.getUser(), 4000));
   } catch {
-    // Supabase unreachable (e.g. paused free-tier project). Don't 500 —
-    // send the user to /login, which shows the friendly connection notice.
-    if (!isPublic) {
-      return NextResponse.redirect(new URL("/login?error=connection", request.url));
-    }
-    return response;
+    // Supabase unreachable or hung (e.g. paused free-tier project). Don't 500
+    // or hang — send the user to /login, which shows the connection notice.
+    return NextResponse.redirect(new URL("/login?error=connection", request.url));
   }
 
-  if (!user && !isPublic) {
+  if (!user) {
     return NextResponse.redirect(new URL("/login", request.url));
-  }
-  if (user && path === "/login") {
-    return NextResponse.redirect(new URL("/", request.url));
   }
   return response;
 }
