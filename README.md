@@ -73,31 +73,59 @@ Open http://localhost:3000, sign in with Google, paste your Anthropic API key in
 
 ## Running on a second machine (same data)
 
-The transaction data lives in **Supabase (the cloud), not in this repo** — so
-to use CardIQ on another laptop against your existing data, you just point the
-new clone at the *same* Supabase project. No migrations, no re-setup.
+Your transactions live in **Supabase (the cloud), not in this repo**. To run
+CardIQ on another laptop, you just clone the code and recreate the
+`.env.local` file by fetching each value from the dashboards below. Nothing
+secret is ever committed — `.env.local` is gitignored on purpose.
+
+### Step 1 — Clone & install
 
 ```bash
 git clone https://github.com/kanwarpalss/cardIQ.git
 cd cardIQ
 npm install
-cp .env.local.example .env.local   # then fill in — see the ⚠️ below
-npm run dev                          # http://localhost:3000, sign in with Google
+cp .env.local.example .env.local   # creates a blank template to fill in
 ```
 
-After you sign in, your cards and transactions load automatically from
-Supabase — nothing to import.
+### Step 2 — Fill in `.env.local` (where each value comes from)
 
-> ⚠️ **Copy your `.env.local` values verbatim from your primary machine** —
-> especially **`ENCRYPTION_KEY`**. It's the AES key used to decrypt your stored
-> Gmail refresh token; a *different* key here means the token can't be
-> decrypted and Gmail sync breaks. Use the **same** Supabase URL/keys, the
-> **same** Google client ID/secret, and the **same** `ENCRYPTION_KEY` on every
-> machine. (`.env.local` is gitignored on purpose — it never leaves your
-> machines via git. Move it by hand: AirDrop, a password manager, etc.)
+Open `.env.local` in any editor and fill these in. **Use the SAME values as
+your existing setup** so the new machine sees the same data and account.
+
+| Variable | Where to get it |
+|---|---|
+| `NEXT_PUBLIC_SUPABASE_URL` | [supabase.com/dashboard](https://supabase.com/dashboard) → your project → **Project Settings → API → Project URL** |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Same page → **Project API keys → `anon` `public`** |
+| `SUPABASE_SERVICE_ROLE_KEY` | Same page → **Project API keys → `service_role` `secret`** (click “Reveal”) |
+| `GOOGLE_CLIENT_ID` | [console.cloud.google.com](https://console.cloud.google.com) → your project → **APIs & Services → Credentials → OAuth 2.0 Client IDs** → open your client → **Client ID** |
+| `GOOGLE_CLIENT_SECRET` | Same client page → **Client secret** |
+| `ENCRYPTION_KEY` | ⚠️ **Reuse the exact value from your first machine's `.env.local`** (see note below). Only generate a new one if this is a brand-new install with no existing data. |
+| `NEXT_PUBLIC_APP_URL` | Leave as `http://localhost:3000` for local use |
+| `CARDIQ_USER_ID` | Optional (Dining tab only). Supabase dashboard → **Authentication → Users →** your row → copy the **UID** |
+
+> ⚠️ **About `ENCRYPTION_KEY` — this is the one that bites people.**
+> It's the AES key that decrypts your stored Gmail refresh token. To keep
+> Gmail sync working across machines, **every machine must use the identical
+> key.** It only exists in your first machine's `.env.local` (it's gitignored,
+> so it's *not* on GitHub). Copy that exact line over by hand (AirDrop, a
+> password manager, a secure note — never via git or email).
 >
-> The Google OAuth redirect URI already covers `localhost:3000`, so no Google
-> Cloud changes are needed for another *local* machine.
+> If you truly can't retrieve the original key, you can generate a new one:
+> ```bash
+> node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+> ```
+> …but then you must **sign out and sign in again on every machine** so the
+> Gmail token gets re-encrypted with the new key.
+
+### Step 3 — Run
+
+```bash
+npm run dev      # open http://localhost:3000 and sign in with Google
+```
+
+That's it — your cards and transactions load automatically from Supabase after
+you sign in. The Google OAuth redirect already covers `localhost:3000`, so no
+Google Cloud changes are needed for another *local* machine.
 
 ## What works in V1
 
