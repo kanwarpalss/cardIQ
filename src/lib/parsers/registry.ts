@@ -21,7 +21,8 @@ const SENDER_PARSERS: Array<{
     parse: parseHdfcTxn,
   },
   {
-    match: (s) => s.includes("icicibank.com"),
+    // icici.bank.in is the new (2025+) RBI-mandated alerts domain.
+    match: (s) => s.includes("icicibank.com") || s.includes("icici.bank.in"),
     parse: parseIciciTxn,
   },
   {

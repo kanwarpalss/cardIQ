@@ -346,6 +346,18 @@ describe("parseTxnEmail", () => {
     expect(out?.amount_inr).toBe(9939.79);
   });
 
+  it("routes icici.bank.in (new 2025+ domain) to ICICI parser", () => {
+    const out = parseTxnEmail(
+      "ICICI Bank <credit_cards@icici.bank.in>",
+      "Transaction alert for your ICICI Bank Credit Card",
+      "Dear Customer, Your ICICI Bank Credit Card XX9004 has been used for a transaction of INR 457.50 on Jun 27, 2026 at 10:59:29. Info: BOOK MY SHOW SMART G.",
+      ""
+    );
+    expect(out?.card_last4).toBe("9004");
+    expect(out?.amount_inr).toBe(457.5);
+    expect(out?.merchant_raw).toBe("BOOK MY SHOW SMART G");
+  });
+
   it("routes custcomm.hsbc.co.in to HSBC parser", () => {
     const out = parseTxnEmail(
       "HSBC Credit Cards <noreply@custcomm.hsbc.co.in>",

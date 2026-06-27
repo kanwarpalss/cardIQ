@@ -34,7 +34,9 @@ export const ICICI_EMERALDE_PRIVATE_METAL: CardSpec = {
   },
 
   gmail: {
-    senders: ["icicibank.com"],
+    // icici.bank.in is the new (2025+) RBI-mandated alerts domain; icicibank.com
+    // is the legacy one. Keep both so old + new emails are fetched.
+    senders: ["icicibank.com", "icici.bank.in"],
     subject_hints: ["transaction", "spent", "purchase", "credit card"],
   },
 };
