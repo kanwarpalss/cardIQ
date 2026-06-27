@@ -33,7 +33,9 @@ supabase/migrations/     SQL schema
 ### 1. Supabase
 
 1. Create a project at supabase.com (free tier).
-2. SQL Editor → paste `supabase/migrations/001_init.sql` → run.
+2. SQL Editor → run **every** file in `supabase/migrations/` in order
+   (`001_init.sql` → `010_dining_schema.sql`). All are idempotent, so
+   re-running is safe.
 3. Project Settings → API → copy:
    - `NEXT_PUBLIC_SUPABASE_URL`
    - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
@@ -68,6 +70,34 @@ Open http://localhost:3000, sign in with Google, paste your Anthropic API key in
 2. Import the repo on Vercel.
 3. Settings → Environment Variables → paste everything from `.env.local`.
 4. Deploy. Add the production URL to Google OAuth redirect URIs and Supabase Auth → URL Configuration.
+
+## Running on a second machine (same data)
+
+The transaction data lives in **Supabase (the cloud), not in this repo** — so
+to use CardIQ on another laptop against your existing data, you just point the
+new clone at the *same* Supabase project. No migrations, no re-setup.
+
+```bash
+git clone https://github.com/kanwarpalss/cardIQ.git
+cd cardIQ
+npm install
+cp .env.local.example .env.local   # then fill in — see the ⚠️ below
+npm run dev                          # http://localhost:3000, sign in with Google
+```
+
+After you sign in, your cards and transactions load automatically from
+Supabase — nothing to import.
+
+> ⚠️ **Copy your `.env.local` values verbatim from your primary machine** —
+> especially **`ENCRYPTION_KEY`**. It's the AES key used to decrypt your stored
+> Gmail refresh token; a *different* key here means the token can't be
+> decrypted and Gmail sync breaks. Use the **same** Supabase URL/keys, the
+> **same** Google client ID/secret, and the **same** `ENCRYPTION_KEY` on every
+> machine. (`.env.local` is gitignored on purpose — it never leaves your
+> machines via git. Move it by hand: AirDrop, a password manager, etc.)
+>
+> The Google OAuth redirect URI already covers `localhost:3000`, so no Google
+> Cloud changes are needed for another *local* machine.
 
 ## What works in V1
 
