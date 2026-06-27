@@ -25,10 +25,21 @@ export async function middleware(request: NextRequest) {
     }
   );
 
-  const { data: { user } } = await supabase.auth.getUser();
-
   const path = request.nextUrl.pathname;
   const isPublic = path.startsWith("/login") || path.startsWith("/auth");
+
+  let user = null;
+  try {
+    ({ data: { user } } = await supabase.auth.getUser());
+  } catch {
+    // Supabase unreachable (e.g. paused free-tier project). Don't 500 —
+    // send the user to /login, which shows the friendly connection notice.
+    if (!isPublic) {
+      return NextResponse.redirect(new URL("/login?error=connection", request.url));
+    }
+    return response;
+  }
+
   if (!user && !isPublic) {
     return NextResponse.redirect(new URL("/login", request.url));
   }

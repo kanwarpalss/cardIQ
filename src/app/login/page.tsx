@@ -1,11 +1,33 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { checkSupabaseReachable } from "@/lib/supabase/health";
+import SupabaseDownNotice from "@/components/SupabaseDownNotice";
 
 export default function LoginPage() {
   const supabase = createClient();
+  const [down, setDown] = useState(false);
+  const [retrying, setRetrying] = useState(false);
+
+  // The middleware redirects here with ?error=connection when a server-side
+  // Supabase call fails. Surface the friendly notice straight away.
+  useEffect(() => {
+    if (new URLSearchParams(window.location.search).get("error") === "connection") {
+      setDown(true);
+    }
+  }, []);
 
   async function signIn() {
+    // Preflight: clicking the button redirects the browser AWAY to
+    // <project>.supabase.co. If that host can't resolve (paused project),
+    // the user lands on a raw browser DNS error with no way back. Catch it
+    // here, while our app is still in control, and show a helpful notice.
+    const reachable = await checkSupabaseReachable();
+    if (!reachable) {
+      setDown(true);
+      return;
+    }
     await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
@@ -14,6 +36,17 @@ export default function LoginPage() {
         queryParams: { access_type: "offline", prompt: "consent" },
       },
     });
+  }
+
+  async function retry() {
+    setRetrying(true);
+    const reachable = await checkSupabaseReachable();
+    setRetrying(false);
+    if (reachable) {
+      setDown(false);
+      // Clear the ?error param so a refresh doesn't re-trigger the notice.
+      window.history.replaceState(null, "", window.location.pathname);
+    }
   }
 
   return (
@@ -25,7 +58,10 @@ export default function LoginPage() {
       </div>
 
       <div className="relative w-full max-w-sm mx-4">
-        {/* Card */}
+        {down ? (
+          <SupabaseDownNotice onRetry={retry} retrying={retrying} />
+        ) : (
+        /* Card */
         <div className="rounded-2xl border border-rim bg-surface shadow-card p-8 space-y-6">
 
           {/* Logo + wordmark */}
@@ -71,6 +107,7 @@ export default function LoginPage() {
             Your data stays on your device.
           </p>
         </div>
+        )}
       </div>
     </main>
   );
