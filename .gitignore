@@ -14,3 +14,6 @@ supabase/.branches/
 
 # puppy-context pseudo-cache digest (derived; regenerated on session shutdown)
 CONTEXT.md
+
+# Local Claude Code config (machine-specific permissions)
+.claude/
