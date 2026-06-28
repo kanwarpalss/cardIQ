@@ -57,7 +57,7 @@ export default function SupabaseDownNotice({ onRetry, retrying }: Props) {
       </div>
 
       {/* Fix steps */}
-      <ol className="text-sm text-mist/60 leading-relaxed space-y-1.5 list-decimal pl-5 marker:text-mist/30">
+      <ol className="text-sm text-mist/60 leading-relaxed space-y-1.5 list-decimal pl-5 marker:text-mist/55">
         <li>
           Open the{" "}
           <a
@@ -112,7 +112,7 @@ export default function SupabaseDownNotice({ onRetry, retrying }: Props) {
         </a>
       </div>
 
-      <p className="text-2xs text-mist/30 text-center leading-relaxed">
+      <p className="text-2xs text-mist/55 text-center leading-relaxed">
         Tip: if you&apos;re on a corporate network/VPN that blocks Supabase, try
         a hotspot or guest WiFi.
       </p>

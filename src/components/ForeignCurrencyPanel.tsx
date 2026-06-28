@@ -111,8 +111,8 @@ export default function ForeignCurrencyPanel({ transactions }: Props) {
       {/* ── Header ───────────────────────────────────────────────────────── */}
       <div className="flex items-center justify-between flex-wrap gap-2">
         <div>
-          <h3 className="text-2xs uppercase tracking-widest text-mist/30">Foreign currency transactions</h3>
-          <p className="text-2xs text-mist/30 mt-0.5">
+          <h3 className="text-2xs uppercase tracking-widest text-mist/55">Foreign currency transactions</h3>
+          <p className="text-2xs text-mist/55 mt-0.5">
             {transactions.length} txn{transactions.length > 1 ? "s" : ""} across {list.length} currenc{list.length > 1 ? "ies" : "y"}
             {" · "}INR shown both at txn date and at today&apos;s rate.
           </p>
@@ -131,7 +131,7 @@ export default function ForeignCurrencyPanel({ transactions }: Props) {
 
       {refreshMsg && (
         <div className="text-2xs text-mist/60 px-3 py-2 rounded-lg bg-raised border border-rim">
-          {refreshMsg} <span className="text-mist/30">— refresh the page to see updated totals.</span>
+          {refreshMsg} <span className="text-mist/55">— refresh the page to see updated totals.</span>
         </div>
       )}
 
@@ -158,7 +158,7 @@ export default function ForeignCurrencyPanel({ transactions }: Props) {
                       <path d="M1 1l4 4 4-4" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round"/>
                     </svg>
                   </div>
-                  <div className="flex items-center gap-2 text-2xs text-mist/30 justify-self-start">
+                  <div className="flex items-center gap-2 text-2xs text-mist/55 justify-self-start">
                     {b.count} txn{b.count > 1 ? "s" : ""}
                     {b.missingRateCount > 0 && (
                       <span className="text-amber">· {b.missingRateCount} missing rate</span>
@@ -169,11 +169,11 @@ export default function ForeignCurrencyPanel({ transactions }: Props) {
                   </span>
                   <span className="font-medium text-gold/90 tabular-nums text-right text-xs">
                     ₹{Math.round(b.totalInrHistorical).toLocaleString("en-IN")}
-                    <div className="text-2xs text-mist/30 font-normal">at txn date</div>
+                    <div className="text-2xs text-mist/55 font-normal">at txn date</div>
                   </span>
                   <span className="font-medium text-mist/70 tabular-nums text-right text-xs">
                     ₹{Math.round(b.totalInrToday).toLocaleString("en-IN")}
-                    <div className="text-2xs text-mist/30 font-normal">today</div>
+                    <div className="text-2xs text-mist/55 font-normal">today</div>
                   </span>
                 </div>
               </button>
@@ -187,12 +187,12 @@ export default function ForeignCurrencyPanel({ transactions }: Props) {
                     const inrToday = toInr(native, t.original_currency) ?? 0;
                     return (
                       <div key={t.id} className="px-4 py-2.5 grid grid-cols-[auto_1fr_auto_auto_auto] items-baseline gap-x-4 text-xs">
-                        <span className="text-mist/40 tabular-nums">
+                        <span className="text-mist/60 tabular-nums">
                           {new Date(t.txn_at).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "2-digit" })}
                         </span>
                         <div className="min-w-0 flex items-center gap-2">
                           <span className="text-mist/80 truncate">{t.merchant || "—"}</span>
-                          <span className="text-2xs text-mist/30 shrink-0">··{t.card_last4}</span>
+                          <span className="text-2xs text-mist/55 shrink-0">··{t.card_last4}</span>
                         </div>
                         <span className={`tabular-nums font-medium text-right ${
                           t.txn_type === "credit" ? "text-emerald" : "text-mist/90"
@@ -215,14 +215,14 @@ export default function ForeignCurrencyPanel({ transactions }: Props) {
                   {/* Pager */}
                   {totalPages > 1 && (
                     <div className="px-4 py-2 flex items-center justify-between text-2xs">
-                      <span className="text-mist/30">
+                      <span className="text-mist/55">
                         {(page - 1) * TXN_PAGE + 1}–{Math.min(page * TXN_PAGE, sortedTxns.length)} of {sortedTxns.length}
                       </span>
                       <div className="flex items-center gap-2">
                         <button disabled={page <= 1}
                           onClick={() => setTxnPage((m) => ({ ...m, [b.currency]: page - 1 }))}
                           className="px-2 py-0.5 rounded text-mist/60 hover:text-gold disabled:opacity-30 disabled:cursor-not-allowed">‹ Prev</button>
-                        <span className="text-mist/40 tabular-nums">{page}/{totalPages}</span>
+                        <span className="text-mist/60 tabular-nums">{page}/{totalPages}</span>
                         <button disabled={page >= totalPages}
                           onClick={() => setTxnPage((m) => ({ ...m, [b.currency]: page + 1 }))}
                           className="px-2 py-0.5 rounded text-mist/60 hover:text-gold disabled:opacity-30 disabled:cursor-not-allowed">Next ›</button>
@@ -251,13 +251,13 @@ export default function ForeignCurrencyPanel({ transactions }: Props) {
           </span>
         </div>
         <div className="flex items-center justify-between pt-1 border-t border-wire/50">
-          <span className="text-2xs text-mist/30">Difference (today vs txn date):</span>
+          <span className="text-2xs text-mist/55">Difference (today vs txn date):</span>
           <span className={`text-2xs tabular-nums font-medium ${
             inrDelta >= 0 ? "text-amber" : "text-emerald"
           }`}>
             {inrDelta >= 0 ? "+" : ""}₹{Math.round(inrDelta).toLocaleString("en-IN")}
             {grandInrHistorical > 0 && (
-              <span className="text-mist/30 ml-1">({((inrDelta / grandInrHistorical) * 100).toFixed(1)}%)</span>
+              <span className="text-mist/55 ml-1">({((inrDelta / grandInrHistorical) * 100).toFixed(1)}%)</span>
             )}
           </span>
         </div>

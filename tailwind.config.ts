@@ -5,31 +5,33 @@ export default {
   theme: {
     extend: {
       colors: {
-        // ── Depth layers (lightest last) ────────────────────────────
-        ink:     "#070b14",   // deepest background
-        surface: "#0f1422",   // card / panel
-        raised:  "#161d30",   // elevated elements, dropdowns
-        hover:   "#1c2438",   // interactive hover state
+        // ── Depth layers (warm espresso-charcoal, lightest last) ──────────
+        // Warm, chic darks — NOT cold pure-black. Each layer is lifted enough
+        // to keep text legible (readability is the first tenet here).
+        ink:     "#14110c",   // deepest background — warm near-black
+        surface: "#1e1a13",   // card / panel
+        raised:  "#29231a",   // elevated elements, dropdowns
+        hover:   "#352d22",   // interactive hover state
 
-        // ── Borders (white-alpha so they always sit cleanly on any layer) ──
-        wire: "rgba(255,255,255,0.06)",   // hairline — section dividers
-        rim:  "rgba(255,255,255,0.11)",   // visible border
+        // ── Borders (warm-white alpha so they read on any warm layer) ──────
+        wire: "rgba(237,233,224,0.10)",   // hairline — section dividers
+        rim:  "rgba(237,233,224,0.18)",   // visible border
 
-        // ── Text (warm white — same warmth as wealth dashboard) ─────
-        mist: "#ede9e0",
+        // ── Text (warm white) ───────────────────────────────────────────
+        mist: "#f1ede4",
 
-        // ── Brand accent ────────────────────────────────────────────
-        gold:    "#e0b44a",   // richer, deeper champagne gold
+        // ── Brand accent ────────────────────────────────────────────────
+        gold:    "#e6bd57",   // champagne gold, slightly brighter for contrast
 
-        // ── Status ──────────────────────────────────────────────────
-        emerald:  "#22c55e",
-        ruby:     "#ef4444",
-        sapphire: "#3b82f6",
-        amber:    "#f59e0b",
+        // ── Status ──────────────────────────────────────────────────────
+        emerald:  "#34d27b",
+        ruby:     "#f4675f",
+        sapphire: "#5b9bf8",
+        amber:    "#f5b042",
 
-        // ── Legacy aliases (so old classes don't break mid-refactor) ─
-        panel: "#0f1422",
-        line:  "rgba(255,255,255,0.06)",
+        // ── Legacy aliases (so old classes don't break mid-refactor) ─────
+        panel: "#1e1a13",
+        line:  "rgba(237,233,224,0.10)",
       },
       fontFamily: {
         sans:  ["'Inter'", "ui-sans-serif", "system-ui"],
@@ -44,8 +46,8 @@ export default {
         "dropdown":  "0 8px 40px rgba(0,0,0,0.6), 0 2px 8px rgba(0,0,0,0.4)",
       },
       backgroundImage: {
-        "gold-shimmer": "linear-gradient(135deg, #e0b44a 0%, #c9983a 50%, #e8c060 100%)",
-        "surface-gradient": "linear-gradient(160deg, #0f1422 0%, #111828 100%)",
+        "gold-shimmer": "linear-gradient(135deg, #e6bd57 0%, #cf9f3e 50%, #f0cb6b 100%)",
+        "surface-gradient": "linear-gradient(160deg, #1e1a13 0%, #221d15 100%)",
       },
       animation: {
         "spin-slow": "spin 2s linear infinite",

@@ -119,7 +119,7 @@ export default function CardsTab() {
         <h2 className="font-serif text-lg font-semibold text-gold">My Cards</h2>
 
         {cards.length === 0 && (
-          <p className="text-mist/40 text-sm">No cards added yet. Add your first card below.</p>
+          <p className="text-mist/60 text-sm">No cards added yet. Add your first card below.</p>
         )}
 
         <div className="space-y-2.5">
@@ -137,7 +137,7 @@ export default function CardsTab() {
                   </div>
                   <div>
                     <div className="text-sm font-medium text-mist/90">{name}</div>
-                    <div className="text-2xs text-mist/30">
+                    <div className="text-2xs text-mist/55">
                       <span className="tracking-widest">●●●● ●●●● ●●●● {c.last4}</span>
                     </div>
                   </div>
@@ -153,7 +153,7 @@ export default function CardsTab() {
 
         {/* Add card form */}
         <div className="border-t border-wire pt-5 space-y-3">
-          <div className="text-2xs uppercase tracking-widest text-mist/30 mb-1">Add card</div>
+          <div className="text-2xs uppercase tracking-widest text-mist/55 mb-1">Add card</div>
 
           <select value={productKey} onChange={(e) => setProductKey(e.target.value)}
             className="w-full bg-ink border border-rim rounded-xl px-3 py-2 text-sm text-mist focus:border-gold/40 outline-none">
@@ -196,7 +196,7 @@ export default function CardsTab() {
         <h2 className="font-serif text-lg font-semibold text-gold">Settings</h2>
 
         <div className="space-y-1.5">
-          <label className="text-2xs uppercase tracking-widest text-mist/30 block">
+          <label className="text-2xs uppercase tracking-widest text-mist/55 block">
             Anthropic API Key {savedKey && <span className="text-emerald normal-case ml-1">● saved</span>}
           </label>
           <input type="password" value={apiKey} onChange={(e) => setApiKey(e.target.value)}
@@ -206,7 +206,7 @@ export default function CardsTab() {
         </div>
 
         <div className="space-y-1.5">
-          <label className="text-2xs uppercase tracking-widest text-mist/30 block">Profile</label>
+          <label className="text-2xs uppercase tracking-widest text-mist/55 block">Profile</label>
           <textarea value={profile} onChange={(e) => setProfile(e.target.value)} rows={4}
             placeholder="Describe your spending habits, goals, and what matters to you (e.g. 'I travel frequently, care about lounge access, and spend heavily on dining')…"
             className="w-full bg-ink border border-rim rounded-xl px-3 py-2 text-sm text-mist placeholder:text-mist/25 focus:border-gold/40 outline-none resize-none leading-relaxed" />

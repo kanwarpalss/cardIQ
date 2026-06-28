@@ -267,10 +267,10 @@ export default function SpendTab() {
         <div className="flex items-start justify-between gap-4 flex-wrap">
           <div>
             <h2 className="font-serif text-base font-semibold text-gold mb-0.5">Gmail Sync</h2>
-            <p className="text-xs text-mist/40">Emails are archived locally once and never re-downloaded.</p>
+            <p className="text-xs text-mist/60">Emails are archived locally once and never re-downloaded.</p>
           </div>
           <button onClick={recategorize}
-            className="text-xs text-mist/40 hover:text-mist/70 transition-colors whitespace-nowrap">
+            className="text-xs text-mist/60 hover:text-mist/70 transition-colors whitespace-nowrap">
             Re-categorize
           </button>
         </div>
@@ -289,7 +289,7 @@ export default function SpendTab() {
 
         {/* Period row */}
         <div className="flex items-center gap-3 flex-wrap">
-          <span className="text-2xs uppercase tracking-widest text-mist/30 w-12 shrink-0">Period</span>
+          <span className="text-2xs uppercase tracking-widest text-mist/55 w-12 shrink-0">Period</span>
           <PeriodPicker
             from={fromDate}
             to={toDate}
@@ -300,7 +300,7 @@ export default function SpendTab() {
         {/* Cards row */}
         {allData && allData.cards.length > 0 && (
           <div className="flex items-center gap-3 flex-wrap">
-            <span className="text-2xs uppercase tracking-widest text-mist/30 w-12 shrink-0">Cards</span>
+            <span className="text-2xs uppercase tracking-widest text-mist/55 w-12 shrink-0">Cards</span>
             <div className="flex flex-wrap gap-1.5">
               <FilterPill active={selectedCards.has("all")} onClick={() => toggleCard("all")}>All</FilterPill>
               {allData.cards.map((c) => (
@@ -314,7 +314,7 @@ export default function SpendTab() {
 
         {/* Type row */}
         <div className="flex items-center gap-3 flex-wrap">
-          <span className="text-2xs uppercase tracking-widest text-mist/30 w-12 shrink-0">Type</span>
+          <span className="text-2xs uppercase tracking-widest text-mist/55 w-12 shrink-0">Type</span>
           <div className="flex gap-1.5">
             {(["all", "debit", "credit"] as const).map((t) => (
               <FilterPill key={t} active={txnType === t} onClick={() => setTxnType(t)}>
@@ -324,7 +324,7 @@ export default function SpendTab() {
           </div>
           {categoryFilter && (
             <button onClick={() => setCategoryFilter(null)}
-              className="ml-auto text-xs text-mist/40 hover:text-mist/70 flex items-center gap-1 transition-colors">
+              className="ml-auto text-xs text-mist/60 hover:text-mist/70 flex items-center gap-1 transition-colors">
               <span className="text-gold/60 font-medium">{categoryFilter}</span>
               <span>× clear</span>
             </button>
@@ -333,11 +333,11 @@ export default function SpendTab() {
       </section>
 
       {loading && !allData && (
-        <div className="flex items-center justify-center py-16 text-mist/30 text-sm">Loading…</div>
+        <div className="flex items-center justify-center py-16 text-mist/55 text-sm">Loading…</div>
       )}
 
       {allData && filteredTxns.length === 0 && (
-        <div className="text-center py-16 text-mist/30 text-sm">
+        <div className="text-center py-16 text-mist/55 text-sm">
           No transactions in this range. Try widening the period or syncing Gmail.
         </div>
       )}
@@ -355,7 +355,7 @@ export default function SpendTab() {
           {/* ── Milestone bars ─────────────────────────────────────────── */}
           {txnType !== "credit" && !categoryFilter && allData.cards.length > 0 && (
             <section className="rounded-2xl border border-rim bg-surface p-5 shadow-card space-y-4">
-              <h3 className="text-2xs uppercase tracking-widest text-mist/30">Milestones</h3>
+              <h3 className="text-2xs uppercase tracking-widest text-mist/55">Milestones</h3>
               {allData.cards
                 .filter((c) => selectedCards.has("all") || selectedCards.has(c.last4))
                 .map((card) => {
@@ -376,7 +376,7 @@ export default function SpendTab() {
                         <div className="h-full bg-gold-shimmer rounded-full transition-all duration-700"
                           style={{ width: `${pct}%` }} />
                       </div>
-                      <div className="flex justify-between text-2xs text-mist/30">
+                      <div className="flex justify-between text-2xs text-mist/55">
                         <span>{Math.round(pct)}% of {fmt(milestone)} milestone</span>
                         {pct < 100
                           ? <span>{fmt(milestone - spent)} to go</span>
@@ -394,8 +394,8 @@ export default function SpendTab() {
             {/* Category */}
             <section className="rounded-2xl border border-rim bg-surface p-5 shadow-card space-y-3">
               <div className="flex items-center justify-between">
-                <h3 className="text-2xs uppercase tracking-widest text-mist/30">By category</h3>
-                <span className="text-2xs text-mist/30">
+                <h3 className="text-2xs uppercase tracking-widest text-mist/55">By category</h3>
+                <span className="text-2xs text-mist/55">
                   {filteredCategories.length}
                   {filteredCategories.length !== aggregates.by_category.length && ` / ${aggregates.by_category.length}`}
                 </span>
@@ -439,7 +439,7 @@ export default function SpendTab() {
               {filteredCategories.length > CATEGORY_PAGE && (
                 <div className="pt-2 border-t border-wire flex items-center justify-between">
                   <button onClick={() => { setShowAllCategories((v) => !v); setCategoryPage(1); }}
-                    className="text-xs text-mist/40 hover:text-gold transition-colors">
+                    className="text-xs text-mist/60 hover:text-gold transition-colors">
                     {showAllCategories ? "Show top 10" : `Show all ${filteredCategories.length}`}
                   </button>
                   {showAllCategories && categoryPageCount > 1 && (
@@ -452,8 +452,8 @@ export default function SpendTab() {
             {/* Merchant */}
             <section className="rounded-2xl border border-rim bg-surface p-5 shadow-card space-y-3">
               <div className="flex items-center justify-between">
-                <h3 className="text-2xs uppercase tracking-widest text-mist/30">By merchant</h3>
-                <span className="text-2xs text-mist/30">
+                <h3 className="text-2xs uppercase tracking-widest text-mist/55">By merchant</h3>
+                <span className="text-2xs text-mist/55">
                   {filteredMerchants.length}
                   {filteredMerchants.length !== aggregates.by_merchant.length && ` / ${aggregates.by_merchant.length}`}
                 </span>
@@ -478,7 +478,7 @@ export default function SpendTab() {
               {filteredMerchants.length > MERCHANT_PAGE && (
                 <div className="pt-2 border-t border-wire flex items-center justify-between">
                   <button onClick={() => { setShowAllMerchants((v) => !v); setMerchantPage(1); }}
-                    className="text-xs text-mist/40 hover:text-gold transition-colors">
+                    className="text-xs text-mist/60 hover:text-gold transition-colors">
                     {showAllMerchants ? "Show top 10" : `Show all ${filteredMerchants.length}`}
                   </button>
                   {showAllMerchants && merchantPageCount > 1 && (
@@ -531,9 +531,9 @@ function StatTile({ label, value, sub, accent }: {
   const valClass = accent === "gold" ? "text-gold" : accent === "emerald" ? "text-emerald" : "text-mist/80";
   return (
     <div className="rounded-2xl border border-rim bg-surface p-4 shadow-card">
-      <div className="text-2xs uppercase tracking-widest text-mist/30 mb-2">{label}</div>
+      <div className="text-2xs uppercase tracking-widest text-mist/55 mb-2">{label}</div>
       <div className={`font-serif text-2xl font-semibold tabular-nums ${valClass}`}>{value}</div>
-      <div className="text-2xs text-mist/30 mt-1">{sub}</div>
+      <div className="text-2xs text-mist/55 mt-1">{sub}</div>
     </div>
   );
 }
@@ -543,7 +543,7 @@ function Pager({ page, count, onChange }: { page: number; count: number; onChang
     <div className="flex items-center gap-1.5 text-xs">
       <button disabled={page <= 1} onClick={() => onChange(page - 1)}
         className="px-2 py-1 rounded border border-rim hover:border-gold/30 disabled:opacity-20 transition-all">‹</button>
-      <span className="text-mist/40 tabular-nums">{page}/{count}</span>
+      <span className="text-mist/60 tabular-nums">{page}/{count}</span>
       <button disabled={page >= count} onClick={() => onChange(page + 1)}
         className="px-2 py-1 rounded border border-rim hover:border-gold/30 disabled:opacity-20 transition-all">›</button>
     </div>

@@ -18,7 +18,7 @@
 //     button was a footgun. If parsers ever break this badly again we can
 //     re-add it as a hidden admin tool.
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 
 interface SyncState {
@@ -30,6 +30,15 @@ interface Props {
   onSyncComplete: () => void;
 }
 
+// Backfill presets (days). Re-scans that window so newly-supported senders
+// or anything the incremental cursor skipped gets picked up. ~8y = "everything".
+const BACKFILL_OPTIONS: Array<{ label: string; days: number }> = [
+  { label: "Last 30 days", days: 30 },
+  { label: "Last 90 days", days: 90 },
+  { label: "Last year", days: 365 },
+  { label: "Everything (8 yrs)", days: 365 * 8 },
+];
+
 export default function SyncPanel({ onSyncComplete }: Props) {
   const supabase = createClient();
 
@@ -38,6 +47,25 @@ export default function SyncPanel({ onSyncComplete }: Props) {
   const [progress,  setProgress]  = useState<string | null>(null);
   const [result,    setResult]    = useState<string | null>(null);
   const [resultOk,  setResultOk]  = useState(true);
+  const [menuOpen,  setMenuOpen]  = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  // Close the dropdown on an outside click or Escape.
+  useEffect(() => {
+    if (!menuOpen) return;
+    function onDown(e: MouseEvent) {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) setMenuOpen(false);
+    }
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") setMenuOpen(false);
+    }
+    document.addEventListener("mousedown", onDown);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onDown);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [menuOpen]);
 
   // ── Load last-sync state ────────────────────────────────────────────────
   const loadSyncState = useCallback(async () => {
@@ -60,16 +88,24 @@ export default function SyncPanel({ onSyncComplete }: Props) {
   useEffect(() => { loadSyncState(); }, [loadSyncState]);
 
   // ── Run sync ────────────────────────────────────────────────────────────
-  // Fires the streaming endpoint. First-ever sync uses the server's
-  // FIRST_SYNC_LOOKBACK_DAYS (8 years). Subsequent runs are incremental
-  // because the server respects the stored cursor.
-  async function runSync() {
+  // No arg → incremental (only emails newer than the saved cursor).
+  // lookbackDays → backfill: re-scan that many days so newly-recognised
+  // senders (or anything the cursor skipped) get picked up. Dedup via
+  // gmail_seen_messages guarantees no duplicates either way.
+  async function runSync(lookbackDays?: number) {
+    setMenuOpen(false);
     setSyncing(true);
     setResult(null);
-    setProgress("Connecting to Gmail…");
+    setProgress(
+      lookbackDays ? `Starting backfill of the last ${lookbackDays} days…` : "Connecting to Gmail…"
+    );
 
     try {
-      const res = await fetch("/api/gmail/sync", { method: "POST" });
+      const res = await fetch("/api/gmail/sync", {
+        method: "POST",
+        headers: lookbackDays ? { "Content-Type": "application/json" } : undefined,
+        body: lookbackDays ? JSON.stringify({ lookback_days: lookbackDays }) : undefined,
+      });
 
       if (!res.ok) {
         const errBody = await res.json().catch(() => ({ message: `HTTP ${res.status}` }));
@@ -165,28 +201,74 @@ export default function SyncPanel({ onSyncComplete }: Props) {
 
         <div className="flex-1" />
 
-        {/* The one button. */}
-        <button
-          onClick={runSync}
-          disabled={syncing}
-          className="flex items-center gap-2 px-4 py-1.5 rounded-lg bg-gold-shimmer text-ink text-xs font-semibold shadow-glow-gold hover:opacity-90 disabled:opacity-50 transition-all"
-        >
-          {syncing ? (
-            <>
-              <svg className="w-3 h-3 animate-spin-slow" fill="none" viewBox="0 0 16 16">
-                <circle cx="8" cy="8" r="6" stroke="currentColor" strokeWidth="2" strokeDasharray="20 12" />
-              </svg>
-              Syncing…
-            </>
-          ) : (
-            <>
-              <svg className="w-3 h-3" fill="none" viewBox="0 0 16 16" stroke="currentColor" strokeWidth={2}>
-                <path d="M2 8a6 6 0 1 1 1.5 4M2 12V8h4" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-              Sync Gmail
-            </>
+        {/* Sync dropdown: incremental "Sync now" + backfill windows. */}
+        <div className="relative" ref={menuRef}>
+          <button
+            onClick={() => (syncing ? undefined : setMenuOpen((o) => !o))}
+            disabled={syncing}
+            aria-haspopup="menu"
+            aria-expanded={menuOpen}
+            className="flex items-center gap-2 px-4 py-1.5 rounded-lg bg-gold-shimmer text-ink text-xs font-semibold shadow-glow-gold hover:opacity-90 disabled:opacity-60 transition-all"
+          >
+            {syncing ? (
+              <>
+                <svg className="w-3 h-3 animate-spin-slow" fill="none" viewBox="0 0 16 16">
+                  <circle cx="8" cy="8" r="6" stroke="currentColor" strokeWidth="2" strokeDasharray="20 12" />
+                </svg>
+                Syncing…
+              </>
+            ) : (
+              <>
+                <svg className="w-3 h-3" fill="none" viewBox="0 0 16 16" stroke="currentColor" strokeWidth={2}>
+                  <path d="M2 8a6 6 0 1 1 1.5 4M2 12V8h4" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+                Sync Gmail
+                <svg className="w-3 h-3 -mr-1" fill="none" viewBox="0 0 16 16" stroke="currentColor" strokeWidth={2}>
+                  <path d="m4 6 4 4 4-4" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </>
+            )}
+          </button>
+
+          {menuOpen && !syncing && (
+            <div
+              role="menu"
+              className="absolute right-0 mt-2 w-56 z-50 rounded-xl border border-rim bg-raised shadow-dropdown overflow-hidden"
+            >
+              <button
+                role="menuitem"
+                onClick={() => runSync()}
+                className="w-full flex items-start gap-2.5 px-3 py-2.5 text-left hover:bg-hover transition-colors"
+              >
+                <svg className="w-3.5 h-3.5 mt-0.5 text-gold shrink-0" fill="none" viewBox="0 0 16 16" stroke="currentColor" strokeWidth={2}>
+                  <path d="M2 8a6 6 0 1 1 1.5 4M2 12V8h4" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+                <span>
+                  <span className="block text-xs font-medium text-mist">Sync now</span>
+                  <span className="block text-2xs text-mist/60">Just fetch what&apos;s new</span>
+                </span>
+              </button>
+
+              <div className="px-3 pt-2 pb-1 text-2xs uppercase tracking-widest text-mist/55 border-t border-wire">
+                Backfill
+              </div>
+              {BACKFILL_OPTIONS.map((opt) => (
+                <button
+                  key={opt.days}
+                  role="menuitem"
+                  onClick={() => runSync(opt.days)}
+                  className="w-full flex items-center justify-between px-3 py-2 text-left hover:bg-hover transition-colors"
+                >
+                  <span className="text-xs text-mist/80">{opt.label}</span>
+                  <span className="text-2xs text-mist/55 tabular-nums">{opt.days}d</span>
+                </button>
+              ))}
+              <p className="px-3 py-2 text-2xs text-mist/55 border-t border-wire leading-relaxed">
+                Backfill re-scans older emails (e.g. a newly-supported bank). No duplicates are ever created.
+              </p>
+            </div>
           )}
-        </button>
+        </div>
       </div>
 
       {/* Progress / result area — shows under the button row, never above */}

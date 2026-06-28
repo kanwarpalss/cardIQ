@@ -75,7 +75,7 @@ export default function LoginPage() {
             </div>
             <div>
               <div className="font-serif font-semibold text-xl text-gold tracking-tight">CardIQ</div>
-              <div className="text-2xs text-mist/40 uppercase tracking-widest">Credit Intelligence</div>
+              <div className="text-2xs text-mist/60 uppercase tracking-widest">Credit Intelligence</div>
             </div>
           </div>
 
@@ -102,7 +102,7 @@ export default function LoginPage() {
           </button>
 
           {/* Fine print */}
-          <p className="text-2xs text-mist/30 text-center leading-relaxed">
+          <p className="text-2xs text-mist/55 text-center leading-relaxed">
             Requires Gmail read-only access to parse credit card transaction alerts.
             Your data stays on your device.
           </p>

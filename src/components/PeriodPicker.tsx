@@ -183,7 +183,7 @@ export default function PeriodPicker({ from, to, onChange }: Props) {
 
           {/* Custom range */}
           <div className="border-t border-rim p-3 space-y-2 bg-surface/40">
-            <div className="text-2xs uppercase tracking-widest text-mist/40">Custom range</div>
+            <div className="text-2xs uppercase tracking-widest text-mist/60">Custom range</div>
             <div className="flex items-center gap-2">
               <input
                 type="date"
@@ -192,7 +192,7 @@ export default function PeriodPicker({ from, to, onChange }: Props) {
                 onChange={(e) => setCustomFrom(e.target.value)}
                 className="flex-1 bg-ink border border-rim rounded px-2 py-1.5 text-xs text-mist focus:border-gold/40 outline-none"
               />
-              <span className="text-mist/40 text-xs">→</span>
+              <span className="text-mist/60 text-xs">→</span>
               <input
                 type="date"
                 value={customTo}

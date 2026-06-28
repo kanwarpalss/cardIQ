@@ -202,7 +202,7 @@ export default function TransactionsTable({
 
       {/* Filter bar */}
       <div className="px-5 py-3 border-b border-wire flex items-center gap-2 flex-wrap">
-        <h3 className="text-2xs uppercase tracking-widest text-mist/30 shrink-0">Transactions</h3>
+        <h3 className="text-2xs uppercase tracking-widest text-mist/55 shrink-0">Transactions</h3>
         <input type="text" placeholder="Search merchant or note…" value={search}
           onChange={(e) => { setSearch(e.target.value); setPage(1); }}
           className="flex-1 min-w-[150px] max-w-xs bg-ink border border-rim rounded-lg px-3 py-1.5 text-xs text-mist placeholder:text-mist/25 focus:border-gold/40 outline-none" />
@@ -212,7 +212,7 @@ export default function TransactionsTable({
         <input type="number" placeholder="Max ₹" value={amtMax}
           onChange={(e) => { setAmtMax(e.target.value); setPage(1); }}
           className="w-20 bg-ink border border-rim rounded-lg px-2 py-1.5 text-xs text-mist placeholder:text-mist/25 focus:border-gold/40 outline-none" />
-        <span className="text-2xs text-mist/30 ml-auto shrink-0">
+        <span className="text-2xs text-mist/55 ml-auto shrink-0">
           {processed.length === transactions.length
             ? `${processed.length} transactions`
             : `${processed.length} of ${transactions.length}`}
@@ -224,12 +224,12 @@ export default function TransactionsTable({
           <tr>
             {(["date", "merchant", "category", "card"] as const).map((col) => (
               <th key={col} onClick={() => toggleSort(col)}
-                className="text-left px-5 py-2.5 text-2xs font-medium uppercase tracking-widest text-mist/30 cursor-pointer hover:text-mist/50 select-none capitalize">
+                className="text-left px-5 py-2.5 text-2xs font-medium uppercase tracking-widest text-mist/55 cursor-pointer hover:text-mist/50 select-none capitalize">
                 {col} <SortIcon col={col} />
               </th>
             ))}
             <th onClick={() => toggleSort("amount")}
-              className="text-right px-5 py-2.5 text-2xs font-medium uppercase tracking-widest text-mist/30 cursor-pointer hover:text-mist/50 select-none">
+              className="text-right px-5 py-2.5 text-2xs font-medium uppercase tracking-widest text-mist/55 cursor-pointer hover:text-mist/50 select-none">
               Amount <SortIcon col="amount" />
             </th>
           </tr>
@@ -245,7 +245,7 @@ export default function TransactionsTable({
               <tr key={t.id} className="group border-b border-wire last:border-0 hover:bg-raised transition-colors">
 
                 {/* Date */}
-                <td className="px-5 py-3 text-mist/40 text-xs whitespace-nowrap align-top">
+                <td className="px-5 py-3 text-mist/60 text-xs whitespace-nowrap align-top">
                   {new Date(t.txn_at).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "2-digit" })}
                 </td>
 
@@ -301,7 +301,7 @@ export default function TransactionsTable({
                           className="w-full bg-ink border border-gold/40 rounded-lg px-2 py-1 text-xs text-mist focus:border-gold outline-none resize-none" />
                         {noteSuggestions.length > 0 && (
                           <div className="absolute z-10 left-0 right-0 top-full mt-0.5 bg-raised border border-rim rounded-xl shadow-dropdown max-h-40 overflow-y-auto">
-                            <div className="px-2 py-1 text-2xs uppercase tracking-widest text-mist/30 border-b border-wire">Existing notes</div>
+                            <div className="px-2 py-1 text-2xs uppercase tracking-widest text-mist/55 border-b border-wire">Existing notes</div>
                             {noteSuggestions.map((s, i) => (
                               <button key={i} onMouseDown={(e) => { e.preventDefault(); setEditNoteText(s); }}
                                 className="w-full text-left px-2 py-1.5 text-xs text-mist/70 hover:bg-hover hover:text-mist truncate transition-colors">
@@ -324,7 +324,7 @@ export default function TransactionsTable({
                       </div>
                     ) : t.notes ? (
                       <button onClick={() => startNoteEdit(t)} title="Click to edit note"
-                        className="group/n mt-1 flex items-start gap-1 text-left text-xs italic text-mist/40 hover:text-mist/70 transition-colors w-full">
+                        className="group/n mt-1 flex items-start gap-1 text-left text-xs italic text-mist/60 hover:text-mist/70 transition-colors w-full">
                         <span className="text-gold/40 shrink-0 not-italic text-2xs mt-0.5">📝</span>
                         <span className="break-words">{t.notes}</span>
                       </button>
@@ -392,13 +392,13 @@ export default function TransactionsTable({
 
       {totalPages > 1 && (
         <div className="px-5 py-3 border-t border-wire flex items-center justify-between">
-          <span className="text-2xs text-mist/30 tabular-nums">
+          <span className="text-2xs text-mist/55 tabular-nums">
             {(page - 1) * PAGE + 1}–{Math.min(page * PAGE, processed.length)} of {processed.length}
           </span>
           <div className="flex items-center gap-1.5 text-xs">
             <button disabled={page <= 1} onClick={() => setPage((p) => p - 1)}
               className="px-2 py-1 border border-rim rounded-lg disabled:opacity-20 hover:border-gold/30 text-mist/60 hover:text-mist transition-all">‹</button>
-            <span className="text-mist/40 tabular-nums">{page}/{totalPages}</span>
+            <span className="text-mist/60 tabular-nums">{page}/{totalPages}</span>
             <button disabled={page >= totalPages} onClick={() => setPage((p) => p + 1)}
               className="px-2 py-1 border border-rim rounded-lg disabled:opacity-20 hover:border-gold/30 text-mist/60 hover:text-mist transition-all">›</button>
           </div>

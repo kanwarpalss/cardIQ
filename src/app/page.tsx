@@ -78,7 +78,7 @@ export default function Home() {
                       : "text-mist/50 hover:text-mist hover:bg-surface/50"
                   }`}
                 >
-                  <span className={active ? "text-gold" : "text-mist/40"}>{TAB_ICONS[t]}</span>
+                  <span className={active ? "text-gold" : "text-mist/60"}>{TAB_ICONS[t]}</span>
                   {t}
                 </button>
               );
@@ -88,8 +88,11 @@ export default function Home() {
           {/* Sign out */}
           <button
             onClick={signOut}
-            className="text-xs text-mist/30 hover:text-mist/70 transition-colors shrink-0"
+            className="shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-rim text-xs font-medium text-mist/80 hover:text-mist hover:bg-hover transition-all"
           >
+            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 16 16" stroke="currentColor" strokeWidth={1.8}>
+              <path d="M6 14H3a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1h3M10.5 11 14 8l-3.5-3M14 8H6" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
             Sign out
           </button>
         </div>

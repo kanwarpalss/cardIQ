@@ -146,7 +146,7 @@ export default function DiningTab() {
                     style={{ background: ok ? "#22c55e" : "#ef4444" }}
                     aria-hidden
                   />
-                  <span className="text-mist/40">{PLATFORM_META[p].label}</span>
+                  <span className="text-mist/60">{PLATFORM_META[p].label}</span>
                 </div>
               );
             })}
@@ -157,7 +157,7 @@ export default function DiningTab() {
       {/* ── Search box ─────────────────────────────────────────────── */}
       <div className="relative">
         <svg
-          className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-mist/30"
+          className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-mist/55"
           fill="none" viewBox="0 0 16 16" stroke="currentColor" strokeWidth={1.8}
           aria-hidden
         >
@@ -170,13 +170,13 @@ export default function DiningTab() {
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search Toit, Truffles, Glen's Bakehouse…"
           className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-surface border border-wire focus:border-gold/40
-                     focus:outline-none text-mist placeholder:text-mist/30 text-sm"
+                     focus:outline-none text-mist placeholder:text-mist/55 text-sm"
           aria-label="Search restaurants"
         />
       </div>
 
       {/* ── Results ────────────────────────────────────────────────── */}
-      {loading && <div className="text-center text-mist/40 text-sm py-8">Searching…</div>}
+      {loading && <div className="text-center text-mist/60 text-sm py-8">Searching…</div>}
 
       {error && (
         <div className="rounded-xl border border-ruby/40 bg-ruby/5 px-4 py-3 text-sm text-ruby">
@@ -240,12 +240,12 @@ function RestaurantCard({ restaurant: r }: { restaurant: Restaurant }) {
         <div className="min-w-0 flex-1">
           <div className="flex items-baseline gap-2 flex-wrap">
             <h3 className="text-mist font-medium truncate">{r.canonical_name}</h3>
-            {r.area && <span className="text-xs text-mist/40">· {r.area}</span>}
+            {r.area && <span className="text-xs text-mist/60">· {r.area}</span>}
             {r.cuisines.length > 0 && (
-              <span className="text-xs text-mist/40 truncate">· {r.cuisines.slice(0, 3).join(", ")}</span>
+              <span className="text-xs text-mist/60 truncate">· {r.cuisines.slice(0, 3).join(", ")}</span>
             )}
             {r.price_for_two != null && (
-              <span className="text-xs text-mist/40">· ₹{r.price_for_two.toLocaleString("en-IN")} for two</span>
+              <span className="text-xs text-mist/60">· ₹{r.price_for_two.toLocaleString("en-IN")} for two</span>
             )}
           </div>
         </div>
@@ -269,7 +269,7 @@ function RestaurantCard({ restaurant: r }: { restaurant: Restaurant }) {
       )}
 
       {r.listings.length === 0 && (
-        <div className="mt-3 text-xs text-mist/30">No listings yet — scrape hasn't run.</div>
+        <div className="mt-3 text-xs text-mist/55">No listings yet — scrape hasn't run.</div>
       )}
     </div>
   );
@@ -280,7 +280,7 @@ function PlatformOfferCell({ platform, listing }: { platform: Platform; listing?
 
   if (!listing) {
     return (
-      <div className="rounded-lg border border-wire bg-ink/30 px-3 py-2 text-xs text-mist/30">
+      <div className="rounded-lg border border-wire bg-ink/30 px-3 py-2 text-xs text-mist/55">
         Not listed on {meta.label}
       </div>
     );
@@ -311,7 +311,7 @@ function PlatformOfferCell({ platform, listing }: { platform: Platform; listing?
         {headline}
       </div>
       {topOffer?.terms && (
-        <div className="text-2xs text-mist/40 mt-1 truncate" title={topOffer.terms}>
+        <div className="text-2xs text-mist/60 mt-1 truncate" title={topOffer.terms}>
           {topOffer.terms}
         </div>
       )}
@@ -322,14 +322,14 @@ function PlatformOfferCell({ platform, listing }: { platform: Platform; listing?
 function EmptyState({ query }: { query: string }) {
   if (query.length > 0) {
     return (
-      <div className="text-center py-12 text-mist/40 text-sm">
+      <div className="text-center py-12 text-mist/60 text-sm">
         <div>No restaurants match &ldquo;{query}&rdquo;.</div>
         <div className="mt-1 text-xs">Try a shorter query — or the scraper may not have run yet.</div>
       </div>
     );
   }
   return (
-    <div className="text-center py-12 text-mist/40 text-sm">
+    <div className="text-center py-12 text-mist/60 text-sm">
       <div>No restaurants scraped yet.</div>
       <div className="mt-1 text-xs">
         Run the scraper on the Mac mini, or wait for the weekly cron.
