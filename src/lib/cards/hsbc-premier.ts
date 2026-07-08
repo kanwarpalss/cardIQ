@@ -8,6 +8,13 @@ export const HSBC_PREMIER: CardSpec = {
 
   // 3 reward points per ₹100 on all categories (no cap).
   // 5x reward points on overseas spends.
+  rewards: {
+    program: "HSBC Reward Points",
+    earn_summary: "3 pts / ₹100 (5x overseas)",
+    points_per_unit: 3,
+    unit_inr: 100,
+  },
+
   milestones_monthly: [],
   milestones_anniversary: [],
 

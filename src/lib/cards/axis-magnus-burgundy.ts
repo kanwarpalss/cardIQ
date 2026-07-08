@@ -8,6 +8,13 @@ export const AXIS_MAGNUS_BURGUNDY: CardSpec = {
 
   // Earn rate: 12 EDGE points per ₹200 up to ₹1.5L/month
   // Accelerated: 35 EDGE points per ₹200 on spend BEYOND ₹1.5L/month
+  rewards: {
+    program: "EDGE Rewards",
+    earn_summary: "12 pts / ₹200 (35 beyond ₹1.5L monthly)",
+    points_per_unit: 12,
+    unit_inr: 200,
+  },
+
   milestones_monthly: [
     {
       spend_inr: 150000,

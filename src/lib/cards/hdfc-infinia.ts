@@ -8,6 +8,13 @@ export const HDFC_INFINIA: CardSpec = {
 
   // 5 RP per ₹150 base. SmartBuy gives 10X (33 RP per ₹150) on selected categories.
   // Quarterly milestone is the headline benefit (₹4L → ₹4K voucher options).
+  rewards: {
+    program: "HDFC Reward Points",
+    earn_summary: "5 pts / ₹150 (up to 10X via SmartBuy)",
+    points_per_unit: 5,
+    unit_inr: 150,
+  },
+
   milestones_monthly: [],
   milestones_anniversary: [
     { spend_inr: 800000, reward: "10,000 bonus reward points (Q1)" },

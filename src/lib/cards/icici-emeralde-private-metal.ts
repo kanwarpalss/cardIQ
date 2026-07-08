@@ -8,6 +8,13 @@ export const ICICI_EMERALDE_PRIVATE_METAL: CardSpec = {
 
   // 6 ICICI Reward Points per ₹200 on retail spends. Unlimited cap.
   // EazyDiner Prime free; Visit BookMyShow / Cleartrip vouchers via milestones.
+  rewards: {
+    program: "ICICI Reward Points",
+    earn_summary: "6 pts / ₹200 (uncapped)",
+    points_per_unit: 6,
+    unit_inr: 200,
+  },
+
   milestones_monthly: [],
   milestones_anniversary: [
     { spend_inr: 1200000, reward: "EaseMyTrip voucher worth ₹6,000" },

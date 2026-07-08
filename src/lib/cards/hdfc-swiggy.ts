@@ -9,6 +9,14 @@ export const HDFC_SWIGGY: CardSpec = {
   // 10% cashback on Swiggy (Food, Instamart, Dineout, Genie) — capped ₹1,500/month
   // 5% cashback on online MCCs — capped ₹1,500/month
   // 1% on other spends
+  // Cashback card: "points" are ₹ of cashback; base rate = 1% (₹1 per ₹100).
+  rewards: {
+    program: "Swiggy Cashback (₹)",
+    earn_summary: "10% Swiggy · 5% online · 1% other",
+    points_per_unit: 1,
+    unit_inr: 100,
+  },
+
   milestones_monthly: [],
   milestones_anniversary: [],
 
