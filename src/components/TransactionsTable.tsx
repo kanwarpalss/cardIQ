@@ -277,7 +277,7 @@ export default function TransactionsTable({
                           className="px-2.5 py-1 text-xs border border-rim rounded-lg hover:border-gold/30 text-mist/60 hover:text-mist">
                           Cancel
                         </button>
-                        <span className="text-2xs text-mist/25 ml-1">renames all "{t.merchant}"</span>
+                        <span className="text-2xs text-mist/25 ml-1">renames all &quot;{t.merchant}&quot;</span>
                       </div>
                     </div>
                   ) : (

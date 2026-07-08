@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { CARD_REGISTRY } from "@/lib/cards/registry";
+import { getCardArt } from "@/lib/card-art";
 
 type CardRow = {
   id: string;
@@ -131,9 +132,12 @@ export default function CardsTab() {
               <div key={c.id}
                 className="flex items-center justify-between px-4 py-3 rounded-xl border border-rim bg-raised hover:bg-hover transition-colors">
                 <div className="flex items-center gap-3">
-                  {/* Card chip icon */}
-                  <div className="w-9 h-6 rounded bg-gold-shimmer flex items-center justify-center shadow-glow-gold shrink-0">
-                    <span className="text-ink font-bold text-xs">{NETWORK_ICON[net] ?? "★"}</span>
+                  {/* Mini card face in the product's real colors */}
+                  <div className="w-10 h-7 rounded-md border border-white/15 flex items-center justify-center shrink-0"
+                    style={{ background: getCardArt(c.product_key).gradient }}>
+                    <span className="font-bold text-xs" style={{ color: getCardArt(c.product_key).accent }}>
+                      {NETWORK_ICON[net.split(" ")[0]] ?? "★"}
+                    </span>
                   </div>
                   <div>
                     <div className="text-sm font-medium text-mist/90">{name}</div>

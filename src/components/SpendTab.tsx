@@ -38,7 +38,9 @@ const CATEGORY_PAGE = 10;   // mirror MERCHANT_PAGE for visual consistency
 const MILESTONE     = 150_000;
 
 // ── Component ────────────────────────────────────────────────────────────────
-export default function SpendTab() {
+// `focusCard` is a deep-link from Overview card tiles: a fresh object per click
+// (identity change re-fires the effect even for the same card).
+export default function SpendTab({ focusCard }: { focusCard?: { last4: string } | null }) {
   const init = defaultRange();
   const [fromDate, setFromDate] = useState(init.from);
   const [toDate,   setToDate]   = useState(init.to);
@@ -75,6 +77,9 @@ export default function SpendTab() {
 
   useEffect(() => { loadAll(); }, []);
   useEffect(() => { setMerchantPage(1); setCategoryPage(1); }, [fromDate, toDate, selectedCards, txnType, categoryFilter]);
+  useEffect(() => {
+    if (focusCard) setSelectedCards(new Set([focusCard.last4]));
+  }, [focusCard]);
 
   // ── Handlers ───────────────────────────────────────────────────────────────
   function toggleCard(last4: string) {

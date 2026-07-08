@@ -269,7 +269,7 @@ function RestaurantCard({ restaurant: r }: { restaurant: Restaurant }) {
       )}
 
       {r.listings.length === 0 && (
-        <div className="mt-3 text-xs text-mist/55">No listings yet — scrape hasn't run.</div>
+        <div className="mt-3 text-xs text-mist/55">No listings yet — scrape hasn&apos;t run.</div>
       )}
     </div>
   );
