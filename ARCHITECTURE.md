@@ -413,3 +413,33 @@ You: git push origin main
 ```
 
 You never SSH into a server, never manage Docker, never restart anything. Push code → it's live. That's the whole magic of Vercel for Next.js apps.
+
+---
+
+## 13. The holistic layer (added 2026-07-08)
+
+CardIQ grew from "spend dashboard" into a one-stop credit-card destination. Three new tables (migration 009) carry everything the Gmail pipeline can't see:
+
+| Table | What lives there | Lifecycle |
+|---|---|---|
+| `reward_balances` | Point-balance snapshots per card (EDGE, HDFC RP…) | Tied to a card — deleted with it |
+| `offers` | Card offers you want to remember, with validity windows | Optionally card-linked — survives card deletion |
+| `loyalty_accounts` | Airline/hotel program tiers, member ids, points | Independent of cards — your Marriott status outlives any card |
+
+**Why manual entry:** there is no safe automated source for these yet (bank portals are login-gated; scraping is brittle). Every row carries `source = 'manual' | 'parsed'` so a future version that parses loyalty/offer emails writes into the *same* tables — no migration needed.
+
+**How it's surfaced:**
+
+```
+Overview (home)
+  ├─ hero stats           ← transactions (this month, INR)
+  ├─ card-art tiles       ← cards × registry specs (milestone %, ≈points est.)
+  │     └─ click → Spend, pre-filtered to that card
+  ├─ Reward balances      ← reward_balances (latest snapshot per card)
+  ├─ Active offers        ← offers (soonest expiry first, ≤14d flagged)
+  └─ Loyalty status       ← loyalty_accounts (tier chips, expiry warnings)
+
+Sidebar:  Overview · Spend · Rewards · Offers · Loyalty · Dining · Chat · Cards
+```
+
+**Estimates are labeled estimates:** card tiles show "≈ N pts (base-rate estimate)" computed from spend × the card's documented base earn rate (`src/lib/cards/*.ts`). Real balances always come from what you entered in Rewards. The pure logic (latest-snapshot selection, offer expiry, tier lapse) lives in `src/lib/perks.ts` with boundary tests in `perks.test.ts`.
