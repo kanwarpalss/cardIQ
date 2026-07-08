@@ -546,15 +546,31 @@ export async function POST(req: Request) {
         send(controller, { status: "done", ...result });
 
       } catch (e) {
-        // Surface a useful message instead of a frozen spinner. The most common
-        // cause is an expired/revoked Google refresh token (Google revokes them
-        // after ~7 days for apps still in "testing" mode) — turn the opaque
-        // `invalid_grant` into something the user can actually act on.
-        const raw = (e as Error).message || String(e);
+        // Surface a useful message instead of a frozen spinner. Two DISTINCT
+        // failure modes get conflated if not handled separately:
+        //   - invalid_grant/invalid_token: the refresh token itself expired or
+        //     was revoked (common for Google apps still in "Testing" mode,
+        //     ~7 day token lifetime) — signing in again genuinely fixes this.
+        //   - insufficient scope/permission: the token is valid but was never
+        //     granted gmail.readonly. Signing in again usually does NOT fix
+        //     this, because Google silently reuses the existing grant instead
+        //     of re-prompting — the user must revoke access at Google's end
+        //     first. Conflating the two into one "sign in again" message is
+        //     exactly why this used to recur silently. See /api/gmail/scope-check.
+        const err = e as Error & { code?: number; errors?: Array<{ reason?: string }> };
+        const raw = err.message || String(e);
         console.error("[gmail/sync] stream error:", raw);
-        const friendly = /invalid_grant|invalid_token|unauthorized|no refresh token/i.test(raw)
-          ? "Gmail access expired. Please sign out and sign in again to re-grant access."
-          : raw;
+
+        const isScopeIssue =
+          err.code === 403 ||
+          /insufficient.*(scope|permission)/i.test(raw) ||
+          err.errors?.some((er) => er.reason === "insufficientPermissions");
+
+        const friendly = isScopeIssue
+          ? "Gmail access is missing read permission, so sync can't fetch emails. Signing in again alone usually won't fix this — go to myaccount.google.com/permissions, remove CardIQ's access there, then sign in again to grant it fresh. (Check Cards → Gmail connection for a live status.)"
+          : /invalid_grant|invalid_token|unauthorized|no refresh token/i.test(raw)
+            ? "Gmail access expired. Please sign out and sign in again to re-grant access."
+            : raw;
         send(controller, { status: "error", message: friendly });
       } finally {
         controller.close();

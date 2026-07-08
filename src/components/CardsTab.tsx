@@ -19,6 +19,13 @@ const NETWORK_ICON: Record<string, string> = {
   Amex:       "A",
 };
 
+type GmailScopeStatus = {
+  status: "ok" | "no_token" | "insufficient_scope" | "expired_token" | "error";
+  message: string;
+  fix?: string;
+  email?: string;
+};
+
 export default function CardsTab() {
   const supabase = createClient();
   const [cards,      setCards]      = useState<CardRow[]>([]);
@@ -31,6 +38,8 @@ export default function CardsTab() {
   const [formError,  setFormError]  = useState<string | null>(null);
   const [backfillNote, setBackfillNote] = useState<string | null>(null);
   const [saving,     setSaving]     = useState(false);
+  const [gmailStatus, setGmailStatus] = useState<GmailScopeStatus | null>(null);
+  const [checkingGmail, setCheckingGmail] = useState(false);
 
   async function load() {
     const { data: cardsData } = await supabase.from("cards").select("*").order("created_at");
@@ -43,7 +52,19 @@ export default function CardsTab() {
     setProfile(settings?.profile_text || "");
   }
 
-  useEffect(() => { load(); }, []);
+  async function checkGmail() {
+    setCheckingGmail(true);
+    try {
+      const res = await fetch("/api/gmail/scope-check");
+      setGmailStatus(await res.json());
+    } catch (e) {
+      setGmailStatus({ status: "error", message: (e as Error).message });
+    } finally {
+      setCheckingGmail(false);
+    }
+  }
+
+  useEffect(() => { load(); checkGmail(); }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   async function addCard() {
     setFormError(null);
@@ -193,6 +214,40 @@ export default function CardsTab() {
             Add card
           </button>
         </div>
+      </section>
+
+      {/* ── Gmail connection ─────────────────────────────────────────── */}
+      <section className="rounded-2xl border border-rim bg-surface p-6 shadow-card space-y-3">
+        <div className="flex items-center justify-between">
+          <h2 className="font-serif text-lg font-semibold text-gold">Gmail connection</h2>
+          <button onClick={checkGmail} disabled={checkingGmail}
+            className="text-xs text-mist/60 hover:text-gold disabled:opacity-40 transition-colors">
+            {checkingGmail ? "Checking…" : "Check now"}
+          </button>
+        </div>
+        {!gmailStatus ? (
+          <p className="text-sm text-mist/50">Checking Gmail access…</p>
+        ) : (
+          <div className={`rounded-xl border px-4 py-3 text-sm space-y-1.5 ${
+            gmailStatus.status === "ok"
+              ? "border-emerald/30 bg-emerald/5"
+              : gmailStatus.status === "no_token"
+              ? "border-rim bg-raised"
+              : "border-ruby/30 bg-ruby/5"
+          }`}>
+            <div className={`font-medium ${
+              gmailStatus.status === "ok" ? "text-emerald" : gmailStatus.status === "no_token" ? "text-mist/70" : "text-ruby"
+            }`}>
+              {gmailStatus.status === "ok" && "🟢 Connected"}
+              {gmailStatus.status === "no_token" && "⚪ Not connected"}
+              {gmailStatus.status === "insufficient_scope" && "🔴 Insufficient permission"}
+              {gmailStatus.status === "expired_token" && "🔴 Access expired"}
+              {gmailStatus.status === "error" && "🔴 Check failed"}
+            </div>
+            <p className="text-mist/70">{gmailStatus.message}</p>
+            {gmailStatus.fix && <p className="text-mist/55 text-xs leading-relaxed">{gmailStatus.fix}</p>}
+          </div>
+        )}
       </section>
 
       {/* ── Settings ─────────────────────────────────────────────────── */}

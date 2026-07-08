@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { CARD_REGISTRY } from "@/lib/cards/registry";
 import { CATEGORIES }    from "@/lib/categories";
+import { anniversaryWindowStart } from "@/lib/format";
 import PeriodPicker      from "./PeriodPicker";
 import MerchantPanel     from "./MerchantPanel";
 import SyncPanel         from "./SyncPanel";
@@ -17,7 +18,7 @@ type Txn = {
   merchant: string | null; category: string | null;
   txn_at: string; txn_type: "debit" | "credit"; notes?: string | null;
 };
-type CardRow = { id: string; last4: string; nickname: string | null; product_key: string };
+type CardRow = { id: string; last4: string; nickname: string | null; product_key: string; anniversary_date: string | null };
 type AllData = { transactions: Txn[]; cards: CardRow[]; last_sync: string | null };
 
 // ── Utils ────────────────────────────────────────────────────────────────────
@@ -35,7 +36,6 @@ function defaultRange() {
 
 const MERCHANT_PAGE = 10;
 const CATEGORY_PAGE = 10;   // mirror MERCHANT_PAGE for visual consistency
-const MILESTONE     = 150_000;
 
 // ── Component ────────────────────────────────────────────────────────────────
 // `focusCard` is a deep-link from Overview card tiles: a fresh object per click
@@ -184,6 +184,26 @@ export default function SpendTab({ focusCard }: { focusCard?: { last4: string } 
     () => filteredTxns.filter((t) => t.original_currency && t.original_currency.toUpperCase() !== "INR"),
     [filteredTxns]
   );
+
+  // Anniversary-milestone spend is INDEPENDENT of the view period (from/to
+  // pickers above) — it always tracks the card's own anniversary year, using
+  // the full unfiltered transaction history. Keyed by last4.
+  const anniversarySpendByCard = useMemo(() => {
+    const out: Record<string, number> = {};
+    if (!allData) return out;
+    const cardsByLast4 = new Map(allData.cards.map((c) => [c.last4, c]));
+    for (const t of allData.transactions) {
+      if (t.txn_type !== "debit") continue;
+      if (t.original_currency && t.original_currency.toUpperCase() !== "INR") continue;
+      const card = cardsByLast4.get(t.card_last4);
+      const spec = card ? CARD_REGISTRY[card.product_key] : undefined;
+      if (!spec?.milestones_anniversary?.length) continue; // only compute where it'll be shown
+      const start = anniversaryWindowStart(card!.anniversary_date);
+      if (new Date(t.txn_at) < start) continue;
+      out[t.card_last4] = (out[t.card_last4] || 0) + Number(t.amount_inr);
+    }
+    return out;
+  }, [allData]);
 
   const aggregates = useMemo(() => {
     // INR-ONLY aggregates. Foreign txns get their own panel below.
@@ -357,38 +377,54 @@ export default function SpendTab({ focusCard }: { focusCard?: { last4: string } 
             <StatTile label="Transactions" value={String(aggregates.summary.txn_count)} sub={`${fromDate.slice(0,7)} → ${toDate.slice(0,7)}`} accent="muted" />
           </div>
 
-          {/* ── Milestone bars ─────────────────────────────────────────── */}
-          {txnType !== "credit" && !categoryFilter && allData.cards.length > 0 && (
+          {/* ── Milestone bars — only for cards with a real, sourced milestone.
+               Monthly-milestone cards use the selected period's spend; cards
+               with only an anniversary milestone use anniversary-to-date spend
+               (independent of the period picker) so the number stays honest
+               regardless of what range is selected. Cards with neither show
+               nothing rather than a fabricated bar. ───────────────────────── */}
+          {txnType !== "credit" && !categoryFilter && allData.cards.some(
+            (c) => selectedCards.has("all") || selectedCards.has(c.last4)
+          ) && allData.cards.some((c) => {
+            const spec = CARD_REGISTRY[c.product_key];
+            return spec?.milestones_monthly?.length || spec?.milestones_anniversary?.length;
+          }) && (
             <section className="rounded-2xl border border-rim bg-surface p-5 shadow-card space-y-4">
               <h3 className="text-2xs uppercase tracking-widest text-mist/55">Milestones</h3>
               {allData.cards
                 .filter((c) => selectedCards.has("all") || selectedCards.has(c.last4))
                 .map((card) => {
-                  const spent     = aggregates.totals[card.last4] || 0;
-                  const spec      = CARD_REGISTRY[card.product_key];
-                  const milestone = spec?.milestones_monthly?.[0]?.spend_inr ?? MILESTONE;
-                  const pct       = Math.min((spent / milestone) * 100, 100);
-                  return (
-                    <div key={card.id} className="space-y-2">
-                      <div className="flex justify-between text-sm">
-                        <span className="text-mist/80">
-                          {cardLabel(card)}
-                          <span className="opacity-30 text-xs ml-1.5">··{card.last4}</span>
-                        </span>
-                        <span className="font-semibold text-gold tabular-nums">{fmt(spent)}</span>
-                      </div>
-                      <div className="h-1.5 bg-ink rounded-full overflow-hidden">
-                        <div className="h-full bg-gold-shimmer rounded-full transition-all duration-700"
-                          style={{ width: `${pct}%` }} />
-                      </div>
-                      <div className="flex justify-between text-2xs text-mist/55">
-                        <span>{Math.round(pct)}% of {fmt(milestone)} milestone</span>
-                        {pct < 100
-                          ? <span>{fmt(milestone - spent)} to go</span>
-                          : <span className="text-emerald">Reached ✓</span>}
-                      </div>
-                    </div>
-                  );
+                  const spec = CARD_REGISTRY[card.product_key];
+                  const monthly = spec?.milestones_monthly?.[0];
+                  const annualTiers = spec?.milestones_anniversary ?? [];
+
+                  if (monthly) {
+                    const spent = aggregates.totals[card.last4] || 0;
+                    const pct   = Math.min((spent / monthly.spend_inr) * 100, 100);
+                    return (
+                      <MilestoneBar key={card.id} label={cardLabel(card)} sub={card.last4}
+                        spent={spent} target={monthly.spend_inr} pct={pct}
+                        caption={`${Math.round(pct)}% of ${fmt(monthly.spend_inr)} monthly milestone`} />
+                    );
+                  }
+
+                  if (annualTiers.length > 0) {
+                    const spent = anniversarySpendByCard[card.last4] || 0;
+                    const next  = annualTiers.find((m) => spent < m.spend_inr) ?? annualTiers[annualTiers.length - 1];
+                    const pct   = Math.min((spent / next.spend_inr) * 100, 100);
+                    const reached = spent >= annualTiers[annualTiers.length - 1].spend_inr;
+                    return (
+                      <MilestoneBar key={card.id} label={cardLabel(card)} sub={card.last4}
+                        spent={spent} target={next.spend_inr} pct={pct} reached={reached}
+                        caption={
+                          reached
+                            ? `All anniversary-year milestones reached (${fmt(spent)} since anniversary)`
+                            : `${Math.round(pct)}% of ${fmt(next.spend_inr)} anniversary-year milestone — ${next.reward}`
+                        } />
+                    );
+                  }
+
+                  return null; // no documented milestone for this card — say nothing, not something fake
                 })}
             </section>
           )}
@@ -527,6 +563,33 @@ function FilterPill({ active, onClick, children }: {
       }`}>
       {children}
     </button>
+  );
+}
+
+function MilestoneBar({ label, sub, spent, target, pct, caption, reached }: {
+  label: string; sub: string; spent: number; target: number; pct: number; caption: string; reached?: boolean;
+}) {
+  const done = reached ?? pct >= 100;
+  return (
+    <div className="space-y-2">
+      <div className="flex justify-between text-sm">
+        <span className="text-mist/80">
+          {label}
+          <span className="opacity-30 text-xs ml-1.5">··{sub}</span>
+        </span>
+        <span className="font-semibold text-gold tabular-nums">{fmt(spent)}</span>
+      </div>
+      <div className="h-1.5 bg-ink rounded-full overflow-hidden">
+        <div className="h-full bg-gold-shimmer rounded-full transition-all duration-700"
+          style={{ width: `${pct}%` }} />
+      </div>
+      <div className="flex justify-between text-2xs text-mist/55">
+        <span>{caption}</span>
+        {done
+          ? <span className="text-emerald">Reached ✓</span>
+          : <span>{fmt(target - spent)} to go</span>}
+      </div>
+    </div>
   );
 }
 

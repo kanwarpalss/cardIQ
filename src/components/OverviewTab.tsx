@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { isMissingTableError } from "@/lib/supabase/errors";
 import { CARD_REGISTRY } from "@/lib/cards/registry";
-import { fmtINR, fmtNum, fmtDate } from "@/lib/format";
+import { fmtINR, fmtNum, fmtDate, anniversaryWindowStart } from "@/lib/format";
 import {
   latestBalanceByCard, estimatePoints, sortOffersForDisplay,
   effectiveOfferStatus, expiryState,
@@ -19,7 +19,7 @@ type Txn = {
   merchant: string | null; category: string | null;
   txn_at: string; txn_type: "debit" | "credit";
 };
-type CardRow = { id: string; last4: string; nickname: string | null; product_key: string };
+type CardRow = { id: string; last4: string; nickname: string | null; product_key: string; anniversary_date: string | null };
 type AllData = { transactions: Txn[]; cards: CardRow[]; last_sync: string | null };
 
 const cardLabel = (c: CardRow) =>
@@ -89,6 +89,25 @@ export default function OverviewTab({
     };
   }, [allData]);
 
+  // Anniversary-milestone spend ignores the "this month" window above — it
+  // always tracks the card's own anniversary year (mirrors SpendTab).
+  const anniversarySpendByCard = useMemo(() => {
+    const out: Record<string, number> = {};
+    if (!allData) return out;
+    const cardsByLast4 = new Map(allData.cards.map((c) => [c.last4, c]));
+    for (const t of allData.transactions) {
+      if (t.txn_type !== "debit") continue;
+      if (t.original_currency && t.original_currency.toUpperCase() !== "INR") continue;
+      const card = cardsByLast4.get(t.card_last4);
+      const spec = card ? CARD_REGISTRY[card.product_key] : undefined;
+      if (!spec?.milestones_anniversary?.length) continue;
+      const start = anniversaryWindowStart(card!.anniversary_date);
+      if (new Date(t.txn_at) < start) continue;
+      out[t.card_last4] = (out[t.card_last4] || 0) + Number(t.amount_inr);
+    }
+    return out;
+  }, [allData]);
+
   const latestBalances = useMemo(() => latestBalanceByCard(rewards), [rewards]);
   const activeOffers = useMemo(
     () => sortOffersForDisplay(offers).filter((o) => effectiveOfferStatus(o) === "active"),
@@ -152,9 +171,32 @@ export default function OverviewTab({
             {cards.map((c) => {
               const spec = CARD_REGISTRY[c.product_key];
               const spent = month.perCard[c.last4] || 0;
-              const milestone = spec?.milestones_monthly?.[0]?.spend_inr;
-              const pct = milestone ? Math.min((spent / milestone) * 100, 100) : null;
               const est = spec?.rewards ? estimatePoints(spent, spec.rewards) : null;
+
+              // Same honest monthly-vs-anniversary-vs-nothing logic as SpendTab —
+              // never fabricate a milestone for a card that doesn't document one.
+              const monthly = spec?.milestones_monthly?.[0];
+              const annualTiers = spec?.milestones_anniversary ?? [];
+              let milestoneBlock: React.ReactNode = null;
+              if (monthly) {
+                const pct = Math.min((spent / monthly.spend_inr) * 100, 100);
+                milestoneBlock = (
+                  <MilestoneStrip pct={pct} reached={pct >= 100}
+                    caption={`${Math.round(pct)}% of ${fmtINR(monthly.spend_inr)}`}
+                    toGo={pct < 100 ? fmtINR(monthly.spend_inr - spent) : null} />
+                );
+              } else if (annualTiers.length > 0) {
+                const annSpent = anniversarySpendByCard[c.last4] || 0;
+                const next = annualTiers.find((m) => annSpent < m.spend_inr) ?? annualTiers[annualTiers.length - 1];
+                const pct = Math.min((annSpent / next.spend_inr) * 100, 100);
+                const reached = annSpent >= annualTiers[annualTiers.length - 1].spend_inr;
+                milestoneBlock = (
+                  <MilestoneStrip pct={pct} reached={reached}
+                    caption={reached ? "Anniversary milestones reached" : `${Math.round(pct)}% of ${fmtINR(next.spend_inr)} (anniversary year)`}
+                    toGo={!reached ? fmtINR(next.spend_inr - annSpent) : null} />
+                );
+              }
+
               return (
                 <CardVisual key={c.id} productKey={c.product_key}
                   name={cardLabel(c)} issuer={spec?.issuer ?? ""} network={spec?.network ?? ""}
@@ -163,19 +205,7 @@ export default function OverviewTab({
                     <span className="text-xs text-white/55">This month</span>
                     <span className="font-serif text-xl font-semibold text-white tabular-nums">{fmtINR(spent)}</span>
                   </div>
-                  {pct !== null && milestone && (
-                    <>
-                      <div className="mt-2.5 h-1 bg-black/40 rounded-full overflow-hidden">
-                        <div className="h-full bg-gold-shimmer rounded-full transition-all duration-700" style={{ width: `${pct}%` }} />
-                      </div>
-                      <div className="mt-1.5 flex justify-between text-2xs text-white/50">
-                        <span>{Math.round(pct)}% of {fmtINR(milestone)}</span>
-                        {pct >= 100
-                          ? <span className="text-emerald">Milestone reached ✓</span>
-                          : <span>{fmtINR(milestone - spent)} to go</span>}
-                      </div>
-                    </>
-                  )}
+                  {milestoneBlock}
                   {est !== null && spec?.rewards && (
                     <div className="mt-2 text-2xs text-white/50">
                       ≈ {fmtNum(est)} {spec.rewards.program} this month <span className="text-white/35">(base-rate estimate)</span>
@@ -295,6 +325,24 @@ export default function OverviewTab({
 }
 
 // ── Local pieces ──────────────────────────────────────────────────────────────
+
+function MilestoneStrip({ pct, caption, toGo, reached }: {
+  pct: number; caption: string; toGo: string | null; reached: boolean;
+}) {
+  return (
+    <>
+      <div className="mt-2.5 h-1 bg-black/40 rounded-full overflow-hidden">
+        <div className="h-full bg-gold-shimmer rounded-full transition-all duration-700" style={{ width: `${pct}%` }} />
+      </div>
+      <div className="mt-1.5 flex justify-between text-2xs text-white/50">
+        <span>{caption}</span>
+        {reached
+          ? <span className="text-emerald">Reached ✓</span>
+          : toGo && <span>{toGo} to go</span>}
+      </div>
+    </>
+  );
+}
 
 function HeroStat({ label, value, tone }: { label: string; value: string; tone: "gold" | "emerald" | "plain" }) {
   const cls = tone === "gold" ? "text-gold" : tone === "emerald" ? "text-emerald" : "text-mist/90";

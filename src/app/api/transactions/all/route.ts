@@ -29,7 +29,7 @@ export async function GET() {
   }
 
   const [{ data: cards }, { data: settings }] = await Promise.all([
-    supabase.from("cards").select("id, last4, nickname, product_key").eq("user_id", user.id),
+    supabase.from("cards").select("id, last4, nickname, product_key, anniversary_date").eq("user_id", user.id),
     supabase.from("user_settings").select("last_gmail_sync_at").eq("user_id", user.id).single(),
   ]);
 
