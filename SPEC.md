@@ -70,10 +70,19 @@ A one-stop credit-card destination: syncs bank transaction emails from Gmail (Ax
 | 2026-07-08 | Three separate tables (reward_balances / offers / loyalty_accounts) | One generic "points" table | Card points die with the card (FK cascade); loyalty statuses outlive cards (no FK); offers are time-boxed and optionally card-linked (set-null) — different lifecycles, different shapes |
 | 2026-07-08 | Sidebar shell (desktop) + pill nav (mobile), 8 sections | Keep flat top tabs | 8+ tabs overflow a top bar; sidebar scales as sections grow — "keep adding sections" is an explicit requirement |
 | 2026-07-08 | New tabs do CRUD via Supabase client directly (CardsTab pattern) | Dedicated API routes | RLS already enforces per-user access; routes added no security, only boilerplate. Secrets stay in server routes as before |
+| 2026-07-10 | Cardholder statements outrank blog sources for KP's own cards; encode with attribution | Trust aggregator blogs over KP | KP sees his actual T&Cs in bank apps; blogs conflict with each other (Infinia quarterly: ₹4L vs ₹9L). Every card spec now carries source comments + benefits_verified_at |
+| 2026-07-10 | Milestone bars only render for documented reward milestones; earn-rate kinks stay text-only | Show M4B's ₹1.5L acceleration as a milestone bar | Nothing is GRANTED at M4B's ₹1.5L — a progress bar implies a payout that doesn't exist. KP: "show it honestly even for M4B" |
+| 2026-07-10 | Loyalty tab shows card-granted lounge perks as read-only registry data (dashed border) above personal accounts | Insert card perks as loyalty_accounts DB rows | Registry data auto-updates with card spec changes and can't drift; DB copies would go stale and blur the manual-vs-reference boundary |
 
-## §6 Current State (as of 2026-07-08)
+## §6 Current State (as of 2026-07-10)
 
-**New this session (holistic redesign):**
+**New 2026-07-10 (accuracy + Gmail-permission session):**
+- Gmail insufficient-permission properly diagnosed: scope errors (403) now distinguished from expired tokens (invalid_grant) with the real fix path in the error message; new `GET /api/gmail/scope-check` makes a live Gmail call; Cards tab shows a Gmail-connection status card with "Check now"
+- Milestone honesty: fake ₹1.5L fallback removed everywhere; M4B's ₹1.5L is earn-rate text only (per KP it's not a reward milestone); EPM carries the ₹1.5L MONTHLY milestone (per cardholder; not on ICICI's public page — reward wording pending from iMobile)
+- All 5 card specs re-verified against web sources with `benefits_verified_at` dates + source comments; corrections: EPM anniversary tiers (₹8L vouchers + ₹10L fee waiver, was unsourced ₹12L), HSBC lounge (unlimited via LoungeKey, was wrongly capped 4/6), M4B ₹30L fee-waiver milestone added, Infinia ₹10L renewal-waiver added (quarterly bonus left unmodeled — sources conflict)
+- SpendTab renders BOTH monthly + anniversary bars when a card has both (EPM); CardsTab lists all documented milestones per card + verified date; LoyaltyTab gained "Granted by your cards" read-only lounge-perk section
+
+**New 2026-07-08 (holistic redesign):**
 - Overview home tab: greeting + hero stats, issuer-true card-art tiles (milestone progress + base-rate point estimates), rewards/offers/loyalty summary panels; card tiles deep-link into Spend filtered to that card
 - Rewards tab: per-card balance snapshots with history, deltas, staleness flags (>45 days → amber)
 - Offers tab: CRUD with expiry chips ("3d left" / "No expiry" / expired), status filters (active/used/expired/archived)
@@ -113,6 +122,9 @@ A one-stop credit-card destination: syncs bank transaction emails from Gmail (Ax
 | Recategorize re-cooks ALL transactions | Pending fix | Should only re-cook transactions affected by changed mappings/rules. |
 | No `raw_merchant` stored in transactions | Accepted for now | merchant_mappings uses cleaned name as raw_name key; two-pass lookup compensates. |
 | Point estimates are base-rate only | Accepted (by design) | Card tiles show "≈ N pts (base-rate estimate)" — accelerated/bonus earn not modeled; real balances come from the Rewards tab. |
+| EPM ₹1.5L monthly milestone reward wording | 🟡 PENDING KP | Milestone encoded per KP (cardholder) but ICICI's public page doesn't list it — KP to supply the exact reward text from iMobile; update `icici-emeralde-private-metal.ts`. |
+| Infinia quarterly bonus milestone | 🟡 PENDING KP | Widely reported (10K bonus points) but sources conflict on threshold (₹4L vs ₹9L); intentionally unmodeled. KP to confirm from HDFC app and add the tier. |
+| Gmail re-grant needs KP's hands | 🟡 ACTION KP | Insufficient-scope can only be fixed by revoking CardIQ at myaccount.google.com/permissions, then re-login AND ticking the Gmail checkbox on Google's consent screen. App now detects + explains this, but can't do it for him. |
 
 ## §8 Environment Variables
 
@@ -126,19 +138,25 @@ A one-stop credit-card destination: syncs bank transaction emails from Gmail (Ax
 | `GOOGLE_CLIENT_SECRET` | Server |
 | `ENCRYPTION_KEY` | Server (AES-256 for stored secrets) |
 
-## §9 Session Handoff Notes (2026-07-08)
+## §9 Session Handoff Notes (2026-07-10)
 
-### Accomplished This Session
-1. **Holistic architecture layer** — migration 009 (reward_balances, offers, loyalty_accounts; RLS own-rows; `source` column future-proofs V2 email-parsing). CardSpec gained reward program + earn rates for all 5 cards.
-2. **Full UX redesign** — sidebar shell (desktop) + pill nav (mobile), new Overview home (hero stats, issuer-true card-art tiles with milestone progress + point estimates, rewards/offers/loyalty panels), three new tabs (Rewards, Offers, Loyalty). Card tiles deep-link to Spend filtered per card.
-3. **Quality** — perks.ts pure logic with 15 boundary tests (177 total green), typecheck + lint + prod build clean, .eslintrc.json added, two pre-existing lint errors fixed. Devil's-advocate pass run pre-build (5 CRIT citations recorded).
-4. **SPEC brought back to truth** — May-09 blockers re-triaged, table list + decisions log updated.
+### Accomplished This Session (2026-07-10)
+1. **Gmail insufficient-permission root-caused + instrumented** — scope errors (403) vs expired tokens (invalid_grant) now distinguished; live scope-check endpoint + Gmail-connection status card in Cards tab. Actual re-grant requires KP's hands (see §7).
+2. **Milestone honesty per KP's correction** — ₹1.5L monthly milestone moved to EPM (cardholder-attested); M4B's ₹1.5L demoted to earn-rate text; fee-waiver milestones added where sourced (M4B ₹30L, EPM ₹10L, Infinia ₹10L).
+3. **All 5 card specs re-verified with sources + dates** — HSBC lounge corrected to unlimited; EPM anniversary tiers corrected against ICICI's official page; Infinia quarterly bonus flagged unverifiable.
+4. **Loyalty enriched** — card-granted lounge perks (read-only, from registry) now show above personal airline/hotel accounts.
+
+### Accomplished 2026-07-08
+1. Holistic architecture layer — migration 009 (reward_balances, offers, loyalty_accounts; RLS own-rows; `source` column future-proofs V2 email-parsing). CardSpec gained reward program + earn rates.
+2. Full UX redesign — sidebar shell, Overview home (card-art tiles, hero stats, holistic panels), Rewards/Offers/Loyalty tabs, Spend deep-links.
+3. Quality — perks.ts + boundary tests, .eslintrc.json, devil's-advocate pass (5 CRIT citations).
 
 ### ▶ Start next session here
-1. **KP: run migration 009** in Supabase SQL Editor (paste `supabase/migrations/009_rewards_offers_loyalty.sql`, Run). Until then the three new tabs show a setup notice.
-2. **KP: click through the redesign** on localhost (Overview → card tile → Spend deep-link; add a reward balance, an offer, a loyalty program) — my verification stopped at the login wall.
-3. Verify `gmail_seen_messages` count in Supabase (stale May flag — likely fine).
-4. When happy: `git push origin main` deploys to Vercel (3 local commits waiting).
+1. **KP: fix Gmail access** — myaccount.google.com/permissions → remove CardIQ → back in app: sign out, sign in, and **tick the Gmail checkbox on Google's consent screen** → Cards tab → Gmail connection → Check now → expect 🟢.
+2. **KP: run migration 009** in Supabase SQL Editor (paste `supabase/migrations/009_rewards_offers_loyalty.sql`, Run) if not done yet.
+3. **KP: supply two numbers** — EPM's ₹1.5L monthly reward text (from iMobile) and Infinia's real quarterly milestone threshold (₹4L or ₹9L?) — then update the two card files.
+4. Verify `gmail_seen_messages` count in Supabase (stale May flag — likely fine).
+5. When happy: `git push origin main` deploys to Vercel (several local commits waiting).
 
 ## §10 Deployment
 
