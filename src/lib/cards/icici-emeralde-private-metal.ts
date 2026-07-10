@@ -15,9 +15,23 @@ export const ICICI_EMERALDE_PRIVATE_METAL: CardSpec = {
     unit_inr: 200,
   },
 
-  milestones_monthly: [],
+  // Per KP (cardholder, 2026-07-10): EPM has a ₹1.5L MONTHLY spend milestone.
+  // Not on ICICI's public rewards-and-milestone-benefits page (fetched
+  // 2026-07-10 — it lists only the ₹8L annual vouchers + ₹10L fee waiver),
+  // so this is likely a cardholder-targeted benefit visible in iMobile.
+  // Reward wording pending KP's confirmation from the app — update the
+  // `reward` string below once known.
+  milestones_monthly: [
+    { spend_inr: 150000, reward: "Monthly milestone benefit (per card T&Cs — exact reward to be confirmed from iMobile)" },
+  ],
+
+  // Anniversary milestones verified 2026-07-10 against ICICI's OFFICIAL
+  // rewards-and-milestone-benefits page (direct fetch): ₹8L annual spend →
+  // 2 EaseMyTrip vouchers (₹3,000 each); ₹10L annual spend → annual fee
+  // (₹12,499 + GST) waived. Previous ₹12L figure was unsourced — corrected.
   milestones_anniversary: [
-    { spend_inr: 1200000, reward: "EaseMyTrip voucher worth ₹6,000" },
+    { spend_inr: 800000, reward: "₹6,000 in EaseMyTrip vouchers (two ₹3,000 vouchers)" },
+    { spend_inr: 1000000, reward: "Annual fee (₹12,499 + GST) waived" },
   ],
 
   lounge: {
@@ -39,6 +53,8 @@ export const ICICI_EMERALDE_PRIVATE_METAL: CardSpec = {
     vouchers: "https://www.icicibank.com/offers",
     lounge: "https://www.icicibank.com/personal-banking/cards/credit-card/emeralde-private-metal-credit-card",
   },
+
+  benefits_verified_at: "2026-07-10",
 
   gmail: {
     // icici.bank.in is the new (2025+) RBI-mandated alerts domain; icicibank.com

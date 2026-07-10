@@ -6,13 +6,15 @@ export const HDFC_SWIGGY: CardSpec = {
   issuer: "HDFC Bank",
   network: "Mastercard",
 
-  // 10% cashback on Swiggy (Food, Instamart, Dineout, Genie) — capped ₹1,500/month
-  // 5% cashback on online MCCs — capped ₹1,500/month
-  // 1% on other spends
+  // Confirmed 2026-07-08 via paisabazaar.com/cardinsider.com:
+  // 10% cashback on Swiggy (Food, Instamart, Dineout, Genie) — capped ₹1,500/cycle,
+  // min txn ₹249 (raised from ₹100, effective 17 Apr 2026)
+  // 5% cashback on other online spends — capped ₹1,500/cycle
+  // 1% on everything else (incl. offline) — capped ₹500/cycle
   // Cashback card: "points" are ₹ of cashback; base rate = 1% (₹1 per ₹100).
   rewards: {
     program: "Swiggy Cashback (₹)",
-    earn_summary: "10% Swiggy · 5% online · 1% other",
+    earn_summary: "10% Swiggy · 5% online · 1% other (caps: ₹1,500/₹1,500/₹500 per cycle)",
     points_per_unit: 1,
     unit_inr: 100,
   },
@@ -33,6 +35,8 @@ export const HDFC_SWIGGY: CardSpec = {
     points: "https://www.swiggy.com/",
     vouchers: "https://offers.smartbuy.hdfcbank.com/",
   },
+
+  benefits_verified_at: "2026-07-08",
 
   gmail: {
     senders: ["hdfcbank.bank.in", "hdfcbank.net", "hdfcbank.com"],

@@ -3,9 +3,14 @@
 import { useEffect, useMemo, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { isMissingTableError } from "@/lib/supabase/errors";
+import { CARD_REGISTRY } from "@/lib/cards/registry";
 import { fmtNum, fmtDate } from "@/lib/format";
 import { expiryState, type LoyaltyRow } from "@/lib/perks";
 import MissingTableNotice from "./MissingTableNotice";
+
+type CardRow = { id: string; last4: string; nickname: string | null; product_key: string };
+const cardLabel = (c: CardRow) =>
+  c.nickname || CARD_REGISTRY[c.product_key]?.display_name || c.product_key;
 
 const GROUPS: { type: LoyaltyRow["program_type"]; label: string; icon: string }[] = [
   { type: "airline", label: "Airlines", icon: "✈" },
@@ -34,6 +39,7 @@ const EMPTY_FORM: FormState = {
 export default function LoyaltyTab() {
   const supabase = createClient();
   const [rows, setRows] = useState<LoyaltyRow[]>([]);
+  const [cards, setCards] = useState<CardRow[]>([]);
   const [migrationNeeded, setMigrationNeeded] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -41,15 +47,28 @@ export default function LoyaltyTab() {
   const [saving, setSaving] = useState(false);
 
   async function load() {
-    const res = await supabase.from("loyalty_accounts").select("*").order("program_name");
-    if (res.error) {
-      if (isMissingTableError(res.error)) setMigrationNeeded(true);
-      else setError(res.error.message);
+    const [loyaltyRes, cardsRes] = await Promise.all([
+      supabase.from("loyalty_accounts").select("*").order("program_name"),
+      supabase.from("cards").select("id,last4,nickname,product_key").order("created_at"),
+    ]);
+    if (loyaltyRes.error) {
+      if (isMissingTableError(loyaltyRes.error)) setMigrationNeeded(true);
+      else setError(loyaltyRes.error.message);
     }
-    setRows((res.data as LoyaltyRow[]) ?? []);
+    setRows((loyaltyRes.data as LoyaltyRow[]) ?? []);
+    setCards((cardsRes.data as CardRow[]) ?? []);
     setLoading(false);
   }
   useEffect(() => { load(); }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Card-granted travel perks — pure reference data straight from the card
+  // registry (lounge access), not user-entered. Only cards that actually
+  // document a lounge entitlement show up here; nothing fabricated.
+  const cardPerks = useMemo(() => {
+    return cards
+      .map((c) => ({ card: c, spec: CARD_REGISTRY[c.product_key] }))
+      .filter(({ spec }) => spec?.lounge?.domestic || spec?.lounge?.international);
+  }, [cards]);
 
   const grouped = useMemo(() => {
     const m = new Map<string, LoyaltyRow[]>();
@@ -141,6 +160,46 @@ export default function LoyaltyTab() {
       {migrationNeeded && <MissingTableNotice feature="Loyalty" />}
       {error && <div className="rounded-xl border border-ruby/30 bg-ruby/5 text-ruby text-sm px-4 py-3">{error}</div>}
 
+      {/* ── Card-granted travel perks — read-only reference from the card
+           registry (lounge access), never user-entered. Distinct visual
+           treatment (dashed border, no edit/delete) so it's clearly not the
+           same kind of data as the manual accounts below. ─────────────────── */}
+      {cardPerks.length > 0 && (
+        <section className="space-y-2.5">
+          <h2 className="text-xs uppercase tracking-widest text-mist/60">Granted by your cards</h2>
+          <div className="grid sm:grid-cols-2 gap-3">
+            {cardPerks.map(({ card, spec }) => (
+              <div key={card.id} className="rounded-2xl border border-dashed border-rim bg-surface/60 p-4">
+                <div className="flex items-baseline justify-between gap-2">
+                  <span className="text-sm font-medium text-mist/85">{cardLabel(card)}</span>
+                  {spec.benefits_verified_at && (
+                    <span className="text-2xs text-mist/40 shrink-0">
+                      verified {fmtDate(spec.benefits_verified_at)}
+                    </span>
+                  )}
+                </div>
+                <div className="mt-2 space-y-1 text-xs text-mist/60">
+                  {spec.lounge.domestic && (
+                    <div>
+                      <span className="text-mist/40">Domestic:</span>{" "}
+                      {spec.lounge.domestic.provider} — {String(spec.lounge.domestic.visits_per_year)}
+                      {typeof spec.lounge.domestic.visits_per_year === "number" ? " visits/yr" : ""}
+                    </div>
+                  )}
+                  {spec.lounge.international && (
+                    <div>
+                      <span className="text-mist/40">International:</span>{" "}
+                      {spec.lounge.international.provider} — {String(spec.lounge.international.visits_per_year)}
+                      {typeof spec.lounge.international.visits_per_year === "number" ? " visits/yr" : ""}
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
       {/* Add / edit form */}
       {form && (
         <section className="rounded-2xl border border-gold/25 bg-surface p-5 shadow-card space-y-3">
@@ -188,14 +247,20 @@ export default function LoyaltyTab() {
 
       {/* Groups */}
       {rows.length === 0 && !migrationNeeded && !form ? (
-        <div className="rounded-2xl border border-rim bg-surface p-10 shadow-card text-center">
-          <div className="font-serif text-lg font-semibold text-mist mb-1">Nothing here yet</div>
-          <p className="text-sm text-mist/60">
-            Add your airline and hotel programs to see every status, tier and points balance next to your cards.
-          </p>
-        </div>
+        cardPerks.length === 0 && (
+          <div className="rounded-2xl border border-rim bg-surface p-10 shadow-card text-center">
+            <div className="font-serif text-lg font-semibold text-mist mb-1">Nothing here yet</div>
+            <p className="text-sm text-mist/60">
+              Add your airline and hotel programs to see every status, tier and points balance next to your cards.
+            </p>
+          </div>
+        )
       ) : (
-        GROUPS.map(({ type, label, icon }) => {
+        <>
+        {cardPerks.length > 0 && rows.length > 0 && (
+          <h2 className="text-xs uppercase tracking-widest text-mist/60 pt-1">Your personal accounts</h2>
+        )}
+        {GROUPS.map(({ type, label, icon }) => {
           const list = grouped.get(type) ?? [];
           if (list.length === 0) return null;
           return (
@@ -269,7 +334,8 @@ export default function LoyaltyTab() {
               })}
             </section>
           );
-        })
+        })}
+        </>
       )}
     </div>
   );

@@ -18,25 +18,33 @@ export const HSBC_PREMIER: CardSpec = {
   milestones_monthly: [],
   milestones_anniversary: [],
 
+  // CORRECTED 2026-07-08 via hsbc.co.in official site (direct fetch — highest
+  // confidence source used in this pass): lounge access is UNLIMITED for the
+  // primary cardholder at both domestic and international airports (1,400+
+  // via LoungeKey) — the previous 4/year domestic + 6/year international caps
+  // were not supported by any source and have been removed. The "8" figure is
+  // a GUEST allowance (international only), not a primary-cardholder cap.
   lounge: {
     domestic: {
-      provider: "Mastercard / DreamFolks",
-      visits_per_year: 4,
-      guest_policy: "primary only",
+      provider: "LoungeKey",
+      visits_per_year: "unlimited",
+      guest_policy: "primary cardholder only — no cap; guest visits not covered domestically",
     },
     international: {
-      provider: "Mastercard Travel Pass / LoungeKey",
-      visits_per_year: 6,
-      guest_policy: "primary only; guests at access fee",
+      provider: "LoungeKey",
+      visits_per_year: "unlimited",
+      guest_policy: "unlimited for primary; 8 complimentary international guest visits/year",
     },
   },
 
   sources: {
-    deals: "https://www.hsbc.co.in/credit-cards/products/premier-mastercard/",
-    points: "https://www.hsbc.co.in/credit-cards/rewards/",
+    deals: "https://www.hsbc.co.in/credit-cards/products/premier/",
+    points: "https://www.hsbc.co.in/credit-cards/products/premier/rewards/",
     vouchers: "https://www.hsbc.co.in/credit-cards/offers/",
-    lounge: "https://www.hsbc.co.in/credit-cards/products/premier-mastercard/lounge-access/",
+    lounge: "https://www.hsbc.co.in/credit-cards/products/premier/",
   },
+
+  benefits_verified_at: "2026-07-08",
 
   gmail: {
     senders: ["hsbc.co.in", "mail.hsbc.co.in"],

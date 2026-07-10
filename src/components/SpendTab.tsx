@@ -397,12 +397,16 @@ export default function SpendTab({ focusCard }: { focusCard?: { last4: string } 
                   const spec = CARD_REGISTRY[card.product_key];
                   const monthly = spec?.milestones_monthly?.[0];
                   const annualTiers = spec?.milestones_anniversary ?? [];
+                  // A card can have BOTH (EPM: ₹1.5L monthly + annual voucher/fee
+                  // tiers) — show each on its own bar. Cards with neither show
+                  // nothing, never a fabricated bar.
+                  const bars: React.ReactNode[] = [];
 
                   if (monthly) {
                     const spent = aggregates.totals[card.last4] || 0;
                     const pct   = Math.min((spent / monthly.spend_inr) * 100, 100);
-                    return (
-                      <MilestoneBar key={card.id} label={cardLabel(card)} sub={card.last4}
+                    bars.push(
+                      <MilestoneBar key={`${card.id}-m`} label={cardLabel(card)} sub={card.last4}
                         spent={spent} target={monthly.spend_inr} pct={pct}
                         caption={`${Math.round(pct)}% of ${fmt(monthly.spend_inr)} monthly milestone`} />
                     );
@@ -413,8 +417,9 @@ export default function SpendTab({ focusCard }: { focusCard?: { last4: string } 
                     const next  = annualTiers.find((m) => spent < m.spend_inr) ?? annualTiers[annualTiers.length - 1];
                     const pct   = Math.min((spent / next.spend_inr) * 100, 100);
                     const reached = spent >= annualTiers[annualTiers.length - 1].spend_inr;
-                    return (
-                      <MilestoneBar key={card.id} label={cardLabel(card)} sub={card.last4}
+                    bars.push(
+                      <MilestoneBar key={`${card.id}-a`}
+                        label={monthly ? "" : cardLabel(card)} sub={monthly ? "" : card.last4}
                         spent={spent} target={next.spend_inr} pct={pct} reached={reached}
                         caption={
                           reached
@@ -424,7 +429,7 @@ export default function SpendTab({ focusCard }: { focusCard?: { last4: string } 
                     );
                   }
 
-                  return null; // no documented milestone for this card — say nothing, not something fake
+                  return bars.length > 0 ? bars : null;
                 })}
             </section>
           )}
@@ -575,7 +580,7 @@ function MilestoneBar({ label, sub, spent, target, pct, caption, reached }: {
       <div className="flex justify-between text-sm">
         <span className="text-mist/80">
           {label}
-          <span className="opacity-30 text-xs ml-1.5">··{sub}</span>
+          {sub && <span className="opacity-30 text-xs ml-1.5">··{sub}</span>}
         </span>
         <span className="font-semibold text-gold tabular-nums">{fmt(spent)}</span>
       </div>

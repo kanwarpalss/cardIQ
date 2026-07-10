@@ -4,6 +4,24 @@ import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { CARD_REGISTRY } from "@/lib/cards/registry";
 import { getCardArt } from "@/lib/card-art";
+import { fmtDate, fmtINR } from "@/lib/format";
+import type { CardSpec } from "@/lib/cards/types";
+
+// Honest summary lines — only what the registry actually documents, ALL of
+// it (a card can have both monthly and anniversary milestones, e.g. EPM).
+// Cards with an unverified/unknown milestone (e.g. HDFC Infinia's quarterly
+// bonus, see hdfc-infinia.ts) correctly show nothing rather than a guess.
+function milestoneSummary(spec?: CardSpec): string[] {
+  if (!spec) return [];
+  return [
+    ...spec.milestones_monthly.map(
+      (m) => `Monthly: ${fmtINR(m.spend_inr)} → ${m.reward}`
+    ),
+    ...spec.milestones_anniversary.map(
+      (m) => `Anniversary year: ${fmtINR(m.spend_inr)} → ${m.reward}`
+    ),
+  ];
+}
 
 type CardRow = {
   id: string;
@@ -149,28 +167,43 @@ export default function CardsTab() {
             const spec = CARD_REGISTRY[c.product_key];
             const name = c.nickname || spec?.display_name || c.product_key;
             const net  = spec?.network ?? "";
+            const summary = milestoneSummary(spec);
             return (
               <div key={c.id}
-                className="flex items-center justify-between px-4 py-3 rounded-xl border border-rim bg-raised hover:bg-hover transition-colors">
-                <div className="flex items-center gap-3">
-                  {/* Mini card face in the product's real colors */}
-                  <div className="w-10 h-7 rounded-md border border-white/15 flex items-center justify-center shrink-0"
-                    style={{ background: getCardArt(c.product_key).gradient }}>
-                    <span className="font-bold text-xs" style={{ color: getCardArt(c.product_key).accent }}>
-                      {NETWORK_ICON[net.split(" ")[0]] ?? "★"}
-                    </span>
-                  </div>
-                  <div>
-                    <div className="text-sm font-medium text-mist/90">{name}</div>
-                    <div className="text-2xs text-mist/55">
-                      <span className="tracking-widest">●●●● ●●●● ●●●● {c.last4}</span>
+                className="px-4 py-3 rounded-xl border border-rim bg-raised hover:bg-hover transition-colors">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    {/* Mini card face in the product's real colors */}
+                    <div className="w-10 h-7 rounded-md border border-white/15 flex items-center justify-center shrink-0"
+                      style={{ background: getCardArt(c.product_key).gradient }}>
+                      <span className="font-bold text-xs" style={{ color: getCardArt(c.product_key).accent }}>
+                        {NETWORK_ICON[net.split(" ")[0]] ?? "★"}
+                      </span>
+                    </div>
+                    <div>
+                      <div className="text-sm font-medium text-mist/90">{name}</div>
+                      <div className="text-2xs text-mist/55">
+                        <span className="tracking-widest">●●●● ●●●● ●●●● {c.last4}</span>
+                      </div>
                     </div>
                   </div>
+                  <button onClick={() => removeCard(c.id)}
+                    className="text-2xs text-mist/25 hover:text-ruby transition-colors px-2 py-1">
+                    Remove
+                  </button>
                 </div>
-              <button onClick={() => removeCard(c.id)}
-                  className="text-2xs text-mist/25 hover:text-ruby transition-colors px-2 py-1">
-                  Remove
-                </button>
+                {(summary.length > 0 || spec?.benefits_verified_at) && (
+                  <div className="mt-2.5 pt-2.5 border-t border-wire flex items-baseline justify-between gap-3 text-2xs">
+                    <span className="text-mist/55 space-y-0.5">
+                      {summary.length > 0
+                        ? summary.map((line) => <span key={line} className="block">{line}</span>)
+                        : "No documented milestone on file"}
+                    </span>
+                    {spec?.benefits_verified_at && (
+                      <span className="text-mist/35 shrink-0">verified {fmtDate(spec.benefits_verified_at)}</span>
+                    )}
+                  </div>
+                )}
               </div>
             );
           })}

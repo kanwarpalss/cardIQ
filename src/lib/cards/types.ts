@@ -33,4 +33,8 @@ export type CardSpec = {
     senders: string[];
     subject_hints: string[];
   };
+  // Date (YYYY-MM-DD) this card's benefit data was last checked against real
+  // sources. Shown in the UI so stale data is visible rather than silently
+  // trusted forever — re-verify and bump this when benefits data is refreshed.
+  benefits_verified_at?: string;
 };
