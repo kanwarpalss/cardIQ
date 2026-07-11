@@ -138,9 +138,13 @@ A one-stop credit-card destination: syncs bank transaction emails from Gmail (Ax
 | `GOOGLE_CLIENT_SECRET` | Server |
 | `ENCRYPTION_KEY` | Server (AES-256 for stored secrets) |
 
-## §9 Session Handoff Notes (2026-07-10)
+## §9 Session Handoff Notes (2026-07-11)
 
-### Accomplished This Session (2026-07-10)
+### Accomplished This Session (2026-07-11)
+1. **iCloud-synced shell aliases** — shared aliases file at `~/Library/Mobile Documents/com~apple~CloudDocs/shared-aliases.sh`; `.zshrc` on each machine sources it. `cardiq` alias starts dev server + opens browser. New machines join with one copy-paste line. Solves the multi-machine "what port?" problem permanently.
+2. **Vercel deploy initiated** — KP importing project at vercel.com → kanwarpalss/cardIQ; env vars loaded via "Import .env" button (hidden file visible with `Cmd+Shift+.`); auto-deploy on `git push origin main`.
+
+### Accomplished 2026-07-10
 1. **Gmail insufficient-permission root-caused + instrumented** — scope errors (403) vs expired tokens (invalid_grant) now distinguished; live scope-check endpoint + Gmail-connection status card in Cards tab. Actual re-grant requires KP's hands (see §7).
 2. **Milestone honesty per KP's correction** — ₹1.5L monthly milestone moved to EPM (cardholder-attested); M4B's ₹1.5L demoted to earn-rate text; fee-waiver milestones added where sourced (M4B ₹30L, EPM ₹10L, Infinia ₹10L).
 3. **All 5 card specs re-verified with sources + dates** — HSBC lounge corrected to unlimited; EPM anniversary tiers corrected against ICICI's official page; Infinia quarterly bonus flagged unverifiable.
@@ -151,16 +155,26 @@ A one-stop credit-card destination: syncs bank transaction emails from Gmail (Ax
 2. Full UX redesign — sidebar shell, Overview home (card-art tiles, hero stats, holistic panels), Rewards/Offers/Loyalty tabs, Spend deep-links.
 3. Quality — perks.ts + boundary tests, .eslintrc.json, devil's-advocate pass (5 CRIT citations).
 
-### ▶ Start next session here
-1. **KP: fix Gmail access** — myaccount.google.com/permissions → remove CardIQ → back in app: sign out, sign in, and **tick the Gmail checkbox on Google's consent screen** → Cards tab → Gmail connection → Check now → expect 🟢.
-2. **KP: run migration 009** in Supabase SQL Editor (paste `supabase/migrations/009_rewards_offers_loyalty.sql`, Run) if not done yet.
-3. **KP: supply two numbers** — EPM's ₹1.5L monthly reward text (from iMobile) and Infinia's real quarterly milestone threshold (₹4L or ₹9L?) — then update the two card files.
-4. Verify `gmail_seen_messages` count in Supabase (stale May flag — likely fine).
-5. When happy: `git push origin main` deploys to Vercel (several local commits waiting).
+### ▶ Start next session here (V2 feature build — Fable-5 territory)
+**KP actions first:**
+1. **Fix Gmail access** — myaccount.google.com/permissions → remove CardIQ → back in app: sign out, sign in, and **tick the Gmail checkbox on Google's consent screen** → Cards tab → Gmail connection → Check now → expect 🟢.
+2. **Run migration 009** in Supabase SQL Editor (`supabase/migrations/009_rewards_offers_loyalty.sql`) if not done.
+3. **Supply two numbers** — EPM's ₹1.5L monthly reward text (from iMobile) and Infinia's quarterly milestone threshold (₹4L or ₹9L?) from HDFC app.
+4. **Finish Vercel deploy** and confirm URL working.
+5. `git push origin main` to deploy once satisfied.
+
+**Then the V2 build (one autonomous session):**
+- A. Two-tier categories (Dining→Coffee, Health→Pickleball…) + migration adding `subcategory` column
+- B. Scope-choice on every category/note edit ("just this one" vs "all N from merchant")
+- C. Order-item enrichment — Gmail parsers for Amazon/Swiggy/BigBasket/Zomato/Blinkit; amount+date matching; expand arrow on transactions; auto-rename merchants; confidence markers
+- D. Filters + search (category chips added to existing merchant search)
+- E. New Insights tab — spend by category tier, top merchants, top items, month-over-month
+- F. Re-theme — away from espresso+gold; playful-chic, warm cream + color pops, modern fintech-editorial feel
 
 ## §10 Deployment
 
-- **Local dev:** `npm run dev` at repo root → http://localhost:3000 (repo was flattened 2026-06-28; there is no `cardiq-app/` subfolder anymore)
-- **Production:** Vercel — auto-deploys on `git push origin main`
-- **Vercel env vars:** Must match §8 above — set in Vercel project settings
+- **Local dev:** Type `cardiq` in any terminal (alias in `~/Library/Mobile Documents/com~apple~CloudDocs/shared-aliases.sh`) → opens browser + starts server on http://localhost:3000
+- **New machine setup:** `echo '[ -f ~/Library/Mobile\ Documents/com~apple~CloudDocs/shared-aliases.sh ] && source ~/Library/Mobile\ Documents/com~apple~CloudDocs/shared-aliases.sh' >> ~/.zshrc`
+- **Production:** Vercel — auto-deploys on `git push origin main`; project imported from kanwarpalss/cardIQ
+- **Vercel env vars:** Loaded via "Import .env" from `~/Code/cardIQ/.env.local` (show hidden files with `Cmd+Shift+.`)
 - **Supabase:** Migrations run manually in Supabase SQL Editor, in numeric order (001 → … → 009)
