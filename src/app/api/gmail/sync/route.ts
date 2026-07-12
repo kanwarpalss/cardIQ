@@ -1,8 +1,11 @@
 import { google } from "googleapis";
 import { createClient } from "@/lib/supabase/server";
 import { decrypt } from "@/lib/crypto";
+import { makeGmailOAuthClient, extractBody } from "@/lib/gmail/extract";
+import { friendlyGmailSyncError } from "@/lib/gmail/errors";
 import { parseTxnEmailWithFallback } from "@/lib/parsers/registry";
-import { categorize } from "@/lib/categorize";
+import { categorizeFull } from "@/lib/categorize";
+import { isMissingColumnError } from "@/lib/supabase/errors";
 import { cleanMerchant } from "@/lib/merchant-clean";
 import { enrichAmount } from "@/lib/txn-enrich";
 import { CARD_REGISTRY } from "@/lib/cards/registry";
@@ -26,64 +29,31 @@ const FIRST_SYNC_LOOKBACK_DAYS = 365 * 8;
 const CURSOR_KEY = "_all";
 
 // ─── helpers ────────────────────────────────────────────────────────────────
+// base64Decode / stripHtml / extractBody / the OAuth client factory moved
+// verbatim to src/lib/gmail/extract.ts (2026-07-11) so the orders sync
+// decodes emails identically. Behaviour unchanged.
 
-function getOAuthClient() {
-  return new google.auth.OAuth2(
-    process.env.GOOGLE_CLIENT_ID,
-    process.env.GOOGLE_CLIENT_SECRET
-  );
-}
-
+// Guarded stream writes. Once the client disconnects (navigates away, clicks
+// sync twice, or the request is aborted), the ReadableStream controller is
+// torn down — any further enqueue()/close() throws ERR_INVALID_STATE, which
+// Next surfaces as "failed to pipe response" (a 500) and the browser sees as
+// a broken input stream. That crash used to MASK the real error (e.g. the
+// "Insufficient Permission" scope message). Swallowing the throw here lets the
+// live request deliver its real {status:"error"} payload cleanly.
 function send(controller: ReadableStreamDefaultController, data: object) {
-  controller.enqueue(new TextEncoder().encode(JSON.stringify(data) + "\n"));
+  try {
+    controller.enqueue(new TextEncoder().encode(JSON.stringify(data) + "\n"));
+  } catch {
+    // Client gone / stream already closed — nothing to write to.
+  }
 }
 
-function base64Decode(str: string): string {
-  return Buffer.from(str.replace(/-/g, "+").replace(/_/g, "/"), "base64").toString("utf-8");
-}
-
-function stripHtml(html: string): string {
-  return html
-    .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, " ")
-    .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, " ")
-    .replace(/<[^>]+>/g, " ")
-    .replace(/&nbsp;/g, " ")
-    .replace(/&amp;/g, "&")
-    .replace(/&lt;/g, "<")
-    .replace(/&gt;/g, ">")
-    .replace(/&quot;/g, '"')
-    .replace(/&#39;/g, "'")
-    .replace(/&rsquo;|&lsquo;/g, "'")
-    .replace(/&rdquo;|&ldquo;/g, '"')
-    .replace(/\s+/g, " ")
-    .trim();
-}
-
-function extractBody(payload: any): string {
-  if (!payload) return "";
-  if (payload.mimeType === "text/plain" && payload.body?.data) {
-    return base64Decode(payload.body.data);
+function safeClose(controller: ReadableStreamDefaultController) {
+  try {
+    controller.close();
+  } catch {
+    // Already closed or errored (client aborted). Closing twice is a no-op.
   }
-  if (payload.mimeType === "text/html" && payload.body?.data) {
-    return stripHtml(base64Decode(payload.body.data));
-  }
-  if (payload.body?.data) {
-    const decoded = base64Decode(payload.body.data);
-    return decoded.includes("<") ? stripHtml(decoded) : decoded;
-  }
-  if (payload.parts) {
-    for (const part of payload.parts) {
-      if (part.mimeType === "text/plain" && part.body?.data) return base64Decode(part.body.data);
-    }
-    for (const part of payload.parts) {
-      if (part.mimeType === "text/html" && part.body?.data) return stripHtml(base64Decode(part.body.data));
-    }
-    for (const part of payload.parts) {
-      const body = extractBody(part);
-      if (body) return body;
-    }
-  }
-  return "";
 }
 
 // ─── route ──────────────────────────────────────────────────────────────────
@@ -130,13 +100,31 @@ export async function POST(req: Request) {
   const cardByLast4 = new Map((cards || []).map((c) => [c.last4, c.id]));
   const knownLast4s = new Set((cards || []).map((c) => c.last4));
 
-  const { data: mappingsRaw } = await supabase
-    .from("merchant_mappings")
-    .select("raw_name, normalized_name, category")
-    .eq("user_id", user.id);
+  // Two-tier categories arrived with migration 012 — probe for the column
+  // once and degrade to category-only if it isn't there yet. A missing
+  // column must NEVER break the sync itself.
+  type MappingRow = { raw_name: string; normalized_name: string; category: string; subcategory?: string | null };
+  let mappingsRaw: MappingRow[] = [];
+  let hasSubcategory = true;
+  {
+    const res = await supabase
+      .from("merchant_mappings")
+      .select("raw_name, normalized_name, category, subcategory")
+      .eq("user_id", user.id);
+    if (res.error && isMissingColumnError(res.error, "subcategory")) {
+      hasSubcategory = false;
+      const legacy = await supabase
+        .from("merchant_mappings")
+        .select("raw_name, normalized_name, category")
+        .eq("user_id", user.id);
+      mappingsRaw = (legacy.data ?? []) as MappingRow[];
+    } else {
+      mappingsRaw = (res.data ?? []) as MappingRow[];
+    }
+  }
 
   const merchantMap = new Map(
-    (mappingsRaw || []).map((m) => [m.raw_name.toLowerCase(), m])
+    mappingsRaw.map((m) => [m.raw_name.toLowerCase(), m])
   );
 
   // ── Read the forward cursor ───────────────────────────────────────────────
@@ -187,7 +175,7 @@ export async function POST(req: Request) {
   const fromClause = [...allSenders].map((s) => `from:${s}`).join(" OR ");
   const query = `(${fromClause}) after:${afterSeconds}`;
 
-  const auth = getOAuthClient();
+  const auth = makeGmailOAuthClient();
   auth.setCredentials({ refresh_token: decrypt(settings.google_refresh_token_encrypted) });
   const gmail = google.gmail({ version: "v1", auth });
 
@@ -296,7 +284,7 @@ export async function POST(req: Request) {
             ...result,
             message: "Already up to date — no new emails.",
           });
-          controller.close();
+          safeClose(controller);
           return;
         }
 
@@ -312,7 +300,7 @@ export async function POST(req: Request) {
             ...result,
             message: `Already up to date — ${allIds.length} emails checked, all already in your database.`,
           });
-          controller.close();
+          safeClose(controller);
           return;
         }
 
@@ -434,7 +422,12 @@ export async function POST(req: Request) {
               (cleanedKey ? merchantMap.get(cleanedKey) : undefined);
 
             const merchant = mapping?.normalized_name ?? cleaned ?? null;
-            const category = mapping?.category ?? categorize(merchant);
+            // A mapping is the user's explicit choice and wins wholesale —
+            // including its subcategory (or deliberate lack of one). Keyword
+            // rules only apply when no mapping exists.
+            const ruled = categorizeFull(merchant);
+            const category = mapping?.category ?? ruled.category;
+            const subcategory = mapping ? (mapping.subcategory ?? null) : ruled.subcategory;
 
             // Centralized foreign-currency handling. enrichAmount looks up the
             // historical FX rate for the txn date when needed, so foreign
@@ -458,6 +451,7 @@ export async function POST(req: Request) {
                   low_confidence: parsed.low_confidence ?? false,
                   merchant,
                   category,
+                  ...(hasSubcategory ? { subcategory } : {}),
                   txn_type: parsed.txn_type,
                   txn_at: txnAt.toISOString(),
                   gmail_message_id: msgId,
@@ -546,34 +540,14 @@ export async function POST(req: Request) {
         send(controller, { status: "done", ...result });
 
       } catch (e) {
-        // Surface a useful message instead of a frozen spinner. Two DISTINCT
-        // failure modes get conflated if not handled separately:
-        //   - invalid_grant/invalid_token: the refresh token itself expired or
-        //     was revoked (common for Google apps still in "Testing" mode,
-        //     ~7 day token lifetime) — signing in again genuinely fixes this.
-        //   - insufficient scope/permission: the token is valid but was never
-        //     granted gmail.readonly. Signing in again usually does NOT fix
-        //     this, because Google silently reuses the existing grant instead
-        //     of re-prompting — the user must revoke access at Google's end
-        //     first. Conflating the two into one "sign in again" message is
-        //     exactly why this used to recur silently. See /api/gmail/scope-check.
-        const err = e as Error & { code?: number; errors?: Array<{ reason?: string }> };
-        const raw = err.message || String(e);
-        console.error("[gmail/sync] stream error:", raw);
-
-        const isScopeIssue =
-          err.code === 403 ||
-          /insufficient.*(scope|permission)/i.test(raw) ||
-          err.errors?.some((er) => er.reason === "insufficientPermissions");
-
-        const friendly = isScopeIssue
-          ? "Gmail access is missing read permission, so sync can't fetch emails. Signing in again alone usually won't fix this — go to myaccount.google.com/permissions, remove CardIQ's access there, then sign in again to grant it fresh. (Check Cards → Gmail connection for a live status.)"
-          : /invalid_grant|invalid_token|unauthorized|no refresh token/i.test(raw)
-            ? "Gmail access expired. Please sign out and sign in again to re-grant access."
-            : raw;
-        send(controller, { status: "error", message: friendly });
+        // Surface a useful message instead of a frozen spinner. The
+        // scope-vs-expired distinction (the source of the recurring silent
+        // Gmail-permission bug) lives in friendlyGmailSyncError — shared with
+        // the orders sync so the two routes can never drift apart.
+        console.error("[gmail/sync] stream error:", (e as Error).message || e);
+        send(controller, { status: "error", message: friendlyGmailSyncError(e) });
       } finally {
-        controller.close();
+        safeClose(controller);
       }
     },
   });

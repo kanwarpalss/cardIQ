@@ -12,3 +12,18 @@ export function isMissingTableError(
     error.message ?? ""
   );
 }
+
+// "The column doesn't exist yet" — a column-adding migration (e.g. 012's
+// subcategory) hasn't been run. Callers degrade to the old column set so
+// core flows (especially Gmail sync) keep working pre-migration.
+//   42703    = Postgres undefined_column
+//   PGRST204 = PostgREST "column not found in schema cache"
+export function isMissingColumnError(
+  error: { code?: string; message?: string } | null | undefined,
+  column: string
+): boolean {
+  if (!error) return false;
+  const mentionsColumn = (error.message ?? "").includes(column);
+  if (error.code === "42703" || error.code === "PGRST204") return mentionsColumn;
+  return mentionsColumn && /column .* does not exist|could not find the .* column|schema cache/i.test(error.message ?? "");
+}

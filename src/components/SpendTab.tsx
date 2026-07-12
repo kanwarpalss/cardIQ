@@ -2,12 +2,12 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { CARD_REGISTRY } from "@/lib/cards/registry";
-import { CATEGORIES }    from "@/lib/categories";
+import { CATEGORIES, SUBCATEGORIES } from "@/lib/categories";
 import { anniversaryWindowStart } from "@/lib/format";
 import PeriodPicker      from "./PeriodPicker";
 import MerchantPanel     from "./MerchantPanel";
 import SyncPanel         from "./SyncPanel";
-import TransactionsTable from "./TransactionsTable";
+import TransactionsTable, { type OrderRow, type CategoryPatch } from "./TransactionsTable";
 import ForeignCurrencyPanel from "./ForeignCurrencyPanel";
 
 // ── Types ───────────────────────────────────────────────────────
@@ -16,10 +16,12 @@ type Txn = {
   original_currency: string | null;
   original_amount:   number | null;
   merchant: string | null; category: string | null;
+  subcategory?: string | null;
   txn_at: string; txn_type: "debit" | "credit"; notes?: string | null;
 };
 type CardRow = { id: string; last4: string; nickname: string | null; product_key: string; anniversary_date: string | null };
-type AllData = { transactions: Txn[]; cards: CardRow[]; last_sync: string | null };
+type OrderApiRow = OrderRow & { txn_id: string | null };
+type AllData = { transactions: Txn[]; orders?: OrderApiRow[]; cards: CardRow[]; last_sync: string | null };
 
 // ── Utils ────────────────────────────────────────────────────────────────────
 const fmt  = (n: number) => "₹" + Math.round(n).toLocaleString("en-IN");
@@ -101,30 +103,38 @@ export default function SpendTab({ focusCard }: { focusCard?: { last4: string } 
     if (res.ok) loadAll();
   }
 
-  async function handleMerchantSave(old_name: string, new_name: string, category: string) {
+  async function handleMerchantSave(old_name: string, new_name: string, category: string, subcategory: string | null) {
     const res = await fetch("/api/merchant-mappings", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ old_name, new_name, category }),
+      body: JSON.stringify({ old_name, new_name, category, subcategory }),
     });
     if (!res.ok) return;
     setAllData((prev) => prev ? {
       ...prev,
       transactions: prev.transactions.map((t) =>
-        t.merchant === old_name ? { ...t, merchant: new_name, category } : t
+        t.merchant === old_name ? { ...t, merchant: new_name, category, subcategory } : t
       ),
     } : prev);
   }
 
-  async function handleTxnCategoryChange(txnId: string, category: string) {
+  async function handleTxnCategoryChange(txnId: string, patch: CategoryPatch) {
     const res = await fetch(`/api/transactions/${txnId}`, {
       method: "PATCH", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ category }),
+      body: JSON.stringify(patch),
     });
     if (!res.ok) return;
     setAllData((prev) => prev ? {
       ...prev,
-      transactions: prev.transactions.map((t) => t.id === txnId ? { ...t, category } : t),
+      transactions: prev.transactions.map((t) =>
+        t.id === txnId
+          ? {
+              ...t,
+              ...(patch.category !== undefined ? { category: patch.category } : {}),
+              ...(patch.subcategory !== undefined ? { subcategory: patch.subcategory } : {}),
+            }
+          : t
+      ),
     } : prev);
   }
 
@@ -137,6 +147,18 @@ export default function SpendTab({ focusCard }: { focusCard?: { last4: string } 
     setAllData((prev) => prev ? {
       ...prev,
       transactions: prev.transactions.map((t) => t.id === txnId ? { ...t, notes } : t),
+    } : prev);
+  }
+
+  async function handleNotesBulk(merchant: string, notes: string) {
+    const res = await fetch("/api/transactions/bulk-notes", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ merchant, notes }),
+    });
+    if (!res.ok) return;
+    setAllData((prev) => prev ? {
+      ...prev,
+      transactions: prev.transactions.map((t) => t.merchant === merchant ? { ...t, notes } : t),
     } : prev);
   }
 
@@ -155,6 +177,30 @@ export default function SpendTab({ focusCard }: { focusCard?: { last4: string } 
       if (t.notes?.trim()) set.add(t.notes.trim());
     }
     return Array.from(set);
+  }, [allData]);
+
+  // Subcategory suggestions per category: canonical list (SUBCATEGORIES) +
+  // anything the user has already typed on a transaction in that category —
+  // same "custom values resurface" behaviour as categories.
+  const subcategorySuggestions = useMemo(() => {
+    const map: Record<string, Set<string>> = {};
+    for (const [cat, subs] of Object.entries(SUBCATEGORIES)) map[cat] = new Set(subs);
+    for (const t of allData?.transactions ?? []) {
+      const cat = t.category?.trim();
+      const sub = t.subcategory?.trim();
+      if (!cat || !sub) continue;
+      (map[cat] ??= new Set()).add(sub);
+    }
+    return Object.fromEntries(Object.entries(map).map(([k, v]) => [k, Array.from(v)]));
+  }, [allData]);
+
+  // Matched order emails keyed by transaction id (expand-row enrichment).
+  const ordersByTxn = useMemo(() => {
+    const map = new Map<string, OrderRow>();
+    for (const o of allData?.orders ?? []) {
+      if (o.txn_id) map.set(o.txn_id, o);
+    }
+    return map;
   }, [allData]);
 
   const filteredTxns = useMemo(() => {
@@ -215,10 +261,10 @@ export default function SpendTab({ focusCard }: { focusCard?: { last4: string } 
     const totals: Record<string, number> = {};
     for (const t of debits) totals[t.card_last4] = (totals[t.card_last4] || 0) + Number(t.amount_inr);
 
-    const merchantMap: Record<string, { total: number; count: number; category: string }> = {};
+    const merchantMap: Record<string, { total: number; count: number; category: string; subcategory: string | null }> = {};
     for (const t of debits) {
       const k = t.merchant || "(missing)";
-      if (!merchantMap[k]) merchantMap[k] = { total: 0, count: 0, category: t.category || "Uncategorized" };
+      if (!merchantMap[k]) merchantMap[k] = { total: 0, count: 0, category: t.category || "Uncategorized", subcategory: t.subcategory ?? null };
       merchantMap[k].total += Number(t.amount_inr);
       merchantMap[k].count++;
     }
@@ -519,6 +565,7 @@ export default function SpendTab({ focusCard }: { focusCard?: { last4: string } 
                 merchants={visibleMerchants}
                 maxTotal={maxMerchantTotal}
                 categories={allCategories}
+                subcategories={subcategorySuggestions}
                 onSave={handleMerchantSave}
               />
               {filteredMerchants.length > MERCHANT_PAGE && (
@@ -540,10 +587,13 @@ export default function SpendTab({ focusCard }: { focusCard?: { last4: string } 
             transactions={inrTxns}
             cards={allData.cards}
             categories={allCategories}
+            subcategories={subcategorySuggestions}
+            ordersByTxn={ordersByTxn}
             existingNotes={existingNotes}
             onMerchantSave={handleMerchantSave}
             onCategoryChange={handleTxnCategoryChange}
             onNotesChange={handleTxnNotesChange}
+            onNotesBulk={handleNotesBulk}
           />
 
           {/* ── Foreign currency panel (renders only if foreign txns exist) ── */}

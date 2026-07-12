@@ -4,6 +4,7 @@ import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import OverviewTab from "@/components/OverviewTab";
 import SpendTab    from "@/components/SpendTab";
+import InsightsTab from "@/components/InsightsTab";
 import RewardsTab  from "@/components/RewardsTab";
 import OffersTab   from "@/components/OffersTab";
 import LoyaltyTab  from "@/components/LoyaltyTab";
@@ -11,13 +12,13 @@ import DiningTab   from "@/components/DiningTab";
 import ChatTab     from "@/components/ChatTab";
 import CardsTab    from "@/components/CardsTab";
 
-const TABS = ["Overview", "Spend", "Rewards", "Offers", "Loyalty", "Dining", "Chat", "Cards"] as const;
+const TABS = ["Overview", "Spend", "Insights", "Rewards", "Offers", "Loyalty", "Dining", "Chat", "Cards"] as const;
 type Tab = (typeof TABS)[number];
 
 // Sidebar groups — "Cards" lives at the bottom rail (it doubles as settings).
 const NAV_GROUPS: { label: string | null; tabs: Tab[] }[] = [
   { label: null,      tabs: ["Overview"] },
-  { label: "Money",   tabs: ["Spend"] },
+  { label: "Money",   tabs: ["Spend", "Insights"] },
   { label: "Perks",   tabs: ["Rewards", "Offers", "Loyalty"] },
   { label: "Explore", tabs: ["Dining", "Chat"] },
 ];
@@ -33,6 +34,9 @@ const TAB_ICONS: Record<Tab, React.ReactNode> = {
   ),
   Spend: (
     <svg {...ICON_PROPS}><path d="M2 13V9m4 4V6m4 7V8m4 5V3" strokeLinecap="round"/></svg>
+  ),
+  Insights: (
+    <svg {...ICON_PROPS}><circle cx="8" cy="8" r="6"/><path d="M8 2v6l4.2 2.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
   ),
   Rewards: (
     <svg {...ICON_PROPS}><path d="M8 1.5 9.8 5.6l4.2.4-3.2 2.9.9 4.3L8 11l-3.7 2.2.9-4.3L2 6l4.2-.4L8 1.5z" strokeLinejoin="round"/></svg>
@@ -60,7 +64,7 @@ function LogoMark() {
       <svg className="w-4 h-4 text-ink" fill="none" viewBox="0 0 16 16" stroke="currentColor" strokeWidth={2.2}>
         <rect x="1" y="4" width="14" height="10" rx="2"/>
         <path d="M1 7h14" strokeLinecap="square"/>
-        <circle cx="4.5" cy="11" r="1" fill="#070b14" stroke="none"/>
+        <circle cx="4.5" cy="11" r="1" fill="currentColor" stroke="none"/>
       </svg>
     </div>
   );
@@ -162,6 +166,7 @@ export default function Home() {
       <main className="lg:pl-60 min-h-screen">
         {tab === "Overview" && <OverviewTab onOpenSpend={openSpendForCard} onNavigate={navigate} />}
         {tab === "Spend"    && <SpendTab focusCard={spendFocus} />}
+        {tab === "Insights" && <InsightsTab />}
         {tab === "Rewards"  && <RewardsTab onNavigate={navigate} />}
         {tab === "Offers"   && <OffersTab />}
         {tab === "Loyalty"  && <LoyaltyTab />}

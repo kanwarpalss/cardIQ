@@ -1,8 +1,14 @@
 // Keyword-based default categorization for Indian merchants.
 // User-defined mappings in merchant_mappings table take priority.
-// Order matters — first match wins, so put more specific rules above broader ones.
+// Order matters — first match wins, so put more specific rules above broader
+// ones. That is also how the two-tier split works (V2 feature A): a
+// subcategory rule ("Dining · Coffee") sits ABOVE its parent's base rule, so
+// "Starbucks" hits Coffee before the generic Dining net catches it.
+//
+// Rules without a subcategory leave it null — the txn renders as just the
+// category. Every keyword lives in exactly ONE rule (ARCH-04).
 
-const RULES: { category: string; keywords: string[] }[] = [
+const RULES: { category: string; subcategory?: string; keywords: string[] }[] = [
   {
     category: "Rent",
     keywords: ["red giraffe", "nobroker", "no broker", "magicbricks", "rent payment", "housingedge"],
@@ -17,53 +23,124 @@ const RULES: { category: string; keywords: string[] }[] = [
   },
   {
     category: "Sports & Recreation",
-    keywords: ["huddle", "playo", "kheloo", "padel", "pickleball", "khelomore", "sportskeeda"],
+    subcategory: "Pickleball",
+    keywords: ["pickleball", "huddle"],
+  },
+  {
+    category: "Sports & Recreation",
+    subcategory: "Padel",
+    keywords: ["padel"],
+  },
+  {
+    category: "Sports & Recreation",
+    keywords: ["playo", "kheloo", "khelomore", "sportskeeda"],
   },
   {
     category: "CRED Payments",
     keywords: ["cred ", "cred store", "cred ecom", "cred club", "cred cash"],
   },
   {
+    // Quick commerce BEFORE the food-delivery rule: "Swiggy Instamart"
+    // contains both "instamart" and "swiggy" and is groceries, not dining.
+    category: "Groceries",
+    subcategory: "Quick Commerce",
+    keywords: ["blinkit", "zepto", "instamart", "grofers"],
+  },
+  {
+    category: "Dining",
+    subcategory: "Coffee",
+    keywords: ["starbucks", "third wave", "blue tokai", "chaayos", "cafe", "coffee", "barista"],
+  },
+  {
+    category: "Dining",
+    subcategory: "Food Delivery",
+    keywords: ["swiggy", "zomato", "eatsure", "foodpanda"],
+  },
+  {
+    category: "Dining",
+    subcategory: "Desserts",
+    keywords: ["bakery", "patisserie", "theobroma"],
+  },
+  {
     category: "Dining",
     keywords: [
-      "swiggy", "zomato", "eatsure", "foodpanda", "domino", "mcdonald", "kfc",
-      "subway", "pizza", "burger", "cafe", "coffee", "bistro", "dhaba",
-      "chaayos", "starbucks", "third wave", "blue tokai", "barbeque",
-      "big chill", "social offline", "punjab grill", "wendy", "haldiram",
-      "restaurant", "kitchen", "eatery", "diner", "bakery", "patisserie",
+      "domino", "mcdonald", "kfc",
+      "subway", "pizza", "burger", "bistro", "dhaba",
+      "barbeque", "big chill", "social offline", "punjab grill", "wendy", "haldiram",
+      "restaurant", "kitchen", "eatery", "diner",
     ],
   },
   {
     category: "Groceries",
+    subcategory: "Supermarket",
     keywords: [
-      "bigbasket", "blinkit", "zepto", "instamart", "dmart", "d-mart", "d mart",
+      "bigbasket", "dmart", "d-mart", "d mart",
       "nature's basket", "natures basket", "reliance smart", "reliance fresh",
-      "spencer", "grofers", "jiomart", "more supermarket", "star bazaar", "freshmenu",
+      "spencer", "jiomart", "more supermarket", "star bazaar",
+    ],
+  },
+  {
+    category: "Groceries",
+    keywords: ["freshmenu"],
+  },
+  {
+    category: "Travel",
+    subcategory: "Flights",
+    keywords: [
+      "indigo", "interglobe", "air india", "vistara", "spicejet", "akasa", "go first",
+      "airlines", "airways",
     ],
   },
   {
     category: "Travel",
-    keywords: [
-      "makemytrip", "mmt", "goibibo", "yatra", "cleartrip", "airbnb", "oyo",
-      "indigo", "interglobe", "air india", "vistara", "spicejet", "akasa", "go first",
-      "marriott", "taj hotels", "ihg", "hyatt", "hilton", "airport", "lounge",
-      "airlines", "airways", "travel edge", "wernost",
-    ],
+    subcategory: "Hotels",
+    keywords: ["marriott", "taj hotels", "ihg", "hyatt", "hilton", "oyo", "airbnb"],
+  },
+  {
+    category: "Travel",
+    subcategory: "Lounges",
+    keywords: ["lounge"],
+  },
+  {
+    category: "Travel",
+    keywords: ["makemytrip", "mmt", "goibibo", "yatra", "cleartrip", "airport", "travel edge", "wernost"],
   },
   {
     category: "Transport",
+    subcategory: "Cabs",
+    keywords: ["uber", "ola ", "rapido", "meru", "blablacar", "namma yatri"],
+  },
+  {
+    category: "Transport",
+    subcategory: "Metro & Rail",
+    keywords: ["metro", "irctc"],
+  },
+  {
+    category: "Transport",
+    subcategory: "Bus",
+    keywords: ["redbus"],
+  },
+  {
+    category: "Transport",
+    subcategory: "Auto",
+    keywords: ["auto rickshaw"],
+  },
+  {
+    category: "Transport",
+    keywords: ["porter"],
+  },
+  {
+    category: "Entertainment",
+    subcategory: "Streaming",
     keywords: [
-      "uber", "ola ", "rapido", "metro", "irctc", "redbus", "meru",
-      "blablacar", "porter", "namma yatri", "auto rickshaw",
+      "netflix", "hotstar", "disney", "amazon prime", "spotify", "gaana", "youtube",
+      "zee5", "sonyliv", "jiocinema", "apple tv", "mxplayer",
     ],
   },
   {
     category: "Entertainment",
-    keywords: [
-      "netflix", "hotstar", "disney", "amazon prime", "spotify", "gaana", "youtube",
-      "bookmyshow", "bms", "pvr", "inox", "zee5", "sonyliv", "jiocinema",
-      "apple tv", "mxplayer",
-    ],
+    subcategory: "Movies & Events",
+    keywords: ["bookmyshow", "bms", "pvr", "inox"],
   },
   {
     category: "Fuel",
@@ -73,21 +150,52 @@ const RULES: { category: string; keywords: string[] }[] = [
     ],
   },
   {
+    // Pharmacy above Hospitals: "Apollo Pharmacy" contains both "apollo"
+    // and "pharmacy" and must land in Pharmacy.
     category: "Healthcare",
+    subcategory: "Pharmacy",
+    keywords: ["medplus", "netmeds", "1mg", "tata 1mg", "pharmacy", "chemist"],
+  },
+  {
+    category: "Healthcare",
+    subcategory: "Diagnostics",
+    keywords: ["thyrocare", "lal path", "metropolis"],
+  },
+  {
+    category: "Healthcare",
+    subcategory: "Hospitals & Clinics",
+    keywords: ["apollo", "hospital", "clinic", "fortis", "max healthcare", "manipal hospital"],
+  },
+  {
+    category: "Healthcare",
+    keywords: ["practo", "medical"],
+  },
+  {
+    category: "Shopping",
+    subcategory: "Marketplace",
+    keywords: ["amazon", "amzn", "flipkart", "meesho", "snapdeal", "tata cliq"],
+  },
+  {
+    category: "Shopping",
+    subcategory: "Fashion",
     keywords: [
-      "apollo", "medplus", "netmeds", "1mg", "tata 1mg", "practo", "thyrocare",
-      "lal path", "metropolis", "hospital", "clinic", "pharmacy",
-      "chemist", "medical", "fortis", "max healthcare", "manipal hospital",
+      "myntra", "ajio", "h&m", "zara", "uniqlo", "westside",
+      "lifestyle", "shoppers stop", "pantaloons", "max fashion",
     ],
   },
   {
     category: "Shopping",
-    keywords: [
-      "amazon", "amzn", "flipkart", "myntra", "ajio", "nykaa", "meesho",
-      "snapdeal", "tata cliq", "h&m", "zara", "uniqlo", "westside",
-      "lifestyle", "shoppers stop", "pantaloons", "max fashion",
-      "boat", "samsung", "apple", "croma", "reliance digital", "decathlon",
-    ],
+    subcategory: "Beauty",
+    keywords: ["nykaa"],
+  },
+  {
+    category: "Shopping",
+    subcategory: "Electronics",
+    keywords: ["boat", "samsung", "apple", "croma", "reliance digital"],
+  },
+  {
+    category: "Shopping",
+    keywords: ["decathlon"],
   },
   {
     category: "Utilities",
@@ -106,11 +214,22 @@ const RULES: { category: string; keywords: string[] }[] = [
   },
   {
     category: "Financial",
-    keywords: [
-      "insurance", "lic", "hdfc life", "icici pru", "sbi life",
-      "mutual fund", "groww", "zerodha", "kuvera", "emi",
-      "malabar gold", "jewellery", "jewelry", "gold",
-    ],
+    subcategory: "Insurance",
+    keywords: ["insurance", "lic", "hdfc life", "icici pru", "sbi life"],
+  },
+  {
+    category: "Financial",
+    subcategory: "Investments",
+    keywords: ["mutual fund", "groww", "zerodha", "kuvera"],
+  },
+  {
+    category: "Financial",
+    subcategory: "Jewellery",
+    keywords: ["malabar gold", "jewellery", "jewelry", "gold"],
+  },
+  {
+    category: "Financial",
+    keywords: ["emi"],
   },
   {
     category: "Rewards",
@@ -120,11 +239,20 @@ const RULES: { category: string; keywords: string[] }[] = [
   },
 ];
 
-export function categorize(merchant: string | null | undefined): string {
-  if (!merchant) return "Uncategorized";
+export type CategoryResult = { category: string; subcategory: string | null };
+
+export function categorizeFull(merchant: string | null | undefined): CategoryResult {
+  if (!merchant) return { category: "Uncategorized", subcategory: null };
   const lower = merchant.toLowerCase();
   for (const rule of RULES) {
-    if (rule.keywords.some((k) => lower.includes(k))) return rule.category;
+    if (rule.keywords.some((k) => lower.includes(k))) {
+      return { category: rule.category, subcategory: rule.subcategory ?? null };
+    }
   }
-  return "Uncategorized";
+  return { category: "Uncategorized", subcategory: null };
+}
+
+/** Category-only view — kept so existing callers/tests stay valid. */
+export function categorize(merchant: string | null | undefined): string {
+  return categorizeFull(merchant).category;
 }

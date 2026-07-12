@@ -5,33 +5,36 @@ export default {
   theme: {
     extend: {
       colors: {
-        // ── Depth layers (warm espresso-charcoal, lightest last) ──────────
-        // Warm, chic darks — NOT cold pure-black. Each layer is lifted enough
-        // to keep text legible (readability is the first tenet here).
-        ink:     "#14110c",   // deepest background — warm near-black
-        surface: "#1e1a13",   // card / panel
-        raised:  "#29231a",   // elevated elements, dropdowns
-        hover:   "#352d22",   // interactive hover state
+        // ── V2 re-theme (2026-07-11): warm cream editorial, coral accent ──
+        // Token NAMES are kept from the espresso era so no component changes:
+        // they're semantic slots now — ink = page background, surface = card,
+        // mist = foreground text, gold = brand accent. Only VALUES changed.
 
-        // ── Borders (warm-white alpha so they read on any warm layer) ──────
-        wire: "rgba(237,233,224,0.10)",   // hairline — section dividers
-        rim:  "rgba(237,233,224,0.18)",   // visible border
+        // ── Depth layers (warm cream paper, deepest first) ────────────────
+        ink:     "#faf6ee",   // page background — warm cream paper
+        surface: "#fffcf6",   // card / panel — near-white cream
+        raised:  "#f4ede0",   // elevated elements, dropdowns
+        hover:   "#ede4d3",   // interactive hover state
 
-        // ── Text (warm white) ───────────────────────────────────────────
-        mist: "#f1ede4",
+        // ── Borders (warm-brown alpha so they read on any cream layer) ────
+        wire: "rgba(59,45,26,0.10)",   // hairline — section dividers
+        rim:  "rgba(59,45,26,0.18)",   // visible border
 
-        // ── Brand accent ────────────────────────────────────────────────
-        gold:    "#e6bd57",   // champagne gold, slightly brighter for contrast
+        // ── Text (deep warm brown-charcoal — editorial, not cold black) ───
+        mist: "#33291b",
 
-        // ── Status ──────────────────────────────────────────────────────
-        emerald:  "#34d27b",
-        ruby:     "#f4675f",
-        sapphire: "#5b9bf8",
-        amber:    "#f5b042",
+        // ── Brand accent (persimmon coral — the "color pop") ──────────────
+        gold:    "#d94e26",
+
+        // ── Status (tuned for contrast on cream) ──────────────────────────
+        emerald:  "#178a5c",
+        ruby:     "#d13f38",
+        sapphire: "#2f6fd0",
+        amber:    "#c97a06",
 
         // ── Legacy aliases (so old classes don't break mid-refactor) ─────
-        panel: "#1e1a13",
-        line:  "rgba(237,233,224,0.10)",
+        panel: "#fffcf6",
+        line:  "rgba(59,45,26,0.10)",
       },
       fontFamily: {
         sans:  ["'Inter'", "ui-sans-serif", "system-ui"],
@@ -41,13 +44,13 @@ export default {
         "2xs": ["0.65rem", { lineHeight: "1rem" }],
       },
       boxShadow: {
-        "glow-gold": "0 0 24px rgba(224,180,74,0.12)",
-        "card":      "0 4px 24px rgba(0,0,0,0.5), 0 1px 3px rgba(0,0,0,0.3)",
-        "dropdown":  "0 8px 40px rgba(0,0,0,0.6), 0 2px 8px rgba(0,0,0,0.4)",
+        "glow-gold": "0 0 24px rgba(217,78,38,0.16)",
+        "card":      "0 4px 20px rgba(80,60,30,0.08), 0 1px 3px rgba(80,60,30,0.05)",
+        "dropdown":  "0 8px 32px rgba(80,60,30,0.16), 0 2px 8px rgba(80,60,30,0.08)",
       },
       backgroundImage: {
-        "gold-shimmer": "linear-gradient(135deg, #e6bd57 0%, #cf9f3e 50%, #f0cb6b 100%)",
-        "surface-gradient": "linear-gradient(160deg, #1e1a13 0%, #221d15 100%)",
+        "gold-shimmer": "linear-gradient(135deg, #e0572e 0%, #c74320 50%, #f0764a 100%)",
+        "surface-gradient": "linear-gradient(160deg, #fffcf6 0%, #faf4e8 100%)",
       },
       animation: {
         "spin-slow": "spin 2s linear infinite",

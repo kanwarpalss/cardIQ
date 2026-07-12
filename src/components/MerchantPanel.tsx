@@ -2,24 +2,32 @@
 
 import { useState } from "react";
 
-type MerchantRow = { merchant: string; total: number; count: number; category: string };
+type MerchantRow = { merchant: string; total: number; count: number; category: string; subcategory: string | null };
 
 interface Props {
   merchants: MerchantRow[];
   maxTotal: number;
   /** Canonical + custom categories — the dropdown shows all of these. */
   categories: string[];
+  /** Per-category subcategory suggestions (canonical + user-typed). */
+  subcategories: Record<string, string[]>;
   /** Called when a rename/recategorize is saved. */
-  onSave: (old_name: string, new_name: string, category: string) => Promise<void>;
+  onSave: (old_name: string, new_name: string, category: string, subcategory: string | null) => Promise<void>;
 }
 
 const fmt = (n: number) => "₹" + Math.round(n).toLocaleString("en-IN");
 
-export default function MerchantPanel({ merchants, maxTotal, categories, onSave }: Props) {
+// Sentinels for the subcategory dropdown (real values are free text).
+const SUB_NONE  = "__none";
+const SUB_OTHER = "__other";
+
+export default function MerchantPanel({ merchants, maxTotal, categories, subcategories, onSave }: Props) {
   const [editingMerchant, setEditingMerchant] = useState<string | null>(null);
   const [editName, setEditName] = useState("");
   const [editCategory, setEditCategory] = useState("");
   const [customCategory, setCustomCategory] = useState("");
+  const [editSubcategory, setEditSubcategory] = useState<string>(SUB_NONE);
+  const [customSubcategory, setCustomSubcategory] = useState("");
   const [saving, setSaving] = useState(false);
 
   function startEdit(m: MerchantRow) {
@@ -28,6 +36,9 @@ export default function MerchantPanel({ merchants, maxTotal, categories, onSave 
     const isCategoryKnown = categories.includes(m.category);
     setEditCategory(isCategoryKnown ? m.category : "Other");
     setCustomCategory(isCategoryKnown ? "" : m.category);
+    const subs = subcategories[m.category] ?? [];
+    setEditSubcategory(m.subcategory === null ? SUB_NONE : subs.includes(m.subcategory) ? m.subcategory : SUB_OTHER);
+    setCustomSubcategory(m.subcategory !== null && !subs.includes(m.subcategory) ? m.subcategory : "");
   }
 
   function cancelEdit() {
@@ -35,6 +46,8 @@ export default function MerchantPanel({ merchants, maxTotal, categories, onSave 
     setEditName("");
     setEditCategory("");
     setCustomCategory("");
+    setEditSubcategory(SUB_NONE);
+    setCustomSubcategory("");
   }
 
   async function commitEdit(oldMerchant: string) {
@@ -42,10 +55,14 @@ export default function MerchantPanel({ merchants, maxTotal, categories, onSave 
       ? customCategory.trim() || "Uncategorized"
       : editCategory;
     const finalName = editName.trim() || oldMerchant;
+    const finalSubcategory =
+      editSubcategory === SUB_NONE  ? null :
+      editSubcategory === SUB_OTHER ? (customSubcategory.trim() || null) :
+      editSubcategory;
 
     setSaving(true);
     try {
-      await onSave(oldMerchant, finalName, finalCategory);
+      await onSave(oldMerchant, finalName, finalCategory, finalSubcategory);
       setEditingMerchant(null);
     } finally {
       setSaving(false);
@@ -58,6 +75,7 @@ export default function MerchantPanel({ merchants, maxTotal, categories, onSave 
         const isEditing = editingMerchant === m.merchant;
 
         if (isEditing) {
+          const subOptions = subcategories[editCategory] ?? [];
           return (
             <div key={m.merchant} className="p-2 -mx-2 rounded border border-gold/30 bg-gold/5 space-y-2">
               {/* Name input */}
@@ -77,7 +95,7 @@ export default function MerchantPanel({ merchants, maxTotal, categories, onSave 
                 <label className="text-xs opacity-40 uppercase tracking-wider">Category</label>
                 <select
                   value={editCategory}
-                  onChange={(e) => setEditCategory(e.target.value)}
+                  onChange={(e) => { setEditCategory(e.target.value); setEditSubcategory(SUB_NONE); setCustomSubcategory(""); }}
                   className="w-full bg-panel border border-line rounded px-2 py-1 text-sm focus:border-gold outline-none"
                 >
                   {categories.map((c) => (
@@ -93,6 +111,32 @@ export default function MerchantPanel({ merchants, maxTotal, categories, onSave 
                   placeholder="Type custom category…"
                   value={customCategory}
                   onChange={(e) => setCustomCategory(e.target.value)}
+                  onKeyDown={(e) => { if (e.key === "Enter") commitEdit(m.merchant); if (e.key === "Escape") cancelEdit(); }}
+                  className="w-full bg-panel border border-line rounded px-2 py-1 text-sm focus:border-gold outline-none"
+                />
+              )}
+
+              {/* Subcategory dropdown (second tier — optional) */}
+              <div className="space-y-1">
+                <label className="text-xs opacity-40 uppercase tracking-wider">Subcategory</label>
+                <select
+                  value={editSubcategory}
+                  onChange={(e) => setEditSubcategory(e.target.value)}
+                  className="w-full bg-panel border border-line rounded px-2 py-1 text-sm focus:border-gold outline-none"
+                >
+                  <option value={SUB_NONE}>No subcategory</option>
+                  {subOptions.map((s) => (
+                    <option key={s} value={s}>{s}</option>
+                  ))}
+                  <option value={SUB_OTHER}>Other (type below)</option>
+                </select>
+              </div>
+
+              {editSubcategory === SUB_OTHER && (
+                <input
+                  placeholder="Type custom subcategory…"
+                  value={customSubcategory}
+                  onChange={(e) => setCustomSubcategory(e.target.value)}
                   onKeyDown={(e) => { if (e.key === "Enter") commitEdit(m.merchant); if (e.key === "Escape") cancelEdit(); }}
                   className="w-full bg-panel border border-line rounded px-2 py-1 text-sm focus:border-gold outline-none"
                 />
@@ -131,13 +175,15 @@ export default function MerchantPanel({ merchants, maxTotal, categories, onSave 
                 <span className="truncate">{m.merchant}</span>
                 <button
                   onClick={() => startEdit(m)}
-                  title="Edit merchant name or category"
+                  title="Edit merchant name, category or subcategory"
                   className="opacity-0 group-hover:opacity-60 hover:!opacity-100 transition text-xs shrink-0 leading-none"
                 >
                   ✏
                 </button>
               </div>
-              <span className="text-xs opacity-40 shrink-0">{m.category}</span>
+              <span className="text-xs opacity-40 shrink-0">
+                {m.subcategory ? `${m.category} · ${m.subcategory}` : m.category}
+              </span>
               <span className="text-gold/80 shrink-0">{fmt(m.total)}</span>
             </div>
             <div className="flex items-center gap-2 mt-1">

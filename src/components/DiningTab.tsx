@@ -252,7 +252,7 @@ function RestaurantCard({ restaurant: r }: { restaurant: Restaurant }) {
         {bestPct > 0 && (
           <div
             className="shrink-0 px-2.5 py-1 rounded-lg text-xs font-medium"
-            style={{ background: "rgba(224,180,74,0.12)", color: "#e0b44a" }}
+            style={{ background: "rgba(217,78,38,0.10)", color: "#d94e26" }}
           >
             up to {bestPct}% off
           </div>

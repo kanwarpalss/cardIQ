@@ -2,7 +2,7 @@
 
 > Project brain. Updated every session.
 > Static architecture doc lives in ARCHITECTURE.md — don't duplicate it here.
-> Last updated: 2026-07-08
+> Last updated: 2026-07-12
 
 ---
 
@@ -42,6 +42,12 @@ A one-stop credit-card destination: syncs bank transaction emails from Gmail (Ax
 | `src/lib/categories.ts` | Canonical category list (shared by UI and backend) |
 | `src/lib/merchant-clean.ts` | Raw merchant name → cleaned display name |
 | `src/lib/parsers/axis.ts` | Regex parser for Axis Bank email alerts |
+| `src/lib/parsers/orders/` | Order-email parsers (Swiggy/Zomato/BigBasket/Amazon) + sender registry — grounded in real emails sampled from KP's Gmail 2026-07-11 |
+| `src/lib/order-match.ts` | Pure order→transaction matcher: amount + date + merchant affinity, confidence tiers high/medium/low |
+| `src/app/api/gmail/orders/sync/route.ts` | Orders sync — second Gmail pass; own cursor `_orders`, shares the gmail_seen_messages ledger |
+| `src/components/InsightsTab.tsx` | Insights: MoM bars, two-tier category breakdown, top merchants, top items (from orders.items) |
+| `src/app/api/transactions/bulk-notes/route.ts` | Feature B: same note across all txns of a merchant (no mapping created — notes aren't merchant metadata) |
+| `tailwind.config.ts` + `src/app/globals.css` | THE theme — all colors are semantic tokens (ink/surface/mist/gold); re-theme = edit values here only |
 | `src/lib/cards/registry.ts` | Hardcoded card specs (milestones, lounge access, senders) |
 | `supabase/migrations/` | SQL migration files (run in order) |
 
@@ -58,6 +64,8 @@ A one-stop credit-card destination: syncs bank transaction emails from Gmail (Ax
 - `reward_balances` — card-point balance snapshots (migration 009; latest as_of = current)
 - `offers` — user-tracked card offers with validity windows (migration 009)
 - `loyalty_accounts` — airline/hotel program tiers + points, card-independent (migration 009)
+- `orders` — parsed order emails: source, kind (order|refund), items jsonb, total, txn_id match + match_confidence (migration 011)
+- `transactions` + `merchant_mappings` each gained a nullable `subcategory` column (migration 012)
 
 ## §5 Decisions Log
 
@@ -73,8 +81,44 @@ A one-stop credit-card destination: syncs bank transaction emails from Gmail (Ax
 | 2026-07-10 | Cardholder statements outrank blog sources for KP's own cards; encode with attribution | Trust aggregator blogs over KP | KP sees his actual T&Cs in bank apps; blogs conflict with each other (Infinia quarterly: ₹4L vs ₹9L). Every card spec now carries source comments + benefits_verified_at |
 | 2026-07-10 | Milestone bars only render for documented reward milestones; earn-rate kinks stay text-only | Show M4B's ₹1.5L acceleration as a milestone bar | Nothing is GRANTED at M4B's ₹1.5L — a progress bar implies a payout that doesn't exist. KP: "show it honestly even for M4B" |
 | 2026-07-10 | Loyalty tab shows card-granted lounge perks as read-only registry data (dashed border) above personal accounts | Insert card perks as loyalty_accounts DB rows | Registry data auto-updates with card spec changes and can't drift; DB copies would go stale and blur the manual-vs-reference boundary |
+| 2026-07-11 | Order→txn match lives ON the orders row (txn_id FK + confidence) | order_id column on transactions | Orders can unlink without touching txns; feature C needed zero transactions schema change |
+| 2026-07-11 | Amazon = refund amounts + Delivered item-names only; Blinkit has NO parser | Full parsers for all 5 SPEC sources | Verified against KP's Gmail: Amazon India stopped emailing order totals (~2023); Blinkit sends zero emails. Parsers for data that doesn't exist would be untestable fiction |
+| 2026-07-11 | Matcher refuses ambiguity: round amounts require merchant affinity; multiple candidates cap at 'low' or refuse outright | Greedy amount+date matching | A wrong match shown confidently is worse than no match — same principle as the 2026-07-08 manual-first rewards decision |
+| 2026-07-11 | "Auto-rename" is display-level: order's real merchant leads, bank name becomes "via …" subtext; DB merchant untouched | Overwriting transactions.merchant | An overwrite would fight merchant_mappings bulk renames and be irreversible; display enrichment is free to improve |
+| 2026-07-11 | A merchant mapping wins wholesale, including its subcategory (or deliberate lack of one); keyword rules fill only unmapped merchants | Rules backfill subcategory under mappings | The user's explicit choice must never be second-guessed by heuristics |
+| 2026-07-11 | Every route probes for migrations 011/012 and degrades gracefully when missing | Hard-fail until migrations run | Bank sync must NEVER break because an enrichment migration is pending; orders sync alone fails with a run-the-migration message |
+| 2026-07-11 | Scope-choice "all N from merchant" on category edits routes through the merchant-mapping path | A bulk-update-only endpoint | Mapping upsert means future syncs agree with the bulk choice — bulk-without-mapping would silently revert on next sync |
+| 2026-07-11 | Bulk notes get their own endpoint and do NOT create a mapping | Reuse merchant-mappings | Notes are per-transaction data, not merchant metadata; new syncs should arrive note-less |
+| 2026-07-11 | Re-theme = token VALUES only; token names (gold/mist/ink) kept as semantic slots | Rename tokens app-wide | Zero component churn; next re-theme is again a 2-file edit. White-on-card-art text intentionally untouched (sits on issuer gradients) |
+| 2026-07-11 | Insights aggregates client-side from /api/transactions/all | New aggregate endpoints | Same payload SpendTab already fetches; no new API surface, no drift between tabs |
+| 2026-07-12 | Order matching is **merchant-first**: a D2C brand's email (with items) claims a transaction before Razorpay (signal-only) | Razorpay-first as "universal key" | Razorpay's strength is legal-entity name (matches bank descriptor); merchant emails have the real items and brand. The link shown to KP must be the richest detail available — a merchant email with a Spark Case item beats "Hourglass Design Pvt Ltd" every time |
+| 2026-07-12 | Shipping/delivery status pings (shipped, out for delivery, etc.) are excluded from order parsing | Treat status pings as orders | A status ping lands days after the order and has zero item detail; the charge matches the correctly-dated order confirmation instead (KP's rule: "if you have shipped, you have order too") |
+| 2026-07-12 | Exact-amount same-day matches bumped from low → medium confidence | Keep at low for all no-affinity matches | KP's data shows 99% accuracy on exact amounts; a unique same-/next-day hit is a strong signal and justifies "medium" ("likely"). Wider gaps stay low for review |
 
-## §6 Current State (as of 2026-07-10)
+## §6 Current State (as of 2026-07-12)
+
+**New 2026-07-12 (C order-matching redesign — merchant-first ranking):**
+- **Merchant-first ranking** via `orderMatchRank()`: D2C brand's own email (with items) → rank 3, merchant no-items → 2, generic → 1, Razorpay → 0. Sync sorts unmatched orders by rank before matching, so a ₹1,499 Postbox order with "Spark Case" items claims the ₹1,499 charge instead of losing to a Razorpay confirmation with zero detail.
+- **Shipping/status email exclusion:** "on its way", "shipped", "out for delivery", "delivered" subject lines rejected in Shopify + generic parsers (marketplace parsers already sender-gated). Charge now matches the correctly-dated order confirmation (KP's rule enforced).
+- **Confidence retuning:** unique exact-amount matches within ±2 days bumped to `medium` ("likely"), reflecting KP's 99% accuracy data on exact amounts; wider gaps stay `low` for review.
+- **2-year Gmail audit** (`scripts/order-match-audit.ts`): scanned 3,152 candidate emails, applied merchant-first ranking, captured actual item lists, emitted `audit-review.json` (JSON review data for HTML widget). **Results:** 1,185 INR debits (2y) → 197 matched orders (16.5% coverage); 129 high-confidence, 44 medium, 24 low. Only 16 matches carried real item detail (Postbox, Swiggy, etc.). Baseline is dominated by Razorpay (no items). Target is 90%+ for true online-purchases (denominator ~250–300, not 1,185 which includes offline rent/insurance/medical).
+- **Tests:** 257 total (4 confidence-score expectations updated + new rank + shipping-guard tests); typecheck + lint clean.
+- Gates: suite + typecheck + lint — all green. Audit complete.
+
+**New 2026-07-11 (V2 build part 2 — B scope-choice, D chip filters, E Insights, F re-theme):**
+- B: category and note edits in the transactions table now carry an "All N from <merchant>" checkbox — category-scope goes through the mapping path (future syncs agree), note-scope through the new bulk-notes endpoint
+- D: category chips (busiest-first, multi-select) under the table's filter bar; selecting exactly one category reveals its subcategory chips (↳ second tier)
+- E: Insights tab (Money group) — 12-month MoM bar chart (click a bar to focus a month), two-tier category breakdown, top-10 merchants, top items straight from matched order emails
+- F: re-theme shipped as a token-value swap — warm cream paper (#faf6ee), deep warm-brown text, persimmon coral accent (#d94e26); issuer card-art untouched; ChatTab prose de-inverted; verified live via computed styles + screenshot (login page)
+- KP's 8-hour-old dev server 500'd on the tailwind-config change (stale dev cache — prod build was already green); restarted clean, everything renders
+- Gates after part 2: 239 tests, typecheck, lint, prod build — all green
+
+**New 2026-07-11 (V2 build part 1 — C order enrichment + A two-tier categories):**
+- Orders layer: `/api/gmail/orders/sync` (cursor `_orders`, ARCH-12 trio, auto-chained after bank sync by SyncPanel — one click runs both passes); parsers for Swiggy/Zomato/BigBasket/Amazon built from real sampled emails; order→txn matcher with high/medium/low confidence
+- TransactionsTable: expand arrow (▶) on matched rows shows items, order ref, total + confidence chip (✓ matched / ≈ likely / ? possible); confident matches show the restaurant/store as the primary merchant name with "via <bank name>" subtext; table search also covers order item names
+- Two-tier categories: canonical `SUBCATEGORIES` map in categories.ts, two-tier keyword rules (Coffee, Food Delivery, Quick Commerce, Pickleball…), `subcategory` threaded through sync/recategorize/PATCH/merchant-mappings; edit UI in table + merchant panel; renders as "Dining · Coffee"
+- Boundary-prover pass found 4 real silent-wrong-answer parser bugs (split-payment Swiggy totals, ₹0 BigBasket orders dropped, Amazon refunds dying on short order refs, cancelled orders parsing as paid) — all fixed, 17 regression tests locked in
+- Verified: 239 tests green, typecheck clean, lint clean, production build passes. NOT yet verified live: order sync end-to-end against real Gmail (blocked on Gmail re-grant + migration 011) — TEST-02 pending KP click-through
 
 **New 2026-07-10 (accuracy + Gmail-permission session):**
 - Gmail insufficient-permission properly diagnosed: scope errors (403) now distinguished from expired tokens (invalid_grant) with the real fix path in the error message; new `GET /api/gmail/scope-check` makes a live Gmail call; Cards tab shows a Gmail-connection status card with "Check now"
@@ -111,7 +155,8 @@ A one-stop credit-card destination: syncs bank transaction emails from Gmail (Ax
 
 **Pending / In Flight:**
 - Migration 009 must be run manually in Supabase SQL Editor before Rewards/Offers/Loyalty can save data (tabs show a plain-English notice until then).
-- Authed dashboard visuals of the 2026-07-08 redesign verified by build + tests + login-page render only — KP click-through pending (Google OAuth can't be done headlessly).
+- Migrations **011 (orders)** and **012 (subcategories)** must be run in the SQL Editor before order enrichment / subcategories can save; every route degrades gracefully until then (bank sync unaffected; orders sync explains itself).
+- Authed dashboard visuals verified by build + tests + login-page DOM only — KP click-through pending (Google OAuth can't be done headlessly). Applies to the 2026-07-08 redesign AND the 2026-07-11 expand-row/subcategory UI.
 
 ## §7 Known Issues
 
@@ -125,6 +170,9 @@ A one-stop credit-card destination: syncs bank transaction emails from Gmail (Ax
 | EPM ₹1.5L monthly milestone reward wording | 🟡 PENDING KP | Milestone encoded per KP (cardholder) but ICICI's public page doesn't list it — KP to supply the exact reward text from iMobile; update `icici-emeralde-private-metal.ts`. |
 | Infinia quarterly bonus milestone | 🟡 PENDING KP | Widely reported (10K bonus points) but sources conflict on threshold (₹4L vs ₹9L); intentionally unmodeled. KP to confirm from HDFC app and add the tier. |
 | Gmail re-grant needs KP's hands | 🟡 ACTION KP | Insufficient-scope can only be fixed by revoking CardIQ at myaccount.google.com/permissions, then re-login AND ticking the Gmail checkbox on Google's consent screen. App now detects + explains this, but can't do it for him. |
+| Order sync unverified against live Gmail | 🟡 BLOCKED on the row above | Code-complete + 57 parser/matcher tests, but TEST-02 (real synced counts) needs Gmail re-grant + migrations 011/012. Then: Sync Gmail → expect "N orders parsed, M linked" in the result line. |
+| Swiggy split-payment total picks the card-labeled row | Accepted (best available) | No real split-payment sample existed in Gmail; heuristic = prefer "card" row, else last row. A wrong pick fails safe (no match) — revisit if a real sample surfaces. |
+| Re-theme taste review | 🟡 PENDING KP | Coral (#d94e26) on warm cream chosen per "playful-chic, color pops, fintech-editorial". Only /login was visually verifiable without OAuth. If the coral reads wrong, it's a 2-file value edit (tailwind.config.ts + globals.css). |
 
 ## §8 Environment Variables
 
@@ -138,11 +186,20 @@ A one-stop credit-card destination: syncs bank transaction emails from Gmail (Ax
 | `GOOGLE_CLIENT_SECRET` | Server |
 | `ENCRYPTION_KEY` | Server (AES-256 for stored secrets) |
 
-## §9 Session Handoff Notes (2026-07-11)
+## §9 Session Handoff Notes (2026-07-12)
 
-### Accomplished This Session (2026-07-11)
-1. **iCloud-synced shell aliases** — shared aliases file at `~/Library/Mobile Documents/com~apple~CloudDocs/shared-aliases.sh`; `.zshrc` on each machine sources it. `cardiq` alias starts dev server + opens browser. New machines join with one copy-paste line. Solves the multi-machine "what port?" problem permanently.
-2. **Vercel deploy initiated** — KP importing project at vercel.com → kanwarpalss/cardIQ; env vars loaded via "Import .env" button (hidden file visible with `Cmd+Shift+.`); auto-deploy on `git push origin main`.
+### Accomplished This Session (2026-07-12, C redesign — merchant-first ranking)
+1. **Feature C — order-matching v2, code-complete.** Merchant-first ranking so D2C brand emails claim txns before payment gateways; shipping/status pings excluded (KP's "not shipped" rule); exact-amount same-day confidence bumped from low → medium (99% accuracy). All 257 tests green; typecheck + lint clean.
+2. **Audit infrastructure** — `/scripts/order-match-audit.ts` reads real 3,152 Gmail emails, applies merchant-first matching, captures item detail, writes `audit-review.json` for HTML review widget. Coverage report TBD (audit in-flight, ~70% through parsing).
+3. **Project CLAUDE.md updated** — merchant-first ranking (orderMatchRank) locked as an invariant for future order-enrichment work.
+4. **Memory + reflection captured** — order-matching redesign summary in `cardiq-order-matching.md`, session reflection at `~/.claude-state/reflections/2026-07-12-cardIQ.md`.
+
+### Accomplished This Session (2026-07-11, V2 build part 1)
+1. **Feature C — order-item enrichment, code-complete.** Migration 011 (orders table); parsers for Swiggy/Zomato/BigBasket/Amazon built from REAL emails sampled via Gmail MCP (Blinkit skipped: sends no emails; Amazon: refunds + item names only — no totals in their emails anymore); pure matcher with refuse-to-guess confidence tiers; `/api/gmail/orders/sync` (own `_orders` cursor, shared seen-ledger); SyncPanel chains it after bank sync; expand-row UI with items + confidence chips; display-level auto-rename.
+2. **Feature A — two-tier categories, code-complete.** Migration 012 (subcategory on transactions + merchant_mappings); canonical SUBCATEGORIES + two-tier keyword rules; threaded through all four write paths with probe-and-degrade migration tolerance; edit UI in TransactionsTable + MerchantPanel.
+3. **Boundary-prover pass** — 4 real parser bugs found and fixed pre-ship; 17 regression tests added (239 total, all green; typecheck + lint + prod build clean).
+4. **Features B, D, E, F — code-complete.** Scope-choice edits ("all N from merchant"), category+subcategory chip filters, Insights tab (MoM / category tiers / top merchants / top items), and the warm-cream + coral re-theme (token-value swap, theme verified live on /login).
+5. *(Earlier today: iCloud shell aliases + Vercel deploy initiated — see §10.)*
 
 ### Accomplished 2026-07-10
 1. **Gmail insufficient-permission root-caused + instrumented** — scope errors (403) vs expired tokens (invalid_grant) now distinguished; live scope-check endpoint + Gmail-connection status card in Cards tab. Actual re-grant requires KP's hands (see §7).
@@ -155,21 +212,21 @@ A one-stop credit-card destination: syncs bank transaction emails from Gmail (Ax
 2. Full UX redesign — sidebar shell, Overview home (card-art tiles, hero stats, holistic panels), Rewards/Offers/Loyalty tabs, Spend deep-links.
 3. Quality — perks.ts + boundary tests, .eslintrc.json, devil's-advocate pass (5 CRIT citations).
 
-### ▶ Start next session here (V2 feature build — Fable-5 territory)
-**KP actions first:**
-1. **Fix Gmail access** — myaccount.google.com/permissions → remove CardIQ → back in app: sign out, sign in, and **tick the Gmail checkbox on Google's consent screen** → Cards tab → Gmail connection → Check now → expect 🟢.
-2. **Run migration 009** in Supabase SQL Editor (`supabase/migrations/009_rewards_offers_loyalty.sql`) if not done.
-3. **Supply two numbers** — EPM's ₹1.5L monthly reward text (from iMobile) and Infinia's quarterly milestone threshold (₹4L or ₹9L?) from HDFC app.
-4. **Finish Vercel deploy** and confirm URL working.
-5. `git push origin main` to deploy once satisfied.
+### ▶ Next Steps (2026-07-12 → 2026-07-13+)
+**Immediate (C redesign QoL):**
+1. **Build HTML review widget** — render `audit-review.json` locally as an interactive widget: uncertain matches (medium/low) first, each row shows order email (merchant/items/date) ↔ transaction (amount/merchant/date) + confidence + reasoning. Embeds data directly (never leaves machine). Use for manual validation of low/medium matches.
+2. **Run live audit once migrations 011/012 are live** — the above 16.5% figure uses the app's real code but fresh Gmail scan; once the sync is deployed, metrics will show live sync coverage (should be close, as audit runs the exact same matchers).
+3. **Identify parser gaps** — audit's 786 unmatched parsed orders are likely merchant emails the parsers missed (new D2C email formats, Razorpay-exclusive merchants). Inspect audit output to find the top senders among unmatched.
 
-**Then the V2 build (one autonomous session):**
-- A. Two-tier categories (Dining→Coffee, Health→Pickleball…) + migration adding `subcategory` column
-- B. Scope-choice on every category/note edit ("just this one" vs "all N from merchant")
-- C. Order-item enrichment — Gmail parsers for Amazon/Swiggy/BigBasket/Zomato/Blinkit; amount+date matching; expand arrow on transactions; auto-rename merchants; confidence markers
-- D. Filters + search (category chips added to existing merchant search)
-- E. New Insights tab — spend by category tier, top merchants, top items, month-over-month
-- F. Re-theme — away from espresso+gold; playful-chic, warm cream + color pops, modern fintech-editorial feel
+**KP actions — C + A go live the moment these are done (existing from 2026-07-11):**
+1. **Run migrations 011 + 012** in Supabase SQL Editor (`011_orders.sql`, then `012_subcategories.sql`; also 009 if still pending).
+2. **Fix Gmail access** — myaccount.google.com/permissions → remove CardIQ → back in app: sign out, sign in, and **tick the Gmail checkbox on Google's consent screen** → Cards tab → Gmail connection → Check now → expect 🟢.
+3. **Click Sync Gmail once** — expect the result line to end with "N orders parsed, M linked to transactions", then click a ▶ arrow on a Swiggy/Zomato txn (TEST-02 live verification).
+4. **Supply two numbers** — EPM's ₹1.5L monthly reward text (from iMobile) and Infinia's quarterly milestone threshold (₹4L or ₹9L?) from HDFC app.
+5. **Finish Vercel deploy** if not done, then commit + `git push origin main` when satisfied (working tree currently holds the uncommitted C+A build — consider /lead-review first).
+
+**V2 feature build: ALL SIX DONE (A–F ✅ 2026-07-11).** Nothing remains from the V2 list.
+Next session candidates: KP's visual click-through feedback (theme taste, expand-row polish), /lead-review findings, the recategorize re-cook fix (§7), and live TEST-02 verification of order sync once Gmail is re-granted.
 
 ## §10 Deployment
 
@@ -177,4 +234,4 @@ A one-stop credit-card destination: syncs bank transaction emails from Gmail (Ax
 - **New machine setup:** `echo '[ -f ~/Library/Mobile\ Documents/com~apple~CloudDocs/shared-aliases.sh ] && source ~/Library/Mobile\ Documents/com~apple~CloudDocs/shared-aliases.sh' >> ~/.zshrc`
 - **Production:** Vercel — auto-deploys on `git push origin main`; project imported from kanwarpalss/cardIQ
 - **Vercel env vars:** Loaded via "Import .env" from `~/Code/cardIQ/.env.local` (show hidden files with `Cmd+Shift+.`)
-- **Supabase:** Migrations run manually in Supabase SQL Editor, in numeric order (001 → … → 009)
+- **Supabase:** Migrations run manually in Supabase SQL Editor, in numeric order (001 → … → 012)

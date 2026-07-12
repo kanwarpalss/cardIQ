@@ -87,11 +87,68 @@ export default function SyncPanel({ onSyncComplete }: Props) {
 
   useEffect(() => { loadSyncState(); }, [loadSyncState]);
 
+  // ── NDJSON stream helper ────────────────────────────────────────────────
+  // POSTs to a sync endpoint and hands each parsed NDJSON message to onMsg.
+  // Resolves with the final {status:"done"} payload; throws on HTTP errors
+  // or a server-sent {status:"error"}.
+  async function streamNdjson(
+    url: string,
+    lookbackDays: number | undefined,
+    onMsg: (msg: any) => void
+  ): Promise<any> {
+    const res = await fetch(url, {
+      method: "POST",
+      headers: lookbackDays ? { "Content-Type": "application/json" } : undefined,
+      body: lookbackDays ? JSON.stringify({ lookback_days: lookbackDays }) : undefined,
+    });
+
+    if (!res.ok) {
+      const errBody = await res.json().catch(() => ({ message: `HTTP ${res.status}` }));
+      throw new Error(errBody.message || errBody.error || `HTTP ${res.status}`);
+    }
+    if (!res.body) throw new Error("Sync returned no response body");
+
+    const reader  = res.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = "";
+    let doneMsg: any = null;
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      // NDJSON can split mid-line across chunks → buffer the tail.
+      buffer += decoder.decode(value, { stream: true });
+      const lines = buffer.split("\n");
+      buffer = lines.pop() ?? "";
+      for (const line of lines.filter(Boolean)) {
+        // Parse defensively: a half-received line is normal NDJSON behaviour
+        // and should be ignored. But a fully-parsed message must be handled
+        // OUTSIDE this try — otherwise a server-sent {status:"error"} would
+        // be swallowed by the parse-error catch and the UI hangs forever.
+        let msg: any;
+        try {
+          msg = JSON.parse(line);
+        } catch {
+          continue; // partial / non-JSON chunk — wait for the rest
+        }
+        if (msg.status === "error") throw new Error(msg.message || "Sync failed");
+        if (msg.status === "done") doneMsg = msg;
+        onMsg(msg);
+      }
+    }
+    if (!doneMsg) throw new Error("Sync ended without a result");
+    return doneMsg;
+  }
+
   // ── Run sync ────────────────────────────────────────────────────────────
   // No arg → incremental (only emails newer than the saved cursor).
   // lookbackDays → backfill: re-scan that many days so newly-recognised
   // senders (or anything the cursor skipped) get picked up. Dedup via
   // gmail_seen_messages guarantees no duplicates either way.
+  //
+  // Two passes per click: bank transaction emails first, THEN order emails
+  // (Swiggy/Zomato/BigBasket/Amazon) — orders match against transactions,
+  // so the transactions must land first.
   async function runSync(lookbackDays?: number) {
     setMenuOpen(false);
     setSyncing(true);
@@ -101,70 +158,53 @@ export default function SyncPanel({ onSyncComplete }: Props) {
     );
 
     try {
-      const res = await fetch("/api/gmail/sync", {
-        method: "POST",
-        headers: lookbackDays ? { "Content-Type": "application/json" } : undefined,
-        body: lookbackDays ? JSON.stringify({ lookback_days: lookbackDays }) : undefined,
-      });
-
-      if (!res.ok) {
-        const errBody = await res.json().catch(() => ({ message: `HTTP ${res.status}` }));
-        throw new Error(errBody.message || errBody.error || `HTTP ${res.status}`);
-      }
-      if (!res.body) throw new Error("Sync returned no response body");
-
-      const reader  = res.body.getReader();
-      const decoder = new TextDecoder();
-      let buffer = "";
-
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        // NDJSON can split mid-line across chunks → buffer the tail.
-        buffer += decoder.decode(value, { stream: true });
-        const lines = buffer.split("\n");
-        buffer = lines.pop() ?? "";
-        for (const line of lines.filter(Boolean)) {
-          // Parse defensively: a half-received line is normal NDJSON behaviour
-          // and should be ignored. But a fully-parsed message must be handled
-          // OUTSIDE this try — otherwise a server-sent {status:"error"} would
-          // be swallowed by the parse-error catch and the UI hangs forever.
-          let msg: any;
-          try {
-            msg = JSON.parse(line);
-          } catch {
-            continue; // partial / non-JSON chunk — wait for the rest
-          }
-
-          {
-            if (msg.status === "listing") {
-              setProgress(msg.message || "Scanning Gmail for bank emails…");
-            } else if (msg.status === "syncing") {
-              if (typeof msg.fetched === "number" && msg.total) {
-                const pct = Math.round((msg.fetched / msg.total) * 100);
-                setProgress(`${pct}% · ${msg.fetched}/${msg.total} emails · ${msg.new_txns ?? 0} new transactions`);
-              } else if (msg.message) {
-                setProgress(msg.message);
-              }
-            } else if (msg.status === "done") {
-              const n    = msg.new_txns ?? 0;
-              const errs = (msg.errors as string[] | undefined)?.length ?? 0;
-              const errNote = errs > 0 ? ` · ⚠ ${errs} error${errs > 1 ? "s" : ""}` : "";
-              setResult(
-                n > 0
-                  ? `✓ ${n} new transaction${n > 1 ? "s" : ""} added${errNote}`
-                  : `✓ Already up to date — ${msg.fetched ?? 0} emails checked${errNote}`
-              );
-              setResultOk(errs === 0);
-              setProgress(null);
-              await loadSyncState();
-              onSyncComplete();
-            } else if (msg.status === "error") {
-              throw new Error(msg.message || "Sync failed");
-            }
+      // ── Pass 1: bank transaction emails ──
+      const bank = await streamNdjson("/api/gmail/sync", lookbackDays, (msg) => {
+        if (msg.status === "listing") {
+          setProgress(msg.message || "Scanning Gmail for bank emails…");
+        } else if (msg.status === "syncing") {
+          if (typeof msg.fetched === "number" && msg.total) {
+            const pct = Math.round((msg.fetched / msg.total) * 100);
+            setProgress(`${pct}% · ${msg.fetched}/${msg.total} emails · ${msg.new_txns ?? 0} new transactions`);
+          } else if (msg.message) {
+            setProgress(msg.message);
           }
         }
+      });
+
+      // ── Pass 2: order emails. A failure here (e.g. migration 011 not run
+      // yet) must not bury the successful bank sync — report it alongside. ──
+      let orderNote = "";
+      let ordersOk = true;
+      try {
+        const orders = await streamNdjson("/api/gmail/orders/sync", lookbackDays, (msg) => {
+          if (msg.status === "syncing" && typeof msg.fetched === "number" && msg.total) {
+            setProgress(`Order emails: ${msg.fetched}/${msg.total} · ${msg.new_orders ?? 0} parsed`);
+          } else if (msg.message) {
+            setProgress(msg.message);
+          }
+        });
+        const parts: string[] = [];
+        if (orders.new_orders) parts.push(`${orders.new_orders} order${orders.new_orders > 1 ? "s" : ""} parsed`);
+        if (orders.matched)    parts.push(`${orders.matched} linked to transactions`);
+        if (parts.length) orderNote = ` · ${parts.join(", ")}`;
+      } catch (oe) {
+        ordersOk = false;
+        orderNote = ` · Orders: ${(oe as Error).message}`;
       }
+
+      const n    = bank.new_txns ?? 0;
+      const errs = (bank.errors as string[] | undefined)?.length ?? 0;
+      const errNote = errs > 0 ? ` · ⚠ ${errs} error${errs > 1 ? "s" : ""}` : "";
+      setResult(
+        (n > 0
+          ? `✓ ${n} new transaction${n > 1 ? "s" : ""} added${errNote}`
+          : `✓ Already up to date — ${bank.fetched ?? 0} emails checked${errNote}`) + orderNote
+      );
+      setResultOk(errs === 0 && ordersOk);
+      setProgress(null);
+      await loadSyncState();
+      onSyncComplete();
     } catch (e) {
       setResult(`Error: ${(e as Error).message}`);
       setResultOk(false);

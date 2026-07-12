@@ -48,9 +48,9 @@ export default function ChatTab() {
             <div className="text-xs opacity-50 mb-1">{m.role === "user" ? "you" : "cardiq"}</div>
             {m.role === "assistant" ? (
               <>
-                <div className="prose prose-invert prose-sm max-w-none
-                  prose-p:my-1 prose-ul:my-1 prose-li:my-0.5
-                  prose-headings:text-gold prose-strong:text-white
+                <div className="prose prose-sm max-w-none
+                  prose-p:my-1 prose-ul:my-1 prose-li:my-0.5 prose-p:text-mist prose-li:text-mist
+                  prose-headings:text-gold prose-strong:text-mist
                   prose-code:text-gold prose-code:bg-panel prose-code:px-1 prose-code:rounded">
                   <ReactMarkdown>{m.content}</ReactMarkdown>
                 </div>
