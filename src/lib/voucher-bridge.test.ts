@@ -146,6 +146,13 @@ describe("reconcileVouchers — brand isolation & normalization", () => {
     expect(normalizeBrand("  AMAZON.IN ")).toBe("amazon");
   });
 
+  it("collapses Gyftr Amazon sub-brands so an 'Amazon Fresh' voucher funds an Amazon order", () => {
+    expect(normalizeBrand("Amazon Fresh")).toBe("amazon");
+    expect(normalizeBrand("Amazon Shopping")).toBe("amazon");
+    const r = reconcileVouchers([v({ brand: "Amazon Fresh" })], [o({ brand: "amazon", amount: 500 })]);
+    expect(r.orders[0].status).toBe("attributed");
+  });
+
   it("an unknown brand reconciles against its own vouchers but not across", () => {
     const r = reconcileVouchers(
       [{ id: "vv", brand: "NykaaFashion", faceValue: 1000, purchasedAt: "2026-01-01T00:00:00Z", cardTxnId: "c" }],

@@ -117,6 +117,11 @@ const DEFAULTS: Required<BridgeOptions> = { reconcileTolerance: 1, graceHours: 2
 // aliases). Cross-brand funding is impossible by construction.
 const BRAND_ALIASES: Record<string, string> = {
   "amazon": "amazon", "amazon pay": "amazon", "amazonpay": "amazon", "amazon.in": "amazon",
+  // Gyftr sells Amazon vouchers under sub-brands ("Amazon Fresh", "Amazon
+  // Shopping"). Amazon India gift balance is universal on amazon.in, so these
+  // all reconcile against Amazon orders. (If a Fresh voucher is ever found to be
+  // grocery-only, split this out — for now KP spends them as general Amazon.)
+  "amazon fresh": "amazon", "amazonfresh": "amazon", "amazon shopping": "amazon", "amazon.in shopping": "amazon",
   "swiggy": "swiggy", "swiggy money": "swiggy", "swiggymoney": "swiggy", "swiggy.in": "swiggy",
   "zomato": "zomato",
   "bigbasket": "bigbasket", "big basket": "bigbasket", "bigbasket wallet": "bigbasket", "bbnow": "bigbasket", "bb now": "bigbasket",

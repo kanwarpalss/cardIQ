@@ -9,7 +9,10 @@ import {
 import { friendlyGmailSyncError } from "@/lib/gmail/errors";
 import { isMissingTableError, isMissingColumnError } from "@/lib/supabase/errors";
 import { parseOrderEmail, ORDER_DISCOVERY_CLAUSES, type OrderSource } from "@/lib/parsers/orders/registry";
+import { parseGyftrVouchers, isGyftrSender } from "@/lib/parsers/orders/gyftr";
 import { matchOrderToTxn, orderMatchRank, reviewStatusFor, type TxnLite, type MatchConfidence } from "@/lib/order-match";
+import { matchVoucherToCharge } from "@/lib/voucher-match";
+import { normalizeBrand } from "@/lib/voucher-bridge";
 
 /**
  * Order-email sync (V2 feature C) — the second Gmail pass, structurally a
@@ -99,6 +102,22 @@ export async function POST(req: Request) {
     );
   }
 
+  // Migration 015 (vouchers) gate — the sync now stores Gyftr vouchers, so the
+  // table must exist. Fail once, clearly, like the 011/013/014 gates.
+  const { error: voucherTableErr } = await supabase
+    .from("vouchers")
+    .select("id", { head: true, count: "exact" })
+    .eq("user_id", user.id);
+  if (isMissingTableError(voucherTableErr)) {
+    return new Response(
+      JSON.stringify({
+        error: "missing_vouchers_table",
+        message: "Run supabase/migrations/015_vouchers.sql in the Supabase SQL Editor, then sync again — it adds the Gyftr voucher bridge.",
+      }),
+      { status: 400, headers: { "Content-Type": "application/json" } }
+    );
+  }
+
   const { data: settings } = await supabase
     .from("user_settings")
     .select("google_refresh_token_encrypted")
@@ -172,6 +191,8 @@ export async function POST(req: Request) {
       const result = {
         fetched: 0,
         new_orders: 0,
+        new_vouchers: 0,     // Gyftr vouchers parsed + stored this run
+        vouchers_matched: 0, // vouchers linked to their funding GYFTR charge
         matched: 0,
         pending_review: 0, // subset of `matched` that landed at medium/low → await KP's review
         skipped: 0,
@@ -276,6 +297,47 @@ export async function POST(req: Request) {
               lastSubject = subject;
               lastBody = text;
               lastFrom = fromHeader;
+
+              // Gyftr emails are voucher ISSUANCES, not orders — route them to
+              // the vouchers table and skip the order pipeline entirely.
+              if (isGyftrSender(fromHeader)) {
+                const vouchers = parseGyftrVouchers(subject, text, html);
+                if (vouchers.length === 0) {
+                  result.skipped++;
+                } else {
+                  const rows = vouchers.map((vch) => ({
+                    user_id: user!.id,
+                    gmail_message_id: msgId,
+                    code: vch.code ?? null,
+                    brand: vch.brand,
+                    brand_key: normalizeBrand(vch.brand),
+                    face_value: vch.faceValue,
+                    purchased_at: new Date(msgInternalDate).toISOString(),
+                    valid_till: vch.validTill ?? null,
+                    raw_subject: subject,
+                  }));
+                  const { error: vErr } = await supabase
+                    .from("vouchers")
+                    .upsert(rows, { onConflict: "user_id,gmail_message_id,code" });
+                  if (vErr) {
+                    result.errors.push(`voucher upsert ${msgId}: ${vErr.message}`);
+                  } else {
+                    result.new_vouchers += rows.length;
+                  }
+                }
+                // Record as seen and move to the next email (skip order parse).
+                seenBatch.push({
+                  user_id: user!.id,
+                  gmail_message_id: msgId,
+                  txn_id: null,
+                  raw_subject: lastSubject,
+                  raw_body: lastBody,
+                  raw_from: lastFrom,
+                  internal_date: lastInternalDate,
+                });
+                if (seenBatch.length >= 50) await flushSeenBatch();
+                continue;
+              }
 
               const parsed = parseOrderEmail(fromHeader, subject, text, html);
 
@@ -383,12 +445,56 @@ export async function POST(req: Request) {
           if (data.length < PAGE) break;
         }
 
-        const { data: claimedRows } = await supabase
-          .from("orders")
-          .select("txn_id")
-          .eq("user_id", user!.id)
-          .not("txn_id", "is", null);
-        const usedTxnIds = new Set<string>((claimedRows ?? []).map((r) => r.txn_id as string));
+        // Txns already claimed — by an order OR a voucher — so nothing is
+        // attributed twice across the two matchers.
+        const [{ data: claimedOrderRows }, { data: claimedVoucherRows }] = await Promise.all([
+          supabase.from("orders").select("txn_id").eq("user_id", user!.id).not("txn_id", "is", null),
+          supabase.from("vouchers").select("txn_id").eq("user_id", user!.id).not("txn_id", "is", null),
+        ]);
+        const usedTxnIds = new Set<string>([
+          ...(claimedOrderRows ?? []).map((r) => r.txn_id as string),
+          ...(claimedVoucherRows ?? []).map((r) => r.txn_id as string),
+        ]);
+
+        // ── Voucher → funding GYFTR charge. Runs FIRST so a distinctive "GYFTR
+        // VIA SMARTBUY" charge is reserved by its voucher before order matching
+        // (which could otherwise coincidentally amount-match it). ──
+        const unmatchedVouchers: Array<{ id: string; face_value: string | number; purchased_at: string }> = [];
+        for (let from = 0; ; from += PAGE) {
+          const { data, error } = await supabase
+            .from("vouchers")
+            .select("id, face_value, purchased_at")
+            .eq("user_id", user!.id)
+            .is("txn_id", null)
+            .order("purchased_at", { ascending: true })
+            .range(from, from + PAGE - 1);
+          if (error || !data?.length) break;
+          unmatchedVouchers.push(...(data as typeof unmatchedVouchers));
+          if (data.length < PAGE) break;
+        }
+        for (const vch of unmatchedVouchers) {
+          const vmatch = matchVoucherToCharge(
+            { faceValue: Number(vch.face_value), purchasedAt: vch.purchased_at },
+            txns,
+            usedTxnIds
+          );
+          if (!vmatch) continue;
+          const { error: vmErr } = await supabase
+            .from("vouchers")
+            .update({
+              txn_id: vmatch.txnId,
+              match_confidence: vmatch.confidence satisfies MatchConfidence,
+              matched_at: new Date().toISOString(),
+            })
+            .eq("id", vch.id)
+            .eq("user_id", user!.id);
+          if (vmErr) {
+            result.errors.push(`voucher match save ${vch.id}: ${vmErr.message}`);
+          } else {
+            usedTxnIds.add(vmatch.txnId);
+            result.vouchers_matched++;
+          }
+        }
 
         for (const o of unmatched) {
           const match = matchOrderToTxn(

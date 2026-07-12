@@ -48,6 +48,10 @@ export const ORDER_DISCOVERY_CLAUSES = [
   "category:purchases",
   "subject:(order OR receipt OR invoice OR confirmation)",
   ...ORDER_QUERY_SENDERS.map((s) => `from:${s}`),
+  // Gyftr voucher-issuance emails (the voucher bridge). Their subject
+  // ("…Gift Voucher details…") carries none of the order keywords above, so
+  // add the sender explicitly. They're parsed as vouchers, not orders.
+  "from:gifts@gyftr.com",
 ] as const;
 
 /** "Swiggy <noreply@swiggy.in>" → "noreply@swiggy.in" (lowercased). */
