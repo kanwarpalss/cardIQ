@@ -17,3 +17,7 @@ CONTEXT.md
 
 # Local Claude Code config (machine-specific permissions)
 .claude/
+
+# Local audit artifacts — contain real financial data, never commit
+audit-review.json
+audit*.log

@@ -48,6 +48,22 @@ export type OrderLite = {
 export type MatchConfidence = "high" | "medium" | "low";
 export type OrderMatch = { txnId: string; confidence: MatchConfidence };
 
+// The review state machine (migration 014). Only 'unmatched' orders are
+// (re-)matched; 'rejected' is a permanent dead-end (reject = permanent unlink).
+export type ReviewStatus = "unmatched" | "pending" | "confirmed" | "rejected";
+
+/**
+ * Review status a freshly-proposed match starts in:
+ *   high  → 'confirmed' (auto — exact amount + brand affinity + same day, the
+ *           129/197 obvious cases KP shouldn't have to rubber-stamp)
+ *   med/low → 'pending' (waits in the Review queue for a thumbs-up)
+ * This is the single home of the auto-confirm policy — UI and sync both defer
+ * to it (ARCH-04: one source of truth).
+ */
+export function reviewStatusFor(confidence: MatchConfidence): "confirmed" | "pending" {
+  return confidence === "high" ? "confirmed" : "pending";
+}
+
 const AMOUNT_TOLERANCE = 0.75;
 const DAY_MS = 86_400_000;
 const WINDOW_DAYS_WITH_AMOUNT = 5;

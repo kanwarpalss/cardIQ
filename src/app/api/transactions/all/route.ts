@@ -44,18 +44,35 @@ export async function GET() {
     from += PAGE;
   }
 
-  // Matched orders (V2 feature C) — keyed by txn_id on the client. Missing
-  // table (migration 011 not run) just means no enrichment.
+  // Matched orders (V2 feature C) — keyed by txn_id on the client. Only
+  // CONFIRMED matches surface in Spend (migration 014): high-confidence ones
+  // auto-confirm, medium/low wait in the Review tab until KP approves them, so
+  // a guessed link never masquerades as truth here.
+  //   • Missing orders table (011 not run)  → no enrichment.
+  //   • Missing review_status (014 not run) → degrade to "any linked order"
+  //     (pre-014 behaviour), so Spend keeps working before the migration.
   const orders: Array<Record<string, unknown>> = [];
+  let orderCols = "id, source, kind, order_ref, merchant_name, total_amount, order_at, items, txn_id, match_confidence, review_status";
+  let confirmedOnly = true;
   for (let oFrom = 0; ; oFrom += PAGE) {
-    const { data, error } = await supabase
+    let q = supabase
       .from("orders")
-      .select("id, source, kind, order_ref, merchant_name, total_amount, order_at, items, txn_id, match_confidence")
+      .select(orderCols)
       .eq("user_id", user.id)
-      .not("txn_id", "is", null)
       .range(oFrom, oFrom + PAGE - 1);
-    if (error || !data?.length) break;
-    orders.push(...data);
+    q = confirmedOnly ? q.eq("review_status", "confirmed") : q.not("txn_id", "is", null);
+    const { data, error } = await q;
+    if (error) {
+      if (isMissingColumnError(error, "review_status") && confirmedOnly) {
+        orderCols = "id, source, kind, order_ref, merchant_name, total_amount, order_at, items, txn_id, match_confidence";
+        confirmedOnly = false;
+        oFrom -= PAGE; // redo this page with the pre-014 query
+        continue;
+      }
+      break; // missing table (011) or transient — degrade to no enrichment
+    }
+    if (!data?.length) break;
+    orders.push(...(data as unknown as Array<Record<string, unknown>>));
     if (data.length < PAGE) break;
   }
 

@@ -7,9 +7,9 @@ import {
   extractHtml,
 } from "@/lib/gmail/extract";
 import { friendlyGmailSyncError } from "@/lib/gmail/errors";
-import { isMissingTableError } from "@/lib/supabase/errors";
+import { isMissingTableError, isMissingColumnError } from "@/lib/supabase/errors";
 import { parseOrderEmail, ORDER_DISCOVERY_CLAUSES, type OrderSource } from "@/lib/parsers/orders/registry";
-import { matchOrderToTxn, orderMatchRank, type TxnLite, type MatchConfidence } from "@/lib/order-match";
+import { matchOrderToTxn, orderMatchRank, reviewStatusFor, type TxnLite, type MatchConfidence } from "@/lib/order-match";
 
 /**
  * Order-email sync (V2 feature C) — the second Gmail pass, structurally a
@@ -78,6 +78,22 @@ export async function POST(req: Request) {
       JSON.stringify({
         error: "missing_orders_table",
         message: "The orders table doesn't exist yet. Run supabase/migrations/011_orders.sql in the Supabase SQL Editor, then sync again.",
+      }),
+      { status: 400, headers: { "Content-Type": "application/json" } }
+    );
+  }
+
+  // Migration 014 (review_status) gate — the sync now stamps every match with a
+  // review state, so it must exist. Fail once, clearly, like the 011/013 gates.
+  const { error: reviewColErr } = await supabase
+    .from("orders")
+    .select("review_status", { head: true, count: "exact" })
+    .eq("user_id", user.id);
+  if (isMissingColumnError(reviewColErr, "review_status")) {
+    return new Response(
+      JSON.stringify({
+        error: "missing_review_status_column",
+        message: "Run supabase/migrations/014_order_review_status.sql in the Supabase SQL Editor, then sync again — it adds the order-review queue.",
       }),
       { status: 400, headers: { "Content-Type": "application/json" } }
     );
@@ -157,6 +173,7 @@ export async function POST(req: Request) {
         fetched: 0,
         new_orders: 0,
         matched: 0,
+        pending_review: 0, // subset of `matched` that landed at medium/low → await KP's review
         skipped: 0,
         errors: [] as string[],
         is_first_sync: isFirstSync,
@@ -334,6 +351,7 @@ export async function POST(req: Request) {
             .select("id, source, kind, total_amount, order_at, merchant_name, items")
             .eq("user_id", user!.id)
             .is("txn_id", null)
+            .eq("review_status", "unmatched") // skip 'rejected' dead-ends (reject = permanent unlink)
             .range(from, from + PAGE - 1);
           if (error || !data?.length) break;
           unmatched.push(...(data as typeof unmatched));
@@ -390,6 +408,8 @@ export async function POST(req: Request) {
             .update({
               txn_id: match.txnId,
               match_confidence: match.confidence satisfies MatchConfidence,
+              // high → auto-confirmed; medium/low → pending KP's review (014).
+              review_status: reviewStatusFor(match.confidence),
               matched_at: new Date().toISOString(),
             })
             .eq("id", o.id)
@@ -399,6 +419,7 @@ export async function POST(req: Request) {
           } else {
             usedTxnIds.add(match.txnId);
             result.matched++;
+            if (reviewStatusFor(match.confidence) === "pending") result.pending_review++;
           }
         }
 

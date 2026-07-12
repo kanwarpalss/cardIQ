@@ -222,3 +222,12 @@ describe("orderMatchRank — merchant-first priority", () => {
     );
   });
 });
+
+describe("reviewStatusFor — auto-confirm policy (migration 014)", () => {
+  it("only 'high' auto-confirms; medium and low wait for review", async () => {
+    const { reviewStatusFor } = await import("./order-match");
+    expect(reviewStatusFor("high")).toBe("confirmed");
+    expect(reviewStatusFor("medium")).toBe("pending");
+    expect(reviewStatusFor("low")).toBe("pending");
+  });
+});

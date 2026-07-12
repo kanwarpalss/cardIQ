@@ -24,6 +24,7 @@ export type OrderRow = {
   total_amount: number | string | null;
   items: Array<{ name: string; qty?: number; price?: number }>;
   match_confidence: "high" | "medium" | "low" | null;
+  review_status?: "unmatched" | "pending" | "confirmed" | "rejected" | null;
 };
 
 export type CategoryPatch = { category?: string; subcategory?: string | null };
@@ -87,8 +88,14 @@ const SOURCE_LABELS: Record<string, string> = {
 const SUB_NONE  = "__none";
 const SUB_OTHER = "__other";
 
-/** Confidence marker for a matched order — honesty rendered as UI. */
-function ConfidenceChip({ level }: { level: OrderRow["match_confidence"] }) {
+/** Confidence marker for a matched order — honesty rendered as UI. A match KP
+ *  has confirmed (or that auto-confirmed at high confidence) reads as settled
+ *  truth regardless of how it was originally scored; pre-014 links fall back to
+ *  the raw confidence nuance. */
+function ConfidenceChip({ level, status }: { level: OrderRow["match_confidence"]; status?: OrderRow["review_status"] }) {
+  if (status === "confirmed") {
+    return <span className="text-2xs px-1.5 py-0.5 rounded-md border whitespace-nowrap text-emerald border-emerald/30 bg-emerald/5">✓ confirmed</span>;
+  }
   if (!level) return null;
   const map = {
     high:   { label: "✓ matched",        cls: "text-emerald border-emerald/30 bg-emerald/5" },
@@ -674,7 +681,7 @@ export default function TransactionsTable({
                         {order.merchant_name && (
                           <span className="text-xs text-mist/80">{order.merchant_name}</span>
                         )}
-                        <ConfidenceChip level={order.match_confidence} />
+                        <ConfidenceChip level={order.match_confidence} status={order.review_status} />
                         {order.order_ref && (
                           <span className="text-2xs text-mist/40 ml-auto tabular-nums">#{order.order_ref}</span>
                         )}

@@ -1,9 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { createClient } from "@/lib/supabase/client";
 import OverviewTab from "@/components/OverviewTab";
 import SpendTab    from "@/components/SpendTab";
+import OrdersTab   from "@/components/OrdersTab";
+import ReviewTab   from "@/components/ReviewTab";
 import InsightsTab from "@/components/InsightsTab";
 import RewardsTab  from "@/components/RewardsTab";
 import OffersTab   from "@/components/OffersTab";
@@ -12,13 +14,14 @@ import DiningTab   from "@/components/DiningTab";
 import ChatTab     from "@/components/ChatTab";
 import CardsTab    from "@/components/CardsTab";
 
-const TABS = ["Overview", "Spend", "Insights", "Rewards", "Offers", "Loyalty", "Dining", "Chat", "Cards"] as const;
+const TABS = ["Overview", "Spend", "Orders", "Insights", "Rewards", "Offers", "Loyalty", "Dining", "Chat", "Review", "Cards"] as const;
 type Tab = (typeof TABS)[number];
 
-// Sidebar groups — "Cards" lives at the bottom rail (it doubles as settings).
+// Sidebar groups — "Review" and "Cards" live at the bottom rail (Review is a
+// tucked-away validation inbox; Cards doubles as settings).
 const NAV_GROUPS: { label: string | null; tabs: Tab[] }[] = [
   { label: null,      tabs: ["Overview"] },
-  { label: "Money",   tabs: ["Spend", "Insights"] },
+  { label: "Money",   tabs: ["Spend", "Orders", "Insights"] },
   { label: "Perks",   tabs: ["Rewards", "Offers", "Loyalty"] },
   { label: "Explore", tabs: ["Dining", "Chat"] },
 ];
@@ -34,6 +37,12 @@ const TAB_ICONS: Record<Tab, React.ReactNode> = {
   ),
   Spend: (
     <svg {...ICON_PROPS}><path d="M2 13V9m4 4V6m4 7V8m4 5V3" strokeLinecap="round"/></svg>
+  ),
+  Orders: (
+    <svg {...ICON_PROPS}><path d="M3 5.5h10l-.9 7.2a1 1 0 0 1-1 .8H4.9a1 1 0 0 1-1-.8L3 5.5zM5.8 5.5V4a2.2 2.2 0 0 1 4.4 0v1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+  ),
+  Review: (
+    <svg {...ICON_PROPS}><circle cx="8" cy="8" r="6"/><path d="M5.4 8.1 7.1 9.8 10.6 6" strokeLinecap="round" strokeLinejoin="round"/></svg>
   ),
   Insights: (
     <svg {...ICON_PROPS}><circle cx="8" cy="8" r="6"/><path d="M8 2v6l4.2 2.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
@@ -74,7 +83,19 @@ export default function Home() {
   const [tab, setTab] = useState<Tab>("Overview");
   // New object identity per click so re-clicking the same card re-applies the filter.
   const [spendFocus, setSpendFocus] = useState<{ last4: string } | null>(null);
+  // Count of order matches awaiting review — drives the "Review" nav badge.
+  const [reviewCount, setReviewCount] = useState(0);
   const supabase = createClient();
+
+  const refreshReviewCount = useCallback(async () => {
+    try {
+      const res = await fetch("/api/orders/review?status=pending");
+      if (!res.ok) return; // migration not run / offline — just leave the badge off
+      const json = await res.json();
+      setReviewCount((json.orders ?? []).length);
+    } catch { /* silent — badge is a nicety, never blocks the app */ }
+  }, []);
+  useEffect(() => { refreshReviewCount(); }, [refreshReviewCount]);
 
   async function signOut() {
     await supabase.auth.signOut();
@@ -92,6 +113,7 @@ export default function Home() {
 
   const navItem = (t: Tab, compact = false) => {
     const active = tab === t;
+    const badge = t === "Review" && reviewCount > 0 ? reviewCount : 0;
     return (
       <button key={t} onClick={() => setTab(t)}
         className={compact
@@ -105,6 +127,11 @@ export default function Home() {
             }`}>
         <span className={active ? "text-gold" : "text-mist/50"}>{TAB_ICONS[t]}</span>
         {t}
+        {badge > 0 && (
+          <span className={`${compact ? "" : "ml-auto"} text-2xs px-1.5 py-0.5 rounded-full bg-gold/15 text-gold border border-gold/25 tabular-nums leading-none`}>
+            {badge}
+          </span>
+        )}
       </button>
     );
   };
@@ -134,6 +161,7 @@ export default function Home() {
         </nav>
 
         <div className="px-3 py-4 border-t border-wire space-y-1">
+          {navItem("Review")}
           {navItem("Cards")}
           <button onClick={signOut}
             className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-medium text-mist/55 hover:text-mist hover:bg-surface/60 transition-all">
@@ -166,6 +194,8 @@ export default function Home() {
       <main className="lg:pl-60 min-h-screen">
         {tab === "Overview" && <OverviewTab onOpenSpend={openSpendForCard} onNavigate={navigate} />}
         {tab === "Spend"    && <SpendTab focusCard={spendFocus} />}
+        {tab === "Orders"   && <OrdersTab />}
+        {tab === "Review"   && <ReviewTab onChanged={refreshReviewCount} />}
         {tab === "Insights" && <InsightsTab />}
         {tab === "Rewards"  && <RewardsTab onNavigate={navigate} />}
         {tab === "Offers"   && <OffersTab />}
