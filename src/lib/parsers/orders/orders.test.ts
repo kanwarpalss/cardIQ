@@ -436,6 +436,25 @@ describe("parseOrderEmail — Shopify D2C brands", () => {
     expect(o!.merchant_name).toBe("The Postbox");
   });
 
+  it("Postbox REAL email: reads items from HTML when text/plain is junk CSS", () => {
+    // The actual synced email: text/plain is leaked CSS (0 items until fixed),
+    // while the HTML carries the order. Parser must read the HTML.
+    const junkText = "96 /* remove spaces */ html, body { Margin: 0 !important; } * { -webkit-font-smoothing: antialiased; }";
+    const realHtml =
+      '<div>Order Confirmation Order No. #118863 11/07/2026 Hi Kanwar,</div>' +
+      '<table><tr><td>Items ordered</td></tr>' +
+      '<tr><td>Spark - Stationery Zipper Case / Classic Tan Classic Tan The Postbox x 1 Rs. 1,699.00</td></tr>' +
+      '<tr><td>Discount (Rs 200/- Off) -Rs. 200.00</td></tr>' +
+      '<tr><td>Subtotal Rs. 1,499.00</td></tr><tr><td>Total excl. tax Rs. 1,270.34</td></tr>' +
+      '<tr><td>Sales tax Rs. 228.66</td></tr><tr><td>Total Rs. 1,499.00</td></tr></table>';
+    const o = parseOrderEmail(POSTBOX_SENDER, POSTBOX_SUBJECT, junkText, realHtml);
+    expect(o).not.toBeNull();
+    expect(o!.total_amount).toBe(1499);          // grand Total, from the HTML
+    expect(o!.items).toHaveLength(1);
+    expect(o!.items[0].name).toContain("Spark - Stationery Zipper Case");
+    expect(o!.items[0]).toMatchObject({ qty: 1, price: 1699 });
+  });
+
   it("routes to Shopify only via signature — a marketplace sender still wins", () => {
     // BigBasket order text carrying a stray shopify URL must still parse as bigbasket.
     const o = parseOrderEmail(

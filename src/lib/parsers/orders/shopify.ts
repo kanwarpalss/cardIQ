@@ -26,6 +26,7 @@ import {
   merchantFromSender,
   isShippingStatusEmail,
 } from "./types";
+import { stripHtml } from "../../gmail/strip";
 
 const MONEY = String.raw`(?:rs\.?|inr|₹)\s*([\d,]+(?:\.\d{1,2})?)`;
 // "Total" as a whole word (skips "Subtotal") and not "Total excl. tax".
@@ -36,10 +37,13 @@ const ORDER_REF_RE = /order\s*(?:number|no\.?|#)\s*[,:#]*\s*([A-Za-z0-9][\w-]{3,
 export function looksLikeShopify(html: string, text: string): boolean {
   if (/cdn\.shopify\.com|shopifycloud|myshopify\.com/i.test(html)) return true;
   // Structural fallback for stripped/forwarded copies with no Shopify URLs.
+  // Scan BOTH text and stripped HTML — a brand's text/plain part may be junk
+  // (leaked CSS) while the order lives in the HTML.
+  const hay = `${text} ${html ? stripHtml(html) : ""}`;
   return (
-    /your order summary/i.test(text) &&
-    /\bsub-?total\b/i.test(text) &&
-    new RegExp(String.raw`(?<![a-z])total(?!\s+excl)`, "i").test(text)
+    /(?:your order summary|items ordered)/i.test(hay) &&
+    /\bsub-?total\b/i.test(hay) &&
+    new RegExp(String.raw`(?<![a-z])total(?!\s+excl)`, "i").test(hay)
   );
 }
 
@@ -47,47 +51,80 @@ export function parseShopifyOrder(
   sender: string,
   subject: string,
   text: string,
-  _html: string
+  html: string
 ): ParsedOrder | null {
   // Shipping/delivery status pings are not the order — skip so the charge
   // matches the (correctly-dated) confirmation email instead.
   if (isShippingStatusEmail(subject)) return null;
 
-  // Grand total — LAST match wins (the grand total follows Subtotal / pre-tax).
-  let total: number | undefined;
-  for (const m of text.matchAll(GRAND_TOTAL_RE)) total = parseInrAmount(m[1]);
-  if (total == null) return null; // no order total we can match on → skip
-
-  return {
-    source: "shopify",
-    kind: /\brefund(ed)?\b/i.test(subject) ? "refund" : "order",
-    order_ref: ORDER_REF_RE.exec(subject)?.[1] ?? ORDER_REF_RE.exec(text)?.[1],
-    merchant_name: merchantFromSender(sender),
-    total_amount: total,
-    items: extractItems(text),
-  };
+  // Read the order from whichever source actually carries it. Some brands'
+  // text/plain part is junk (leaked CSS — e.g. The Postbox), so the stripped
+  // HTML is tried first; but a thin/stub HTML falls back to the plain text.
+  // "Has an order" == "has a grand-Total line we can match the charge on".
+  for (const content of [html ? stripHtml(html) : "", text]) {
+    const total = grandTotal(content);
+    if (total == null) continue;
+    return {
+      source: "shopify",
+      kind: /\brefund(ed)?\b/i.test(subject) ? "refund" : "order",
+      order_ref: ORDER_REF_RE.exec(subject)?.[1] ?? ORDER_REF_RE.exec(content)?.[1],
+      merchant_name: merchantFromSender(sender),
+      total_amount: total,
+      items: extractItems(content),
+    };
+  }
+  return null; // no order total in either source → not a parseable order
 }
 
-/** Best-effort line items from the "order summary … Subtotal" block. */
-function extractItems(text: string): OrderItem[] {
-  const block = /your order summary(.*?)\bsub-?total\b/is.exec(text)?.[1];
+/** Grand total — LAST match wins (it follows Subtotal / "Total excl. tax"). */
+function grandTotal(content: string): number | undefined {
+  let total: number | undefined;
+  for (const m of content.matchAll(GRAND_TOTAL_RE)) total = parseInrAmount(m[1]);
+  return total;
+}
+
+/**
+ * Best-effort line items from the order block. Shopify themes label it either
+ * "Your order summary" or "Items ordered", and delimit the qty with a × sign
+ * or a spaced letter "x" ("Postbox x 1 Rs. 1,699.00"). The block runs up to the
+ * Subtotal line.
+ */
+function extractItems(content: string): OrderItem[] {
+  const block = /(?:your order summary|items ordered)(.*?)\bsub-?total\b/is.exec(content)?.[1];
   if (!block) return [];
 
   const items: OrderItem[] = [];
-  // Primary: "<name> × <qty>  Rs <price>" (qty is the reliable delimiter).
-  const withQty = new RegExp(
-    String.raw`([^×]{2,120}?)\s*×\s*(\d+)(?:[^0-9]*?(?:rs\.?|₹)\s*([\d,]+(?:\.\d{1,2})?))?`,
+  // Primary: "<name> × <qty>  Rs <price>" — the × sign never occurs in a name.
+  const withMultSign = new RegExp(
+    String.raw`([^×]{2,150}?)\s*×\s*(\d+)(?:[^0-9]*?(?:rs\.?|₹)\s*([\d,]+(?:\.\d{1,2})?))?`,
     "gi"
   );
-  for (const m of block.matchAll(withQty)) {
-    const name = decodeEntities(m[1]).replace(/^[\s·|,-]+/, "").trim();
-    if (!name) continue;
-    items.push({ name, qty: parseInt(m[2], 10), ...(m[3] ? { price: parseInrAmount(m[3]) } : {}) });
+  for (const m of block.matchAll(withMultSign)) {
+    const name = cleanItemName(m[1]);
+    if (name) items.push({ name, qty: parseInt(m[2], 10), ...(m[3] ? { price: parseInrAmount(m[3]) } : {}) });
   }
   if (items.length) return items;
 
-  // Fallback: the text before the first price line (variants may repeat).
-  const single = new RegExp(String.raw`(.{2,120}?)\s*(?:rs\.?|₹)\s*[\d,]+(?:\.\d{1,2})?`, "i").exec(block);
-  const name = single ? decodeEntities(single[1]).trim() : "";
+  // Fallback for the letter-"x" theme: "<name> x <qty> Rs <price>". A bare "x"
+  // occurs inside words ("Postbox"), so anchor on spaced-x + qty + a price to
+  // disambiguate — the price must follow, which a product name's "x" never does.
+  const withLetterX = new RegExp(
+    String.raw`(.+?)\s+x\s+(\d+)\s+(?:rs\.?|₹|inr)\s*([\d,]+(?:\.\d{1,2})?)`,
+    "gi"
+  );
+  for (const m of block.matchAll(withLetterX)) {
+    const name = cleanItemName(m[1]);
+    if (name) items.push({ name, qty: parseInt(m[2], 10), price: parseInrAmount(m[3]) });
+  }
+  if (items.length) return items;
+
+  // Last resort: the text before the first price line (single-item orders).
+  const single = new RegExp(String.raw`(.{2,150}?)\s*(?:rs\.?|₹)\s*[\d,]+(?:\.\d{1,2})?`, "i").exec(block);
+  const name = single ? cleanItemName(single[1]) : "";
   return name ? [{ name }] : [];
+}
+
+/** Trim list punctuation and a leading "Items ordered"-style label residue. */
+function cleanItemName(raw: string): string {
+  return decodeEntities(raw).replace(/^[\s·|,\-–—]+/, "").replace(/[\s·|,\-–—]+$/, "").trim();
 }

@@ -81,7 +81,7 @@ export function merchantFromSender(from: string): string {
  * own "delivered = the receipt" semantics; this guard is for Shopify/generic.
  */
 export function isShippingStatusEmail(subject: string): boolean {
-  return /\b(on its way|has shipped|shipment|shipping update|out for delivery|track(ing)? (your )?(order|package|shipment)|is on the way|arriving|delivered)\b/i.test(
+  return /\b(on its way|has shipped|shipment|shipping update|out for delivery|track(ing)? (your )?(order|package|shipment)|is on the way|arriving|delivered|at your doorstep|been delivered|order (is )?(now )?delivered)\b/i.test(
     subject
   );
 }

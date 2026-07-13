@@ -6,6 +6,12 @@
 // HTML-stripped plain text the bank parsers were built against.
 
 import { google } from "googleapis";
+import { stripHtml } from "./strip";
+
+// Re-exported so existing importers (`@/lib/gmail/extract`) keep working; the
+// canonical implementation now lives in ./strip (googleapis-free, so parsers
+// can use it too).
+export { stripHtml };
 
 export function makeGmailOAuthClient() {
   return new google.auth.OAuth2(
@@ -16,23 +22,6 @@ export function makeGmailOAuthClient() {
 
 export function base64Decode(str: string): string {
   return Buffer.from(str.replace(/-/g, "+").replace(/_/g, "/"), "base64").toString("utf-8");
-}
-
-export function stripHtml(html: string): string {
-  return html
-    .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, " ")
-    .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, " ")
-    .replace(/<[^>]+>/g, " ")
-    .replace(/&nbsp;/g, " ")
-    .replace(/&amp;/g, "&")
-    .replace(/&lt;/g, "<")
-    .replace(/&gt;/g, ">")
-    .replace(/&quot;/g, '"')
-    .replace(/&#39;/g, "'")
-    .replace(/&rsquo;|&lsquo;/g, "'")
-    .replace(/&rdquo;|&ldquo;/g, '"')
-    .replace(/\s+/g, " ")
-    .trim();
 }
 
 export function extractBody(payload: any): string {
