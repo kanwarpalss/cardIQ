@@ -44,6 +44,7 @@ function isDuplicate(o: Order): boolean {
 const SOURCE_LABELS: Record<string, string> = {
   swiggy: "Swiggy", zomato: "Zomato", bigbasket: "BigBasket", amazon: "Amazon",
   blinkit: "Blinkit", shopify: "Shopify", generic: "Online", razorpay: "Razorpay",
+  smartbuy: "SmartBuy", apple: "Apple",
 };
 
 const PAGE = 50;

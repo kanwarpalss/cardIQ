@@ -14,6 +14,8 @@ import { parseZomatoOrder } from "./zomato";
 import { parseBigbasketOrder } from "./bigbasket";
 import { parseAmazonOrder } from "./amazon";
 import { parseRazorpayOrder } from "./razorpay";
+import { parseSmartbuyOrder } from "./smartbuy";
+import { parseAppleOrder } from "./apple";
 import { looksLikeShopify, parseShopifyOrder } from "./shopify";
 import { parseGenericOrder } from "./generic";
 
@@ -53,6 +55,9 @@ export const ORDER_DISCOVERY_CLAUSES = [
   // ("…Gift Voucher details…") carries none of the order keywords above, so
   // add the sender explicitly. They're parsed as vouchers, not orders.
   "from:gifts@gyftr.com",
+  // SmartBuy travel — subject is "… Booking with SmartBuy is Successful", no
+  // order/receipt keyword, so add the sender.
+  "from:donotreply@smartbuyoffers.co",
 ] as const;
 
 /** "Swiggy <noreply@swiggy.in>" → "noreply@swiggy.in" (lowercased). */
@@ -81,6 +86,8 @@ const ORDER_SENDER_PARSERS: Array<{
   { match: (s) => senderAddress(s) === "alerts@bigbasket.com",   parse: parseBigbasketOrder },
   { match: (s) => fromDomain(s, "amazon.in"),                    parse: parseAmazonOrder },
   { match: (s) => fromDomain(s, "razorpay.com"),                 parse: parseRazorpayOrder },
+  { match: (s) => fromDomain(s, "smartbuyoffers.co"),            parse: parseSmartbuyOrder },
+  { match: (s) => fromDomain(s, "apple.com"),                    parse: parseAppleOrder },
 ];
 
 export function parseOrderEmail(

@@ -9,7 +9,7 @@
 // as seen, never stored). Items are left empty — arbitrary templates have no
 // reliable item structure, and the match (merchant + total) is the point.
 
-import { type ParsedOrder, type OrderItem, parseInrAmount, merchantFromSender, isShippingStatusEmail } from "./types";
+import { type ParsedOrder, type OrderItem, parseInrAmount, decodeEntities, merchantFromSender, isShippingStatusEmail } from "./types";
 
 const MONEY = String.raw`(?:rs\.?|inr|₹)\s*([\d,]+(?:\.\d{1,2})?)`;
 
@@ -35,6 +35,40 @@ const TOTAL_LABELS = [
 // Some merchants put the product name straight in the subject:
 // "Your Order for DeckUp Bei 4-Door Engineered Wood…". Capture it as the item.
 const SUBJECT_ITEM_RE = /(?:your\s+)?order\s+for\s+(.+?)\s*$/i;
+
+// Many merchants render a line-item table: a header, then "<name> <qty> <price>"
+// rows, then a totals footer. Catches Dominos, Printo, Supertails, etc.
+const TABLE_HEADER_RE =
+  /Item\s+Name\s+Quantity\s+Price|Items?\s+Qty\s+Price|Items?\s+QTY\s+COST|Item\s+Quantity\s+Price(?:\s+Total)?|Item\s+Price/i;
+const TABLE_FOOTER_RE =
+  /Sub\s*-?\s*Total|Payment\s+details|Grand\s+Total|Total\s+(?:MRP|Amount|Paid)|\bTotal\s*:/i;
+// Price ₹/Rs-prefixed …
+const ROW_CURRENCY_RE = /(.+?)\s+(\d{1,3})\s+(?:Rs\.?|₹)\s*([\d,]+(?:\.\d{1,2})?)/g;
+// … or a bare decimal amount (Dominos: "Chicken … 1 500.00").
+const ROW_DECIMAL_RE = /(.+?)\s+(\d{1,3})\s+([\d,]+\.\d{2})\b/g;
+
+/** Line items from a "<header> … <name> <qty> <price> … <footer>" table. */
+function itemsFromTable(text: string): OrderItem[] {
+  const hAt = text.search(TABLE_HEADER_RE);
+  if (hAt < 0) return [];
+  const afterHeader = text.slice(hAt).replace(TABLE_HEADER_RE, "");
+  const fAt = afterHeader.search(TABLE_FOOTER_RE);
+  const block = (fAt >= 0 ? afterHeader.slice(0, fAt) : afterHeader).trim();
+  if (!block) return [];
+
+  for (const rowRe of [ROW_CURRENCY_RE, ROW_DECIMAL_RE]) {
+    const items: OrderItem[] = [];
+    rowRe.lastIndex = 0;
+    for (let m = rowRe.exec(block); m; m = rowRe.exec(block)) {
+      const name = decodeEntities(m[1]).replace(/^[\s·|,\-–—]+/, "").trim();
+      if (name.length < 2) continue;
+      items.push({ name, qty: parseInt(m[2], 10), price: parseInrAmount(m[3]) });
+      if (items.length >= 40) break;
+    }
+    if (items.length) return items;
+  }
+  return [];
+}
 
 /** Best-effort single item from the subject line ("… order for <X>"). */
 function itemsFromSubject(subject: string): OrderItem[] {
@@ -72,11 +106,19 @@ export function parseGenericOrder(
   _html: string
 ): ParsedOrder | null {
   const hay = `${subject}\n${text}`;
-  if (isShippingStatusEmail(subject)) return null; // status ping, not the order
   if (!ORDER_INTENT_RE.test(hay)) return null;
 
   const total = extractTotal(text);
   if (total == null) return null;
+
+  // Item detail: a line-item table wins, else the subject ("… order for X").
+  const items = itemsFromTable(text);
+  if (items.length === 0) items.push(...itemsFromSubject(subject));
+
+  // A shipping-status subject with NO detail is just a status ping → skip. But a
+  // "delivered" email that carries a real item table IS the receipt (Supertails,
+  // Instamart) — keep it.
+  if (isShippingStatusEmail(subject) && items.length === 0) return null;
 
   return {
     source: "generic",
@@ -84,6 +126,6 @@ export function parseGenericOrder(
     order_ref: ORDER_REF_RE.exec(hay)?.[1],
     merchant_name: merchantFromSender(sender),
     total_amount: total,
-    items: itemsFromSubject(subject),
+    items,
   };
 }

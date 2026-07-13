@@ -557,6 +557,99 @@ describe("parseOrderEmail — merchant item overrides", () => {
   });
 });
 
+// ── SmartBuy travel (flights + hotels) ───────────────────────────────────────
+describe("parseOrderEmail — SmartBuy travel", () => {
+  it("flight: itinerary (route, date, airline, passenger, PNR) + card amount", () => {
+    const text =
+      "smartbuy Flight --> Dear Amarjit, Your flight booking through our booking partner CLEARTRIP is Successful! " +
+      "Order ID 44116973458171036841 Order Date 15 Oct 2023 10:26:58 Amount Paid Rs 6,915 " +
+      "Contact Number 9650077811 IndiGo 6E - 6634 IXC BLR Class E Quantity 1 Adult Ticket(s) " +
+      "Airline PNR V3YIXX 2023-OCT-19 08:10 IXC Chandigarh Terminal :- 3 h 05 min --Via -- Non-Stop " +
+      "2023-OCT-19 11:15 BLR Bangalore Terminal :- 1 Passengers Adult 1: Mr. Amarjit Anand " +
+      "Payments Basefare Rs 4,500 Netpay Rs 6,915 Paid by points Rs 0 Paid by card Rs 6,915";
+    const o = parseOrderEmail("SmartBuy <donotreply@smartbuyoffers.co>", "Your Flight Booking with SmartBuy is Successful", text, "");
+    expect(o!.source).toBe("smartbuy");
+    expect(o!.total_amount).toBe(6915);
+    expect(o!.order_ref).toBe("44116973458171036841");
+    const name = o!.items[0].name;
+    expect(name).toContain("Chandigarh (IXC) → Bangalore (BLR)");
+    expect(name).toContain("19 Oct 2023");
+    expect(name).toContain("IndiGo 6E - 6634");
+    expect(name).toContain("Mr. Amarjit Anand");
+    expect(name).toContain("PNR V3YIXX");
+  });
+
+  it("hotel: name, dates, room, guest + the CARD portion (not the points-inclusive total)", () => {
+    const text =
+      "smartbuy Hotel --> Dear Kanwar, Your hotel booking through our booking partner MAKEMYTRIP is Successful. " +
+      "Order ID 43673407147532910026 Amount Paid Rs. 53,820 Contact Number 9650077811 " +
+      "Goa Marriott Resort & Spa Miramar Beach, PO Box No 64 Panjim Goa -IN 2023-09-29 2023-10-01 " +
+      "Guests room1 Guest room, 1 King, Garden view Inclusion NA Adult 1: Kanwar Fare Summary " +
+      "Room Type : Guest room, 1 King, Garden view No of Guests: room1 Adult : 2 " +
+      "Netpay Rs 53,820 Paid by points Rs 4,875 Paid by card Rs 48,945";
+    const o = parseOrderEmail("SmartBuy <donotreply@smartbuyoffers.co>", "Your Hotel Booking with SmartBuy is Successful", text, "");
+    expect(o!.source).toBe("smartbuy");
+    expect(o!.total_amount).toBe(48945); // paid by card, not ₹53,820 (points included)
+    const name = o!.items[0].name;
+    expect(name).toContain("Goa Marriott Resort & Spa Miramar Beach");
+    expect(name).toContain("29 Sep 2023");
+    expect(name).toContain("Guest room, 1 King, Garden view");
+  });
+});
+
+// ── Apple (subscriptions + receipts) ─────────────────────────────────────────
+describe("parseOrderEmail — Apple", () => {
+  it("invoice: subscription name + charge", () => {
+    const text =
+      "Tax Invoice 7 July 2026 Order ID: MNMTFBW03Y Document: 694158047395 Apple Account: kanwarpalss@gmail.com " +
+      "Apple One Family (Monthly) SAC: 998439 Renews 8 August 2026 ₹ 365.00 Billing and Payment " +
+      "Subtotal ₹ 309.32 IGST charged at 18% ₹ 55.68 Store Credit ₹ 365.00";
+    const o = parseOrderEmail("Apple <no_reply@email.apple.com>", "Your invoice from Apple.", text, "");
+    expect(o!.source).toBe("apple");
+    expect(o!.total_amount).toBe(365);
+    expect(o!.order_ref).toBe("MNMTFBW03Y");
+    expect(o!.items).toEqual([{ name: "Apple One Family (Monthly)" }]);
+  });
+
+  it("receipt: app/service line + TOTAL", () => {
+    const text =
+      "Receipt APPLE ACCOUNT kanwarpalss@gmail.com DATE Jul 8, 2026 ORDER ID MNMTFH764G DOCUMENT NO. 820158479139 " +
+      "Apple Services ₹ 100 Add Funds to Apple Account Kanwar's iPhone Pro ₹ 100 TOTAL ₹ 100 Get help";
+    const o = parseOrderEmail("Apple <no_reply@email.apple.com>", "Your receipt from Apple.", text, "");
+    expect(o!.source).toBe("apple");
+    expect(o!.total_amount).toBe(100);
+    expect(o!.order_ref).toBe("MNMTFH764G");
+    expect(o!.items[0].name).toContain("Add Funds to Apple Account");
+  });
+});
+
+// ── Generic item tables (Dominos, Supertails, …) ─────────────────────────────
+describe("parseOrderEmail — generic item tables", () => {
+  it("Dominos: bare-decimal item rows", () => {
+    const text =
+      "Thank you for choosing Domino's. Order Confirmed Order No. 86 | 21-04-2020 Order Total Rs.645.00 " +
+      "Items Qty Price Chicken Fiesta Medium | Wheat Thin Crust 1 500.00 Pepsi Black Can 2 120.00 " +
+      "Sub Total : Rs.620.00 GST : Rs.25.00 Grand Total : Rs.645.00";
+    const o = parseOrderEmail("Dominos India <do-not-reply@dominos.co.in>", "Order Successful", text, "");
+    expect(o!.total_amount).toBe(645);
+    expect(o!.items).toEqual([
+      { name: "Chicken Fiesta Medium | Wheat Thin Crust", qty: 1, price: 500 },
+      { name: "Pepsi Black Can", qty: 2, price: 120 },
+    ]);
+  });
+
+  it("Supertails: a 'delivered' receipt WITH an item table is kept (not skipped as shipping)", () => {
+    const text =
+      "Woohoo! Delivered on Sat, 11 April Shipment details ID: ST272689312507 " +
+      "Items QTY COST MSD Animal Health Bravecto (1 tablet) 2 ₹3508 " +
+      "Payment details Total MRP ₹4126 Total Amount ₹3343 Your order is Prepaid";
+    const o = parseOrderEmail("Supertails <support@send.supertails.com>", "Your Supertails order has been delivered!", text, "");
+    expect(o).not.toBeNull();
+    expect(o!.total_amount).toBe(3343);
+    expect(o!.items).toEqual([{ name: "MSD Animal Health Bravecto (1 tablet)", qty: 2, price: 3508 }]);
+  });
+});
+
 // ── Razorpay (universal payment rail) ────────────────────────────────────────
 // Fixtures condensed from REAL emails in KP's Gmail (2026-07-12), no-reply@razorpay.com.
 // The merchant string is the registered ENTITY ("HOURGLASS DESIGN PVT LTD"),
