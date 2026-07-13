@@ -13,6 +13,7 @@ import { parseGyftrVouchers, isGyftrSender } from "@/lib/parsers/orders/gyftr";
 import { matchOrderToTxn, orderMatchRank, reviewStatusFor, type TxnLite, type MatchConfidence } from "@/lib/order-match";
 import { matchVoucherToCharge } from "@/lib/voucher-match";
 import { normalizeBrand, reconcileVouchers, type VoucherPurchase, type VoucherPaidOrder } from "@/lib/voucher-bridge";
+import { findDuplicateOrders, type DedupOrder } from "@/lib/order-dedup";
 
 // Marketplace sources reconcile against a voucher by their PLATFORM name (a
 // Swiggy Money voucher funds swiggy-source orders whose merchant_name is the
@@ -126,6 +127,21 @@ export async function POST(req: Request) {
     );
   }
 
+  // Migration 016 (duplicate_of) gate — the sync flags same-purchase duplicates.
+  const { error: dupColErr } = await supabase
+    .from("orders")
+    .select("duplicate_of", { head: true, count: "exact" })
+    .eq("user_id", user.id);
+  if (isMissingColumnError(dupColErr, "duplicate_of")) {
+    return new Response(
+      JSON.stringify({
+        error: "missing_duplicate_of_column",
+        message: "Run supabase/migrations/016_order_duplicates.sql in the Supabase SQL Editor, then sync again — it adds same-purchase de-duplication.",
+      }),
+      { status: 400, headers: { "Content-Type": "application/json" } }
+    );
+  }
+
   const { data: settings } = await supabase
     .from("user_settings")
     .select("google_refresh_token_encrypted")
@@ -202,6 +218,7 @@ export async function POST(req: Request) {
         new_vouchers: 0,      // Gyftr vouchers parsed + stored this run
         vouchers_matched: 0,  // vouchers linked to their funding GYFTR charge
         voucher_linked: 0,    // card-unmatched orders traced to a voucher (drawdown)
+        duplicates_flagged: 0, // same-purchase duplicate orders flagged for review
         matched: 0,
         pending_review: 0, // subset of `matched` that landed at medium/low → await KP's review
         skipped: 0,
@@ -545,6 +562,43 @@ export async function POST(req: Request) {
         // tracing order → voucher → the GYFTR card charge. The card charge is
         // already counted in Spend, so these orders are never re-tallied. ──
         await runVoucherDrawdown();
+
+        // ── Same-purchase de-duplication. One purchase emits several order
+        // emails (merchant + payment gateway + shipper), each a row. Cluster by
+        // amount + same time, keep the richest as primary, flag the rest. ──
+        await runDedup();
+
+        async function runDedup() {
+          const rows: Array<{ id: string; source: string; items: unknown[] | null; total_amount: string | number | null; order_at: string; txn_id: string | null; review_status: string; duplicate_of: string | null }> = [];
+          for (let from = 0; ; from += PAGE) {
+            const { data, error } = await supabase
+              .from("orders")
+              .select("id, source, items, total_amount, order_at, txn_id, review_status, duplicate_of")
+              .eq("user_id", user!.id)
+              .range(from, from + PAGE - 1);
+            if (error || !data?.length) break;
+            rows.push(...(data as typeof rows));
+            if (data.length < PAGE) break;
+          }
+          const byId = new Map(rows.map((r) => [r.id, r]));
+          const dedupInput: DedupOrder[] = rows.map((r) => ({
+            id: r.id, source: r.source as OrderSource, itemsCount: Array.isArray(r.items) ? r.items.length : 0,
+            total_amount: r.total_amount == null ? null : Number(r.total_amount), order_at: r.order_at, txn_id: r.txn_id,
+          }));
+          const dupOf = findDuplicateOrders(dedupInput);
+          for (const [dupId, primaryId] of dupOf) {
+            const row = byId.get(dupId);
+            // Don't disturb an already-flagged dup or a human-decided order.
+            if (!row || row.duplicate_of || row.review_status === "confirmed" || row.review_status === "rejected") continue;
+            const { error: dErr } = await supabase
+              .from("orders")
+              .update({ duplicate_of: primaryId, review_status: "pending" })
+              .eq("id", dupId)
+              .eq("user_id", user!.id);
+            if (dErr) result.errors.push(`dedup flag ${dupId}: ${dErr.message}`);
+            else result.duplicates_flagged++;
+          }
+        }
 
         async function runVoucherDrawdown() {
           const voucherRows: Array<{ id: string; brand_key: string; face_value: string | number; purchased_at: string; txn_id: string | null }> = [];

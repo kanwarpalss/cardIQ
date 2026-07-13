@@ -28,11 +28,17 @@ type Order = {
   voucher_draws?: VoucherDraw[] | null;
   voucher_txn?: LedgerTxn | null; // the card charge that funded the voucher
   voucher_amount?: number | null; // total drawn from vouchers for this order
+  duplicate_of?: string | null;   // same purchase, reported by another entity
 };
 
 /** Paid from a voucher balance (traced order → voucher → card charge). */
 function isVoucherFunded(o: Order): boolean {
   return Array.isArray(o.voucher_draws) && o.voucher_draws.length > 0;
+}
+
+/** A duplicate report of another order's purchase (gateway/shipper vs merchant). */
+function isDuplicate(o: Order): boolean {
+  return !!o.duplicate_of;
 }
 
 const SOURCE_LABELS: Record<string, string> = {
@@ -58,6 +64,9 @@ function isCardLinked(o: Order): o is Order & { txn: LedgerTxn } {
 
 /** Where this order sits relative to a card charge — the ledger's link badge. */
 function LinkBadge({ o }: { o: Order }) {
+  if (isDuplicate(o)) {
+    return <span className="text-2xs px-1.5 py-0.5 rounded-md border whitespace-nowrap text-mist/45 border-rim bg-raised" title="Same purchase, reported by another entity (gateway/shipper)">⧉ duplicate</span>;
+  }
   if (isCardLinked(o)) {
     return <span className="text-2xs px-1.5 py-0.5 rounded-md border whitespace-nowrap text-emerald border-emerald/30 bg-emerald/5">✓ card ••{o.txn.card_last4}</span>;
   }
@@ -79,6 +88,7 @@ export default function OrdersTab() {
   const [search, setSearch]     = useState("");
   const [source, setSource]     = useState<string>("all");
   const [link, setLink]         = useState<LinkFilter>("all");
+  const [showDups, setShowDups] = useState(false);
   const [page, setPage]         = useState(1);
   const [expanded, setExpanded] = useState<string | null>(null);
 
@@ -100,7 +110,7 @@ export default function OrdersTab() {
     }
   }
   useEffect(() => { load(); }, []);
-  useEffect(() => { setPage(1); }, [search, source, link]);
+  useEffect(() => { setPage(1); }, [search, source, link, showDups]);
 
   // Full-history backfill — pulls 8 years of order emails. Long-running
   // (20–30 min); guarded so it's never a casual click. Streams NDJSON progress.
@@ -161,6 +171,8 @@ export default function OrdersTab() {
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
     return orders.filter((o) => {
+      // Duplicates (same purchase via another entity) are hidden unless asked for.
+      if (!showDups && isDuplicate(o)) return false;
       if (source !== "all" && o.source !== source) return false;
       if (link === "linked"   && !isCardLinked(o)) return false;
       if (link === "unlinked" &&  isCardLinked(o)) return false;
@@ -169,18 +181,21 @@ export default function OrdersTab() {
         .filter(Boolean).join(" ").toLowerCase();
       return hay.includes(q);
     });
-  }, [orders, search, source, link]);
+  }, [orders, search, source, link, showDups]);
 
   const stats = useMemo(() => {
-    let value = 0, linked = 0, withItems = 0;
+    let value = 0, linked = 0, withItems = 0, total = 0, dups = 0;
     for (const o of orders) {
+      // Duplicates (same purchase, another entity) never count toward anything.
+      if (isDuplicate(o)) { dups++; continue; }
+      total++;
       // Voucher-funded orders are NOT re-tallied — the funding GYFTR card charge
       // already counts that spend (avoids double-counting voucher + order).
       if (o.total_amount != null && o.kind === "order" && !isVoucherFunded(o)) value += Number(o.total_amount);
       if (isCardLinked(o) || isVoucherFunded(o)) linked++;
       if (o.items.length > 0) withItems++;
     }
-    return { total: orders.length, value, linked, withItems };
+    return { total, value, linked, withItems, dups };
   }, [orders]);
 
   const pageCount = Math.max(1, Math.ceil(filtered.length / PAGE));
@@ -257,6 +272,15 @@ export default function OrdersTab() {
             </button>
           ))}
         </div>
+        {stats.dups > 0 && (
+          <button onClick={() => setShowDups((v) => !v)}
+            title="Same-purchase duplicates (a merchant + its payment gateway report the one charge)"
+            className={`px-2.5 py-1.5 rounded-lg text-xs font-medium transition-all border ${
+              showDups ? "bg-surface text-mist border-rim" : "text-mist/45 hover:text-mist/70 border-transparent"
+            }`}>
+            {showDups ? "Hiding none" : `Hidden: ${stats.dups} duplicate${stats.dups === 1 ? "" : "s"}`}
+          </button>
+        )}
       </div>
 
       {/* Ledger */}

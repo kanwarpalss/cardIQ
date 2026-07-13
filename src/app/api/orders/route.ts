@@ -17,8 +17,12 @@ import { isMissingTableError, isMissingColumnError } from "@/lib/supabase/errors
 // just comes back without a review state and the client falls back to txn_id
 // for the link badge. Missing orders table (011 not run) → clear notice.
 
-const BASE_COLUMNS =
-  "id, source, kind, order_ref, merchant_name, total_amount, order_at, items, txn_id, match_confidence, raw_subject, voucher_draws";
+// Columns present since the orders table existed — always safe to select.
+const SAFE_COLUMNS =
+  "id, source, kind, order_ref, merchant_name, total_amount, order_at, items, txn_id, match_confidence, raw_subject";
+// Added by later migrations (014/015/016). Each is dropped from the query if its
+// migration hasn't been run, so the ledger still renders on a partial schema.
+const OPTIONAL_COLUMNS = ["review_status", "voucher_draws", "duplicate_of"];
 const PAGE = 1000;
 
 export async function GET() {
@@ -27,12 +31,12 @@ export async function GET() {
   if (!user) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
 
   const all: Array<Record<string, unknown>> = [];
-  let columns = BASE_COLUMNS + ", review_status";
+  const optional = [...OPTIONAL_COLUMNS];
 
   for (let from = 0; ; from += PAGE) {
     const { data, error } = await supabase
       .from("orders")
-      .select(columns)
+      .select([SAFE_COLUMNS, ...optional].join(", "))
       .eq("user_id", user.id)
       .order("order_at", { ascending: false })
       .range(from, from + PAGE - 1);
@@ -41,11 +45,12 @@ export async function GET() {
       if (isMissingTableError(error)) {
         return NextResponse.json({ error: "missing_orders_table", orders: [] }, { status: 400 });
       }
-      // Migration 014 not run yet — retry once without review_status so the
-      // ledger still renders (the link badge falls back to txn_id).
-      if (isMissingColumnError(error, "review_status") && columns !== BASE_COLUMNS) {
-        columns = BASE_COLUMNS;
-        from -= PAGE; // redo this page with the narrower column set
+      // A later migration isn't run — drop that optional column and retry the
+      // page so the ledger still renders on a partial schema.
+      const missing = optional.find((c) => isMissingColumnError(error, c));
+      if (missing) {
+        optional.splice(optional.indexOf(missing), 1);
+        from -= PAGE;
         continue;
       }
       return NextResponse.json({ error: error.message }, { status: 500 });
