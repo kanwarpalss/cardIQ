@@ -12,7 +12,15 @@ import { parseOrderEmail, ORDER_DISCOVERY_CLAUSES, type OrderSource } from "@/li
 import { parseGyftrVouchers, isGyftrSender } from "@/lib/parsers/orders/gyftr";
 import { matchOrderToTxn, orderMatchRank, reviewStatusFor, type TxnLite, type MatchConfidence } from "@/lib/order-match";
 import { matchVoucherToCharge } from "@/lib/voucher-match";
-import { normalizeBrand } from "@/lib/voucher-bridge";
+import { normalizeBrand, reconcileVouchers, type VoucherPurchase, type VoucherPaidOrder } from "@/lib/voucher-bridge";
+
+// Marketplace sources reconcile against a voucher by their PLATFORM name (a
+// Swiggy Money voucher funds swiggy-source orders whose merchant_name is the
+// restaurant); D2C/other orders reconcile by their merchant name.
+const MARKETPLACE_SOURCES = new Set<OrderSource>(["swiggy", "zomato", "bigbasket", "amazon", "blinkit"]);
+function orderBrandKey(o: { source: string; merchant_name: string | null }): string {
+  return normalizeBrand(MARKETPLACE_SOURCES.has(o.source as OrderSource) ? o.source : (o.merchant_name ?? o.source));
+}
 
 /**
  * Order-email sync (V2 feature C) — the second Gmail pass, structurally a
@@ -191,8 +199,9 @@ export async function POST(req: Request) {
       const result = {
         fetched: 0,
         new_orders: 0,
-        new_vouchers: 0,     // Gyftr vouchers parsed + stored this run
-        vouchers_matched: 0, // vouchers linked to their funding GYFTR charge
+        new_vouchers: 0,      // Gyftr vouchers parsed + stored this run
+        vouchers_matched: 0,  // vouchers linked to their funding GYFTR charge
+        voucher_linked: 0,    // card-unmatched orders traced to a voucher (drawdown)
         matched: 0,
         pending_review: 0, // subset of `matched` that landed at medium/low → await KP's review
         skipped: 0,
@@ -496,6 +505,7 @@ export async function POST(req: Request) {
           }
         }
 
+        const cardMatchedOrderIds = new Set<string>();
         for (const o of unmatched) {
           const match = matchOrderToTxn(
             {
@@ -524,8 +534,60 @@ export async function POST(req: Request) {
             result.errors.push(`match save ${o.id}: ${matchErr.message}`);
           } else {
             usedTxnIds.add(match.txnId);
+            cardMatchedOrderIds.add(o.id);
             result.matched++;
             if (reviewStatusFor(match.confidence) === "pending") result.pending_review++;
+          }
+        }
+
+        // ── Voucher bridge drawdown (Chunk 2). Orders with NO card charge but a
+        // brand that has vouchers are drawn down against those vouchers (FIFO),
+        // tracing order → voucher → the GYFTR card charge. The card charge is
+        // already counted in Spend, so these orders are never re-tallied. ──
+        await runVoucherDrawdown();
+
+        async function runVoucherDrawdown() {
+          const voucherRows: Array<{ id: string; brand_key: string; face_value: string | number; purchased_at: string; txn_id: string | null }> = [];
+          for (let from = 0; ; from += PAGE) {
+            const { data, error } = await supabase
+              .from("vouchers")
+              .select("id, brand_key, face_value, purchased_at, txn_id")
+              .eq("user_id", user!.id)
+              .range(from, from + PAGE - 1);
+            if (error || !data?.length) break;
+            voucherRows.push(...(data as typeof voucherRows));
+            if (data.length < PAGE) break;
+          }
+          if (voucherRows.length === 0) return;
+
+          const vps: VoucherPurchase[] = voucherRows.map((v) => ({
+            id: v.id, brand: v.brand_key, faceValue: Number(v.face_value),
+            purchasedAt: v.purchased_at, cardTxnId: v.txn_id,
+          }));
+          const brandsWithVouchers = new Set(vps.map((v) => v.brand));
+
+          // Candidates: orders still without a card charge, of a brand that has
+          // vouchers, with an amount to draw. (Amount-less orders can't draw.)
+          const vpos: VoucherPaidOrder[] = [];
+          for (const o of unmatched) {
+            if (cardMatchedOrderIds.has(o.id)) continue;
+            if (o.kind !== "order" || o.total_amount == null) continue;
+            const brand = orderBrandKey(o);
+            if (!brandsWithVouchers.has(brand)) continue;
+            vpos.push({ id: o.id, brand, amount: Number(o.total_amount), orderedAt: o.order_at });
+          }
+          if (vpos.length === 0) return;
+
+          const bridge = reconcileVouchers(vps, vpos);
+          for (const attr of bridge.orders) {
+            if (attr.draws.length === 0) continue;
+            const { error: dErr } = await supabase
+              .from("orders")
+              .update({ voucher_draws: attr.draws })
+              .eq("id", attr.orderId)
+              .eq("user_id", user!.id);
+            if (dErr) result.errors.push(`voucher draw save ${attr.orderId}: ${dErr.message}`);
+            else result.voucher_linked++;
           }
         }
 
