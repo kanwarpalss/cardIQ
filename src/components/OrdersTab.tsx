@@ -10,6 +10,7 @@ import { useEffect, useMemo, useState } from "react";
 
 type Item = { name: string; qty?: number | null; price?: number | null };
 type LedgerTxn = { card_last4: string; amount_inr: number | string; txn_at: string; merchant: string | null };
+type VoucherDraw = { voucherId: string; amount: number; cardTxnId?: string | null };
 type Order = {
   id: string;
   source: string;
@@ -24,7 +25,15 @@ type Order = {
   review_status?: "unmatched" | "pending" | "confirmed" | "rejected" | null;
   raw_subject: string | null;
   txn: LedgerTxn | null;
+  voucher_draws?: VoucherDraw[] | null;
+  voucher_txn?: LedgerTxn | null; // the card charge that funded the voucher
+  voucher_amount?: number | null; // total drawn from vouchers for this order
 };
+
+/** Paid from a voucher balance (traced order → voucher → card charge). */
+function isVoucherFunded(o: Order): boolean {
+  return Array.isArray(o.voucher_draws) && o.voucher_draws.length > 0;
+}
 
 const SOURCE_LABELS: Record<string, string> = {
   swiggy: "Swiggy", zomato: "Zomato", bigbasket: "BigBasket", amazon: "Amazon",
@@ -51,6 +60,10 @@ function isCardLinked(o: Order): o is Order & { txn: LedgerTxn } {
 function LinkBadge({ o }: { o: Order }) {
   if (isCardLinked(o)) {
     return <span className="text-2xs px-1.5 py-0.5 rounded-md border whitespace-nowrap text-emerald border-emerald/30 bg-emerald/5">✓ card ••{o.txn.card_last4}</span>;
+  }
+  if (isVoucherFunded(o)) {
+    // Paid from a voucher — traced to the funding card charge via the voucher.
+    return <span className="text-2xs px-1.5 py-0.5 rounded-md border whitespace-nowrap text-amber border-amber/30 bg-amber/5">◈ voucher{o.voucher_txn ? ` ••${o.voucher_txn.card_last4}` : ""}</span>;
   }
   if (o.review_status === "pending" && o.txn) {
     return <span className="text-2xs px-1.5 py-0.5 rounded-md border whitespace-nowrap text-gold border-gold/30 bg-gold/5">≈ review pending</span>;
@@ -161,8 +174,10 @@ export default function OrdersTab() {
   const stats = useMemo(() => {
     let value = 0, linked = 0, withItems = 0;
     for (const o of orders) {
-      if (o.total_amount != null && o.kind === "order") value += Number(o.total_amount);
-      if (isCardLinked(o)) linked++;
+      // Voucher-funded orders are NOT re-tallied — the funding GYFTR card charge
+      // already counts that spend (avoids double-counting voucher + order).
+      if (o.total_amount != null && o.kind === "order" && !isVoucherFunded(o)) value += Number(o.total_amount);
+      if (isCardLinked(o) || isVoucherFunded(o)) linked++;
       if (o.items.length > 0) withItems++;
     }
     return { total: orders.length, value, linked, withItems };
@@ -301,6 +316,11 @@ export default function OrdersTab() {
                         {o.order_ref && <span>Order #{o.order_ref}</span>}
                         {isCardLinked(o) ? (
                           <span>Paid on card ••{o.txn.card_last4} · {fmt(o.txn.amount_inr)} · {day(o.txn.txn_at)}</span>
+                        ) : isVoucherFunded(o) ? (
+                          <span className="text-amber/80">
+                            Paid via {fmt(o.voucher_amount)} voucher
+                            {o.voucher_txn ? ` → bought on card ••${o.voucher_txn.card_last4} · ${day(o.voucher_txn.txn_at)}` : ""}
+                          </span>
                         ) : (
                           <span>Not linked to a card charge{o.review_status === "pending" ? " (pending review)" : ""}</span>
                         )}
