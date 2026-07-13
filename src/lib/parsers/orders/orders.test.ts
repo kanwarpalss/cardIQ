@@ -75,6 +75,39 @@ describe("parseSwiggyOrder", () => {
   });
 });
 
+// Format B — the COMMON "Your Order Summary" text-table template. Real email
+// (Corner House Ice Cream, 2024-07-06). Had ZERO items until the text fallback:
+// its item list, restaurant and order-ref live in plain text, not the HTML the
+// Format-A parser reads. This block fails on the pre-fix parser.
+describe("parseSwiggyOrder — Format B (Order Summary text table)", () => {
+  const TEXT =
+    "Greetings from Swiggy Your order was delivered in 36 minutes! Order No: 179253759225214 " +
+    "Restaurant Corner House Ice Cream Your Order Summary: Order No: 179253759225214 " +
+    "Order placed at: Saturday, July 6, 2024 10:12 PM Order Status: Delivered " +
+    "Ordered from: Corner House Ice Cream GROUND FLOOR, BROOKE FIELD MALL " +
+    "Item Name Quantity Price Cafe Caramel 1 ₹ 200 Death By Chocolate 1 ₹ 230 " +
+    "Item Total: ₹ 430.00 Platform fee: ₹ 5.00 Taxes: ₹ 78.30 " +
+    "Paid Via Credit/Debit card: ₹ 563.00 Order Total: ₹ 563";
+  const o = parseSwiggyOrder("Your Swiggy order was delivered before time", TEXT, "");
+
+  it("parses with the paid card amount as total", () => {
+    expect(o).not.toBeNull();
+    expect(o!.total_amount).toBe(563);
+  });
+  it("extracts every item with qty + price from the text table", () => {
+    expect(o!.items).toEqual([
+      { name: "Cafe Caramel", qty: 1, price: 200 },
+      { name: "Death By Chocolate", qty: 1, price: 230 },
+    ]);
+  });
+  it("reads the restaurant name from the text label", () => {
+    expect(o!.merchant_name).toBe("Corner House Ice Cream");
+  });
+  it("reads the order ref from 'Order No:'", () => {
+    expect(o!.order_ref).toBe("179253759225214");
+  });
+});
+
 // ── Zomato ──────────────────────────────────────────────────────────────────
 
 const ZOMATO_SUBJECT = "Your Zomato order from YUKI";

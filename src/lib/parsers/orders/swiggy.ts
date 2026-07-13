@@ -1,23 +1,24 @@
 // Swiggy order-delivered email parser.
 //
-// Confirmed format (real email, noreply@swiggy.in, 2026-07-06):
-//   Subject: "Your Swiggy order was successfully delivered"
-//            (also "Your Swiggy Gourmet order was delivered superfast")
-//   Text (stripped): "… ORDER JOURNEY Third Wave Coffee <address> Jul 6,
-//     10:20 AM … Order ID: 242283010812320 BILL DETAILS Hot Latte [Regular]
-//     x2 ₹478 With Milk (₹0) Restaurant Packaging ₹35.00 Platform fee with
-//     GST ₹17.58 Discount Applied - ₹180.00 Delivery Fee (FREE with Swiggy
-//     One) ₹36 FREE Taxes ₹14.90 Paid Via Credit/Debit card ₹365.00"
+// Swiggy sends TWO different delivered-order templates; this parser handles both.
+//
+// Format A — "ORDER JOURNEY / BILL DETAILS" (HTML-structured, 2026-07-06):
+//   "… ORDER JOURNEY Third Wave Coffee <address> … Order ID: 2422830… BILL
+//    DETAILS Hot Latte [Regular] x2 ₹478 … Paid Via Credit/Debit card ₹365.00"
+//   Items are ">name x<qty><" HTML cells; restaurant is the first bold <p>.
+//
+// Format B — "Your Order Summary" table (the COMMON one, real 2024-07-06 email):
+//   "… Order No: 1792537… Restaurant Corner House Ice Cream Your Order Summary:
+//    … Item Name Quantity Price Cafe Caramel 1 ₹ 200 Death By Chocolate 1 ₹ 230
+//    Item Total: ₹ 430.00 … Paid Via Credit/Debit card: ₹ 563.00"
+//   Items + restaurant + order-ref are all in plain TEXT here — no HTML needed.
+//   (Format A's HTML item extraction silently yields nothing on Format B, which
+//    is why 91 real orders had zero item detail until this fallback was added.)
 //
 // Rules:
 //   • total_amount is the "Paid Via … ₹X" figure — the amount that actually
 //     hit the card — NEVER the item subtotal (discounts/fees make them differ).
-//   • Restaurant name comes from the raw HTML: the first bold <p> after
-//     "ORDER JOURNEY" (in stripped text the name fuses with the address, so
-//     text alone can't separate them).
-//   • Item rows are "<name> x<qty>" table cells in the HTML with the ₹price
-//     nearby; addon lines like "With Milk (₹0)" have no x<qty> and are
-//     skipped automatically.
+//   • Item/restaurant extraction tries the HTML path first, then the text table.
 
 import { type ParsedOrder, type OrderItem, parseInrAmount, decodeEntities } from "./types";
 
@@ -26,13 +27,34 @@ import { type ParsedOrder, type OrderItem, parseInrAmount, decodeEntities } from
 // The card row is what hits the bank statement — prefer it; otherwise the
 // last row (bill layouts end with the final figure).
 const TOTAL_ALL_RE = /Paid\s+Via\s+([^₹]{0,60}?)₹\s*([\d,]+(?:\.\d{1,2})?)/gi;
-const ORDER_ID_RE  = /Order\s+ID:\s*(\d{6,})/i;
+// Order reference — Format A uses "Order ID:", Format B uses "Order No:".
+const ORDER_REF_RE = /Order\s+(?:ID|No)\.?:\s*(\d{6,})/i;
 // Item cell in HTML: ">Hot Latte [Regular] x2<" — name then xQty, no nested tags.
 const ITEM_HTML_RE = />([^<>]{2,100}?)\s+x(\d+)\s*<\//gi;
 // Price near an item cell: first ₹amount within the next chunk of HTML.
 const PRICE_RE     = /₹\s*([\d,]+(?:\.\d{1,2})?)/;
 // Restaurant: first bold <p> after ORDER JOURNEY in the raw HTML.
 const RESTAURANT_HTML_RE = /<p[^>]*font-weight:\s*700[^>]*>([^<]{2,80})<\/p>/i;
+// Format B — restaurant sits between "Restaurant" and "Your Order Summary".
+const RESTAURANT_TEXT_RE = /\bRestaurant\s+(.+?)\s+Your\s+Order\s+Summary/i;
+// Format B item table lives between the "Item Name Quantity Price" header and
+// "Item Total:". Each row is "<name> <qty> ₹ <price>".
+const ITEM_TEXT_BLOCK_RE = /Item\s+Name\s+Quantity\s+Price\s+(.+?)\s+Item\s+Total/i;
+const ITEM_TEXT_ROW_RE   = /([^₹]+?)\s+(\d+)\s+₹\s*([\d,]+(?:\.\d{1,2})?)/g;
+
+/** Format B: line items from the plain-text "Item Name Quantity Price" table. */
+function itemsFromText(text: string): OrderItem[] {
+  const block = ITEM_TEXT_BLOCK_RE.exec(text)?.[1];
+  if (!block) return [];
+  const items: OrderItem[] = [];
+  ITEM_TEXT_ROW_RE.lastIndex = 0;
+  for (let m = ITEM_TEXT_ROW_RE.exec(block); m; m = ITEM_TEXT_ROW_RE.exec(block)) {
+    const name = decodeEntities(m[1]).replace(/^[\s·|,-]+/, "").trim();
+    if (!name) continue;
+    items.push({ name, qty: parseInt(m[2], 10), price: parseInrAmount(m[3]) });
+  }
+  return items;
+}
 
 function pickPaidAmount(text: string): number | undefined {
   const paid: Array<{ method: string; amount: number }> = [];
@@ -53,14 +75,8 @@ export function parseSwiggyOrder(subject: string, text: string, html: string): P
   const total = pickPaidAmount(text);
   if (total === undefined) return null; // no paid amount → not the delivered-order template
 
+  // ── Items: Format A (HTML BILL DETAILS) first, then Format B (text table). ──
   const items: OrderItem[] = [];
-  const journeyIdx = html.indexOf("ORDER JOURNEY");
-  const restaurantMatch = journeyIdx >= 0
-    ? RESTAURANT_HTML_RE.exec(html.slice(journeyIdx))
-    : null;
-
-  // Items only exist below BILL DETAILS — search from there so the x<qty>
-  // pattern can't accidentally hit anything in the header/journey blocks.
   const billIdx = html.indexOf("BILL DETAILS");
   if (billIdx >= 0) {
     const billHtml = html.slice(billIdx);
@@ -76,12 +92,18 @@ export function parseSwiggyOrder(subject: string, text: string, html: string): P
       });
     }
   }
+  if (items.length === 0) items.push(...itemsFromText(text));
+
+  // ── Restaurant: HTML bold-<p> (Format A), else the text label (Format B). ──
+  const journeyIdx = html.indexOf("ORDER JOURNEY");
+  const restaurantHtml = journeyIdx >= 0 ? RESTAURANT_HTML_RE.exec(html.slice(journeyIdx))?.[1] : undefined;
+  const restaurant = restaurantHtml ?? RESTAURANT_TEXT_RE.exec(text)?.[1];
 
   return {
     source: "swiggy",
     kind: "order",
-    order_ref: ORDER_ID_RE.exec(text)?.[1],
-    merchant_name: restaurantMatch ? decodeEntities(restaurantMatch[1]) : undefined,
+    order_ref: ORDER_REF_RE.exec(text)?.[1],
+    merchant_name: restaurant ? decodeEntities(restaurant).trim() : undefined,
     total_amount: total,
     items,
   };
