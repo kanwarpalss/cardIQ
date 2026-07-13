@@ -8,6 +8,7 @@
 // already accepts source='blinkit'.
 
 import { type ParsedOrder } from "./types";
+import { applyMerchantItemOverride } from "./merchant-items";
 import { parseSwiggyOrder } from "./swiggy";
 import { parseZomatoOrder } from "./zomato";
 import { parseBigbasketOrder } from "./bigbasket";
@@ -88,6 +89,14 @@ export function parseOrderEmail(
   text: string,
   html: string
 ): ParsedOrder | null {
+  const parsed = runParsers(sender, subject, text, html);
+  // Post-parse: stamp a known item for override merchants (e.g. GoRally →
+  // "Pickleball Game") when the parser found none — regardless of source, since
+  // such merchants often bill via a payment rail that lists no items.
+  return parsed ? applyMerchantItemOverride(parsed, `${parsed.merchant_name ?? ""} ${subject} ${sender}`) : null;
+}
+
+function runParsers(sender: string, subject: string, text: string, html: string): ParsedOrder | null {
   // 1. Known marketplaces — sender-gated, richest extraction. A marketplace
   //    match is authoritative: if its parser returns null (e.g. a Swiggy
   //    cancellation), that's a real "not an order", not a fall-through.

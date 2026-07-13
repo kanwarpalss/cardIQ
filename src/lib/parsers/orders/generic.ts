@@ -9,7 +9,7 @@
 // as seen, never stored). Items are left empty — arbitrary templates have no
 // reliable item structure, and the match (merchant + total) is the point.
 
-import { type ParsedOrder, parseInrAmount, merchantFromSender, isShippingStatusEmail } from "./types";
+import { type ParsedOrder, type OrderItem, parseInrAmount, merchantFromSender, isShippingStatusEmail } from "./types";
 
 const MONEY = String.raw`(?:rs\.?|inr|₹)\s*([\d,]+(?:\.\d{1,2})?)`;
 
@@ -31,6 +31,21 @@ const TOTAL_LABELS = [
   /total\s+amount/i,
   new RegExp(String.raw`(?<![a-z])total(?!\s+excl)`, "i"),
 ];
+
+// Some merchants put the product name straight in the subject:
+// "Your Order for DeckUp Bei 4-Door Engineered Wood…". Capture it as the item.
+const SUBJECT_ITEM_RE = /(?:your\s+)?order\s+for\s+(.+?)\s*$/i;
+
+/** Best-effort single item from the subject line ("… order for <X>"). */
+function itemsFromSubject(subject: string): OrderItem[] {
+  const m = SUBJECT_ITEM_RE.exec(subject.trim());
+  if (!m) return [];
+  const name = m[1]
+    .replace(/[.…\s]+$/, "")                 // trailing "…" truncation
+    .replace(/\s+(?:has|is|was|from|#).*$/i, "")  // "… has shipped", "… #123"
+    .trim();
+  return name.length >= 2 ? [{ name }] : [];
+}
 
 function extractTotal(text: string): number | undefined {
   // Payment-rail phrasing where the amount PRECEDES the keyword:
@@ -69,6 +84,6 @@ export function parseGenericOrder(
     order_ref: ORDER_REF_RE.exec(hay)?.[1],
     merchant_name: merchantFromSender(sender),
     total_amount: total,
-    items: [],
+    items: itemsFromSubject(subject),
   };
 }

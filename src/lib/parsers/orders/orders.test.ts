@@ -504,6 +504,57 @@ describe("parseOrderEmail — generic any-merchant fallback", () => {
     );
     expect(o).toBeNull();
   });
+
+  it("recovers the item from the subject ('… Order for <X>') — the Flipkart pattern", () => {
+    const o = parseOrderEmail(
+      "Flipkart <noreply@flipkart.com>",
+      "Your Order for DeckUp Bei 4-Door Engineered Wood Cabinet",
+      "Thank you for your order. Order Id: OD12345678. Order Total Rs. 8,499.00",
+      ""
+    );
+    expect(o).not.toBeNull();
+    expect(o!.total_amount).toBe(8499);
+    expect(o!.items).toEqual([{ name: "DeckUp Bei 4-Door Engineered Wood Cabinet" }]);
+  });
+});
+
+// ── Merchant item overrides (KP-curated) ─────────────────────────────────────
+describe("parseOrderEmail — merchant item overrides", () => {
+  it("GoRally (bills via Razorpay, no items) → 'Pickleball Game'", () => {
+    const o = parseOrderEmail(
+      "Payments <no-reply@razorpay.com>",
+      "Payment successful for GoRally",
+      "GoRally ₹ 350.00 Paid Successfully Payment Id pay_SqnDroYU8hQG8t Method card XXXX-XXXX-XXXX-5906 " +
+        "Paid On 18 May, 2026 03:54:15 PM IST",
+      ""
+    );
+    expect(o).not.toBeNull();
+    expect(o!.source).toBe("razorpay");
+    expect(o!.merchant_name).toBe("GoRally");
+    expect(o!.total_amount).toBe(350);
+    expect(o!.items).toEqual([{ name: "Pickleball Game" }]);
+  });
+
+  it("Hudle + Hsquare (pickleball venues, via Razorpay) → 'Pickleball Game'", () => {
+    const hudle = parseOrderEmail("no-reply@razorpay.com", "Payment successful for Hudle",
+      "Hudle ₹ 400.00 Paid Successfully Payment Id pay_abc123 Paid On 1 Jun, 2026 06:00:00 PM IST", "");
+    expect(hudle!.items).toEqual([{ name: "Pickleball Game" }]);
+    const hsq = parseOrderEmail("no-reply@razorpay.com", "Payment receipt for your successful transaction",
+      "Hsquare Sports Private Limited ₹ 500.00 Paid Successfully Payment Id pay_xyz789 Paid On 1 Jun, 2026", "");
+    expect(hsq!.items).toEqual([{ name: "Pickleball Game" }]);
+  });
+
+  it("does not override a merchant whose parser already found real items", () => {
+    // A Swiggy order keeps its real items even if its name matched nothing.
+    const o = parseOrderEmail(
+      "noreply@swiggy.in",
+      "Your Swiggy order was delivered before time",
+      "Restaurant Corner House Your Order Summary: Item Name Quantity Price Cafe Caramel 1 ₹ 200 " +
+        "Item Total: ₹ 200.00 Paid Via Credit/Debit card: ₹ 250.00",
+      ""
+    );
+    expect(o!.items).toEqual([{ name: "Cafe Caramel", qty: 1, price: 200 }]);
+  });
 });
 
 // ── Razorpay (universal payment rail) ────────────────────────────────────────
