@@ -22,9 +22,10 @@
 //     candidate in a tight ±4-day window, and are always 'low'.
 //
 // Confidence semantics (rendered in the UI):
-//   high   = exact amount + affinity + unique candidate + ≤2 days   → "✓"
-//   medium = exact amount + affinity + unique candidate + ≤5 days   → "≈"
-//   low    = matched, but ambiguous / no affinity / no amount        → "?"
+//   high   = exact amount + unique candidate, AND (affinity + ≤2 days)
+//            OR (no affinity but ≤5 min apart — same-purchase proximity)  → "✓"
+//   medium = exact amount + unique candidate + ≤5 days (weaker signal)     → "≈"
+//   low    = matched, but ambiguous / no affinity + loose timing / no amt  → "?"
 
 import type { OrderSource } from "./parsers/orders/types";
 
@@ -68,6 +69,11 @@ const AMOUNT_TOLERANCE = 0.75;
 const DAY_MS = 86_400_000;
 const WINDOW_DAYS_WITH_AMOUNT = 5;
 const WINDOW_DAYS_NO_AMOUNT = 4;
+// "Same-purchase" proximity — an order email and its card charge fire within
+// minutes of each other. A unique exact-amount hit inside this window is one
+// event, so we auto-confirm it even without a brand-name match (mirrors the
+// same-amount-within-5-min rule the duplicate detector already trusts).
+const WINDOW_TIGHT_DAYS = 5 / (24 * 60); // 5 minutes
 
 // Strings that mark a txn merchant as "belonging to" a marketplace source.
 // Checked against the CURRENT merchant display name (which the user may have
@@ -168,14 +174,20 @@ export function matchOrderToTxn(
     return { txnId: nearest.id, confidence: gap <= 2 ? "high" : "medium" };
   }
 
-  // No brand-name affinity (e.g. Postbox → bank descriptor "hourglass"): fall
-  // back to amount + time alone. A UNIQUE exact-amount hit is a strong signal on
-  // its own — KP's data shows exact amounts match the right charge ~99% of the
-  // time, and an order email lands within a minute of the charge. So a same-/
-  // next-day unique hit is 'medium' ("likely"); a wider gap stays 'low'
-  // ("possible", for review). Two+ candidates with no name signal → refuse.
+  // No brand-name affinity (e.g. Postbox → bank descriptor "hourglass", or a
+  // D2C brand billing via Shopflo/PayU as "Dileep Esse"/"Payu"): fall back to
+  // amount + time alone. A UNIQUE exact-amount hit is a strong signal on its own
+  // — KP's data shows exact amounts match the right charge ~99% of the time, and
+  // an order email lands within a minute of the charge. So:
+  //   • within the same-purchase window (≤5 min) → 'high', auto-confirmed: the
+  //     charge and the confirmation email are effectively simultaneous, an
+  //     unrecognisable bank descriptor notwithstanding;
+  //   • same-/next-day (≤2 days) → 'medium' ("likely");
+  //   • wider gap → 'low' ("possible", for review).
+  // Two+ candidates with no name signal → refuse (the uniqueness guard above).
   if (sameAmount.length !== 1) return null;
   const gap = daysApart(order.order_at, sameAmount[0].txn_at);
+  if (gap <= WINDOW_TIGHT_DAYS) return { txnId: sameAmount[0].id, confidence: "high" };
   return { txnId: sameAmount[0].id, confidence: gap <= 2 ? "medium" : "low" };
 }
 

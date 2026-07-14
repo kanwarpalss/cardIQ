@@ -455,6 +455,37 @@ describe("parseOrderEmail — Shopify D2C brands", () => {
     expect(o!.items[0]).toMatchObject({ qty: 1, price: 1699 });
   });
 
+  it("PRDGY REAL: 'Order summary' header (no 'your') + variant suffix on the row", () => {
+    // Gokwik-checkout Shopify theme: header is a bare "Order summary" and each
+    // row carries a size variant between the qty and the price ("× 1 L ₹ …").
+    const html =
+      '<a href="https://cdn.shopify.com/">x</a>' +
+      "Order summary PRDGY Love In Fur Oversized t-shirt × 1 L ₹ 1,699.00 " +
+      "PRDGY Stuck in Traffic Oversized Tshirt × 1 L / Back ₹ 1,699.00 " +
+      "Subtotal ₹ 3,398.00 Order discount -₹ 599.70 Total ₹ 2,798.30";
+    const o = parseOrderEmail("PRDGY <support@prdgy.in>", "Order PC61260 confirmed", "", html);
+    expect(o!.source).toBe("shopify");
+    expect(o!.total_amount).toBe(2798.3); // grand Total, not Subtotal
+    expect(o!.items).toHaveLength(2);
+    expect(o!.items[0]).toMatchObject({ name: "PRDGY Love In Fur Oversized t-shirt", qty: 1, price: 1699 });
+    expect(o!.items[1].name).toBe("PRDGY Stuck in Traffic Oversized Tshirt");
+  });
+
+  it("Ellementry REAL (Shopflo): 'Product Qty. Price' header, 'Bag Total' footer, repeated qty column", () => {
+    const html =
+      '<a href="https://cdn.shopify.com/">x</a>' +
+      "Thank you for shopping with ellementry. Your order with id 124140599 has been placed successfully. " +
+      "Product Qty. Price Crown Glass Bottle with Tumbler × 1 1 ₹ 1,182.00 " +
+      "Drop Glass Water Bottle With Ceramic Stopper Set of 2 × 1 1 ₹ 1,437.00 " +
+      "Bag Total ₹ 2,619.00 Shipping ₹ 00.0 Grand Total ₹ 2,469.00";
+    const o = parseOrderEmail("ellementry <noreply@ellementry.com>", "Order 124140599 confirmed", "", html);
+    expect(o!.source).toBe("shopify");
+    expect(o!.total_amount).toBe(2469); // grand Total, not Bag Total
+    expect(o!.items).toHaveLength(2);
+    expect(o!.items[0]).toMatchObject({ name: "Crown Glass Bottle with Tumbler", qty: 1, price: 1182 });
+    expect(o!.items[1]).toMatchObject({ name: "Drop Glass Water Bottle With Ceramic Stopper Set of 2", qty: 1, price: 1437 });
+  });
+
   it("routes to Shopify only via signature — a marketplace sender still wins", () => {
     // BigBasket order text carrying a stray shopify URL must still parse as bigbasket.
     const o = parseOrderEmail(

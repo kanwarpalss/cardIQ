@@ -65,6 +65,36 @@ describe("matchOrderToTxn — amount-bearing orders", () => {
       .toEqual({ txnId: "t1", confidence: "medium" });
   });
 
+  it("no affinity + unique exact amount + within 5 min → HIGH (same-purchase: Ellementry ↔ 'Dileep Esse')", () => {
+    // Real 2026-07-14 case: bank descriptor 'Dileep Esse' (Shopflo's settlement
+    // entity) shares no token with 'ellementry', but the charge and the order
+    // email are 3 s apart and the ₹2,469 amount is a unique exact hit — the same
+    // same-purchase signal dedup already trusts. Auto-confirm, don't park it.
+    const m = matchOrderToTxn(
+      order({ source: "shopify", merchant_name: "ellementry", total_amount: 2469, order_at: "2026-07-13T20:44:29Z" }),
+      [txn({ merchant: "Dileep Esse", amount_inr: 2469, txn_at: "2026-07-13T20:44:26Z" })]
+    );
+    expect(m).toEqual({ txnId: "t1", confidence: "high" });
+  });
+
+  it("tight-window HIGH boundary: exactly 5 min → high, one second past → medium", () => {
+    const base = { source: "generic" as const, merchant_name: "Acme", total_amount: 2469, order_at: "2026-07-13T20:40:00Z" };
+    expect(matchOrderToTxn(order(base), [txn({ merchant: "Zzz", amount_inr: 2469, txn_at: "2026-07-13T20:45:00Z" })]))
+      .toEqual({ txnId: "t1", confidence: "high" });   // 5 min exactly
+    expect(matchOrderToTxn(order(base), [txn({ merchant: "Zzz", amount_inr: 2469, txn_at: "2026-07-13T20:45:01Z" })]))
+      .toEqual({ txnId: "t1", confidence: "medium" });  // 5 min + 1 s → back to review
+  });
+
+  it("tight-window HIGH still needs UNIQUENESS: two same-amount txns within 5 min → refuses", () => {
+    // The auto-confirm shortcut must never fire when the amount is ambiguous.
+    const base = { source: "generic" as const, merchant_name: "Acme", total_amount: 2469, order_at: "2026-07-13T20:44:00Z" };
+    const m = matchOrderToTxn(order(base), [
+      txn({ id: "a", merchant: "Zzz", amount_inr: 2469, txn_at: "2026-07-13T20:44:30Z" }),
+      txn({ id: "b", merchant: "Yyy", amount_inr: 2469, txn_at: "2026-07-13T20:45:30Z" }),
+    ]);
+    expect(m).toBeNull();
+  });
+
   it("no affinity + unique but >2 days apart → low (for review, not auto-confident)", () => {
     // order_at defaults to 2026-07-06; a debit 4 days later still matches on
     // unique amount, but the loose timing keeps it 'low' → surfaced for review.

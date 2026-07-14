@@ -83,25 +83,46 @@ function grandTotal(content: string): number | undefined {
   return total;
 }
 
+// The item block's start marker and its terminating totals line. Themes vary:
+//   header — "Your order summary" / "Order summary" (Gokwik) / "Items ordered"
+//            / a bare "Product Qty. Price" column head (Shopflo, e.g. Ellementry)
+//   footer — the first totals line: "Subtotal" / "Bag Total" / "Order discount"
+//            / "Grand Total". Whichever comes first ends the block.
+const ITEM_BLOCK_RE = new RegExp(
+  String.raw`(?:your\s+order\s+summary|order\s+summary|items?\s+ordered|product\s+qty\.?\s+price)` +
+    String.raw`(.*?)` +
+    String.raw`(?:\bsub-?total\b|\bbag\s+total\b|\border\s+discount\b|\bgrand\s+total\b)`,
+  "is"
+);
+
 /**
- * Best-effort line items from the order block. Shopify themes label it either
- * "Your order summary" or "Items ordered", and delimit the qty with a × sign
- * or a spaced letter "x" ("Postbox x 1 Rs. 1,699.00"). The block runs up to the
- * Subtotal line.
+ * Best-effort line items from the order block. Delimits the qty with a × sign or
+ * a spaced letter "x" ("Postbox x 1 Rs. 1,699.00").
  */
 function extractItems(content: string): OrderItem[] {
-  const block = /(?:your order summary|items ordered)(.*?)\bsub-?total\b/is.exec(content)?.[1];
+  const block = ITEM_BLOCK_RE.exec(content)?.[1];
   if (!block) return [];
 
   const items: OrderItem[] = [];
-  // Primary: "<name> × <qty>  Rs <price>" — the × sign never occurs in a name.
+  // Primary: "<name> × <qty> … ₹<price>". The × never occurs in a name, and we
+  // consume THROUGH the price (skipping a variant "L" or a repeated qty column
+  // between the ×-qty and the ₹) so the next item's name starts clean —
+  // "… × 1 1 ₹1,182  Drop Bottle × 1 1 ₹1,437" splits into two tidy items.
   const withMultSign = new RegExp(
-    String.raw`([^×]{2,150}?)\s*×\s*(\d+)(?:[^0-9]*?(?:rs\.?|₹)\s*([\d,]+(?:\.\d{1,2})?))?`,
+    String.raw`([^×]{2,150}?)\s*×\s*(\d+)[^×₹]*?(?:rs\.?|₹)\s*([\d,]+(?:\.\d{1,2})?)`,
     "gi"
   );
   for (const m of block.matchAll(withMultSign)) {
     const name = cleanItemName(m[1]);
-    if (name) items.push({ name, qty: parseInt(m[2], 10), ...(m[3] ? { price: parseInrAmount(m[3]) } : {}) });
+    if (name) items.push({ name, qty: parseInt(m[2], 10), price: parseInrAmount(m[3]) });
+  }
+  if (items.length) return items;
+
+  // No per-line price in this theme: "<name> × <qty>" only (total lives below).
+  const noPriceMult = new RegExp(String.raw`([^×]{2,150}?)\s*×\s*(\d+)`, "gi");
+  for (const m of block.matchAll(noPriceMult)) {
+    const name = cleanItemName(m[1]);
+    if (name) items.push({ name, qty: parseInt(m[2], 10) });
   }
   if (items.length) return items;
 
