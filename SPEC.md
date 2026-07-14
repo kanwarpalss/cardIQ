@@ -2,7 +2,7 @@
 
 > Project brain. Updated every session.
 > Static architecture doc lives in ARCHITECTURE.md — don't duplicate it here.
-> Last updated: 2026-07-12
+> Last updated: 2026-07-14
 
 ---
 
@@ -64,8 +64,9 @@ A one-stop credit-card destination: syncs bank transaction emails from Gmail (Ax
 - `reward_balances` — card-point balance snapshots (migration 009; latest as_of = current)
 - `offers` — user-tracked card offers with validity windows (migration 009)
 - `loyalty_accounts` — airline/hotel program tiers + points, card-independent (migration 009)
-- `orders` — parsed order emails: source, kind (order|refund), items jsonb, total, txn_id match + match_confidence (migration 011)
+- `orders` — parsed order emails: source, kind (order|refund), items jsonb, total, txn_id match + match_confidence (migration 011); `review_status` state machine unmatched→pending→confirmed/rejected (migration 014); `voucher_draws` jsonb (migration 015); `duplicate_of` self-FK (migration 016)
 - `transactions` + `merchant_mappings` each gained a nullable `subcategory` column (migration 012)
+- `vouchers` — parsed Gyftr voucher-issuance emails: brand, brand_key, face_value, code, valid_till, txn_id FK to the GYFTR card charge, match_confidence (migration 015)
 
 ## §5 Decisions Log
 
@@ -94,8 +95,34 @@ A one-stop credit-card destination: syncs bank transaction emails from Gmail (Ax
 | 2026-07-12 | Order matching is **merchant-first**: a D2C brand's email (with items) claims a transaction before Razorpay (signal-only) | Razorpay-first as "universal key" | Razorpay's strength is legal-entity name (matches bank descriptor); merchant emails have the real items and brand. The link shown to KP must be the richest detail available — a merchant email with a Spark Case item beats "Hourglass Design Pvt Ltd" every time |
 | 2026-07-12 | Shipping/delivery status pings (shipped, out for delivery, etc.) are excluded from order parsing | Treat status pings as orders | A status ping lands days after the order and has zero item detail; the charge matches the correctly-dated order confirmation instead (KP's rule: "if you have shipped, you have order too") |
 | 2026-07-12 | Exact-amount same-day matches bumped from low → medium confidence | Keep at low for all no-affinity matches | KP's data shows 99% accuracy on exact amounts; a unique same-/next-day hit is a strong signal and justifies "medium" ("likely"). Wider gaps stay low for review |
+| 2026-07-14 | Gyftr voucher bridge: card charge (GYFTR VIA SMARTBUY) → voucher (face value) → many brand orders drawn FIFO | Model as order-to-txn like everything else | GYFTR is not a merchant — it's a voucher wallet. One card charge funds many orders at different brands over weeks. The ledger must show the chain: GYFTR charge → Amazon Fresh/Swiggy voucher → those brand orders drawn against it. Vouchers are their own table |
+| 2026-07-14 | Voucher match tolerates charge < face value | Require exact face-value match | GYFTR offers discounts (₹1,900 for ₹2,000 voucher). Using `charge ≤ faceValue + ₹0.75` catches the discount case; ±₹0.75 exact match would miss it |
+| 2026-07-14 | Same-purchase dedup: exact-amount ±₹0.75 within 5 minutes = duplicate | Only de-dup identical sender | A ₹4,181 charge can appear as "Bath and Body Works" (merchant email) AND "Apparel Group" (Razorpay gateway) within seconds. Both are the same purchase — the gateway row must be hidden, not shown twice. Window is time-of-send not txn_at, since emails can arrive in different orders |
+| 2026-07-14 | Dedup primary selection: card-matched > itemsCount > orderMatchRank > id | Keep whichever came first | The richest representation stays visible; the signal-only gateway email becomes the "duplicate of" row |
+| 2026-07-14 | PIN NOT captured from Gyftr voucher emails | Capture for display | A PIN is a live security secret. Reading and storing it — even encrypted — widens the blast radius if the DB is ever compromised. KP can retrieve the PIN from the original email if needed |
+| 2026-07-14 | SmartBuy "Paid by card Rs X" is the total, not "Amount Paid" | Use Amount Paid | "Amount Paid" includes points and vouchers, not just card spend. KP's card statement shows only the "Paid by card" amount — using the other field would create a mismatch |
 
-## §6 Current State (as of 2026-07-12)
+## §6 Current State (as of 2026-07-14)
+
+**New 2026-07-13–14 (orders layer — full parser build + voucher bridge):**
+- **Item-detail coverage:** 1,877 orders stored; **153 flagged as same-purchase duplicates** (hidden by default); **1,724 visible orders; 739 with item detail (43%)**. All dedicated parsers at 100%: Apple 171/171, SmartBuy 110/110, Swiggy 141/141, BigBasket 87/87, Amazon 50/50, Zomato 13/13. Generic/Razorpay/Shopify tails remain partial (intermediary emails + remaining format variants).
+- **Gyftr voucher bridge** (3 chunks, code-complete + live):
+  - Chunk 1: `src/lib/parsers/orders/gyftr.ts` parses voucher-issuance emails (gifts@gyftr.com) → `vouchers` table. `matchVoucherToCharge()` in `src/lib/voucher-match.ts` links each voucher to the "GYFTR VIA SMARTBUY" card charge using `charge ≤ faceValue + ₹0.75` (handles discounts). Migration 015 applied.
+  - Chunk 2: `src/lib/voucher-bridge.ts` — FIFO `reconcileVouchers()` draws brand orders down against vouchers by brand key (brand aliases: "amazon fresh" → "amazon"). `orders.voucher_draws` jsonb column carries the draw amounts.
+  - Chunk 3: `OrdersTab.tsx` shows "◈ voucher ••<card>" badge (amber) on voucher-funded orders; voucher-detail row shows the chain (GYFTR charge → voucher → brand orders). Voucher-funded orders excluded from the Total value tile (already counted via the GYFTR charge).
+- **SmartBuy travel parsers** (`src/lib/parsers/orders/smartbuy.ts`): flights show full itinerary ("Chandigarh (IXC) → Bangalore (BLR) · 19 Oct 2023 · IndiGo 6E-6634 · Mr. Amarjit Anand · PNR V3YIXX"); hotels show "Goa Marriott Resort & Spa · 29 Sep 2023–1 Oct 2023 · Guest room, 1 King, Garden view · Kanwar". Uses "Paid by card Rs X" as total.
+- **Apple parser** (`src/lib/parsers/orders/apple.ts`): handles 3 formats — Format A ("Apple Account:"), Format B (DOCUMENT NO. anchor with BILLED-TO header), Receipt (both text+HTML tried, item-winner preferred). 171/171 real emails parse correctly; 30/30 manual test cases pass.
+- **Swiggy Format B:** text-table "Item Name Quantity Price" extraction added; previously 91 orders had 0 items.
+- **Shopify HTML-first:** reads stripped HTML before text/plain (which can be leaked CSS); `looksLikeShopify()` scans both.
+- **Generic table parser** (`itemsFromTable`): TABLE_HEADER_RE + TABLE_FOOTER_RE detects line-item tables in any merchant email; catches Dominos, Printo, Supertails, etc.
+- **Merchant item overrides** (`src/lib/parsers/orders/merchant-items.ts`): GoRally/Hudle/Hsquare → "Pickleball Game" (applied post-parse when items=0).
+- **Same-purchase dedup** (`src/lib/order-dedup.ts` + migration 016 + `scripts/dedup-orders.ts`): exact amount ±₹0.75 within 5-min window = same purchase. Primary = card-matched > itemsCount > orderMatchRank > id. 153 rows flagged with `duplicate_of` FK; shown hidden in Orders with "⧉ duplicate" toggle.
+- **Re-heal script** (`scripts/reparse-orders.ts`): re-fetches existing orders by gmail_message_id, re-parses with current code, updates items/total/merchant. Run 3× this session to back-fill Apple (170 rows), Swiggy, Shopify improvements.
+- **`stripHtml` extracted** to `src/lib/gmail/strip.ts` (googleapis-free); parsers import from there; extract.ts re-exports for backwards compat (ARCH-04).
+- **Tests: 327 passing** (up from 239 at session start). Typecheck + lint clean. Pushed to Vercel.
+- **All 4 migrations applied:** 013 (orders_any_source), 014 (review_status), 015 (vouchers), 016 (duplicate_of).
+
+## §6b Current State (as of 2026-07-12)
 
 **New 2026-07-12 (C order-matching redesign — merchant-first ranking):**
 - **Merchant-first ranking** via `orderMatchRank()`: D2C brand's own email (with items) → rank 3, merchant no-items → 2, generic → 1, Razorpay → 0. Sync sorts unmatched orders by rank before matching, so a ₹1,499 Postbox order with "Spark Case" items claims the ₹1,499 charge instead of losing to a Razorpay confirmation with zero detail.
@@ -155,8 +182,8 @@ A one-stop credit-card destination: syncs bank transaction emails from Gmail (Ax
 
 **Pending / In Flight:**
 - Migration 009 must be run manually in Supabase SQL Editor before Rewards/Offers/Loyalty can save data (tabs show a plain-English notice until then).
-- Migrations **011 (orders)** and **012 (subcategories)** must be run in the SQL Editor before order enrichment / subcategories can save; every route degrades gracefully until then (bank sync unaffected; orders sync explains itself).
-- Authed dashboard visuals verified by build + tests + login-page DOM only — KP click-through pending (Google OAuth can't be done headlessly). Applies to the 2026-07-08 redesign AND the 2026-07-11 expand-row/subcategory UI.
+- Migrations 011–016 **all applied** as of 2026-07-14. No migration backlog.
+- Authed dashboard visuals verified by build + tests + login-page DOM only — KP click-through pending (Google OAuth can't be done headlessly). Applies to the 2026-07-08 redesign AND the 2026-07-11 expand-row/subcategory UI, AND the 2026-07-14 voucher bridge + duplicate toggle UI.
 
 ## §7 Known Issues
 
@@ -186,7 +213,38 @@ A one-stop credit-card destination: syncs bank transaction emails from Gmail (Ax
 | `GOOGLE_CLIENT_SECRET` | Server |
 | `ENCRYPTION_KEY` | Server (AES-256 for stored secrets) |
 
-## §9 Session Handoff Notes (2026-07-12)
+## §9 Session Handoff Notes (2026-07-14)
+
+### Accomplished This Session (2026-07-13–14, orders layer — full build)
+1. **Gyftr voucher bridge, end-to-end.** Migration 015 (vouchers table) applied. Parser, voucher→charge matcher, FIFO reconciler, Orders UI (amber badge, chain detail, excluded from Total). Scripts: `drawdown-vouchers.ts` for backfill.
+2. **Same-purchase dedup.** Migration 016 (duplicate_of FK) applied. `order-dedup.ts`, sync dedup phase, backfill script. 153 rows flagged; hidden in UI with toggle.
+3. **Item-detail parsers: Apple (3 formats), SmartBuy (flights + hotels), Swiggy Format B, Shopify HTML-first, generic table.** Re-heal run 3×. Coverage: 1,724 visible orders, 739 with items (43%).
+4. **Merchant item overrides** — GoRally/Hudle/Hsquare → "Pickleball Game".
+5. **`stripHtml` extracted** to `src/lib/gmail/strip.ts` (ARCH-04 compliance).
+6. **327 tests passing.** Pushed to Vercel (rebased against remote changes, `audit-review.json` moved aside to `/tmp`).
+
+### ▶ Next Steps (for next agent or KP)
+
+**KP actions first:**
+1. **Sync Gmail orders** — in the app: click "Sync Gmail" or trigger `/api/gmail/orders/sync`. This will pick up any new order emails since the last sync, apply all the improved parsers, and run the voucher+dedup phases automatically. Check the sync result line for counts.
+2. **Visual review in Orders tab** — look for:
+   - SmartBuy flights/hotels showing passenger/route/date/PNR detail
+   - Apple subscriptions with plan names (Apple One, iCloud+, etc.)
+   - Voucher-funded Swiggy/Amazon orders showing the amber "◈ voucher" badge
+   - The "⧉ duplicate" toggle (bottom of Orders) — flip it to see/hide the 153 duplicate rows; review the flagged pairs and confirm/reject if any look wrong
+3. **Supply Amazon order history** — go to amazon.in → Account → "Request Your Information" → "Your Orders" → download `Retail.OrderHistory.1.csv`. Drop the file and the next agent can build an importer.
+4. **EPM + Infinia milestone data** — EPM monthly reward text from iMobile; Infinia quarterly threshold from HDFC app (§7 Known Issues).
+
+**Next agent — code work:**
+1. **Amazon CSV importer** — once KP provides `Retail.OrderHistory.1.csv`: parse it, upsert into `orders` table (source='amazon_csv'), match to txns by amount+date. Fields: Order Date, Order ID, Title, Category, ASIN, Quantity, Purchase Price Per Unit.
+2. **Shopify remaining gap (203 itemless)** — investigate the top unmatched senders among the 226 shopify-sourced orders; most are likely theme variants or shipping-status emails that slipped through `isShippingStatusEmail`. Run `scripts/reparse-orders.ts` (dry-run) to see what category they fall into.
+3. **Razorpay remaining gap (186 itemless)** — these are mostly legit gateway-only emails (no items to find). But 57 DO have items — investigate whether those 57 match the "same-purchase duplicate" pattern (i.e., a richer merchant email exists alongside them). If yes, the dedup already handles it; if not, check what merchant they're for.
+4. **KP visual click-through feedback** — after KP reviews the Orders tab live, implement any UX polish he requests (e.g., badge styling, sort order, filter presets).
+5. **`/upgrade-brain`** — 8 days overdue (cadence 7d); run at start of next session.
+
+**Migrations — all applied (001–016). No backlog.**
+
+### Accomplished This Session (2026-07-12, C redesign — merchant-first ranking)
 
 ### Accomplished This Session (2026-07-12, C redesign — merchant-first ranking)
 1. **Feature C — order-matching v2, code-complete.** Merchant-first ranking so D2C brand emails claim txns before payment gateways; shipping/status pings excluded (KP's "not shipped" rule); exact-amount same-day confidence bumped from low → medium (99% accuracy). All 257 tests green; typecheck + lint clean.
@@ -234,4 +292,4 @@ Next session candidates: KP's visual click-through feedback (theme taste, expand
 - **New machine setup:** `echo '[ -f ~/Library/Mobile\ Documents/com~apple~CloudDocs/shared-aliases.sh ] && source ~/Library/Mobile\ Documents/com~apple~CloudDocs/shared-aliases.sh' >> ~/.zshrc`
 - **Production:** Vercel — auto-deploys on `git push origin main`; project imported from kanwarpalss/cardIQ
 - **Vercel env vars:** Loaded via "Import .env" from `~/Code/cardIQ/.env.local` (show hidden files with `Cmd+Shift+.`)
-- **Supabase:** Migrations run manually in Supabase SQL Editor, in numeric order (001 → … → 012)
+- **Supabase:** Migrations run manually in Supabase SQL Editor, in numeric order (001 → … → 016); all applied as of 2026-07-14
