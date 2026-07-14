@@ -71,6 +71,8 @@ A one-stop credit-card destination: syncs bank transaction emails from Gmail (Ax
 ## §5 Decisions Log
 
 | Date | Decision | Rejected alternative | Why |
+| 2026-07-14b | 5-min same-purchase window: unique exact-amount match within ≤5 min → HIGH confidence even without brand affinity | Keep at medium for all no-affinity matches | An order email and its charge fire within seconds of each other (e.g. Ellementry via "Dileep Esse" / Shopflo). A unique exact amount within 5 min is one event — the unrecognisable descriptor is incidental, not a signal of ambiguity. Mirrors the same-purchase dedup rule already trusted for duplicate detection |
+| 2026-07-14b | Shopify ITEM_BLOCK_RE covers 4 header variants + 3 footer variants in a single regex | Per-theme branching logic | A single regex is the canonical definition; per-theme branches require knowing the theme up-front and rot as new themes appear. The regex boundary approach (stop at first totals line) is theme-agnostic |
 |---|---|---|---|
 | 2026-05-07 | Merchant lookup uses two-pass: raw_name first, then cleanMerchant(raw) | Single-pass raw only | Display overrides saved via UI use cleaned name as key; raw fallback ensures future syncs still respect them |
 | 2026-05-07 | Inline merchant edit updates ALL transactions with that name | Prompt "apply to all?" | Less friction; bulk rename is always the right UX for merchant overrides |
@@ -102,7 +104,16 @@ A one-stop credit-card destination: syncs bank transaction emails from Gmail (Ax
 | 2026-07-14 | PIN NOT captured from Gyftr voucher emails | Capture for display | A PIN is a live security secret. Reading and storing it — even encrypted — widens the blast radius if the DB is ever compromised. KP can retrieve the PIN from the original email if needed |
 | 2026-07-14 | SmartBuy "Paid by card Rs X" is the total, not "Amount Paid" | Use Amount Paid | "Amount Paid" includes points and vouchers, not just card spend. KP's card statement shows only the "Paid by card" amount — using the other field would create a mismatch |
 
-## §6 Current State (as of 2026-07-14)
+## §6 Current State (as of 2026-07-14b)
+
+**New 2026-07-14b (item-detail coverage + same-purchase auto-confirm):**
+- **Bug 1 — Ellementry not tagged:** Unique exact-amount matches within ≤5 min now auto-confirm at HIGH confidence even without brand-name affinity. `WINDOW_TIGHT_DAYS = 5 / (24*60)` in `src/lib/order-match.ts`. Backfill: `scripts/confirm-tight-matches.ts --apply` promoted **41 pending orders** to confirmed/high.
+- **Bug 2 — Shopify items=0:** `ITEM_BLOCK_RE` in `src/lib/parsers/orders/shopify.ts` now covers all Shopify theme variants — `Order summary` (Gokwik), `Product Qty. Price` (Shopflo/Ellementry), `Bag Total` + `Order discount` as footer stops. `withMultSign` regex consumes THROUGH the price (skips the repeated qty column in Shopflo tables: `× 1 1 ₹1,182`).
+- **Re-heal run:** `scripts/reparse-orders.ts --apply` recovered **159 orders (+294 item rows)**, 0 deletions, 0 errors.
+- **Final dashboard state: 239 confirmed orders show item detail** (up from 183 at session start). Shopify contribution: 63 (up from 7). By source: Swiggy 141/141, BigBasket 87/87, Apple 171/171, SmartBuy 110/110, Shopify 63/200, Generic ~30.
+- **Tests: 332 passing** (5 new: 3 matcher + 2 parser). Typecheck + lint clean. Committed + pushed sha `8011d9d`.
+
+**Honest ceiling note:** 649 item-bearing orders remain unmatched — verified that 545+ have NO card charge candidate at all (paid by UPI/Swiggy wallet/other card not synced). Not a code bug. Items for those orders are visible in the Orders tab. The Spends dashboard (transaction-centric) can only show items for matched orders.
 
 **New 2026-07-13–14 (orders layer — full parser build + voucher bridge):**
 - **Item-detail coverage:** 1,877 orders stored; **153 flagged as same-purchase duplicates** (hidden by default); **1,724 visible orders; 739 with item detail (43%)**. All dedicated parsers at 100%: Apple 171/171, SmartBuy 110/110, Swiggy 141/141, BigBasket 87/87, Amazon 50/50, Zomato 13/13. Generic/Razorpay/Shopify tails remain partial (intermediary emails + remaining format variants).
@@ -222,6 +233,12 @@ A one-stop credit-card destination: syncs bank transaction emails from Gmail (Ax
 4. **Merchant item overrides** — GoRally/Hudle/Hsquare → "Pickleball Game".
 5. **`stripHtml` extracted** to `src/lib/gmail/strip.ts` (ARCH-04 compliance).
 6. **327 tests passing.** Pushed to Vercel (rebased against remote changes, `audit-review.json` moved aside to `/tmp`).
+
+### Accomplished This Session (2026-07-14b — item-detail coverage bugfix)
+1. **Bug 1 fixed — same-purchase auto-confirm.** 5-min window in `order-match.ts`; backfill via `scripts/confirm-tight-matches.ts`. 41 orders promoted to confirmed/high, including Ellementry (the root-cause example KP provided).
+2. **Bug 2 fixed — Shopify item extraction.** `ITEM_BLOCK_RE` covers all theme variants; `withMultSign` handles Shopflo's repeated qty column. 2 new real-email parser tests (PRDGY Gokwik + Ellementry Shopflo).
+3. **Re-heal applied.** 159 orders gained items (+294 rows). Final: 239 confirmed orders with item detail in Spend (from 183).
+4. **All 332 tests pass.** Committed: sha `8011d9d`. Pushed to Vercel.
 
 ### ▶ Next Steps (for next agent or KP)
 
