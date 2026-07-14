@@ -15,43 +15,50 @@
 //    → item = the app/service + description; charge = TOTAL.
 
 import { type ParsedOrder, parseInrAmount, decodeEntities } from "./types";
+import { stripHtml } from "../../gmail/strip";
 
 const MONEY = String.raw`₹\s*([\d,]+(?:\.\d{1,2})?)`;
+// Where the item name ends — the first field label after it.
+const ITEM_END = String.raw`SAC:|Renews|Expires|Report a Problem|Subtotal|TOTAL`;
 
-export function parseAppleOrder(subject: string, text: string, _html: string): ParsedOrder | null {
-  if (!/from Apple\b/i.test(subject) && !/APPLE ACCOUNT|Apple Account:/i.test(text)) return null;
+/** Pull item + charge from one rendering (plain text OR stripped HTML). */
+function extractApple(content: string): ParsedOrder | null {
+  // The purchased line sits after "DOCUMENT NO. <n>" (receipt + newer invoices,
+  // where the header carries a BILLED-TO address first) OR after "Apple Account:
+  // <email>" (older invoices). DOCUMENT NO. wins when present — it comes after
+  // the address block, so it isolates the item cleanly. Tolerate a ":" + spacing.
+  const byDoc = new RegExp(String.raw`DOCUMENT NO\.?:?\s*\d+\s+(.+?)\s+(?:` + ITEM_END + `)`, "is").exec(content);
+  const byAcct = new RegExp(String.raw`Apple Account:?\s*\S+@\S+\s+(.+?)\s+(?:` + ITEM_END + `)`, "is").exec(content);
+  const rawName = byDoc?.[1] ?? byAcct?.[1] ?? "";
+  // Strip any ₹ amounts embedded in the name (receipts repeat the price inline).
+  const name = decodeEntities(rawName.replace(/₹\s*[\d,]+(?:\.\d{1,2})?/g, " ")).replace(/\s+/g, " ").trim();
 
-  // ── Invoice (subscription) ──
-  if (/Tax Invoice/i.test(text) || /invoice from Apple/i.test(subject)) {
-    const name = /Apple Account:\s*\S+\s+(.+?)\s+(?:SAC:|Renews|Expires|₹)/i.exec(text)?.[1]?.trim();
-    const price =
-      new RegExp(String.raw`Renews[^₹]*` + MONEY, "i").exec(text)?.[1] ??
-      new RegExp(String.raw`Store Credit\s*` + MONEY, "i").exec(text)?.[1] ??
-      new RegExp(MONEY).exec(text)?.[1];
-    if (!name || !price) return null;
-    return {
-      source: "apple",
-      kind: "order",
-      order_ref: /Order ID:?\s*([A-Z0-9]{6,})/i.exec(text)?.[1],
-      merchant_name: "Apple",
-      total_amount: parseInrAmount(price),
-      items: [{ name: decodeEntities(name) }],
-    };
-  }
-
-  // ── Receipt ──
-  const total = new RegExp(String.raw`TOTAL\s*` + MONEY, "i").exec(text)?.[1];
+  // Charge: the grand TOTAL, else Store Credit (older invoices have no TOTAL),
+  // else the price beside "Renews", else the first ₹ amount.
+  const total =
+    (new RegExp(String.raw`(?<![A-Za-z])TOTAL:?\s*` + MONEY, "i").exec(content) ?? // not "Subtotal"
+      new RegExp(String.raw`Store Credit\s*` + MONEY, "i").exec(content) ??
+      new RegExp(String.raw`Renews[^₹]*` + MONEY, "i").exec(content) ??
+      new RegExp(MONEY).exec(content))?.[1];
   if (!total) return null;
-  // The purchased line(s) sit between DOCUMENT NO. and TOTAL. Strip the ₹ amounts
-  // out of it to leave the app/service + description (+ device) as the item name.
-  const seg = /DOCUMENT NO\.?\s*\d+\s+(.+?)\s+TOTAL\s*₹/is.exec(text)?.[1] ?? "";
-  const name = decodeEntities(seg.replace(/₹\s*[\d,]+(?:\.\d{1,2})?/g, " ")).replace(/\s+/g, " ").trim();
+
   return {
     source: "apple",
     kind: "order",
-    order_ref: /ORDER ID\s+([A-Z0-9]{6,})/i.exec(text)?.[1],
+    order_ref: /ORDER ID:?\s*([A-Z0-9]{6,})/i.exec(content)?.[1],
     merchant_name: "Apple",
     total_amount: parseInrAmount(total),
     items: name ? [{ name }] : [],
   };
+}
+
+export function parseAppleOrder(subject: string, text: string, html: string): ParsedOrder | null {
+  if (!/from Apple\b/i.test(subject) && !/APPLE ACCOUNT|Apple Account/i.test(text)) return null;
+  // Some Apple emails carry a sparse colon-formatted text/plain part with the
+  // item only in the HTML — try both renderings and prefer the one that yields
+  // the item; fall back to whichever at least has the charge.
+  const results = [text, html ? stripHtml(html) : ""]
+    .map(extractApple)
+    .filter((r): r is ParsedOrder => r !== null);
+  return results.find((r) => r.items.length > 0) ?? results[0] ?? null;
 }

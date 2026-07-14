@@ -611,6 +611,31 @@ describe("parseOrderEmail — Apple", () => {
     expect(o!.items).toEqual([{ name: "Apple One Family (Monthly)" }]);
   });
 
+  it("invoice Format B: item after DOCUMENT NO. + TOTAL (BILLED-TO address first)", () => {
+    // Real variant that returned null before: "APPLE ACCOUNT" (no colon), a
+    // BILLED-TO address block, item after DOCUMENT NO., grand TOTAL.
+    const text =
+      "Tax Invoice APPLE ACCOUNT kanwarpalss@gmail.com BILLED TO Store Credit Kanwar Pal Sethi #461 Sector 37 " +
+      "Chandigarh, CH 160036 IND INVOICE DATE 18 Sept 2024 ORDER ID MNMNSD58ZL DOCUMENT NO. 133851255535 " +
+      "App Store YouTube Music YouTube Premium Family (Monthly) Renews 18 Oct 2024 SAC:998434 Report a Problem ₹ 249 " +
+      "Subtotal ₹ 211 IGST charged at 18% ₹ 38 TOTAL ₹ 249";
+    const o = parseOrderEmail("Apple <no_reply@email.apple.com>", "Your invoice from Apple.", text, "");
+    expect(o!.source).toBe("apple");
+    expect(o!.total_amount).toBe(249);
+    expect(o!.order_ref).toBe("MNMNSD58ZL");
+    expect(o!.items[0].name).toBe("App Store YouTube Music YouTube Premium Family (Monthly)");
+  });
+
+  it("invoice Format B: a movie rental", () => {
+    const text =
+      "Tax Invoice APPLE ACCOUNT kanwarpalss@gmail.com BILLED TO Store Credit Kanwar Pal Sethi #461 " +
+      "ORDER ID MNMNSN17MD DOCUMENT NO. 184852956859 Apple TV Her Drama Movie Rental Apple TV SAC:998433 " +
+      "Report a Problem ₹ 150 Subtotal ₹ 127 IGST charged at 18% ₹ 23 TOTAL ₹ 150";
+    const o = parseOrderEmail("Apple <no_reply@email.apple.com>", "Your invoice from Apple.", text, "");
+    expect(o!.total_amount).toBe(150);
+    expect(o!.items[0].name).toBe("Apple TV Her Drama Movie Rental Apple TV");
+  });
+
   it("receipt: app/service line + TOTAL", () => {
     const text =
       "Receipt APPLE ACCOUNT kanwarpalss@gmail.com DATE Jul 8, 2026 ORDER ID MNMTFH764G DOCUMENT NO. 820158479139 " +
