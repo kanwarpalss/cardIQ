@@ -13,7 +13,7 @@ import { parseGyftrVouchers, isGyftrSender } from "@/lib/parsers/orders/gyftr";
 import { matchOrderToTxn, orderMatchRank, reviewStatusFor, type TxnLite, type MatchConfidence } from "@/lib/order-match";
 import { matchVoucherToCharge } from "@/lib/voucher-match";
 import { normalizeBrand, reconcileVouchers, type VoucherPurchase, type VoucherPaidOrder } from "@/lib/voucher-bridge";
-import { findDuplicateOrders, type DedupOrder } from "@/lib/order-dedup";
+import { planDedup, type DedupRow } from "@/lib/order-dedup";
 
 // Marketplace sources reconcile against a voucher by their PLATFORM name (a
 // Swiggy Money voucher funds swiggy-source orders whose merchant_name is the
@@ -439,8 +439,9 @@ export async function POST(req: Request) {
             .select("id, source, kind, total_amount, order_at, merchant_name, items")
             .eq("user_id", user!.id)
             .is("txn_id", null)
-            .eq("review_status", "unmatched") // skip 'rejected' dead-ends (reject = permanent unlink)
-            .range(from, from + PAGE - 1);
+            .is("duplicate_of", null)          // a flagged duplicate is matched via its primary, not on its own
+            .neq("review_status", "rejected")  // 'rejected' = permanent unlink (a human dead-end). Everything
+            .range(from, from + PAGE - 1);      // else without a txn (incl. legit 'pending') is retried each run
           if (error || !data?.length) break;
           unmatched.push(...(data as typeof unmatched));
           if (data.length < PAGE) break;
@@ -569,34 +570,49 @@ export async function POST(req: Request) {
         await runDedup();
 
         async function runDedup() {
-          const rows: Array<{ id: string; source: string; items: unknown[] | null; total_amount: string | number | null; order_at: string; txn_id: string | null; review_status: string; duplicate_of: string | null }> = [];
+          type Row = {
+            id: string; source: string; items: unknown[] | null; total_amount: string | number | null;
+            order_at: string; txn_id: string | null; review_status: string; duplicate_of: string | null;
+            match_confidence: string | null; order_ref: string | null; merchant_name: string | null;
+          };
+          const rows: Row[] = [];
           for (let from = 0; ; from += PAGE) {
             const { data, error } = await supabase
               .from("orders")
-              .select("id, source, items, total_amount, order_at, txn_id, review_status, duplicate_of")
+              .select("id, source, items, total_amount, order_at, txn_id, review_status, duplicate_of, match_confidence, order_ref, merchant_name")
               .eq("user_id", user!.id)
               .range(from, from + PAGE - 1);
             if (error || !data?.length) break;
-            rows.push(...(data as typeof rows));
+            rows.push(...(data as Row[]));
             if (data.length < PAGE) break;
           }
-          const byId = new Map(rows.map((r) => [r.id, r]));
-          const dedupInput: DedupOrder[] = rows.map((r) => ({
+          // Plan the corrections with the shared planner (one source of truth for
+          // the Invariant-#6 rules — same code the heal script uses), then apply.
+          const planRows: DedupRow[] = rows.map((r) => ({
             id: r.id, source: r.source as OrderSource, itemsCount: Array.isArray(r.items) ? r.items.length : 0,
             total_amount: r.total_amount == null ? null : Number(r.total_amount), order_at: r.order_at, txn_id: r.txn_id,
+            order_ref: r.order_ref, merchantKey: orderBrandKey(r),
+            review_status: r.review_status, match_confidence: r.match_confidence, duplicate_of: r.duplicate_of,
           }));
-          const dupOf = findDuplicateOrders(dedupInput);
-          for (const [dupId, primaryId] of dupOf) {
-            const row = byId.get(dupId);
-            // Don't disturb an already-flagged dup or a human-decided order.
-            if (!row || row.duplicate_of || row.review_status === "confirmed" || row.review_status === "rejected") continue;
-            const { error: dErr } = await supabase
-              .from("orders")
-              .update({ duplicate_of: primaryId, review_status: "pending" })
-              .eq("id", dupId)
-              .eq("user_id", user!.id);
-            if (dErr) result.errors.push(`dedup flag ${dupId}: ${dErr.message}`);
-            else result.duplicates_flagged++;
+          for (const a of planDedup(planRows)) {
+            if (a.kind === "transfer") {
+              const { error } = await supabase.from("orders").update({
+                txn_id: a.txnId, match_confidence: a.matchConfidence,
+                review_status: a.reviewStatus, matched_at: new Date().toISOString(), duplicate_of: null,
+              }).eq("id", a.primaryId).eq("user_id", user!.id);
+              if (error) result.errors.push(`dedup txn-transfer ${a.primaryId}: ${error.message}`);
+            } else if (a.kind === "unflag") {
+              const { error } = await supabase.from("orders").update({ duplicate_of: null })
+                .eq("id", a.id).eq("user_id", user!.id);
+              if (error) result.errors.push(`dedup unflag ${a.id}: ${error.message}`);
+            } else {
+              const { error } = await supabase.from("orders").update({
+                duplicate_of: a.primaryId, review_status: "pending",
+                ...(a.releaseTxn ? { txn_id: null, match_confidence: null } : {}),
+              }).eq("id", a.id).eq("user_id", user!.id);
+              if (error) result.errors.push(`dedup flag ${a.id}: ${error.message}`);
+              else result.duplicates_flagged++;
+            }
           }
         }
 

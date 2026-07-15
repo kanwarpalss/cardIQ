@@ -788,3 +788,70 @@ describe("shipping-status emails are never treated as the order", () => {
     expect(parseOrderEmail("care@thepostbox.in", "Order #19882 confirmed", body, "")).not.toBeNull();
   });
 });
+
+// ── Bath & Body Works (order-bbw@apparelgroup.in) — condensed from the REAL
+// BBW01373248 confirmation (2026-07-12). The format that beat the generic
+// parser: a "YOUR ITEMS" header, then "<name> QTY <n> ₹<price> Form Size"
+// rows, no per-item table header, "ORDER TOTAL" as the grand total. Before the
+// fix this parsed to 0 items (total only). ──
+const BBW_FROM = "Bath&Body Works <order-bbw@apparelgroup.in>";
+const BBW_ITEMS_BODY =
+  "Order Number BBW01373248 Dear Kanwar, Thank you for your order. Order Confirmed " +
+  "VIEW ORDER STATUS Your order can't be changed at this time. YOUR ITEMS " +
+  "Backyard Honey Suckle QTY 1 ₹1,499.00 Form Size Multi QTY 1 ₹799.00 Form Size " +
+  "Gingerbread Bakery QTY 1 ₹750.00 Form Size Pink Gumball QTY 1 ₹799.00 Form Size " +
+  "Black QTY 1 ₹799.00 Form Size Not seeing everything in your order? Find complete details here " +
+  "SHIPPING Ship To Kanwar Singh Bellandur Bangalore Karnataka 560103 Payment Method Razorpay " +
+  "PAYMENT SUMMARY MERCHANDISE SUBTOTAL: ₹4,646.00 SHIPPING & HANDLING: ₹0.00 DISCOUNT - 10349.0 " +
+  "ORDER TOTAL ₹4,181.00 Bath&BodyWorks";
+
+describe("parseOrderEmail — Bath & Body Works (apparelgroup 'QTY n ₹' format)", () => {
+  const o = parseOrderEmail(BBW_FROM, "Your Order has been Successfully placed", BBW_ITEMS_BODY, "");
+
+  it("extracts all five items with qty + price", () => {
+    expect(o).not.toBeNull();
+    expect(o!.items).toEqual([
+      { name: "Backyard Honey Suckle", qty: 1, price: 1499 },
+      { name: "Multi", qty: 1, price: 799 },
+      { name: "Gingerbread Bakery", qty: 1, price: 750 },
+      { name: "Pink Gumball", qty: 1, price: 799 },
+      { name: "Black", qty: 1, price: 799 },
+    ]);
+  });
+
+  it("total is the ORDER TOTAL (₹4181), not the merchandise subtotal (₹4646)", () => {
+    expect(o!.total_amount).toBe(4181);
+  });
+
+  it("'SUCCESSFULLY PACKED' / 'SUCCESSFULLY SHIPPED' status pings are dropped even though they carry items", () => {
+    expect(parseOrderEmail(BBW_FROM, "YOUR ORDER HAS BEEN SUCCESSFULLY PACKED", BBW_ITEMS_BODY, "")).toBeNull();
+    expect(parseOrderEmail(BBW_FROM, "YOUR ORDER HAS BEEN SUCCESSFULLY SHIPPED", BBW_ITEMS_BODY, "")).toBeNull();
+  });
+});
+
+// ── The Postbox item-name hygiene. The real #118863 confirmation repeats the
+// variant and appends the brand, so the naive capture was
+// "Spark - Stationery Zipper Case / Classic Tan Classic Tan The Postbox". The
+// cleaned name must drop the trailing brand and the "x 1" tail. ──
+describe("parseOrderEmail — Postbox item name is cleaned of brand/qty residue", () => {
+  const POSTBOX_BODY =
+    "Order Confirmation Order No. #118863 11/07/2026 Hi Kanwar, This email confirms your order. " +
+    "Items ordered Spark - Stationery Zipper Case / Classic Tan - Classic Tan " +
+    "Spark - Stationery Zipper Case / Classic Tan Classic Tan The Postbox x 1 Rs. 1,699.00 " +
+    "Discount (Rs 200/- Off) -Rs. 200.00 Subtotal Rs. 1,499.00 Total excl. tax Rs. 1,270.34 " +
+    "Sales tax Rs. 228.66 Total Rs. 1,499.00 Payment Info Razorpay";
+  const o = parseOrderEmail("The Postbox <care@thepostbox.in>", "The Postbox: Confirmation email for Order #118863", POSTBOX_BODY, "");
+
+  it("parses one item at ₹1499 total", () => {
+    expect(o!.total_amount).toBe(1499);
+    expect(o!.items).toHaveLength(1);
+  });
+
+  it("item name starts with the product and does NOT include the brand or 'x 1'", () => {
+    expect(o!.items[0].name).toMatch(/^Spark - Stationery Zipper Case/);
+    expect(o!.items[0].name).not.toMatch(/The Postbox/);
+    expect(o!.items[0].name).not.toMatch(/\bx\s*1\b/i);
+    // The doubled title collapsed — "Spark" appears once, not twice.
+    expect(o!.items[0].name.match(/Spark/g)).toHaveLength(1);
+  });
+});

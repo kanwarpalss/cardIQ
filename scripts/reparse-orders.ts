@@ -24,6 +24,7 @@ import { google } from "googleapis";
 import { decrypt } from "../src/lib/crypto";
 import { makeGmailOAuthClient, extractBody, extractHtml } from "../src/lib/gmail/extract";
 import { parseOrderEmail } from "../src/lib/parsers/orders/registry";
+import { isInTransitStatusEmail } from "../src/lib/parsers/orders/types";
 
 const APPLY = process.argv.includes("--apply");
 
@@ -46,11 +47,11 @@ async function main() {
   }
   console.log(`${APPLY ? "APPLY" : "DRY RUN"} — re-parsing ${orders.length} orders…\n`);
 
-  // Stale rows we DELETE on apply: pure shipping-status pings that were stored
-  // as orders before the guard existed (they carry a total and double-count in
-  // the ledger). Deliberately EXCLUDES bare "delivered" so real delivery
-  // receipts (Instamart, Swiggy) are spared — only clear in-transit pings go.
-  const STRICT_SHIPPING_RE = /on its way|at your doorstep|has shipped|out for delivery|shipment|shipping update|is on the way/i;
+  // Stale rows we DELETE on apply: pure in-transit pings (packed / shipped /
+  // dispatched / out-for-delivery) that were stored as orders before the guard
+  // existed — they carry a total and double-count in the ledger. Uses the SAME
+  // predicate as the parser (isInTransitStatusEmail), so "delivered" is spared
+  // (real delivery receipts — Instamart, Swiggy — are kept).
 
   let gained = 0, gainedItems = 0, nowNull = 0, deleted = 0, unchanged = 0, errors = 0;
   const nullSamples: string[] = [];
@@ -75,7 +76,7 @@ async function main() {
         if (nullSamples.length < 12) nullSamples.push(`[${o.source}] ${(o.raw_subject ?? "").slice(0, 55)}`);
         // Purge clear shipping-status pings (they double-count) — but only if
         // unmatched, so a human-reviewed link is never silently destroyed.
-        if (APPLY && !o.txn_id && STRICT_SHIPPING_RE.test(o.raw_subject ?? "")) {
+        if (APPLY && !o.txn_id && isInTransitStatusEmail(o.raw_subject ?? "")) {
           await supabase.from("orders").delete().eq("id", o.id);
           deleted++;
         }

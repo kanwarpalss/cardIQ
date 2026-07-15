@@ -9,12 +9,14 @@
 // as seen, never stored). Items are left empty — arbitrary templates have no
 // reliable item structure, and the match (merchant + total) is the point.
 
-import { type ParsedOrder, type OrderItem, parseInrAmount, decodeEntities, merchantFromSender, isShippingStatusEmail } from "./types";
+import { type ParsedOrder, type OrderItem, parseInrAmount, decodeEntities, merchantFromSender, isShippingStatusEmail, isInTransitStatusEmail } from "./types";
+import { extractItemsGeneral, extractItemsFromMarkup } from "./item-extract";
+import { stripHtml } from "../../gmail/strip";
 
 const MONEY = String.raw`(?:rs\.?|inr|₹)\s*([\d,]+(?:\.\d{1,2})?)`;
 
 const ORDER_INTENT_RE =
-  /order\s*(?:confirmation|confirmed|placed|summary|number|no\.?|#)|your\s+order|thank\s+you\s+for\s+(?:your\s+)?order|payment\s+(?:successful|received|confirmation)|amount\s+paid|tax\s+invoice|\breceipt\b/i;
+  /order\s*(?:confirmation|confirmed|placed|summary|number|no\.?|id|#)|your\s+.{0,20}?\border\b|thank\s+you\s+for\s+(?:your\s+)?order|payment\s+(?:successful|received|confirmation)|amount\s+paid|tax\s+invoice|\breceipt\b|order\s+items/i;
 
 const ORDER_REF_RE =
   /order\s*(?:number|no\.?|id|#)\s*[,:#]*\s*([A-Za-z0-9][\w-]{3,})/i;
@@ -39,13 +41,26 @@ const SUBJECT_ITEM_RE = /(?:your\s+)?order\s+for\s+(.+?)\s*$/i;
 // Many merchants render a line-item table: a header, then "<name> <qty> <price>"
 // rows, then a totals footer. Catches Dominos, Printo, Supertails, etc.
 const TABLE_HEADER_RE =
-  /Item\s+Name\s+Quantity\s+Price|Items?\s+Qty\s+Price|Items?\s+QTY\s+COST|Item\s+Quantity\s+Price(?:\s+Total)?|Item\s+Price/i;
+  /Item\s+Name\s+Quantity\s+Price|Items?\s+Qty\s+Price|Items?\s+QTY\s+COST|Item\s+Quantity\s+Price(?:\s+Total)?|Item\s+Price|Your\s+Items/i;
 const TABLE_FOOTER_RE =
-  /Sub\s*-?\s*Total|Payment\s+details|Grand\s+Total|Total\s+(?:MRP|Amount|Paid)|\bTotal\s*:/i;
+  /Sub\s*-?\s*Total|Payment\s+details|Payment\s+Summary|Grand\s+Total|Total\s+(?:MRP|Amount|Paid)|\bTotal\s*:|Not\s+seeing\s+everything/i;
 // Price ₹/Rs-prefixed …
 const ROW_CURRENCY_RE = /(.+?)\s+(\d{1,3})\s+(?:Rs\.?|₹)\s*([\d,]+(?:\.\d{1,2})?)/g;
 // … or a bare decimal amount (Dominos: "Chicken … 1 500.00").
 const ROW_DECIMAL_RE = /(.+?)\s+(\d{1,3})\s+([\d,]+\.\d{2})\b/g;
+// Apparel Group / Bath & Body Works layout: "<name> QTY <n> ₹<price>", each row
+// trailed by a "Form Size" variant footer. The literal "QTY" and the trailing
+// "Form Size" never occur inside a product name, so they bound the row cleanly —
+// unlike ROW_CURRENCY_RE, which would fold "QTY" into the name and mis-read qty.
+const QTY_ROW_RE = /([^₹]*?)\s*QTY\s+(\d+)\s+(?:Rs\.?|₹|INR)\s*([\d,]+(?:\.\d{1,2})?)/gi;
+
+/** Strip the "Form Size" variant separator that precedes each BBW item name. */
+function cleanQtyName(raw: string): string {
+  return decodeEntities(raw)
+    .replace(/^(?:form\s+size|form|size)\s+/i, "")
+    .replace(/^[\s·|,\-–—]+/, "")
+    .trim();
+}
 
 /** Line items from a "<header> … <name> <qty> <price> … <footer>" table. */
 function itemsFromTable(text: string): OrderItem[] {
@@ -55,6 +70,20 @@ function itemsFromTable(text: string): OrderItem[] {
   const fAt = afterHeader.search(TABLE_FOOTER_RE);
   const block = (fAt >= 0 ? afterHeader.slice(0, fAt) : afterHeader).trim();
   if (!block) return [];
+
+  // BBW/apparelgroup "QTY n ₹" rows first — the literal "QTY" makes them
+  // unambiguous, so trying them before the looser patterns avoids mis-reads.
+  {
+    const items: OrderItem[] = [];
+    QTY_ROW_RE.lastIndex = 0;
+    for (let m = QTY_ROW_RE.exec(block); m; m = QTY_ROW_RE.exec(block)) {
+      const name = cleanQtyName(m[1]);
+      if (name.length < 2) continue;
+      items.push({ name, qty: parseInt(m[2], 10), price: parseInrAmount(m[3]) });
+      if (items.length >= 40) break;
+    }
+    if (items.length) return items;
+  }
 
   for (const rowRe of [ROW_CURRENCY_RE, ROW_DECIMAL_RE]) {
     const items: OrderItem[] = [];
@@ -103,7 +132,7 @@ export function parseGenericOrder(
   sender: string,
   subject: string,
   text: string,
-  _html: string
+  html: string
 ): ParsedOrder | null {
   const hay = `${subject}\n${text}`;
   if (!ORDER_INTENT_RE.test(hay)) return null;
@@ -111,11 +140,23 @@ export function parseGenericOrder(
   const total = extractTotal(text);
   if (total == null) return null;
 
-  // Item detail: a line-item table wins, else the subject ("… order for X").
-  const items = itemsFromTable(text);
+  // Item detail, richest source first: schema.org markup → the strict line-item
+  // table → the shared heuristic extractor over the text AND the stripped HTML
+  // (some merchants' text/plain is junk but the HTML carries the items) → the
+  // subject line as a last resort.
+  const brand = merchantFromSender(sender);
+  const strippedHtml = html ? stripHtml(html) : "";
+  const items = extractItemsFromMarkup(html);
+  if (items.length === 0) items.push(...itemsFromTable(text));
+  if (items.length === 0) items.push(...extractItemsGeneral(text, brand));
+  if (items.length === 0 && strippedHtml) items.push(...extractItemsGeneral(strippedHtml, brand));
   if (items.length === 0) items.push(...itemsFromSubject(subject));
 
-  // A shipping-status subject with NO detail is just a status ping → skip. But a
+  // A pure fulfilment ping (packed / shipped / dispatched) is NEVER the order —
+  // drop it even when it repeats the full item list, as BBW/apparelgroup does in
+  // every status email (else one purchase becomes four phantom rows).
+  if (isInTransitStatusEmail(subject)) return null;
+  // A "delivered"/other status with NO detail is just a status ping → skip. But a
   // "delivered" email that carries a real item table IS the receipt (Supertails,
   // Instamart) — keep it.
   if (isShippingStatusEmail(subject) && items.length === 0) return null;

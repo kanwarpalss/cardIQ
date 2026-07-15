@@ -67,6 +67,27 @@ export function merchantFromSender(from: string): string {
   return root ? root.charAt(0).toUpperCase() + root.slice(1) : "Unknown";
 }
 
+// Fulfilment-progress pings that are NEVER the purchase itself: packed,
+// shipped, dispatched, out-for-delivery, in-transit. A purchase ALWAYS has a
+// prior confirmation email, so these are safe to drop outright — even when they
+// carry the item list (BBW/apparelgroup repeats the items in every status
+// email). "delivered" is deliberately EXCLUDED here — for some marketplaces the
+// delivered email IS the receipt (Supertails/Instamart), so it's handled
+// conditionally (dropped only when it carries no item detail).
+const IN_TRANSIT_RE =
+  /\b(on its way|is on the way|has shipped|been shipped|successfully shipped|order shipped|shipped|shipment|shipping update|out for delivery|arriving|has been packed|successfully packed|been packed|packed|dispatched|track(ing)? (your )?(order|package|shipment)|at your doorstep)\b/i;
+const DELIVERED_RE = /\b(delivered|been delivered|order (is )?(now )?delivered)\b/i;
+
+/**
+ * A pure in-transit / fulfilment-progress ping (packed / shipped / dispatched /
+ * out-for-delivery). These are ALWAYS dropped — there is always a separate
+ * order-confirmation email to match the charge on, so keeping a status ping
+ * would double-count the purchase (and show a delivery date, not order date).
+ */
+export function isInTransitStatusEmail(subject: string): boolean {
+  return IN_TRANSIT_RE.test(subject);
+}
+
 /**
  * Is this a shipping / delivery STATUS email rather than the order itself?
  * A purchase generates one order-confirmation email (dated at purchase time,
@@ -81,9 +102,7 @@ export function merchantFromSender(from: string): string {
  * own "delivered = the receipt" semantics; this guard is for Shopify/generic.
  */
 export function isShippingStatusEmail(subject: string): boolean {
-  return /\b(on its way|has shipped|shipment|shipping update|out for delivery|track(ing)? (your )?(order|package|shipment)|is on the way|arriving|delivered|at your doorstep|been delivered|order (is )?(now )?delivered)\b/i.test(
-    subject
-  );
+  return IN_TRANSIT_RE.test(subject) || DELIVERED_RE.test(subject);
 }
 
 /** Decode the handful of HTML entities that survive into text we capture. */

@@ -4,7 +4,7 @@
 // fail a naive "group by amount" implementation.
 
 import { describe, it, expect } from "vitest";
-import { findDuplicateOrders, type DedupOrder } from "./order-dedup";
+import { findDuplicateOrders, planDedup, type DedupOrder, type DedupRow } from "./order-dedup";
 
 const o = (over: Partial<DedupOrder>): DedupOrder => ({
   id: "x", source: "generic", itemsCount: 0, total_amount: 4181,
@@ -23,12 +23,36 @@ describe("findDuplicateOrders", () => {
     expect(dup.has("merchant")).toBe(false);     // merchant (richer) is primary
   });
 
-  it("keeps a card-matched order as primary even if another has more items", () => {
+  it("the item-rich order is primary even when a poorer sibling holds the card match (Invariant #6)", () => {
+    // The gateway grabbed the txn first (cross-run), but the merchant's own
+    // itemized email must own the purchase — the sync then transfers the txn to
+    // it. This is the exact Postbox↔Razorpay inversion this session fixes.
     const dup = findDuplicateOrders([
-      o({ id: "matched", itemsCount: 0, txn_id: "t1", order_at: "2026-07-12T10:00:00Z" }),
-      o({ id: "rich", itemsCount: 3, txn_id: null, order_at: "2026-07-12T10:01:00Z" }),
+      o({ id: "gateway", source: "razorpay", itemsCount: 0, txn_id: "t1", order_at: "2026-07-12T10:00:00Z" }),
+      o({ id: "merchant", source: "shopify", itemsCount: 3, txn_id: null, order_at: "2026-07-12T10:01:00Z" }),
     ]);
-    expect(dup.get("rich")).toBe("matched");
+    expect(dup.get("gateway")).toBe("merchant"); // gateway is the duplicate
+    expect(dup.has("merchant")).toBe(false);     // item-rich merchant is primary
+  });
+
+  it("clusters same-merchant status repeats by order_ref, regardless of time gap", () => {
+    // BBW sends placed → packed → shipped → delivered over several days, each
+    // repeating the ₹4181 total under the same order number. The 5-min amount
+    // window can't merge them; the shared order_ref must.
+    const dup = findDuplicateOrders([
+      o({ id: "placed", source: "generic", itemsCount: 5, order_ref: "BBW01373248", merchantKey: "bathbodyworks", order_at: "2026-07-12T18:28:00Z" }),
+      o({ id: "delivered", source: "generic", itemsCount: 1, order_ref: "BBW01373248", merchantKey: "bathbodyworks", order_at: "2026-07-16T09:00:00Z" }),
+    ]);
+    expect(dup.get("delivered")).toBe("placed"); // richer 'placed' is primary
+    expect(dup.has("placed")).toBe(false);
+  });
+
+  it("does NOT merge different merchants that happen to share an order_ref token", () => {
+    const dup = findDuplicateOrders([
+      o({ id: "a", order_ref: "12345", merchantKey: "brandx", order_at: "2026-07-12T10:00:00Z" }),
+      o({ id: "b", total_amount: 999, order_ref: "12345", merchantKey: "brandy", order_at: "2026-07-16T10:00:00Z" }),
+    ]);
+    expect(dup.size).toBe(0);
   });
 
   it("does NOT merge two different purchases of the same amount far apart in time", () => {
@@ -78,5 +102,42 @@ describe("findDuplicateOrders", () => {
       o({ id: "b", total_amount: null, order_at: "2026-07-12T10:00:10Z" }),
     ]);
     expect(dup.size).toBe(0);
+  });
+});
+
+describe("planDedup — resolution actions", () => {
+  const row = (o: Partial<DedupRow>): DedupRow => ({
+    id: "x", source: "generic", itemsCount: 0, total_amount: 2897,
+    order_at: "2026-07-12T10:00:00Z", txn_id: null, order_ref: "BBW1", merchantKey: "bbw",
+    review_status: "unmatched", match_confidence: null, duplicate_of: null, ...o,
+  });
+
+  it("transfers the charge from an empty matched status-ping to the item-rich order (Invariant #6)", () => {
+    // Real BBW shape: 'placed' has 7 items but is unmatched; 'shipped' is empty
+    // but holds the confirmed card match under the same order_ref.
+    const actions = planDedup([
+      row({ id: "placed", itemsCount: 7, review_status: "unmatched" }),
+      row({ id: "shipped", itemsCount: 0, txn_id: "t1", match_confidence: "medium", review_status: "confirmed", order_at: "2026-07-14T10:00:00Z" }),
+    ]);
+    const transfer = actions.find((a) => a.kind === "transfer");
+    expect(transfer).toMatchObject({ primaryId: "placed", fromId: "shipped", txnId: "t1", reviewStatus: "confirmed" });
+    // 'shipped' is flagged a duplicate AND releases the charge it was holding.
+    expect(actions.find((a) => a.kind === "flag")).toMatchObject({ id: "shipped", primaryId: "placed", releaseTxn: true });
+  });
+
+  it("demotes a Razorpay gateway confirm in favour of the item-rich merchant order", () => {
+    const actions = planDedup([
+      row({ id: "merchant", source: "shopify", itemsCount: 3 }),
+      row({ id: "gateway", source: "razorpay", itemsCount: 0, txn_id: "t9", review_status: "confirmed", order_ref: null, order_at: "2026-07-12T10:00:20Z" }),
+    ]);
+    expect(actions.find((a) => a.kind === "transfer")).toMatchObject({ primaryId: "merchant", fromId: "gateway" });
+  });
+
+  it("is idempotent — a correctly-resolved cluster yields no actions", () => {
+    const actions = planDedup([
+      row({ id: "placed", itemsCount: 7, txn_id: "t1", review_status: "confirmed", match_confidence: "medium" }),
+      row({ id: "shipped", itemsCount: 0, review_status: "pending", duplicate_of: "placed", order_at: "2026-07-14T10:00:00Z" }),
+    ]);
+    expect(actions).toEqual([]);
   });
 });

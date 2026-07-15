@@ -27,6 +27,7 @@ import {
   isShippingStatusEmail,
 } from "./types";
 import { stripHtml } from "../../gmail/strip";
+import { extractItemsGeneral, extractItemsFromMarkup } from "./item-extract";
 
 const MONEY = String.raw`(?:rs\.?|inr|₹)\s*([\d,]+(?:\.\d{1,2})?)`;
 // "Total" as a whole word (skips "Subtotal") and not "Total excl. tax".
@@ -61,16 +62,21 @@ export function parseShopifyOrder(
   // text/plain part is junk (leaked CSS — e.g. The Postbox), so the stripped
   // HTML is tried first; but a thin/stub HTML falls back to the plain text.
   // "Has an order" == "has a grand-Total line we can match the charge on".
+  const merchant = merchantFromSender(sender);
   for (const content of [html ? stripHtml(html) : "", text]) {
     const total = grandTotal(content);
     if (total == null) continue;
+    // schema.org markup (most reliable) → theme-specific extraction → the shared
+    // heuristic extractor (Sleepy Owl, Supertails, Nicobar, …).
+    const markup = extractItemsFromMarkup(html);
+    const items = markup.length ? markup : extractItems(content, merchant);
     return {
       source: "shopify",
       kind: /\brefund(ed)?\b/i.test(subject) ? "refund" : "order",
       order_ref: ORDER_REF_RE.exec(subject)?.[1] ?? ORDER_REF_RE.exec(content)?.[1],
-      merchant_name: merchantFromSender(sender),
+      merchant_name: merchant,
       total_amount: total,
-      items: extractItems(content),
+      items: items.length ? items : extractItemsGeneral(content, merchant),
     };
   }
   return null; // no order total in either source → not a parseable order
@@ -99,7 +105,7 @@ const ITEM_BLOCK_RE = new RegExp(
  * Best-effort line items from the order block. Delimits the qty with a × sign or
  * a spaced letter "x" ("Postbox x 1 Rs. 1,699.00").
  */
-function extractItems(content: string): OrderItem[] {
+function extractItems(content: string, brand?: string): OrderItem[] {
   const block = ITEM_BLOCK_RE.exec(content)?.[1];
   if (!block) return [];
 
@@ -113,7 +119,7 @@ function extractItems(content: string): OrderItem[] {
     "gi"
   );
   for (const m of block.matchAll(withMultSign)) {
-    const name = cleanItemName(m[1]);
+    const name = cleanItemName(m[1], brand);
     if (name) items.push({ name, qty: parseInt(m[2], 10), price: parseInrAmount(m[3]) });
   }
   if (items.length) return items;
@@ -121,7 +127,7 @@ function extractItems(content: string): OrderItem[] {
   // No per-line price in this theme: "<name> × <qty>" only (total lives below).
   const noPriceMult = new RegExp(String.raw`([^×]{2,150}?)\s*×\s*(\d+)`, "gi");
   for (const m of block.matchAll(noPriceMult)) {
-    const name = cleanItemName(m[1]);
+    const name = cleanItemName(m[1], brand);
     if (name) items.push({ name, qty: parseInt(m[2], 10) });
   }
   if (items.length) return items;
@@ -134,18 +140,45 @@ function extractItems(content: string): OrderItem[] {
     "gi"
   );
   for (const m of block.matchAll(withLetterX)) {
-    const name = cleanItemName(m[1]);
+    const name = cleanItemName(m[1], brand);
     if (name) items.push({ name, qty: parseInt(m[2], 10), price: parseInrAmount(m[3]) });
   }
   if (items.length) return items;
 
   // Last resort: the text before the first price line (single-item orders).
   const single = new RegExp(String.raw`(.{2,150}?)\s*(?:rs\.?|₹)\s*[\d,]+(?:\.\d{1,2})?`, "i").exec(block);
-  const name = single ? cleanItemName(single[1]) : "";
+  const name = single ? cleanItemName(single[1], brand) : "";
   return name ? [{ name }] : [];
 }
 
-/** Trim list punctuation and a leading "Items ordered"-style label residue. */
-function cleanItemName(raw: string): string {
-  return decodeEntities(raw).replace(/^[\s·|,\-–—]+/, "").replace(/[\s·|,\-–—]+$/, "").trim();
+/**
+ * A doubled product title collapses to its first occurrence. The "Items ordered"
+ * theme repeats the title around the variant ("Spark … / Classic Tan - Classic
+ * Tan Spark … / Classic Tan Classic Tan"), so once the tail re-states the head
+ * phrase, cut there. Only phrases ≥10 chars count, so short repeated words
+ * ("Tan … Tan") never trigger a false truncation.
+ */
+function collapseRepeat(name: string): string {
+  const words = name.split(/\s+/);
+  for (let take = Math.min(10, words.length - 1); take >= 3; take--) {
+    const head = words.slice(0, take).join(" ");
+    if (head.length < 10) continue;
+    const idx = name.indexOf(head, head.length);
+    if (idx > 0) return name.slice(0, idx).trim();
+  }
+  return name;
+}
+
+/**
+ * Trim list punctuation and a leading "Items ordered"-style label residue, then
+ * (for D2C themes) strip a trailing brand the theme appends after the product
+ * ("… Classic Tan The Postbox") and collapse a doubled title.
+ */
+function cleanItemName(raw: string, brand?: string): string {
+  let s = decodeEntities(raw).replace(/^[\s·|,\-–—]+/, "").replace(/[\s·|,\-–—]+$/, "").trim();
+  if (brand && brand.length >= 3) {
+    const b = brand.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    s = s.replace(new RegExp(String.raw`\s*${b}\s*$`, "i"), "").trim();
+  }
+  return collapseRepeat(s).replace(/[\s·|,\-–—]+$/, "").trim();
 }
