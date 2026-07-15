@@ -2,7 +2,7 @@
 
 > Project brain. Updated every session.
 > Static architecture doc lives in ARCHITECTURE.md — don't duplicate it here.
-> Last updated: 2026-07-14
+> Last updated: 2026-07-15
 
 ---
 
@@ -71,6 +71,12 @@ A one-stop credit-card destination: syncs bank transaction emails from Gmail (Ax
 ## §5 Decisions Log
 
 | Date | Decision | Rejected alternative | Why |
+| 2026-07-15 | Merchant-first ranking needs a periodic RECONCILIATION pass (`planDedup()`), not just a sort-before-match | Sort-before-match only (as shipped 2026-07-12) | A charge claimed by a poor gateway email in an EARLY sync run can never be won back by a richer merchant email arriving in a LATER run — sorting only prevents the violation within one run, not across runs. `planDedup()` detects an already-claimed resource with a richer unclaimed candidate and emits an explicit `transfer` action. Same function used by the live sync AND any heal script (ARCH-04) |
+| 2026-07-15 | Dedup clusters by TWO signals (exact-amount+time-window OR shared order_ref+merchant) via union-find | Amount+time window alone | A merchant's OWN status-repeat emails (placed → packed → shipped → delivered) can span DAYS, well outside any sane time window — but always share the platform's order_ref. Amount+time catches cross-entity duplicates (merchant email + gateway confirmation); order_ref catches same-entity status repeats. Neither alone was sufficient |
+| 2026-07-15 | Shared item-extract.ts is a FALLBACK layer, tried only after existing theme-specific parser logic declines | Rewrite shopify.ts/generic.ts's own extraction logic in place | A fallback-only design is structurally unable to regress the ~240 orders that already parsed correctly — it can only add coverage. Verified: 0 polluted item names in a 120-order real-data quality sample after wiring it in |
+| 2026-07-15 | schema.org JSON-LD read as a first-pass, but heuristic table-parsing stays the primary engine | Adopt JSON-LD/microdata as the primary extraction strategy (per Google's documented Gmail Order-markup standard) | Researched as industry best-practice, then measured against 30 real no-item emails in KP's Gmail: present in 0/30 (only EazyDiner uses microdata, and EazyDiner is itemless anyway). The heuristic approach is empirically correct for this Indian-D2C-email corpus; JSON-LD reading stays as free insurance for any future merchant that does embed it |
+| 2026-07-15 | IKEA item-detail (PDF attachments) is out of scope for the email-body parser; spawned as a separate task | Try to extend body-text heuristics further | IKEA's confirmation body literally says "Attached is a copy of your order" — items live only in PDF attachments (`gmail.users.messages.attachments.get`), unreachable by any body parser. Needs a genuinely different capability (PDF text extraction + attachment download), so it's tracked as its own reviewed change, not bolted onto the body-parser work |
+| 2026-07-15 | Blinkit/Amazon-beyond-email sourced via dedicated importers (`src/lib/imports/`), not the Gmail order-sync pipeline | Try to find/force a Blinkit email source | Blinkit sends zero order emails (verified: `hello@blinkit.com` is marketing-only) and has no public API — the only source is its own logged-in web-app JSON, fetched with the user's session cookie. Amazon's email coverage is genuinely incomplete (stopped emailing totals ~2023) — its official "Request Your Information" CSV export is the complete source. Both are structurally outside what a Gmail-only sync can ever see |
 | 2026-07-14b | 5-min same-purchase window: unique exact-amount match within ≤5 min → HIGH confidence even without brand affinity | Keep at medium for all no-affinity matches | An order email and its charge fire within seconds of each other (e.g. Ellementry via "Dileep Esse" / Shopflo). A unique exact amount within 5 min is one event — the unrecognisable descriptor is incidental, not a signal of ambiguity. Mirrors the same-purchase dedup rule already trusted for duplicate detection |
 | 2026-07-14b | Shopify ITEM_BLOCK_RE covers 4 header variants + 3 footer variants in a single regex | Per-theme branching logic | A single regex is the canonical definition; per-theme branches require knowing the theme up-front and rot as new themes appear. The regex boundary approach (stop at first totals line) is theme-agnostic |
 |---|---|---|---|
@@ -104,7 +110,17 @@ A one-stop credit-card destination: syncs bank transaction emails from Gmail (Ax
 | 2026-07-14 | PIN NOT captured from Gyftr voucher emails | Capture for display | A PIN is a live security secret. Reading and storing it — even encrypted — widens the blast radius if the DB is ever compromised. KP can retrieve the PIN from the original email if needed |
 | 2026-07-14 | SmartBuy "Paid by card Rs X" is the total, not "Amount Paid" | Use Amount Paid | "Amount Paid" includes points and vouchers, not just card spend. KP's card statement shows only the "Paid by card" amount — using the other field would create a mismatch |
 
-## §6 Current State (as of 2026-07-14b)
+## §6 Current State (as of 2026-07-15)
+
+**New 2026-07-15 (comprehensive item-detail overhaul + Invariant #6 fix + non-email importers):**
+- **Shared item extractor** — `src/lib/parsers/orders/item-extract.ts`, a format-agnostic FALLBACK (tried after shopify.ts/generic.ts's own logic) covering 7 row-pattern families: qty-first (`N x Item`), `Item QTY/Qty: N`, `Item ×N` (BBW/DaMENSCH/Dot Badges), qty+two-prices (HUFT/Supertails), GST-grid (Lacoste), bare-number "Order Status"-anchored (DailyObjects), single-price with a `looksLikeProduct()` guard (Sleepy Owl/Google Play). Also reads schema.org JSON-LD as a first-pass (`extractItemsFromMarkup()`) and strips invisible zero-width spacer junk some ESPs inject (Nicobar).
+- **Invariant #6 reconciliation fix** — `planDedup()` in `src/lib/order-dedup.ts` is now the single source of truth for both the live sync AND heal scripts: clusters same-purchase candidates by exact-amount+time-window OR shared order_ref, picks the richest as primary regardless of who currently holds the card-charge claim, and emits a `transfer` action to move the charge. Fixes the class of bug where a poor Razorpay/status-ping email claimed a charge in an early sync run before a richer merchant email existed. Applied to real data: **117 corrections** (4 charge-transfers, 3 stale-primary unflags, 110 duplicate-flags), 0 errors.
+- **Shipping-status guard split** — `isInTransitStatusEmail()` (packed/shipped/dispatched, ALWAYS dropped) vs. `isShippingStatusEmail()` (adds "delivered", dropped only if no items — some marketplaces' delivered email IS the receipt).
+- **Non-email importers (new)** — `src/lib/imports/amazon-csv.ts` (official Amazon "Request Your Information" export parser, own CSV parser, 5 tests) and `src/lib/imports/blinkit-json.ts` (Blinkit has NO order emails at all — sourced from its internal web-app JSON). **Blinkit's real API shape was decoded this session but the parser has NOT yet been rewritten to match it** — see §9 for the exact field paths and next steps.
+- **Coverage: 85.8% of "retrievable" orders have item detail** (952/1,110 — excludes EazyDiner fee-invoices/lounge/pure-gateway rows, which are genuinely itemless by nature). All-live-orders figure: 63.8% (1,008/1,581).
+- **361 tests passing.** Typecheck + lint clean. Committed `e8af5ea` (parser+dedup) + `fdab041` (importers), both **pushed to `origin/main`** (Vercel auto-deploys).
+- **IKEA item-detail spawned as a separate task** (`task_aef8accd`, running independently in a parallel local session as of session end) — items are in PDF attachments, not the email body; needs a genuinely different capability (PDF text extraction).
+- Full technical detail (exact regex patterns, the decoded Blinkit JSON field-path map, per-merchant before/after parse results) lives in `Claude HQ/summaries/cardIQ/order-item-detail-bugfix.md` — this SPEC section is the summary; that file is the reference.
 
 **New 2026-07-14b (item-detail coverage + same-purchase auto-confirm):**
 - **Bug 1 — Ellementry not tagged:** Unique exact-amount matches within ≤5 min now auto-confirm at HIGH confidence even without brand-name affinity. `WINDOW_TIGHT_DAYS = 5 / (24*60)` in `src/lib/order-match.ts`. Backfill: `scripts/confirm-tight-matches.ts --apply` promoted **41 pending orders** to confirmed/high.
@@ -200,6 +216,11 @@ A one-stop credit-card destination: syncs bank transaction emails from Gmail (Ax
 
 | Issue | Status | Notes |
 |---|---|---|
+| Blinkit importer parser doesn't match Blinkit's real JSON shape | 🔴 NEXT SESSION FIRST TASK | `blinkit-json.ts` was built speculatively with generic e-commerce field aliases (`order_id`/`items`/`price`) BEFORE seeing real data. KP captured the actual `order_history` endpoint response this session — it's a UI-widget render tree (`response.snippets[].data.items[]`, item names buried in `image.accessibility_text.text`), nothing like the generic shape assumed. Full field-path map is in `Claude HQ/summaries/cardIQ/order-item-detail-bugfix.md` §J. Parser rewrite needed before `import-blinkit.ts` will produce anything. |
+| Blinkit order_history is paginated, only 10 orders per page | 🟡 KNOWN GAP | `response.pagination.next_url` carries the next cursor; `scripts/blinkit-fetch.ts` needs pagination-walking added to get full history, not just the most recent 10 orders. |
+| Blinkit order_history truncates items to ~4-5 per order | 🟡 KNOWN GAP | Orders with more items show a "+N" tile instead of listing them; the Reorder button's deeplink URL (`grofers://cart?product_ids=...`) has ALL product IDs (not names) — full per-item detail needs the `order_details_v2` endpoint per order, not yet explored. |
+| Amazon CSV importer untested against a real export | 🟡 VERIFY | `import-amazon.ts` + `amazon-csv.ts` pass 5 unit tests against a synthetic fixture built from Amazon's documented CSV schema, but KP has not yet run it against a real `Retail.OrderHistory.1.csv`. First real run may need a column-mapping tweak (fuzzy header matching should absorb minor drift, but unverified). |
+| IKEA items are in PDF attachments, not the email body | 🟢 IN PROGRESS (parallel session) | Spawned as task `task_aef8accd`, running independently — needs a PDF text-extraction dependency + attachment download + IKEA-specific PDF parser. Check its result at the start of the next session rather than re-investigating. |
 | gmail_seen_messages population | 🟡 VERIFY | The May-09 "Load full history" blocker predates two months of sync work (gap-detector, sync dropdown, ICICI domain fix) — likely resolved, but confirm with `SELECT COUNT(*) FROM gmail_seen_messages` when next in Supabase. |
 | Model routing hook missing | ✅ RESOLVED | The model-routing gate fired via UserPromptSubmit hook on 2026-07-08 — the hook exists and works. |
 | Recategorize re-cooks ALL transactions | Pending fix | Should only re-cook transactions affected by changed mappings/rules. |
@@ -208,7 +229,7 @@ A one-stop credit-card destination: syncs bank transaction emails from Gmail (Ax
 | EPM ₹1.5L monthly milestone reward wording | 🟡 PENDING KP | Milestone encoded per KP (cardholder) but ICICI's public page doesn't list it — KP to supply the exact reward text from iMobile; update `icici-emeralde-private-metal.ts`. |
 | Infinia quarterly bonus milestone | 🟡 PENDING KP | Widely reported (10K bonus points) but sources conflict on threshold (₹4L vs ₹9L); intentionally unmodeled. KP to confirm from HDFC app and add the tier. |
 | Gmail re-grant needs KP's hands | 🟡 ACTION KP | Insufficient-scope can only be fixed by revoking CardIQ at myaccount.google.com/permissions, then re-login AND ticking the Gmail checkbox on Google's consent screen. App now detects + explains this, but can't do it for him. |
-| Order sync unverified against live Gmail | 🟡 BLOCKED on the row above | Code-complete + 57 parser/matcher tests, but TEST-02 (real synced counts) needs Gmail re-grant + migrations 011/012. Then: Sync Gmail → expect "N orders parsed, M linked" in the result line. |
+| Order sync unverified against live Gmail | ✅ RESOLVED | 2026-07-15: extensively verified against real Gmail throughout the item-detail overhaul session — real emails pulled and re-parsed for every merchant investigated, real-data reparse/heal runs applied to the live DB (176 orders gained items, 117 dedup corrections, 0 errors across all passes). |
 | Swiggy split-payment total picks the card-labeled row | Accepted (best available) | No real split-payment sample existed in Gmail; heuristic = prefer "card" row, else last row. A wrong pick fails safe (no match) — revisit if a real sample surfaces. |
 | Re-theme taste review | 🟡 PENDING KP | Coral (#d94e26) on warm cream chosen per "playful-chic, color pops, fintech-editorial". Only /login was visually verifiable without OAuth. If the coral reads wrong, it's a 2-file value edit (tailwind.config.ts + globals.css). |
 
@@ -224,7 +245,26 @@ A one-stop credit-card destination: syncs bank transaction emails from Gmail (Ax
 | `GOOGLE_CLIENT_SECRET` | Server |
 | `ENCRYPTION_KEY` | Server (AES-256 for stored secrets) |
 
-## §9 Session Handoff Notes (2026-07-14)
+## §9 Session Handoff Notes (2026-07-15)
+
+### ▶ NEXT SESSION — start here (KP wants ALL orders extracted, properly)
+
+**1. Rewrite the Blinkit importer parser — top priority.** Current `src/lib/imports/blinkit-json.ts` was built speculatively (before real data) and does NOT match Blinkit's actual response shape. KP captured a real `order_history` response this session — its exact structure (field-by-field, with the truncation caveat and the Reorder-button product-ID fallback) is fully documented in `Claude HQ/summaries/cardIQ/order-item-detail-bugfix.md` §J. Short version: `response.snippets[]` where `widget_type === "order_history_container_vr"` is one order; total is in `.data.items[0].data.left_underlined_subtitle.text` (strip the ₹); date in `.data.items[0].data.subtitle.text` (NO YEAR — needs inference); order_id in `.data.items[0].tracking.common_attributes.order_id`; item NAMES (first ~4-5 only) in `.data.items[2].data.horizontal_item_list[].data.image.accessibility_text.text`. Rewrite the parser against this shape, test against the real JSON (it's in the session transcript / can ask KP to re-paste), then re-run `scripts/import-blinkit.ts --apply`.
+   - Also add pagination to `scripts/blinkit-fetch.ts` (`response.pagination.next_url`) — the sample only had 10 orders (one page).
+   - Stretch goal for complete per-item qty/price: explore the `order_details_v2` deeplink (cart_id + order_id) per order — not yet attempted.
+2. **Test the Amazon CSV importer against a real export.** KP needs to: amazon.in → Account → "Request Your Information" → "Your Orders" → wait for the emailed ZIP → unzip → run `npx tsx scripts/import-amazon.ts --file <path>/Retail.OrderHistory.1.csv` (dry run first, add `--apply` to write). This has never touched a real file — the column-fuzzy-matching should absorb schema drift but is unverified. If it comes back empty or wrong, read the actual CSV headers and adjust `amazon-csv.ts`'s `col()` keyword lists.
+3. **Check on the IKEA PDF-parsing task** (`task_aef8accd`) — KP started it in a separate parallel session. Read its outcome before doing any IKEA-related work yourself; don't duplicate.
+4. **Run an Orders sync in the app** (KP action) if not already done since the 2026-07-15 commits landed — this is what actually applies the Invariant #6 dedup/transfer corrections and any newly-parsed items to transactions KP sees in the dashboard. The code changes are pushed; a sync run is what makes them visible.
+5. Once Blinkit + Amazon are both landing real data, re-measure the coverage number (currently 85.8% of retrievable orders) — Blinkit/Amazon-CSV imports should push it meaningfully higher since those are entirely NEW orders CardIQ's Gmail sync structurally cannot see.
+
+### Accomplished This Session (2026-07-15 — comprehensive item-detail overhaul)
+1. **Shared item-extract.ts fallback extractor** — 7 row-pattern families, covers Instamart/Dot Badges/DaMENSCH/HUFT/Supertails/Lacoste/DailyObjects/Sleepy Owl/Google Play/Nicobar. 0 polluted names in a 120-order real-data quality check.
+2. **Invariant #6 cross-run reconciliation fix** — `planDedup()` single source of truth (sync route + heal scripts); fixed the Postbox/BBW class of bug where a poor gateway/status email permanently held a charge that a richer merchant email should have claimed. 117 real corrections applied, 0 errors.
+3. **Shipping-status guard split** — in-transit (always drop) vs. delivered (drop only if empty).
+4. **Amazon CSV + Blinkit JSON importers built** — Amazon ready to test; Blinkit needs a parser rewrite (see next-session block above — real shape now known).
+5. **Coverage: 85.8% of retrievable orders have items** (up from ~13% at the start of this multi-session arc on 2026-07-14).
+6. **361 tests passing**, typecheck + lint clean. Lead-reviewed (🟡 ship with notes). Committed `e8af5ea` + `fdab041`, both pushed to `origin/main`.
+7. **IKEA PDF-attachment gap discovered and spawned as its own task** — running in parallel.
 
 ### Accomplished This Session (2026-07-13–14, orders layer — full build)
 1. **Gyftr voucher bridge, end-to-end.** Migration 015 (vouchers table) applied. Parser, voucher→charge matcher, FIFO reconciler, Orders UI (amber badge, chain detail, excluded from Total). Scripts: `drawdown-vouchers.ts` for backfill.
