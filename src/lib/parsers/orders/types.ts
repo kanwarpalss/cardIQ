@@ -12,7 +12,7 @@
 // needs a schema change — the brand itself lives in `merchant_name`.
 export type OrderSource =
   | "amazon" | "swiggy" | "zomato" | "bigbasket" | "blinkit"
-  | "razorpay" | "shopify" | "smartbuy" | "apple" | "generic";
+  | "razorpay" | "shopify" | "smartbuy" | "apple" | "ikea" | "generic";
 
 export type OrderItem = {
   name: string;

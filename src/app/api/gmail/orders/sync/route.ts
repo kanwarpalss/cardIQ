@@ -7,6 +7,7 @@ import {
   extractHtml,
 } from "@/lib/gmail/extract";
 import { friendlyGmailSyncError } from "@/lib/gmail/errors";
+import { findPdfAttachments, parseOrderFromPdfs, decodeAttachmentData } from "@/lib/gmail/pdf";
 import { isMissingTableError, isMissingColumnError } from "@/lib/supabase/errors";
 import { parseOrderEmail, ORDER_DISCOVERY_CLAUSES, type OrderSource } from "@/lib/parsers/orders/registry";
 import { parseGyftrVouchers, isGyftrSender } from "@/lib/parsers/orders/gyftr";
@@ -365,7 +366,24 @@ export async function POST(req: Request) {
                 continue;
               }
 
-              const parsed = parseOrderEmail(fromHeader, subject, text, html);
+              let parsed = parseOrderEmail(fromHeader, subject, text, html);
+
+              // PDF-attachment fallback (cost-gated): only when the body yielded
+              // NO items and the message actually carries a PDF. Merchants like
+              // IKEA ship every line item in a PDF invoice, never the body.
+              if ((parsed?.items.length ?? 0) === 0) {
+                const pdfs = findPdfAttachments(full.data.payload);
+                if (pdfs.length > 0) {
+                  const download = async (attachmentId: string) => {
+                    const att = await gmail.users.messages.attachments.get({
+                      userId: "me", messageId: msgId, id: attachmentId,
+                    });
+                    return decodeAttachmentData(att.data.data);
+                  };
+                  const fromPdf = await parseOrderFromPdfs(fromHeader, pdfs, download);
+                  if (fromPdf && fromPdf.items.length > 0) parsed = fromPdf;
+                }
+              }
 
               if (!parsed) {
                 result.skipped++;

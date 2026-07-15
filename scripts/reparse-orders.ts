@@ -23,6 +23,7 @@ import { createClient } from "@supabase/supabase-js";
 import { google } from "googleapis";
 import { decrypt } from "../src/lib/crypto";
 import { makeGmailOAuthClient, extractBody, extractHtml } from "../src/lib/gmail/extract";
+import { findPdfAttachments, parseOrderFromPdfs, decodeAttachmentData } from "../src/lib/gmail/pdf";
 import { parseOrderEmail } from "../src/lib/parsers/orders/registry";
 import { isInTransitStatusEmail } from "../src/lib/parsers/orders/types";
 
@@ -67,7 +68,21 @@ async function main() {
       const from = headers.find((h) => h.name?.toLowerCase() === "from")?.value || "";
       const text = extractBody(full.data.payload);
       const html = extractHtml(full.data.payload);
-      const parsed = parseOrderEmail(from, subject, text, html);
+      let parsed = parseOrderEmail(from, subject, text, html);
+
+      // PDF-attachment fallback — same cost gate as the live sync: only when
+      // the body recovered no items and a PDF is attached (IKEA et al.).
+      if ((parsed?.items.length ?? 0) === 0) {
+        const pdfs = findPdfAttachments(full.data.payload);
+        if (pdfs.length > 0) {
+          const download = async (attachmentId: string) => {
+            const att = await gmail.users.messages.attachments.get({ userId: "me", messageId: o.gmail_message_id, id: attachmentId });
+            return decodeAttachmentData(att.data.data);
+          };
+          const fromPdf = await parseOrderFromPdfs(from, pdfs, download);
+          if (fromPdf && fromPdf.items.length > 0) parsed = fromPdf;
+        }
+      }
 
       const oldN = Array.isArray(o.items) ? o.items.length : 0;
       if (!parsed) {
