@@ -21,3 +21,7 @@ CONTEXT.md
 # Local audit artifacts — contain real financial data, never commit
 audit-review.json
 audit*.log
+
+# Personal order exports (may contain private data / never commit)
+blinkit-orders.json
+*Retail.OrderHistory*.csv
