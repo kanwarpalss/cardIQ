@@ -7,31 +7,43 @@
  *   B. DevTools: open blinkit.com → My Orders, open the Network tab, find the
  *      "orders" XHR, right-click → Copy → Copy response, save it to a .json file.
  *
- * Then:  npx tsx scripts/import-blinkit.ts --file blinkit-orders.json [--apply]
+ * blinkit-fetch.ts includes per-order detail responses automatically. For a
+ * manually-captured detail file, pass it too:
+ *   npx tsx scripts/import-blinkit.ts --file blinkit-orders.json --details-file blinkit-details.json [--apply]
  *
  * The parser is shape-tolerant but Blinkit's JSON isn't documented — if items
  * come through empty, send me the JSON and I'll tune the field aliases in
  * src/lib/imports/blinkit-json.ts.
  */
-import { readFileSync } from "fs";
+import { existsSync, readFileSync } from "fs";
 import { join } from "path";
 for (const line of readFileSync(join(process.cwd(), ".env.local"), "utf8").split("\n")) {
   const m = /^\s*([A-Z_]+)\s*=\s*(.*)\s*$/.exec(line);
   if (m && !process.env[m[1]]) process.env[m[1]] = m[2].replace(/^["']|["']$/g, "");
 }
 import { createClient } from "@supabase/supabase-js";
-import { parseBlinkitOrders } from "../src/lib/imports/blinkit-json";
+import { mergeBlinkitOrders, parseBlinkitOrderDetails, parseBlinkitOrders } from "../src/lib/imports/blinkit-json";
 
 const APPLY = process.argv.includes("--apply");
 const fileArg = process.argv[process.argv.indexOf("--file") + 1];
+const detailsArg = process.argv[process.argv.indexOf("--details-file") + 1];
 
 async function main() {
   if (!fileArg || fileArg.startsWith("--")) {
     console.error("Usage: npx tsx scripts/import-blinkit.ts --file <orders.json> [--apply]");
     process.exit(1);
   }
-  const orders = parseBlinkitOrders(JSON.parse(readFileSync(fileArg, "utf8")));
-  console.log(`Parsed ${orders.length} Blinkit orders (${orders.reduce((n, o) => n + o.items.length, 0)} items).`);
+  if (!existsSync(fileArg)) {
+    console.error(`Cannot find ${fileArg}. The Blinkit fetch did not succeed, so there is nothing to import yet. Fix the fetch first, then rerun this command.`);
+    process.exit(1);
+  }
+  const captured = JSON.parse(readFileSync(fileArg, "utf8"));
+  const history = parseBlinkitOrders(captured);
+  const details = detailsArg && !detailsArg.startsWith("--")
+    ? parseBlinkitOrderDetails(JSON.parse(readFileSync(detailsArg, "utf8")))
+    : parseBlinkitOrderDetails(captured);
+  const orders = mergeBlinkitOrders(history, details);
+  console.log(`Parsed ${orders.length} Blinkit orders (${orders.reduce((n, o) => n + o.items.length, 0)} items; ${details.length} full detail response${details.length === 1 ? "" : "s"}).`);
   if (orders.length === 0) { console.log("No orders found — the JSON shape may differ; send it over and I'll tune the parser."); return; }
   for (const o of orders.slice(0, 8)) console.log(`  ${o.orderedAt.slice(0, 10)} ₹${o.total} — ${o.items.map((i) => i.name).join(", ").slice(0, 90)}`);
 
