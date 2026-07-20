@@ -161,6 +161,22 @@ describe("reconcileVouchers — brand isolation & normalization", () => {
     // "NykaaFashion" vs "Nykaa Fashion" both slug to "nykaafashion".
     expect(r.orders[0].status).toBe("attributed");
   });
+
+  it("allows an audited multi-brand Luxe voucher at Birkenstock", () => {
+    const r = reconcileVouchers(
+      [v({ brand: "Luxe Gift Card", faceValue: 5000 })],
+      [o({ brand: "BIRKENSTOCK", voucherBrand: "luxe", amount: 5000 })]
+    );
+    expect(r.orders[0]).toMatchObject({ attributed: 5000, shortfall: 0, status: "attributed" });
+  });
+
+  it("does not let a Luxe voucher leak to an unapproved merchant", () => {
+    const r = reconcileVouchers(
+      [v({ brand: "Luxe Gift Card", faceValue: 5000 })],
+      [o({ brand: "Random Store", amount: 5000 })]
+    );
+    expect(r.orders[0].status).toBe("unattributed");
+  });
 });
 
 describe("reconcileVouchers — reconcile tolerance", () => {

@@ -10,7 +10,7 @@ import { useEffect, useMemo, useState } from "react";
 
 type Item = { name: string; qty?: number | null; price?: number | null };
 type LedgerTxn = { card_last4: string; amount_inr: number | string; txn_at: string; merchant: string | null };
-type VoucherDraw = { voucherId: string; amount: number; cardTxnId?: string | null };
+type VoucherDraw = { voucherId: string; amount: number; cardTxnId?: string | null; evidence?: "email" | "inferred_split" };
 type Order = {
   id: string;
   source: string;
@@ -28,6 +28,10 @@ type Order = {
   voucher_draws?: VoucherDraw[] | null;
   voucher_txn?: LedgerTxn | null; // the card charge that funded the voucher
   voucher_amount?: number | null; // total drawn from vouchers for this order
+  card_paid_amount?: number | string | null;
+  voucher_paid_amount?: number | string | null;
+  voucher_brand_key?: string | null;
+  payment_evidence?: "email" | "inferred_split" | null;
   duplicate_of?: string | null;   // same purchase, reported by another entity
 };
 
@@ -52,6 +56,9 @@ const EIGHT_YEARS_DAYS = 365 * 8;
 const fmt = (n: number | string | null | undefined) =>
   n == null ? "—" : "₹" + Math.round(Number(n)).toLocaleString("en-IN");
 const day = (s: string) => new Date(s).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
+const voucherLabel = (key: string) => key.split(/[\s_-]+/).map((part) =>
+  part ? part[0].toUpperCase() + part.slice(1) : part
+).join(" ");
 
 type LinkFilter = "all" | "linked" | "unlinked";
 
@@ -67,6 +74,9 @@ function isCardLinked(o: Order): o is Order & { txn: LedgerTxn } {
 function LinkBadge({ o }: { o: Order }) {
   if (isDuplicate(o)) {
     return <span className="text-2xs px-1.5 py-0.5 rounded-md border whitespace-nowrap text-mist/45 border-rim bg-raised" title="Same purchase, reported by another entity (gateway/shipper)">⧉ duplicate</span>;
+  }
+  if (isCardLinked(o) && isVoucherFunded(o)) {
+    return <span className="text-2xs px-1.5 py-0.5 rounded-md border whitespace-nowrap text-amber border-amber/30 bg-amber/5">◈ split ••{o.txn.card_last4}</span>;
   }
   if (isCardLinked(o)) {
     return <span className="text-2xs px-1.5 py-0.5 rounded-md border whitespace-nowrap text-emerald border-emerald/30 bg-emerald/5">✓ card ••{o.txn.card_last4}</span>;
@@ -339,7 +349,13 @@ export default function OrdersTab() {
                       )}
                       <div className="flex flex-wrap gap-x-6 gap-y-1 text-2xs text-mist/50 pt-1 border-t border-wire">
                         {o.order_ref && <span>Order #{o.order_ref}</span>}
-                        {isCardLinked(o) ? (
+                        {isCardLinked(o) && isVoucherFunded(o) ? (
+                          <span className="text-amber/80">
+                            Paid via {fmt(o.voucher_amount)} {o.voucher_brand_key ? `${voucherLabel(o.voucher_brand_key)} ` : ""}voucher
+                            {` + ${fmt(o.card_paid_amount ?? o.txn.amount_inr)} on card ••${o.txn.card_last4}`}
+                            {o.payment_evidence === "inferred_split" ? " · inferred from exact payment remainder" : " · stated in receipt"}
+                          </span>
+                        ) : isCardLinked(o) ? (
                           <span>Paid on card ••{o.txn.card_last4} · {fmt(o.txn.amount_inr)} · {day(o.txn.txn_at)}</span>
                         ) : isVoucherFunded(o) ? (
                           <span className="text-amber/80">

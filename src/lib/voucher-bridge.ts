@@ -51,6 +51,9 @@ export type VoucherPaidOrder = {
   id: string;
   /** Merchant brand — free text; normalized internally. */
   brand: string;
+  /** Exact voucher family when known. This is essential for multi-brand
+   * instruments such as Luxe being spent at Birkenstock. */
+  voucherBrand?: string | null;
   /** The voucher/wallet-funded amount in INR (NOT any card-paid split portion). */
   amount: number;
   /** ISO timestamp of the order. */
@@ -127,6 +130,15 @@ const BRAND_ALIASES: Record<string, string> = {
   "bigbasket": "bigbasket", "big basket": "bigbasket", "bigbasket wallet": "bigbasket", "bbnow": "bigbasket", "bb now": "bigbasket",
   "blinkit": "blinkit", "grofers": "blinkit",
   "flipkart": "flipkart",
+  "luxe": "luxe", "luxe gift card": "luxe",
+  "birkenstock": "birkenstock", "birkenstock india": "birkenstock",
+  "hp pay": "hppay", "hp pay wallet": "hppay",
+};
+
+// Multi-brand voucher acceptance must be explicit. Same-brand funding is
+// always allowed; cross-brand funding is allowed only by this audited map.
+const MERCHANT_VOUCHER_ACCEPTANCE: Record<string, string[]> = {
+  birkenstock: ["luxe"],
 };
 
 /** Collapse a merchant/voucher brand string to a canonical key. */
@@ -139,6 +151,11 @@ export function normalizeBrand(raw: string): string {
   // Unknown brand → its own slug (letters/digits only). Reconciles with its own
   // vouchers; never bleeds into another brand's balance.
   return (stripped || cleaned).replace(/[^a-z0-9]+/g, "") || "unknown";
+}
+
+export function compatibleVoucherKeys(merchant: string): string[] {
+  const key = normalizeBrand(merchant);
+  return [...new Set([key, ...(MERCHANT_VOUCHER_ACCEPTANCE[key] ?? [])])];
 }
 
 function ms(iso: string): number {
@@ -187,7 +204,12 @@ export function reconcileVouchers(
     let need = o.amount > 0 ? o.amount : 0; // non-positive order → nothing to draw
 
     if (need > 0) {
-      const pool = byBrand.get(key) ?? [];
+      const allowedKeys = o.voucherBrand
+        ? [normalizeBrand(o.voucherBrand)]
+        : compatibleVoucherKeys(key);
+      const pool = allowedKeys
+        .flatMap((allowed) => byBrand.get(allowed) ?? [])
+        .sort((a, b) => ms(a.purchasedAt) - ms(b.purchasedAt) || a.id.localeCompare(b.id));
       for (const v of pool) {
         if (need <= 0) break;
         // A voucher can only fund orders placed at/after it was bought

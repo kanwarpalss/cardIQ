@@ -2,7 +2,7 @@
 
 > Project brain. Updated every session.
 > Static architecture doc lives in ARCHITECTURE.md — don't duplicate it here.
-> Last updated: 2026-07-15b
+> Last updated: 2026-07-21
 
 ---
 
@@ -116,8 +116,19 @@ A one-stop credit-card destination: syncs bank transaction emails from Gmail (Ax
 | 2026-07-14 | Dedup primary selection: card-matched > itemsCount > orderMatchRank > id | Keep whichever came first | The richest representation stays visible; the signal-only gateway email becomes the "duplicate of" row |
 | 2026-07-14 | PIN NOT captured from Gyftr voucher emails | Capture for display | A PIN is a live security secret. Reading and storing it — even encrypted — widens the blast radius if the DB is ever compromised. KP can retrieve the PIN from the original email if needed |
 | 2026-07-14 | SmartBuy "Paid by card Rs X" is the total, not "Amount Paid" | Use Amount Paid | "Amount Paid" includes points and vouchers, not just card spend. KP's card statement shows only the "Paid by card" amount — using the other field would create a mismatch |
+| 2026-07-21 | Match each Gyftr issuance email as one purchase batch | Match each voucher code to a separate charge | A single Gyftr charge can issue many codes. Aggregate face value plus a bounded 75–110% discount/fee window matches the real card charge without reusing it per code; indistinguishable candidates are refused. |
+| 2026-07-21 | Voucher drawdowns require payment evidence | Infer that every same-brand order used vouchers | Brand affinity alone creates fictional spending. Drawdowns now require an amount stated in the receipt or an exact order-total remainder covered by compatible voucher balance and a unique direct-card charge. |
+| 2026-07-21 | Allow audited multi-brand voucher families | Require merchant and voucher brand keys to be identical | Multi-brand products such as Luxe can pay Birkenstock. These relationships live in an explicit allowlist; unrelated brands never cross-match. |
 
-## §6 Current State (as of 2026-07-15b)
+## §6 Current State (as of 2026-07-21)
+
+**New 2026-07-21 (Gyftr voucher ledger + split-payment reconciliation):**
+- **Issuance parsing:** modern and legacy Gyftr formats now parse every code in an email, including `E-Gift Card Code`, `Gift Card Code`, `Voucher Code`, `Value`/`Face Value`, HP Pay, Reward Multiplier and PAYBACK subjects. PINs remain intentionally unstored.
+- **Purchase matching:** vouchers are grouped by issuance email and matched to one aggregate `GYFTR VIA SMARTBUY` charge. The matcher accepts bounded discounts/fees (75–110% of aggregate face value), prefers nearest time and amount, and refuses an indistinguishable tie.
+- **Evidence-backed usage:** an order may carry both a direct-card transaction and voucher draws. Receipt-stated splits are authoritative; otherwise a split is inferred only when a unique smaller merchant charge plus compatible available vouchers exactly equals the order total. The audited multi-brand map includes Luxe → Birkenstock.
+- **UI/API:** Orders and Spends can show a `◈ split` payment chain, voucher family/amount, direct-card amount and whether the split was stated or inferred. Gateway duplicates relinquish their transaction to the richer merchant order. Expand affordances remain restricted to genuinely itemized orders.
+- **Live reconciliation:** migration 017 applied. The ledger contains **567 clean vouchers**, **314 linked to funding charges**, and **0 malformed brands**. Eight orders have explicit or inferred voucher amounts; the two fully attributable inferred splits total **₹5,931**: IKEA ₹931 voucher + ₹165 card, and Birkenstock #525889 ₹5,000 Luxe vouchers + ₹793 card.
+- **Maintenance:** `scripts/reconcile-voucher-ledger.ts` is the idempotent dry-run-by-default backfill; `--apply` performs the same safe reconciliation. The old drawdown script delegates to it so the unsafe same-brand/full-order heuristic cannot run again.
 
 **New 2026-07-15b (PDF-attachment item extraction — IKEA):** commit `1e6ec50`
 - **The gap:** some merchants ship line items ONLY in a PDF invoice attached to the order email (IKEA confirmed — body just says "Attached is a copy of your order"; PDFs sent as `application/octet-stream` with a `.pdf` name). The body item-extractor could never reach them.
@@ -151,10 +162,7 @@ A one-stop credit-card destination: syncs bank transaction emails from Gmail (Ax
 
 **New 2026-07-13–14 (orders layer — full parser build + voucher bridge):**
 - **Item-detail coverage:** 1,877 orders stored; **153 flagged as same-purchase duplicates** (hidden by default); **1,724 visible orders; 739 with item detail (43%)**. All dedicated parsers at 100%: Apple 171/171, SmartBuy 110/110, Swiggy 141/141, BigBasket 87/87, Amazon 50/50, Zomato 13/13. Generic/Razorpay/Shopify tails remain partial (intermediary emails + remaining format variants).
-- **Gyftr voucher bridge** (3 chunks, code-complete + live):
-  - Chunk 1: `src/lib/parsers/orders/gyftr.ts` parses voucher-issuance emails (gifts@gyftr.com) → `vouchers` table. `matchVoucherToCharge()` in `src/lib/voucher-match.ts` links each voucher to the "GYFTR VIA SMARTBUY" card charge using `charge ≤ faceValue + ₹0.75` (handles discounts). Migration 015 applied.
-  - Chunk 2: `src/lib/voucher-bridge.ts` — FIFO `reconcileVouchers()` draws brand orders down against vouchers by brand key (brand aliases: "amazon fresh" → "amazon"). `orders.voucher_draws` jsonb column carries the draw amounts.
-  - Chunk 3: `OrdersTab.tsx` shows "◈ voucher ••<card>" badge (amber) on voucher-funded orders; voucher-detail row shows the chain (GYFTR charge → voucher → brand orders). Voucher-funded orders excluded from the Total value tile (already counted via the GYFTR charge).
+- **Gyftr voucher bridge** — the original migration-015 bridge is superseded by the 2026-07-21 batch matcher and evidence-backed split reconciliation above. `orders.voucher_draws` retains the auditable order → voucher → funding-charge chain.
 - **SmartBuy travel parsers** (`src/lib/parsers/orders/smartbuy.ts`): flights show full itinerary ("Chandigarh (IXC) → Bangalore (BLR) · 19 Oct 2023 · IndiGo 6E-6634 · Mr. Amarjit Anand · PNR V3YIXX"); hotels show "Goa Marriott Resort & Spa · 29 Sep 2023–1 Oct 2023 · Guest room, 1 King, Garden view · Kanwar". Uses "Paid by card Rs X" as total.
 - **Apple parser** (`src/lib/parsers/orders/apple.ts`): handles 3 formats — Format A ("Apple Account:"), Format B (DOCUMENT NO. anchor with BILLED-TO header), Receipt (both text+HTML tried, item-winner preferred). 171/171 real emails parse correctly; 30/30 manual test cases pass.
 - **Swiggy Format B:** text-table "Item Name Quantity Price" extraction added; previously 91 orders had 0 items.
@@ -248,7 +256,7 @@ A one-stop credit-card destination: syncs bank transaction emails from Gmail (Ax
 | Infinia quarterly bonus milestone | 🟡 PENDING KP | Widely reported (10K bonus points) but sources conflict on threshold (₹4L vs ₹9L); intentionally unmodeled. KP to confirm from HDFC app and add the tier. |
 | Gmail re-grant needs KP's hands | 🟡 ACTION KP | Insufficient-scope can only be fixed by revoking CardIQ at myaccount.google.com/permissions, then re-login AND ticking the Gmail checkbox on Google's consent screen. App now detects + explains this, but can't do it for him. |
 | Order sync unverified against live Gmail | ✅ RESOLVED | 2026-07-15: extensively verified against real Gmail throughout the item-detail overhaul session — real emails pulled and re-parsed for every merchant investigated, real-data reparse/heal runs applied to the live DB (176 orders gained items, 117 dedup corrections, 0 errors across all passes). |
-| Swiggy split-payment total picks the card-labeled row | Accepted (best available) | No real split-payment sample existed in Gmail; heuristic = prefer "card" row, else last row. A wrong pick fails safe (no match) — revisit if a real sample surfaces. |
+| Swiggy split-payment parsing | ✅ RESOLVED | Every payment-method row is summed for the order total; card and voucher/wallet portions are stored separately. Regression fixture: ₹315 card + ₹50 Swiggy Money = ₹365 total. |
 | Re-theme taste review | 🟡 PENDING KP | Coral (#d94e26) on warm cream chosen per "playful-chic, color pops, fintech-editorial". Only /login was visually verifiable without OAuth. If the coral reads wrong, it's a 2-file value edit (tailwind.config.ts + globals.css). |
 | IKEA notification emails carry no items | Accepted (data reality) | Plain "Order confirmation" emails from "IKEA Customer Service" ("We've got your order! Yay!") have no items and no PDF — items live only behind an ikea.com login. Unrecoverable from email; not a parser gap. |
 | IKEA 2023 `ikea.in` e-invoice layout | Accepted (safe refusal) | Sender is now recognized, but the PDF text layer scrambles and splits money columns. Both known emails duplicate already-captured order `195483337`, so parsing would add zero coverage while risking incorrect amounts. |
@@ -326,7 +334,7 @@ A one-stop credit-card destination: syncs bank transaction emails from Gmail (Ax
 4. **KP visual click-through feedback** — after KP reviews the Orders tab live, implement any UX polish he requests (e.g., badge styling, sort order, filter presets).
 5. **`/upgrade-brain`** — 8 days overdue (cadence 7d); run at start of next session.
 
-**Migrations — all applied (001–016). No backlog.**
+**Migrations — all applied (001–017). No backlog.**
 
 ### Accomplished This Session (2026-07-12, C redesign — merchant-first ranking)
 

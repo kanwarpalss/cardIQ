@@ -257,18 +257,24 @@ describe("parseOrderEmail (registry)", () => {
 // real silent-wrong-answer bugs, not synthetic edge cases. TEST-01 compliant.
 
 describe("parseSwiggyOrder — split payments (boundary-prover)", () => {
-  it("uses the CARD charge, not the first 'Paid Via' line, when payment is split", () => {
+  it("preserves the whole split while identifying the direct-card portion", () => {
     const text =
       "Order ID: 242283010812320 BILL DETAILS " +
       "Paid Via Swiggy Money ₹50.00 Paid Via Credit/Debit card ₹315.00";
     const o = parseSwiggyOrder("Your Swiggy order was successfully delivered", text, "");
-    expect(o!.total_amount).toBe(315);
+    expect(o).toMatchObject({
+      total_amount: 365,
+      card_paid_amount: 315,
+      voucher_paid_amount: 50,
+      voucher_brand: "Swiggy Money",
+    });
   });
 
   it("falls back to the LAST 'Paid Via' line when none mentions a card", () => {
     const text = "Order ID: 111 BILL DETAILS Paid Via Swiggy Money ₹50.00 Paid Via UPI ₹315.00";
     const o = parseSwiggyOrder("Your Swiggy order was successfully delivered", text, "");
-    expect(o!.total_amount).toBe(315);
+    expect(o!.total_amount).toBe(365);
+    expect(o!.voucher_paid_amount).toBe(50);
   });
 
   it("handles lakh-separator totals (₹1,23,456.78)", () => {

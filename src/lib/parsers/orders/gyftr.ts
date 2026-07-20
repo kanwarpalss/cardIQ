@@ -52,11 +52,11 @@ export function isGyftrSender(from: string): boolean {
 
 // Each voucher is anchored by its gift-card code. Codes are alphanumeric, ≥6
 // chars (real sample "FVM4B44E36338"); allow internal hyphens some brands use.
-const CODE_RE = /E-?\s*Gift\s+Card\s+Code\s+([A-Z0-9][A-Z0-9-]{5,})/gi;
+const CODE_RE = /(?:E-?\s*Gift\s+Card\s+Code|Gift\s+Card\s+Code|Voucher\s+Code)\s*:?\s*([A-Z0-9][A-Z0-9-]{5,})/gi;
 // Face value: "Value 2000" (no ₹, no decimals in the sample) — but tolerate a
 // currency prefix and paise for other brands' formats.
-const VALUE_RE = /\bValue\s+(?:Rs\.?\s*|₹\s*|INR\s*)?([\d,]+(?:\.\d{1,2})?)/i;
-const VALID_TILL_RE = /Valid\s+Till\s+(\d{1,2}\s+[A-Za-z]{3,9}\s+\d{4})/i;
+const VALUE_RE = /\bValue\s*:?\s*(?:Rs\.?\s*|₹\s*|INR\s*)?([\d,]+(?:\.\d{1,2})?)/i;
+const VALID_TILL_RE = /Valid\s+Till\s*:?\s*(\d{1,2}\s+[A-Za-z]{3,9}\s+\d{4})/i;
 
 /** "Amazon Fresh Amazon Fresh" → "Amazon Fresh" (Gyftr repeats the brand). */
 function dedupeDoubled(s: string): string {
@@ -85,9 +85,61 @@ function brandFromRegion(region: string): string {
   ];
   const last = fields.at(-1);
   if (last) flat = flat.slice(last.index! + last[0].length);
+  const lastClick = flat.toLowerCase().lastIndexOf("click here");
+  if (lastClick >= 0) flat = flat.slice(lastClick + "click here".length);
+  // Between two voucher blocks Gyftr inserts redemption instructions. They
+  // are layout chrome, not part of the following brand. Real bulk messages
+  // previously produced keys such as "tcclickhereblinkit" because this text
+  // leaked into the six-word tail.
+  flat = flat
+    .replace(/(?:,?\s*For Important Instructions,?\s*)?Redemption steps?\s*&\s*T&C\s*Click Here/gi, " ")
+    .replace(/To Redeem your Gift Voucher\s*:\s*Click Here\s*\.?/gi, " ")
+    .replace(/^.*?(?:instant voucher details\.|voucher enclosed below\s*:)/i, " ")
+    .replace(/^[\s,.:;-]+/, "")
+    .trim();
   const afterBreak = flat.split(/[.:!?]/).pop()!.trim();
   const capped = afterBreak.split(" ").filter(Boolean).slice(-6).join(" ");
   return dedupeDoubled(capped);
+}
+
+function brandFromSubject(subject: string): string | undefined {
+  const patterns = [
+    /here is your\s+(.+?)\s+INR\s+[\d,]+\s+gift voucher/i,
+    /your\s+(.+?)\s+gift voucher worth\s+INR/i,
+    /your order for\s+(.+?)\s+GyFTR Instant Gift Voucher/i,
+  ];
+  for (const re of patterns) {
+    const brand = re.exec(subject)?.[1]?.replace(/^Gift Voucher\s+/i, "").trim();
+    if (brand) return brand;
+  }
+  return undefined;
+}
+
+const TABLE_HEADER_RE = /E-?\s*Gift\s+Card\s+Code\s+Face\s+Value\s+(?:PIN|GCID)\s+(?:Expiry\s+)?Date/i;
+const TABLE_ROW_RE = /([A-Z0-9][A-Z0-9-]{5,})\s+([\d,]+(?:\.\d{1,2})?)\s+[A-Z0-9-]+\s+(\d{1,2}\s+[A-Za-z]{3,9}\s+\d{4})/gi;
+
+/** Older Gyftr templates use one table header followed by bare rows rather
+ * than repeating "E-Gift Card Code" before every code. */
+function parseLegacyTable(subject: string, body: string): ParsedVoucher[] {
+  const header = TABLE_HEADER_RE.exec(body);
+  if (!header) return [];
+  const afterHeader = body.slice(header.index + header[0].length);
+  const end = afterHeader.search(/For any help|How to Redeem|Important Instructions|Warm regards/i);
+  const table = end >= 0 ? afterHeader.slice(0, end) : afterHeader.slice(0, 1200);
+  const brand =
+    brandFromSubject(subject) ??
+    /buying\s+(.+?)\s+Gift Code\s+from Gyftr/i.exec(body)?.[1]?.trim() ??
+    /received a\s+(.+?)\s+Gift Voucher/i.exec(body)?.[1]?.trim();
+  if (!brand) return [];
+
+  const vouchers: ParsedVoucher[] = [];
+  TABLE_ROW_RE.lastIndex = 0;
+  for (let m = TABLE_ROW_RE.exec(table); m; m = TABLE_ROW_RE.exec(table)) {
+    const faceValue = parseInrAmount(m[2]);
+    if (!(faceValue > 0)) continue;
+    vouchers.push({ brand, faceValue, code: m[1], validTill: toIsoDate(m[3]) });
+  }
+  return vouchers;
 }
 
 // Month abbreviations → 0-based index, for TZ-safe date assembly.
@@ -108,17 +160,17 @@ function toIsoDate(raw: string): string | undefined {
  * recognizable voucher block (a Gyftr marketing/expiry-reminder mail), so the
  * sync records it as seen and moves on — same contract as a null order parse.
  */
-export function parseGyftrVouchers(_subject: string, text: string, html: string): ParsedVoucher[] {
+export function parseGyftrVouchers(subject: string, text: string, html: string): ParsedVoucher[] {
   // Prefer the stripped text; some emails only populate the HTML part, so fall
   // back to a whitespace-collapsed HTML if the text has no code anchor.
-  const body = CODE_RE.test(text) ? text : html.replace(/<[^>]+>/g, " ");
+  const body = (CODE_RE.test(text) || TABLE_HEADER_RE.test(text)) ? text : html.replace(/<[^>]+>/g, " ");
   CODE_RE.lastIndex = 0;
 
   const anchors: Array<{ code: string; start: number; end: number }> = [];
   for (let m = CODE_RE.exec(body); m; m = CODE_RE.exec(body)) {
     anchors.push({ code: m[1], start: m.index, end: m.index + m[0].length });
   }
-  if (anchors.length === 0) return [];
+  if (anchors.length === 0) return parseLegacyTable(subject, body);
 
   const vouchers: ParsedVoucher[] = [];
   for (let i = 0; i < anchors.length; i++) {
@@ -133,7 +185,9 @@ export function parseGyftrVouchers(_subject: string, text: string, html: string)
     const faceValue = parseInrAmount(valueM[1]);
     if (!(faceValue > 0)) continue;
 
-    const brand = brandFromRegion(before);
+    // Subject-stated brands (HP Pay / Reward Multiplier) apply to every code in
+    // the message and are more reliable than the inter-row date residue.
+    const brand = brandFromSubject(subject) || brandFromRegion(before);
     if (!brand) continue; // no brand → can't reconcile it; don't store a blank
 
     const validTill = VALID_TILL_RE.exec(after)?.[1];

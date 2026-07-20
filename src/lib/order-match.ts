@@ -41,6 +41,9 @@ export type OrderLite = {
   source: OrderSource;
   kind: "order" | "refund";
   total_amount: number | null;
+  /** Direct-card portion of a split payment. When present, this—not the full
+   * order total—is what must equal the bank transaction. */
+  card_paid_amount?: number | null;
   order_at: string;
   /** Brand/store name (marketplace restaurant, or D2C brand from the sender). */
   merchant_name?: string | null;
@@ -48,6 +51,7 @@ export type OrderLite = {
 
 export type MatchConfidence = "high" | "medium" | "low";
 export type OrderMatch = { txnId: string; confidence: MatchConfidence };
+export type SplitOrderMatch = OrderMatch & { cardAmount: number; voucherAmount: number };
 
 // The review state machine (migration 014). Only 'unmatched' orders are
 // (re-)matched; 'rejected' is a permanent dead-end (reject = permanent unlink).
@@ -116,7 +120,7 @@ function brandTokens(name: string | null | undefined): string[] {
  *     order email, and is intentionally absent for Postbox (bank shows an
  *     unrelated "hourglass" descriptor → matched on amount+time alone).
  */
-function hasAffinity(order: OrderLite, txn: TxnLite): boolean {
+export function hasOrderTxnAffinity(order: OrderLite, txn: TxnLite): boolean {
   const merchant = (txn.merchant ?? "").toLowerCase();
   if (!merchant) return false;
 
@@ -141,12 +145,13 @@ export function matchOrderToTxn(
   const wantType = order.kind === "refund" ? "credit" : "debit";
 
   // ── Amount-less orders (Amazon Delivered): unique-affinity-only, low. ──
-  if (order.total_amount == null) {
+  const matchAmount = order.card_paid_amount ?? order.total_amount;
+  if (matchAmount == null) {
     const candidates = txns.filter(
       (t) =>
         t.txn_type === wantType &&
         !usedTxnIds.has(t.id) &&
-        hasAffinity(order, t) &&
+        hasOrderTxnAffinity(order, t) &&
         daysApart(order.order_at, t.txn_at) <= WINDOW_DAYS_NO_AMOUNT
     );
     if (candidates.length !== 1) return null; // ambiguity → refuse to guess
@@ -158,12 +163,12 @@ export function matchOrderToTxn(
     (t) =>
       t.txn_type === wantType &&
       !usedTxnIds.has(t.id) &&
-      Math.abs(t.amount_inr - order.total_amount!) <= AMOUNT_TOLERANCE &&
+      Math.abs(t.amount_inr - matchAmount) <= AMOUNT_TOLERANCE &&
       daysApart(order.order_at, t.txn_at) <= WINDOW_DAYS_WITH_AMOUNT
   );
   if (sameAmount.length === 0) return null;
 
-  const affine = sameAmount.filter((t) => hasAffinity(order, t));
+  const affine = sameAmount.filter((t) => hasOrderTxnAffinity(order, t));
 
   if (affine.length > 0) {
     const nearest = affine.reduce((best, t) =>
@@ -189,6 +194,39 @@ export function matchOrderToTxn(
   const gap = daysApart(order.order_at, sameAmount[0].txn_at);
   if (gap <= WINDOW_TIGHT_DAYS) return { txnId: sameAmount[0].id, confidence: "high" };
   return { txnId: sameAmount[0].id, confidence: gap <= 2 ? "medium" : "low" };
+}
+
+/**
+ * Conservatively infer a voucher+card split when the merchant email only
+ * exposes the full order total. The direct charge must share merchant affinity,
+ * be unique in a tight two-day window, and leave a remainder that available
+ * compatible voucher balance can fully cover. No name-only or amount-only
+ * fallback is allowed here: inference has to be stronger than ordinary review.
+ */
+export function matchSplitOrderToTxn(
+  order: OrderLite,
+  txns: TxnLite[],
+  availableVoucherBalance: number,
+  usedTxnIds: ReadonlySet<string> = new Set()
+): SplitOrderMatch | null {
+  if (order.kind !== "order" || order.total_amount == null || order.total_amount <= AMOUNT_TOLERANCE) return null;
+  if (order.card_paid_amount != null || availableVoucherBalance <= AMOUNT_TOLERANCE) return null;
+
+  const candidates = txns.filter((t) => {
+    if (t.txn_type !== "debit" || usedTxnIds.has(t.id) || !hasOrderTxnAffinity(order, t)) return false;
+    if (daysApart(order.order_at, t.txn_at) > 2) return false;
+    if (!(t.amount_inr > 0 && t.amount_inr < order.total_amount! - AMOUNT_TOLERANCE)) return false;
+    const remainder = order.total_amount! - t.amount_inr;
+    return remainder <= availableVoucherBalance + AMOUNT_TOLERANCE;
+  });
+  if (candidates.length !== 1) return null;
+  const t = candidates[0];
+  return {
+    txnId: t.id,
+    confidence: "high",
+    cardAmount: t.amount_inr,
+    voucherAmount: Math.round((order.total_amount - t.amount_inr) * 100) / 100,
+  };
 }
 
 /**

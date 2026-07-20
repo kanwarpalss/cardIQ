@@ -36,6 +36,13 @@ export type ParsedOrder = {
    * be a low-confidence match.
    */
   total_amount?: number;
+  /** Portion charged directly to a card, when the email itemises payment
+   *  methods. For ordinary card-only orders this may equal total_amount. */
+  card_paid_amount?: number;
+  /** Portion explicitly paid from a gift-card / voucher / wallet balance. */
+  voucher_paid_amount?: number;
+  /** Voucher family printed by the email ("Swiggy Money", "Luxe", …). */
+  voucher_brand?: string;
   items: OrderItem[];
 };
 

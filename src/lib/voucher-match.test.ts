@@ -1,9 +1,8 @@
-// Boundary tests for voucher → card-charge matching. The discount rule (charge
-// ≤ face, not exact-amount) and the "never pay more than face" guard are the
-// footguns, so each has a case that would fail a naive exact-amount matcher.
+// Boundary tests for voucher → card-charge matching. Real purchases include
+// both discounts and convenience fees, and bulk emails aggregate many codes.
 
 import { describe, it, expect } from "vitest";
-import { matchVoucherToCharge, type VoucherLite } from "./voucher-match";
+import { matchVoucherBatchToCharge, matchVoucherToCharge, type VoucherLite } from "./voucher-match";
 import type { TxnLite } from "./order-match";
 
 const voucher = (over: Partial<VoucherLite> = {}): VoucherLite => ({
@@ -34,8 +33,8 @@ describe("matchVoucherToCharge — the happy path", () => {
 });
 
 describe("matchVoucherToCharge — guards", () => {
-  it("never pairs with a charge LARGER than face value (you never pay above face)", () => {
-    const r = matchVoucherToCharge(voucher({ faceValue: 2000 }), [txn({ amount_inr: 2100 })]);
+  it("never pairs with a charge beyond the bounded fee envelope", () => {
+    const r = matchVoucherToCharge(voucher({ faceValue: 2000 }), [txn({ amount_inr: 2300 })]);
     expect(r).toBeNull();
   });
 
@@ -81,5 +80,36 @@ describe("matchVoucherToCharge — multiple candidates", () => {
     const v2 = matchVoucherToCharge(voucher({ faceValue: 500, purchasedAt: "2026-06-22T09:26:00Z" }), txns, used);
     expect(v1?.txnId).toBe("c1");
     expect(v2?.txnId).toBe("c2");
+  });
+});
+
+describe("matchVoucherBatchToCharge — real Gyftr purchase shapes", () => {
+  it("matches one aggregate charge to a multi-voucher email", () => {
+    const r = matchVoucherBatchToCharge(
+      { faceValue: 16_000, purchasedAt: "2026-06-07T16:12:31Z", voucherCount: 10 },
+      [txn({ amount_inr: 16_000, txn_at: "2026-06-07T16:12:40Z" })]
+    );
+    expect(r).toEqual({ txnId: "t1", confidence: "high" });
+  });
+
+  it("accepts an observed convenience fee above face value", () => {
+    expect(matchVoucherBatchToCharge(
+      { faceValue: 10_000, purchasedAt: "2026-07-03T04:39:29Z", voucherCount: 1 },
+      [txn({ amount_inr: 10_413, txn_at: "2026-07-03T04:39:30Z" })]
+    )).toEqual({ txnId: "t1", confidence: "high" });
+  });
+
+  it("refuses charges outside the bounded discount/fee envelope", () => {
+    const batch = { faceValue: 10_000, purchasedAt: "2026-07-03T04:39:29Z", voucherCount: 1 };
+    expect(matchVoucherBatchToCharge(batch, [txn({ amount_inr: 7_000 })])).toBeNull();
+    expect(matchVoucherBatchToCharge(batch, [txn({ amount_inr: 11_500 })])).toBeNull();
+  });
+
+  it("refuses an indistinguishable duplicate charge", () => {
+    const batch = { faceValue: 5_000, purchasedAt: "2026-01-01T00:00:00Z", voucherCount: 1 };
+    expect(matchVoucherBatchToCharge(batch, [
+      txn({ id: "a", amount_inr: 4_875, txn_at: "2026-01-01T00:00:05Z" }),
+      txn({ id: "b", amount_inr: 4_875, txn_at: "2026-01-01T00:00:05Z" }),
+    ])).toBeNull();
   });
 });

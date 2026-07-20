@@ -11,9 +11,9 @@ import { findPdfAttachments, parseOrderFromPdfs, decodeAttachmentData } from "@/
 import { isMissingTableError, isMissingColumnError } from "@/lib/supabase/errors";
 import { parseOrderEmail, ORDER_DISCOVERY_CLAUSES, type OrderSource } from "@/lib/parsers/orders/registry";
 import { parseGyftrVouchers, isGyftrSender } from "@/lib/parsers/orders/gyftr";
-import { matchOrderToTxn, orderMatchRank, reviewStatusFor, type TxnLite, type MatchConfidence } from "@/lib/order-match";
-import { matchVoucherToCharge } from "@/lib/voucher-match";
-import { normalizeBrand, reconcileVouchers, type VoucherPurchase, type VoucherPaidOrder } from "@/lib/voucher-bridge";
+import { matchOrderToTxn, matchSplitOrderToTxn, orderMatchRank, reviewStatusFor, type TxnLite, type MatchConfidence } from "@/lib/order-match";
+import { matchVoucherBatchToCharge } from "@/lib/voucher-match";
+import { compatibleVoucherKeys, normalizeBrand, reconcileVouchers, type VoucherPurchase, type VoucherPaidOrder } from "@/lib/voucher-bridge";
 import { planDedup, type DedupRow } from "@/lib/order-dedup";
 
 // Marketplace sources reconcile against a voucher by their PLATFORM name (a
@@ -128,6 +128,20 @@ export async function POST(req: Request) {
     );
   }
 
+  const { error: splitColsErr } = await supabase
+    .from("orders")
+    .select("card_paid_amount, voucher_paid_amount, voucher_brand_key, payment_evidence", { head: true, count: "exact" })
+    .eq("user_id", user.id);
+  if (isMissingColumnError(splitColsErr, "card_paid_amount")) {
+    return new Response(
+      JSON.stringify({
+        error: "missing_split_payment_columns",
+        message: "Run supabase/migrations/017_split_voucher_payments.sql in the Supabase SQL Editor, then sync again.",
+      }),
+      { status: 400, headers: { "Content-Type": "application/json" } }
+    );
+  }
+
   // Migration 016 (duplicate_of) gate — the sync flags same-purchase duplicates.
   const { error: dupColErr } = await supabase
     .from("orders")
@@ -218,7 +232,7 @@ export async function POST(req: Request) {
         new_orders: 0,
         new_vouchers: 0,      // Gyftr vouchers parsed + stored this run
         vouchers_matched: 0,  // vouchers linked to their funding GYFTR charge
-        voucher_linked: 0,    // card-unmatched orders traced to a voucher (drawdown)
+        voucher_linked: 0,    // orders with an evidence-backed voucher drawdown
         duplicates_flagged: 0, // same-purchase duplicate orders flagged for review
         matched: 0,
         pending_review: 0, // subset of `matched` that landed at medium/low → await KP's review
@@ -397,6 +411,10 @@ export async function POST(req: Request) {
                     order_ref: parsed.order_ref ?? null,
                     merchant_name: parsed.merchant_name ?? null,
                     total_amount: parsed.total_amount ?? null,
+                    card_paid_amount: parsed.card_paid_amount ?? null,
+                    voucher_paid_amount: parsed.voucher_paid_amount ?? null,
+                    voucher_brand_key: parsed.voucher_brand ? normalizeBrand(parsed.voucher_brand) : null,
+                    payment_evidence: parsed.voucher_paid_amount != null ? "email" : null,
                     order_at: new Date(msgInternalDate).toISOString(),
                     items: parsed.items,
                     raw_subject: subject,
@@ -450,11 +468,12 @@ export async function POST(req: Request) {
           id: string; source: string; kind: "order" | "refund";
           total_amount: string | number | null; order_at: string;
           merchant_name: string | null; items: unknown[] | null;
+          card_paid_amount: string | number | null;
         }> = [];
         for (let from = 0; ; from += PAGE) {
           const { data, error } = await supabase
             .from("orders")
-            .select("id, source, kind, total_amount, order_at, merchant_name, items")
+            .select("id, source, kind, total_amount, card_paid_amount, order_at, merchant_name, items")
             .eq("user_id", user!.id)
             .is("txn_id", null)
             .is("duplicate_of", null)          // a flagged duplicate is matched via its primary, not on its own
@@ -493,35 +512,55 @@ export async function POST(req: Request) {
         // Txns already claimed — by an order OR a voucher — so nothing is
         // attributed twice across the two matchers.
         const [{ data: claimedOrderRows }, { data: claimedVoucherRows }] = await Promise.all([
-          supabase.from("orders").select("txn_id").eq("user_id", user!.id).not("txn_id", "is", null),
+          supabase.from("orders").select("id, txn_id, source").eq("user_id", user!.id).not("txn_id", "is", null),
           supabase.from("vouchers").select("txn_id").eq("user_id", user!.id).not("txn_id", "is", null),
         ]);
         const usedTxnIds = new Set<string>([
           ...(claimedOrderRows ?? []).map((r) => r.txn_id as string),
           ...(claimedVoucherRows ?? []).map((r) => r.txn_id as string),
         ]);
+        const gatewayClaimByTxn = new Map<string, string>();
+        for (const row of claimedOrderRows ?? []) {
+          if (row.source === "razorpay" && row.txn_id) gatewayClaimByTxn.set(row.txn_id as string, row.id as string);
+        }
 
         // ── Voucher → funding GYFTR charge. Runs FIRST so a distinctive "GYFTR
         // VIA SMARTBUY" charge is reserved by its voucher before order matching
         // (which could otherwise coincidentally amount-match it). ──
-        const unmatchedVouchers: Array<{ id: string; face_value: string | number; purchased_at: string }> = [];
+        const unmatchedVouchers: Array<{
+          id: string; gmail_message_id: string; face_value: string | number;
+          purchased_at: string; txn_id: string | null;
+        }> = [];
         for (let from = 0; ; from += PAGE) {
           const { data, error } = await supabase
             .from("vouchers")
-            .select("id, face_value, purchased_at")
+            .select("id, gmail_message_id, face_value, purchased_at, txn_id")
             .eq("user_id", user!.id)
-            .is("txn_id", null)
             .order("purchased_at", { ascending: true })
             .range(from, from + PAGE - 1);
           if (error || !data?.length) break;
           unmatchedVouchers.push(...(data as typeof unmatchedVouchers));
           if (data.length < PAGE) break;
         }
+        const voucherBatches = new Map<string, typeof unmatchedVouchers>();
         for (const vch of unmatchedVouchers) {
-          const vmatch = matchVoucherToCharge(
-            { faceValue: Number(vch.face_value), purchasedAt: vch.purchased_at },
+          const batch = voucherBatches.get(vch.gmail_message_id) ?? [];
+          batch.push(vch);
+          voucherBatches.set(vch.gmail_message_id, batch);
+        }
+        for (const batch of voucherBatches.values()) {
+          const existing = [...new Set(batch.map((v) => v.txn_id).filter(Boolean) as string[])];
+          if (existing.length === 1 && batch.every((v) => v.txn_id === existing[0])) continue;
+          const batchUsed = new Set(usedTxnIds);
+          for (const id of existing) batchUsed.delete(id);
+          const vmatch = matchVoucherBatchToCharge(
+            {
+              faceValue: batch.reduce((sum, v) => sum + Number(v.face_value), 0),
+              purchasedAt: batch[0].purchased_at,
+              voucherCount: batch.length,
+            },
             txns,
-            usedTxnIds
+            batchUsed
           );
           if (!vmatch) continue;
           const { error: vmErr } = await supabase
@@ -531,23 +570,24 @@ export async function POST(req: Request) {
               match_confidence: vmatch.confidence satisfies MatchConfidence,
               matched_at: new Date().toISOString(),
             })
-            .eq("id", vch.id)
+            .in("id", batch.map((v) => v.id))
             .eq("user_id", user!.id);
           if (vmErr) {
-            result.errors.push(`voucher match save ${vch.id}: ${vmErr.message}`);
+            result.errors.push(`voucher batch match save ${batch[0].gmail_message_id}: ${vmErr.message}`);
           } else {
+            for (const id of existing) usedTxnIds.delete(id);
             usedTxnIds.add(vmatch.txnId);
-            result.vouchers_matched++;
+            result.vouchers_matched += batch.length;
           }
         }
 
-        const cardMatchedOrderIds = new Set<string>();
         for (const o of unmatched) {
           const match = matchOrderToTxn(
             {
               source: o.source as OrderSource,
               kind: o.kind,
               total_amount: o.total_amount == null ? null : Number(o.total_amount),
+              card_paid_amount: o.card_paid_amount == null ? null : Number(o.card_paid_amount),
               order_at: o.order_at,
               merchant_name: o.merchant_name,
             },
@@ -570,22 +610,20 @@ export async function POST(req: Request) {
             result.errors.push(`match save ${o.id}: ${matchErr.message}`);
           } else {
             usedTxnIds.add(match.txnId);
-            cardMatchedOrderIds.add(o.id);
             result.matched++;
             if (reviewStatusFor(match.confidence) === "pending") result.pending_review++;
           }
         }
 
-        // ── Voucher bridge drawdown (Chunk 2). Orders with NO card charge but a
-        // brand that has vouchers are drawn down against those vouchers (FIFO),
-        // tracing order → voucher → the GYFTR card charge. The card charge is
-        // already counted in Spend, so these orders are never re-tallied. ──
-        await runVoucherDrawdown();
-
         // ── Same-purchase de-duplication. One purchase emits several order
         // emails (merchant + payment gateway + shipper), each a row. Cluster by
         // amount + same time, keep the richest as primary, flag the rest. ──
         await runDedup();
+
+        // Evidence-backed voucher reconciliation runs after ordinary dedup so
+        // a gateway row released by a split transfer is not immediately
+        // unflagged by the amount-based deduper.
+        await runVoucherDrawdown(gatewayClaimByTxn);
 
         async function runDedup() {
           type Row = {
@@ -634,7 +672,7 @@ export async function POST(req: Request) {
           }
         }
 
-        async function runVoucherDrawdown() {
+        async function runVoucherDrawdown(gatewayClaims: ReadonlyMap<string, string>) {
           const voucherRows: Array<{ id: string; brand_key: string; face_value: string | number; purchased_at: string; txn_id: string | null }> = [];
           for (let from = 0; ; from += PAGE) {
             const { data, error } = await supabase
@@ -652,29 +690,114 @@ export async function POST(req: Request) {
             id: v.id, brand: v.brand_key, faceValue: Number(v.face_value),
             purchasedAt: v.purchased_at, cardTxnId: v.txn_id,
           }));
-          const brandsWithVouchers = new Set(vps.map((v) => v.brand));
-
-          // Candidates: orders still without a card charge, of a brand that has
-          // vouchers, with an amount to draw. (Amount-less orders can't draw.)
-          const vpos: VoucherPaidOrder[] = [];
-          for (const o of unmatched) {
-            if (cardMatchedOrderIds.has(o.id)) continue;
-            if (o.kind !== "order" || o.total_amount == null) continue;
-            const brand = orderBrandKey(o);
-            if (!brandsWithVouchers.has(brand)) continue;
-            vpos.push({ id: o.id, brand, amount: Number(o.total_amount), orderedAt: o.order_at });
+          type VoucherOrderRow = {
+            id: string; source: string; kind: "order" | "refund"; merchant_name: string | null;
+            total_amount: string | number | null; card_paid_amount: string | number | null;
+            voucher_paid_amount: string | number | null; voucher_brand_key: string | null;
+            payment_evidence: "email" | "inferred_split" | null; order_at: string;
+            txn_id: string | null; review_status: string; duplicate_of: string | null;
+            items: unknown[] | null; voucher_draws: unknown[] | null;
+          };
+          const allOrders: VoucherOrderRow[] = [];
+          for (let from = 0; ; from += PAGE) {
+            const { data, error } = await supabase.from("orders")
+              .select("id, source, kind, merchant_name, total_amount, card_paid_amount, voucher_paid_amount, voucher_brand_key, payment_evidence, order_at, txn_id, review_status, duplicate_of, items, voucher_draws")
+              .eq("user_id", user!.id).range(from, from + PAGE - 1);
+            if (error || !data?.length) break;
+            allOrders.push(...(data as VoucherOrderRow[]));
+            if (data.length < PAGE) break;
           }
-          if (vpos.length === 0) return;
 
-          const bridge = reconcileVouchers(vps, vpos);
+          type Candidate = VoucherPaidOrder & { evidence: "email" | "inferred_split"; split?: ReturnType<typeof matchSplitOrderToTxn> };
+          const candidates: Candidate[] = allOrders
+            .filter((o) => o.kind === "order" && !o.duplicate_of && o.review_status !== "rejected" && o.voucher_paid_amount != null && Number(o.voucher_paid_amount) > 0)
+            .map((o) => ({
+              id: o.id, brand: orderBrandKey(o), voucherBrand: o.voucher_brand_key,
+              amount: Number(o.voucher_paid_amount), orderedAt: o.order_at,
+              evidence: o.payment_evidence === "inferred_split" ? "inferred_split" : "email",
+            }));
+
+          // Gateway-confirmation rows are weak evidence and may relinquish their
+          // transaction to a richer merchant order that proves a voucher split.
+          const splitUsed = new Set(usedTxnIds);
+          for (const txnId of gatewayClaims.keys()) splitUsed.delete(txnId);
+          const splitRows = allOrders
+            .filter((o) => o.kind === "order" && !o.txn_id && !o.duplicate_of && o.review_status !== "rejected" &&
+              o.voucher_paid_amount == null && o.total_amount != null && o.source !== "razorpay" && (o.items?.length ?? 0) > 0)
+            .sort((a, b) => new Date(a.order_at).getTime() - new Date(b.order_at).getTime() || a.id.localeCompare(b.id));
+
+          for (const o of splitRows) {
+            const brand = orderBrandKey(o);
+            const allowed = compatibleVoucherKeys(brand);
+            const eligibleBalance = (key: string) => vps
+              .filter((v) => normalizeBrand(v.brand) === key && new Date(v.purchasedAt).getTime() <= new Date(o.order_at).getTime() + 86_400_000)
+              .reduce((sum, v) => sum + v.faceValue, 0);
+            const available = allowed.reduce((sum, key) => sum + eligibleBalance(key), 0);
+            const split = matchSplitOrderToTxn({
+              source: o.source as OrderSource, kind: o.kind,
+              total_amount: Number(o.total_amount), order_at: o.order_at, merchant_name: o.merchant_name,
+            }, txns, available, splitUsed);
+            if (!split) continue;
+            const voucherBrand = allowed.find((key) => eligibleBalance(key) + 0.75 >= split.voucherAmount);
+            if (!voucherBrand) continue;
+            candidates.push({
+              id: o.id, brand, voucherBrand, amount: split.voucherAmount,
+              orderedAt: o.order_at, evidence: "inferred_split", split,
+            });
+            splitUsed.add(split.txnId);
+          }
+
+          const bridge = reconcileVouchers(vps, candidates);
+          const candidateById = new Map(candidates.map((o) => [o.id, o]));
+          const drawsByOrder = new Map<string, Array<Record<string, unknown>>>();
           for (const attr of bridge.orders) {
+            const candidate = candidateById.get(attr.orderId)!;
+            // An inferred split is accepted only when voucher balance covers
+            // the exact remainder. Explicit email evidence may remain partial.
+            if (candidate.split && attr.status !== "attributed") continue;
             if (attr.draws.length === 0) continue;
-            const { error: dErr } = await supabase
-              .from("orders")
-              .update({ voucher_draws: attr.draws })
-              .eq("id", attr.orderId)
-              .eq("user_id", user!.id);
-            if (dErr) result.errors.push(`voucher draw save ${attr.orderId}: ${dErr.message}`);
+            drawsByOrder.set(attr.orderId, attr.draws.map((d) => ({ ...d, evidence: candidate.evidence })));
+
+            if (candidate.split) {
+              const gatewayOrderId = gatewayClaims.get(candidate.split.txnId);
+              const { error: splitErr } = await supabase.from("orders").update({
+                txn_id: candidate.split.txnId,
+                match_confidence: candidate.split.confidence,
+                review_status: reviewStatusFor(candidate.split.confidence),
+                matched_at: new Date().toISOString(),
+                card_paid_amount: candidate.split.cardAmount,
+                voucher_paid_amount: candidate.split.voucherAmount,
+                voucher_brand_key: candidate.voucherBrand,
+                payment_evidence: "inferred_split",
+              }).eq("id", candidate.id).eq("user_id", user!.id);
+              if (splitErr) {
+                result.errors.push(`split payment save ${candidate.id}: ${splitErr.message}`);
+                drawsByOrder.delete(attr.orderId);
+                continue;
+              }
+              if (gatewayOrderId) {
+                const { error: releaseErr } = await supabase.from("orders").update({
+                  txn_id: null, match_confidence: null, duplicate_of: candidate.id, review_status: "pending",
+                }).eq("id", gatewayOrderId).eq("user_id", user!.id);
+                if (releaseErr) result.errors.push(`split gateway release ${gatewayOrderId}: ${releaseErr.message}`);
+              }
+            }
+          }
+
+          // Clear stale heuristic draws from the old implementation, then write
+          // only evidence-backed attributions from this complete recomputation.
+          const staleIds = allOrders
+            .filter((o) => Array.isArray(o.voucher_draws) && o.voucher_draws.length > 0 && !drawsByOrder.has(o.id))
+            .map((o) => o.id);
+          for (let i = 0; i < staleIds.length; i += 100) {
+            const { error } = await supabase.from("orders").update({ voucher_draws: [] })
+              .eq("user_id", user!.id).in("id", staleIds.slice(i, i + 100));
+            if (error) result.errors.push(`voucher stale-draw clear: ${error.message}`);
+          }
+          for (const [orderId, draws] of drawsByOrder) {
+            const { error: dErr } = await supabase.from("orders").update({ voucher_draws: draws })
+              .eq("id", orderId).eq("user_id", user!.id);
+            if (dErr) result.errors.push(`voucher draw save ${orderId}: ${dErr.message}`);
             else result.voucher_linked++;
           }
         }

@@ -22,7 +22,10 @@ const SAFE_COLUMNS =
   "id, source, kind, order_ref, merchant_name, total_amount, order_at, items, txn_id, match_confidence, raw_subject";
 // Added by later migrations (014/015/016). Each is dropped from the query if its
 // migration hasn't been run, so the ledger still renders on a partial schema.
-const OPTIONAL_COLUMNS = ["review_status", "voucher_draws", "duplicate_of"];
+const OPTIONAL_COLUMNS = [
+  "review_status", "voucher_draws", "duplicate_of",
+  "card_paid_amount", "voucher_paid_amount", "voucher_brand_key", "payment_evidence",
+];
 const PAGE = 1000;
 
 export async function GET() {
@@ -64,14 +67,14 @@ export async function GET() {
   // embed — boringly reliable, and matched-order counts are modest). Voucher-
   // funded orders carry no txn_id but their voucher_draws reference the funding
   // GYFTR card charge — resolve those too so the chain can be shown.
-  const drawCardTxnId = (o: Record<string, unknown>): string | null => {
+  const drawCardTxnIds = (o: Record<string, unknown>): string[] => {
     const draws = Array.isArray(o.voucher_draws) ? (o.voucher_draws as Array<{ cardTxnId?: string | null }>) : [];
-    return draws.find((d) => d.cardTxnId)?.cardTxnId ?? null;
+    return [...new Set(draws.map((d) => d.cardTxnId).filter(Boolean) as string[])];
   };
   const txnIds = [
     ...new Set([
       ...(all.map((o) => o.txn_id).filter(Boolean) as string[]),
-      ...(all.map(drawCardTxnId).filter(Boolean) as string[]),
+      ...all.flatMap(drawCardTxnIds),
     ]),
   ];
   const txnById = new Map<string, Record<string, unknown>>();
@@ -87,8 +90,10 @@ export async function GET() {
   for (const o of all) {
     o.txn = o.txn_id ? txnById.get(o.txn_id as string) ?? null : null;
     // For voucher-funded orders, the card that ultimately paid (via the voucher).
-    const vctid = drawCardTxnId(o);
+    const voucherTxnIds = drawCardTxnIds(o);
+    const vctid = voucherTxnIds[0] ?? null;
     o.voucher_txn = vctid ? txnById.get(vctid) ?? null : null;
+    o.voucher_txns = voucherTxnIds.map((id) => txnById.get(id)).filter(Boolean);
     o.voucher_amount = Array.isArray(o.voucher_draws)
       ? (o.voucher_draws as Array<{ amount?: number }>).reduce((s, d) => s + (d.amount ?? 0), 0)
       : 0;

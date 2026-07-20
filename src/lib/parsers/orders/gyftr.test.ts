@@ -69,6 +69,46 @@ describe("parseGyftrVouchers — edge cases", () => {
     expect(vouchers[0].faceValue).not.toBe(500);
   });
 
+  it("strips real bulk-email redemption chrome from every following brand", () => {
+    const body =
+      "Please find your instant voucher details. " +
+      "Zomato Gift Card E-Gift Card Code ZOM111222 Value 2000 PIN 111 Valid Till 31 May 2027, " +
+      "For Important Instructions, Redemption steps & T&C Click Here " +
+      "Swiggy Money Voucher E-Gift Card Code SWG111222 Value 2000 PIN 222 Valid Till 05 Dec 2026, " +
+      "To Redeem your Gift Voucher: Click Here. For Important Instructions, Redemption steps & T&C Click Here " +
+      "BigBasket E-Gift Card Code BIG111222 Value 1000 PIN 333 Valid Till 04 Jun 2027";
+    expect(parseGyftrVouchers("", body, "").map((v) => v.brand)).toEqual([
+      "Zomato Gift Card", "Swiggy Money Voucher", "BigBasket",
+    ]);
+  });
+
+  it("supports the HP Pay subject/body format without storing its PIN", () => {
+    const subject = "Dear Customer - here is your HP Pay INR 5000 gift voucher from null";
+    const body = "Please find the details of your instant voucher enclosed below: Voucher Code: HPVG233437319599 Face Value: 5000.00 Valid Till: 12 Jan 2027";
+    expect(parseGyftrVouchers(subject, body, "")).toEqual([{
+      brand: "HP Pay", faceValue: 5000, code: "HPVG233437319599", validTill: "2027-01-12",
+    }]);
+  });
+
+  it("parses legacy SmartBuy table rows", () => {
+    const body = "Thank you for buying Amazon Gift Code from Gyftr via HDFC Bank SmartBuy. " +
+      "QR Code E-Gift Card Code Face Value GCID Expiry Date JG6X-A92ES6-75DR 500.00 123456789 15 Feb 2023 For any help";
+    expect(parseGyftrVouchers("Confidential - Your Gift Voucher details", body, "")).toEqual([{
+      brand: "Amazon", faceValue: 500, code: "JG6X-A92ES6-75DR", validTill: "2023-02-15",
+    }]);
+  });
+
+  it("parses every row in a Reward Multiplier bulk table", () => {
+    const subject = "Your Swiggy Money Voucher Gift Voucher worth INR 2000 from Reward Multiplier";
+    const body = "QR Code E-Gift Card Code Face Value PIN Date " +
+      "VOGRGLVLC3703FDC 2000.00 817093 16 Mar 2025 " +
+      "VOGR62D4DZNW4AD2 2000.00 960961 16 Mar 2025 How to Redeem: Click here";
+    expect(parseGyftrVouchers(subject, body, "")).toEqual([
+      { brand: "Swiggy Money Voucher", faceValue: 2000, code: "VOGRGLVLC3703FDC", validTill: "2025-03-16" },
+      { brand: "Swiggy Money Voucher", faceValue: 2000, code: "VOGR62D4DZNW4AD2", validTill: "2025-03-16" },
+    ]);
+  });
+
   it("falls back to the HTML part when the plain text has no voucher block", () => {
     const html =
       "<div>Flipkart Flipkart</div><span>E-Gift Card Code ZZZ999YYY888</span><b>Value 1500</b>";

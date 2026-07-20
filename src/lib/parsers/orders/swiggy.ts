@@ -56,14 +56,32 @@ function itemsFromText(text: string): OrderItem[] {
   return items;
 }
 
-function pickPaidAmount(text: string): number | undefined {
+type PaidBreakdown = {
+  total: number;
+  card?: number;
+  voucher?: number;
+  voucherBrand?: string;
+};
+
+function paymentBreakdown(text: string): PaidBreakdown | undefined {
   const paid: Array<{ method: string; amount: number }> = [];
   for (const m of text.matchAll(TOTAL_ALL_RE)) {
     paid.push({ method: m[1], amount: parseInrAmount(m[2]) });
   }
   if (paid.length === 0) return undefined;
   const card = paid.filter((p) => /card/i.test(p.method));
-  return (card.length > 0 ? card[card.length - 1] : paid[paid.length - 1]).amount;
+  const voucher = paid.filter((p) => /money|wallet|voucher|gift\s*card|balance/i.test(p.method));
+  return {
+    // Payment rows are mutually exclusive funding portions. Their sum is the
+    // actual order value, whereas the old parser silently kept only the card
+    // row and lost the voucher-funded portion of split orders.
+    total: paid.reduce((sum, p) => sum + p.amount, 0),
+    ...(card.length ? { card: card.reduce((sum, p) => sum + p.amount, 0) } : {}),
+    ...(voucher.length ? {
+      voucher: voucher.reduce((sum, p) => sum + p.amount, 0),
+      voucherBrand: voucher[voucher.length - 1].method.trim(),
+    } : {}),
+  };
 }
 
 export function parseSwiggyOrder(subject: string, text: string, html: string): ParsedOrder | null {
@@ -72,8 +90,8 @@ export function parseSwiggyOrder(subject: string, text: string, html: string): P
   // otherwise be misfiled as a normal spend.
   if (!/swiggy.*order/i.test(subject) || !/delivered/i.test(subject)) return null;
 
-  const total = pickPaidAmount(text);
-  if (total === undefined) return null; // no paid amount → not the delivered-order template
+  const payment = paymentBreakdown(text);
+  if (!payment) return null; // no paid amount → not the delivered-order template
 
   // ── Items: Format A (HTML BILL DETAILS) first, then Format B (text table). ──
   const items: OrderItem[] = [];
@@ -104,7 +122,12 @@ export function parseSwiggyOrder(subject: string, text: string, html: string): P
     kind: "order",
     order_ref: ORDER_REF_RE.exec(text)?.[1],
     merchant_name: restaurant ? decodeEntities(restaurant).trim() : undefined,
-    total_amount: total,
+    total_amount: payment.total,
+    ...(payment.card != null ? { card_paid_amount: payment.card } : {}),
+    ...(payment.voucher != null ? {
+      voucher_paid_amount: payment.voucher,
+      voucher_brand: payment.voucherBrand,
+    } : {}),
     items,
   };
 }

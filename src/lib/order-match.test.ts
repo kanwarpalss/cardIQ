@@ -3,7 +3,7 @@
 // order-match.ts has a failing case here.
 
 import { describe, it, expect } from "vitest";
-import { matchOrderToTxn, type TxnLite, type OrderLite } from "./order-match";
+import { matchOrderToTxn, matchSplitOrderToTxn, type TxnLite, type OrderLite } from "./order-match";
 
 const txn = (over: Partial<TxnLite>): TxnLite => ({
   id: "t1",
@@ -25,6 +25,14 @@ const order = (over: Partial<OrderLite>): OrderLite => ({
 describe("matchOrderToTxn — amount-bearing orders", () => {
   it("high: exact amount + affinity + unique + same day", () => {
     expect(matchOrderToTxn(order({}), [txn({})])).toEqual({ txnId: "t1", confidence: "high" });
+  });
+
+  it("matches the direct-card portion of an explicitly parsed split", () => {
+    const m = matchOrderToTxn(
+      order({ source: "shopify", merchant_name: "Birkenstock", total_amount: 5793, card_paid_amount: 793 }),
+      [txn({ merchant: "Birkenstock India", amount_inr: 793 })]
+    );
+    expect(m).toEqual({ txnId: "t1", confidence: "high" });
   });
 
   it("medium: exact amount + affinity + unique + 4 days apart", () => {
@@ -157,6 +165,36 @@ describe("matchOrderToTxn — amount-bearing orders", () => {
       [txn({ merchant: "ETERNAL LIMITED", amount_inr: 612.45 })]
     );
     expect(m?.confidence).toBe("high");
+  });
+});
+
+describe("matchSplitOrderToTxn — conservative voucher inference", () => {
+  const birkenstock = order({
+    source: "shopify", merchant_name: "BIRKENSTOCK", total_amount: 5793,
+    order_at: "2026-07-15T19:21:11Z",
+  });
+
+  it("reconstructs the real ₹5,000 voucher + ₹793 card example", () => {
+    expect(matchSplitOrderToTxn(
+      birkenstock,
+      [txn({ merchant: "Birkenstock India", amount_inr: 793, txn_at: "2026-07-15T19:20:00Z" })],
+      5000
+    )).toEqual({ txnId: "t1", confidence: "high", cardAmount: 793, voucherAmount: 5000 });
+  });
+
+  it("refuses without enough compatible voucher balance", () => {
+    expect(matchSplitOrderToTxn(birkenstock, [txn({ merchant: "Birkenstock India", amount_inr: 793 })], 4999)).toBeNull();
+  });
+
+  it("refuses a smaller unrelated charge even if the arithmetic works", () => {
+    expect(matchSplitOrderToTxn(birkenstock, [txn({ merchant: "Some Other Store", amount_inr: 793 })], 5000)).toBeNull();
+  });
+
+  it("refuses two plausible merchant charges rather than guessing", () => {
+    expect(matchSplitOrderToTxn(birkenstock, [
+      txn({ id: "a", merchant: "Birkenstock India", amount_inr: 793 }),
+      txn({ id: "b", merchant: "Birkenstock", amount_inr: 1293 }),
+    ], 5000)).toBeNull();
   });
 });
 

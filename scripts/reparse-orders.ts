@@ -26,6 +26,7 @@ import { makeGmailOAuthClient, extractBody, extractHtml } from "../src/lib/gmail
 import { findPdfAttachments, parseOrderFromPdfs, decodeAttachmentData } from "../src/lib/gmail/pdf";
 import { parseOrderEmail } from "../src/lib/parsers/orders/registry";
 import { isInTransitStatusEmail } from "../src/lib/parsers/orders/types";
+import { normalizeBrand } from "../src/lib/voucher-bridge";
 
 const APPLY = process.argv.includes("--apply");
 
@@ -40,7 +41,7 @@ async function main() {
   const orders: any[] = [];
   for (let from = 0; ; from += 1000) {
     const { data } = await supabase
-      .from("orders").select("id, gmail_message_id, source, items, txn_id, review_status, raw_subject")
+      .from("orders").select("id, gmail_message_id, source, items, txn_id, review_status, raw_subject, total_amount, card_paid_amount, voucher_paid_amount, voucher_brand_key, payment_evidence")
       .range(from, from + 999);
     if (!data?.length) break;
     orders.push(...data);
@@ -98,6 +99,27 @@ async function main() {
         continue;
       }
       const newN = parsed.items.length;
+      // This generic item reparser must not erase a split that the dedicated
+      // voucher reconciler proved from transaction arithmetic. Replace it only
+      // when the merchant parser has stronger, explicit payment evidence.
+      const preserveInference = o.payment_evidence === "inferred_split" && parsed.voucher_paid_amount == null;
+      const paymentPatch = preserveInference ? {
+        card_paid_amount: o.card_paid_amount,
+        voucher_paid_amount: o.voucher_paid_amount,
+        voucher_brand_key: o.voucher_brand_key,
+        payment_evidence: o.payment_evidence,
+      } : {
+        card_paid_amount: parsed.card_paid_amount ?? null,
+        voucher_paid_amount: parsed.voucher_paid_amount ?? null,
+        voucher_brand_key: parsed.voucher_brand ? normalizeBrand(parsed.voucher_brand) : null,
+        payment_evidence: parsed.voucher_paid_amount != null ? "email" : null,
+      };
+      const paymentChanged =
+        Number(o.card_paid_amount ?? 0) !== Number(paymentPatch.card_paid_amount ?? 0) ||
+        Number(o.voucher_paid_amount ?? 0) !== Number(paymentPatch.voucher_paid_amount ?? 0) ||
+        (o.voucher_brand_key ?? null) !== paymentPatch.voucher_brand_key ||
+        (o.payment_evidence ?? null) !== paymentPatch.payment_evidence ||
+        Number(o.total_amount ?? 0) !== Number(parsed.total_amount ?? 0);
       if (newN > oldN) {
         gained++;
         gainedItems += newN - oldN;
@@ -108,8 +130,14 @@ async function main() {
             merchant_name: parsed.merchant_name ?? null,
             total_amount: parsed.total_amount ?? null,
             source: parsed.source,
+            ...paymentPatch,
           }).eq("id", o.id);
         }
+      } else if (paymentChanged) {
+        if (APPLY) await supabase.from("orders").update({
+          total_amount: parsed.total_amount ?? null,
+          ...paymentPatch,
+        }).eq("id", o.id);
       } else {
         unchanged++;
       }

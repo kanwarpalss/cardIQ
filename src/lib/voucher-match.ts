@@ -8,13 +8,13 @@
 //
 //   • The descriptor always carries "gyftr" — a near-unique bank token, so we
 //     don't need amount+name affinity to find the charge.
-//   • The charge is ≤ face value: Gyftr often gives a discount, so ₹2000 of
-//     voucher may cost ₹1900. The generic matcher (exact amount ±₹0.75) would
-//     MISS a discounted buy — hence this dedicated rule.
+//   • The charge is normally close to aggregate face value: Gyftr often gives
+//     a discount, while some SmartBuy purchases include a small fee. The generic
+//     matcher (exact amount ±₹0.75) would miss both — hence this dedicated rule.
 //   • Issuance and charge share the instant, so nearest-in-time is decisive.
 //
-// We never pair a voucher with a charge LARGER than its face value (you never
-// pay more than face), and we cap the time window tightly.
+// We bound accepted charges to 75–110% of the batch face value and cap the time
+// window tightly. A whole issuance email is matched as one purchase batch.
 
 import type { MatchConfidence, TxnLite } from "./order-match";
 
@@ -25,9 +25,15 @@ export type VoucherLite = {
   purchasedAt: string;
 };
 
+/** One Gyftr email is one purchase batch. It can contain many voucher codes
+ * funded by a single aggregate card charge. */
+export type VoucherBatchLite = VoucherLite & { voucherCount: number };
+
 export type VoucherChargeMatch = { txnId: string; confidence: MatchConfidence };
 
 const FACE_TOLERANCE = 0.75; // paise/rounding wiggle above face value
+const MIN_CHARGE_RATIO = 0.75; // promotions/points can discount the batch
+const MAX_CHARGE_RATIO = 1.10; // Gyftr/SmartBuy convenience fees observed live
 const WINDOW_DAYS = 2; // issuance & charge are same-instant; window absorbs skew
 const SAME_INSTANT_MIN = 60; // ≤1h apart ⇒ treat as the same event
 const MIN_MS = 60_000;
@@ -52,24 +58,49 @@ export function matchVoucherToCharge(
   txns: TxnLite[],
   usedTxnIds: ReadonlySet<string> = new Set()
 ): VoucherChargeMatch | null {
+  return matchVoucherBatchToCharge(
+    { ...voucher, voucherCount: 1 },
+    txns,
+    usedTxnIds
+  );
+}
+
+/** Match a whole issuance email to its one aggregate funding charge. */
+export function matchVoucherBatchToCharge(
+  batch: VoucherBatchLite,
+  txns: TxnLite[],
+  usedTxnIds: ReadonlySet<string> = new Set()
+): VoucherChargeMatch | null {
   const candidates = txns.filter(
     (t) =>
       t.txn_type === "debit" &&
       !usedTxnIds.has(t.id) &&
       isGyftrCharge(t.merchant) &&
       t.amount_inr > 0 &&
-      t.amount_inr <= voucher.faceValue + FACE_TOLERANCE &&
-      minutesApart(voucher.purchasedAt, t.txn_at) <= WINDOW_DAYS * 24 * 60
+      t.amount_inr >= batch.faceValue * MIN_CHARGE_RATIO - FACE_TOLERANCE &&
+      t.amount_inr <= batch.faceValue * MAX_CHARGE_RATIO + FACE_TOLERANCE &&
+      minutesApart(batch.purchasedAt, t.txn_at) <= WINDOW_DAYS * 24 * 60
   );
   if (candidates.length === 0) return null;
 
-  // Nearest-in-time wins — the charge and issuance are the same event.
-  const nearest = candidates.reduce((best, t) =>
-    minutesApart(voucher.purchasedAt, t.txn_at) < minutesApart(voucher.purchasedAt, best.txn_at) ? t : best
+  // Nearest in time wins; equal-time candidates are disambiguated by closeness
+  // to the batch face value. A true tie is refused instead of guessing a card.
+  const ranked = [...candidates].sort((a, b) =>
+    minutesApart(batch.purchasedAt, a.txn_at) - minutesApart(batch.purchasedAt, b.txn_at) ||
+    Math.abs(a.amount_inr - batch.faceValue) - Math.abs(b.amount_inr - batch.faceValue) ||
+    a.id.localeCompare(b.id)
   );
+  const nearest = ranked[0];
+  const second = ranked[1];
+  if (second &&
+      Math.abs(minutesApart(batch.purchasedAt, nearest.txn_at) - minutesApart(batch.purchasedAt, second.txn_at)) < 1 &&
+      Math.abs(Math.abs(nearest.amount_inr - batch.faceValue) - Math.abs(second.amount_inr - batch.faceValue)) <= FACE_TOLERANCE) {
+    return null;
+  }
 
-  const gapMin = minutesApart(voucher.purchasedAt, nearest.txn_at);
-  // Same-instant + a "gyftr" descriptor + charge ≤ face = as certain as it gets.
+  const gapMin = minutesApart(batch.purchasedAt, nearest.txn_at);
+  // Same-instant + a "gyftr" descriptor + bounded aggregate amount is as
+  // certain as it gets.
   // A wider gap or several same-window candidates drops to medium/low for review.
   const confidence: MatchConfidence =
     gapMin <= SAME_INSTANT_MIN ? "high" : candidates.length === 1 ? "medium" : "low";
