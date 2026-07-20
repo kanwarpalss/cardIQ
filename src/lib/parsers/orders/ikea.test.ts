@@ -198,11 +198,13 @@ describe("parseIkeaPdf — boundary cases", () => {
 });
 
 describe("isIkeaSender", () => {
-  it("matches ikea.com and its subdomains, not lookalikes", () => {
+  it("matches IKEA's .com and .in domains and their subdomains, not lookalikes", () => {
     expect(isIkeaSender("IKEA <do-not-reply@ikea.com>")).toBe(true);
     expect(isIkeaSender("IKEA <information@cm.order.email.ikea.com>")).toBe(true);
     expect(isIkeaSender("no.reply@ikea.com")).toBe(true);
+    expect(isIkeaSender("IKEA eInvoice <einvoice@receipt.email.ikea.in>")).toBe(true);
     expect(isIkeaSender("phish <billing@ikea.com.evil.example>")).toBe(false);
+    expect(isIkeaSender("phish <billing@ikea.in.evil.example>")).toBe(false);
     expect(isIkeaSender("Amazon <order-update@amazon.in>")).toBe(false);
   });
 });

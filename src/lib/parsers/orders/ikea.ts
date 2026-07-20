@@ -31,10 +31,16 @@ import {
   decodeEntities,
 } from "./types";
 
-/** Domain-anchored IKEA sender check (all IKEA mail flows through *.ikea.com). */
+/**
+ * Domain-anchored IKEA sender check. IKEA India uses both `ikea.com`
+ * (do-not-reply@, information@cm.order.email.ikea.com) and `ikea.in`
+ * (einvoice@receipt.email.ikea.in). Anchoring to the domain rejects lookalikes
+ * such as `ikea.com.evil.example`.
+ */
+const IKEA_DOMAINS = ["ikea.com", "ikea.in"];
 export function isIkeaSender(from: string): boolean {
   const addr = (/<([^<>\s]+@[^<>\s]+)>/.exec(from)?.[1] ?? from).trim().toLowerCase();
-  return addr.endsWith("@ikea.com") || addr.endsWith(".ikea.com");
+  return IKEA_DOMAINS.some((domain) => addr.endsWith(`@${domain}`) || addr.endsWith(`.${domain}`));
 }
 
 // A single IKEA article number, e.g. 505.687.21 — the strongest row anchor in
