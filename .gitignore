@@ -15,8 +15,13 @@ supabase/.branches/
 # puppy-context pseudo-cache digest (derived; regenerated on session shutdown)
 CONTEXT.md
 
-# Local Claude Code config (machine-specific permissions)
-.claude/
+# Local Claude Code config (machine-specific permissions, worktrees, launch cfg).
+# Ignore the CONTENTS, not the folder — CLAUDE.md is the project's shared rules
+# and must travel with the repo (it mirrors /AGENTS.md; see
+# src/lib/project-rules-sync.test.ts). settings.local.json stays local: it holds
+# per-machine permission grants.
+.claude/*
+!.claude/CLAUDE.md
 
 # Local audit artifacts — contain real financial data, never commit
 audit-review.json
