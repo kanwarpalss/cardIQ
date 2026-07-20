@@ -439,6 +439,10 @@ export default function TransactionsTable({
             const isNoteEditing     = editNoteId === t.id;
             const noteSuggestions   = isNoteEditing ? suggestNotes(editNoteText, existingNotes) : [];
             const order             = ordersByTxn.get(t.id);
+            // A linked order can legitimately carry no line items (service
+            // invoices, gateway confirmations, etc.). Do not offer an empty
+            // expansion affordance in that case.
+            const hasOrderItems     = Boolean(order?.items?.length);
             const isExpanded        = expandedId === t.id;
             // "Auto-rename": for confident matches the order's real merchant
             // (restaurant/store) leads and the bank's name becomes the
@@ -509,7 +513,7 @@ export default function TransactionsTable({
                     </div>
                   ) : (
                     <div className="flex items-start gap-1">
-                      {order && (
+                      {hasOrderItems && (
                         <button onClick={() => setExpandedId(isExpanded ? null : t.id)}
                           title={isExpanded ? "Hide order details" : "Show order details"}
                           className={`shrink-0 mt-0.5 text-2xs transition-transform ${isExpanded ? "rotate-90 text-gold" : "text-gold/60 hover:text-gold"}`}>
@@ -669,7 +673,7 @@ export default function TransactionsTable({
               </tr>
 
               {/* ── Expanded order details ── */}
-              {isExpanded && order && (
+              {isExpanded && order && hasOrderItems && (
                 <tr className="border-b border-wire bg-ink/40">
                   <td colSpan={5} className="px-5 py-3">
                     <div className="ml-6 space-y-2">
@@ -686,22 +690,18 @@ export default function TransactionsTable({
                           <span className="text-2xs text-mist/40 ml-auto tabular-nums">#{order.order_ref}</span>
                         )}
                       </div>
-                      {order.items.length > 0 ? (
-                        <ul className="space-y-0.5">
-                          {order.items.map((it, i) => (
-                            <li key={i} className="flex items-baseline gap-2 text-xs">
-                              <span className="text-mist/70">
-                                {it.qty != null && it.qty !== 1 ? `${it.qty} × ` : ""}{it.name}
-                              </span>
-                              {it.price != null && (
-                                <span className="text-mist/40 tabular-nums ml-auto">{fmtExact(it.price)}</span>
-                              )}
-                            </li>
-                          ))}
-                        </ul>
-                      ) : (
-                        <div className="text-2xs text-mist/40 italic">No line items in this email</div>
-                      )}
+                      <ul className="space-y-0.5">
+                        {order.items.map((it, i) => (
+                          <li key={i} className="flex items-baseline gap-2 text-xs">
+                            <span className="text-mist/70">
+                              {it.qty != null && it.qty !== 1 ? `${it.qty} × ` : ""}{it.name}
+                            </span>
+                            {it.price != null && (
+                              <span className="text-mist/40 tabular-nums ml-auto">{fmtExact(it.price)}</span>
+                            )}
+                          </li>
+                        ))}
+                      </ul>
                       {order.total_amount != null && (
                         <div className="text-2xs text-mist/50 pt-1 border-t border-wire/50">
                           Order total {fmtExact(Number(order.total_amount))}
