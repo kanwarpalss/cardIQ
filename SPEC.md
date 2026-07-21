@@ -64,7 +64,7 @@ A one-stop credit-card destination: syncs bank transaction emails from Gmail (Ax
 - `reward_balances` — card-point balance snapshots (migration 009; latest as_of = current)
 - `offers` — user-tracked card offers with validity windows (migration 009)
 - `loyalty_accounts` — airline/hotel program tiers + points, card-independent (migration 009)
-- `orders` — parsed order emails: source, kind (order|refund), items jsonb, total, txn_id match + match_confidence (migration 011); `review_status` state machine unmatched→pending→confirmed/rejected (migration 014); `voucher_draws` jsonb (migration 015); `duplicate_of` self-FK (migration 016)
+- `orders` — parsed/imported orders: source, kind (order|refund), items jsonb, total, txn_id match + match_confidence (migration 011); `review_status` state machine unmatched→pending→confirmed/rejected (migration 014); `voucher_draws` jsonb (migration 015); `duplicate_of` self-FK (migration 016); `card_paid_amount`, `voucher_paid_amount`, `voucher_brand_key`, and `payment_evidence` for auditable split payments (migration 017)
 - `transactions` + `merchant_mappings` each gained a nullable `subcategory` column (migration 012)
 - `vouchers` — parsed Gyftr voucher-issuance emails: brand, brand_key, face_value, code, valid_till, txn_id FK to the GYFTR card charge, match_confidence (migration 015)
 
@@ -275,7 +275,42 @@ A one-stop credit-card destination: syncs bank transaction emails from Gmail (Ax
 | `GOOGLE_CLIENT_SECRET` | Server |
 | `ENCRYPTION_KEY` | Server (AES-256 for stored secrets) |
 
-## §9 Session Handoff Notes (2026-07-15b)
+## §9 Session Handoff Notes (2026-07-21)
+
+### Start Here — Current, Verified State
+
+**Production baseline (audited 2026-07-21):** 1,874 stored orders; 18,586 Gmail messages recorded in the seen ledger; migrations 001–017 applied. By source: Amazon email 51 orders / 51 itemized; Apple 171 / 171; BigBasket 88 / 88; IKEA 32 / 32; Shopify 233 / 218; SmartBuy 114 / 114; Swiggy 141 / 141; Zomato 15 / 15; Generic 689 / 262; Razorpay 340 / 63. There are **0 Blinkit imports** (`blinkit-json:` IDs) and **0 Amazon CSV imports** (`amazon-csv:` IDs), because the real source artifacts have not yet been supplied/imported.
+
+**Gyftr voucher ledger — closed and live:** commit `6c2988c`, production deployment READY. The live database has **567 vouchers**, **314 funding-charge links**, **0 malformed voucher brands**, **8 orders with an explicit/inferred voucher amount**, and **2 fully attributed voucher-draw orders totaling ₹5,931**. The two strict inferred splits are IKEA (₹931 voucher + ₹165 card) and Birkenstock #525889 (₹5,000 Luxe vouchers + ₹793 card). Do not re-run or recreate the legacy same-brand/full-order drawdown logic; use `scripts/reconcile-voucher-ledger.ts` (dry-run first, `--apply` only when needed).
+
+**Blinkit — code complete, real history not yet imported.** Blinkit blocks requests replayed outside its browser context; this is not a cookie-format issue. The authenticated browser collector is the supported path and fetches every history page plus each order's full basket. With a current Copy-as-cURL request saved locally:
+
+1. Generate the collector (it copies code to the clipboard without printing the credentials):
+
+   ```bash
+   BLINKIT_CURL_FILE=<path-to-saved-curl> npx tsx scripts/blinkit-browser-collector.ts
+   ```
+
+2. In the logged-in `blinkit.com` tab, open DevTools → Console, paste, press Return, and wait for the `blinkit-orders.json` download. It must report `failures: []` (or a consciously reviewed exception).
+3. Import safely, then write only after inspecting the dry-run sample/count:
+
+   ```bash
+   npx tsx scripts/import-blinkit.ts --file <path-to-blinkit-orders.json>
+   npx tsx scripts/import-blinkit.ts --file <path-to-blinkit-orders.json> --apply
+   ```
+
+4. Run a normal **Orders sync** in CardIQ. Verify that `source='blinkit'` is nonzero, all imported rows carry items, and high-confidence transaction links surface in Spends. Re-run the coverage audit after this step.
+
+**Amazon CSV — code complete, real export not yet imported.** Request “Your Orders” from amazon.in → Account → Request Your Information, unzip the delivered archive, then:
+
+```bash
+npx tsx scripts/import-amazon.ts --file <path-to-Retail.OrderHistory.1.csv>
+npx tsx scripts/import-amazon.ts --file <path-to-Retail.OrderHistory.1.csv> --apply
+```
+
+Inspect the dry-run count, dates, totals, and item sample before `--apply`. Then run a normal **Orders sync**; it matches imported Amazon rows and deduplicates overlaps with email-originated Amazon orders. First real CSV validation is the only remaining Amazon parser task—adjust header aliases only if its actual schema proves the current fuzzy mapping wrong.
+
+**Quality/deployment state:** 405 tests, TypeScript, lint, and production build all passed for `6c2988c`; Vercel production is READY and its 30-minute runtime-error scan was clean. The next session should begin with the Blinkit JSON and/or Amazon CSV artifact, rather than changing parser logic speculatively.
 
 ### Accomplished This Session (2026-07-15b — PDF-attachment item extraction, IKEA)
 1. **IKEA PDF invoice parsing.** `src/lib/parsers/orders/ikea.ts` + `src/lib/gmail/pdf.ts` — cost-gated PDF fallback (body items === 0 + known sender), 3 safe real layouts + refunds, `unpdf` (over pdf-parse). Wired into sync route + reparse-orders.ts. Historical targeted backfill applied: 16 new itemized orders, 33 genuine itemless notifications/T&C, 0 errors. Live audit: 32 item-bearing rows / 176 lines / 3 refunds / 14 duplicates flagged / 3 confirmed transaction links; the other 15 primaries have no existing transaction candidate under the production matcher. **Complete.**
@@ -296,7 +331,7 @@ A one-stop credit-card destination: syncs bank transaction emails from Gmail (Ax
 1. **Shared item-extract.ts fallback extractor** — 7 row-pattern families, covers Instamart/Dot Badges/DaMENSCH/HUFT/Supertails/Lacoste/DailyObjects/Sleepy Owl/Google Play/Nicobar. 0 polluted names in a 120-order real-data quality check.
 2. **Invariant #6 cross-run reconciliation fix** — `planDedup()` single source of truth (sync route + heal scripts); fixed the Postbox/BBW class of bug where a poor gateway/status email permanently held a charge that a richer merchant email should have claimed. 117 real corrections applied, 0 errors.
 3. **Shipping-status guard split** — in-transit (always drop) vs. delivered (drop only if empty).
-4. **Amazon CSV + Blinkit JSON importers built** — Amazon ready to test; Blinkit needs a parser rewrite (see next-session block above — real shape now known).
+4. **Amazon CSV + Blinkit JSON importers built** — both parsers/collectors are implemented; Amazon awaits its first real CSV and Blinkit awaits its authenticated browser capture (see the 2026-07-21 handoff above).
 5. **Coverage: 85.8% of retrievable orders have items** (up from ~13% at the start of this multi-session arc on 2026-07-14).
 6. **361 tests passing**, typecheck + lint clean. Lead-reviewed (🟡 ship with notes). Committed `e8af5ea` + `fdab041`, both pushed to `origin/main`.
 7. **IKEA PDF-attachment gap discovered and spawned as its own task** — completed 2026-07-15b (commit `ab8cd69`; see the 2026-07-15b block above).
@@ -324,11 +359,11 @@ A one-stop credit-card destination: syncs bank transaction emails from Gmail (Ax
    - Apple subscriptions with plan names (Apple One, iCloud+, etc.)
    - Voucher-funded Swiggy/Amazon orders showing the amber "◈ voucher" badge
    - The "⧉ duplicate" toggle (bottom of Orders) — flip it to see/hide the 153 duplicate rows; review the flagged pairs and confirm/reject if any look wrong
-3. **Supply Amazon order history** — go to amazon.in → Account → "Request Your Information" → "Your Orders" → download `Retail.OrderHistory.1.csv`. Drop the file and the next agent can build an importer.
+3. **Supply Amazon order history** — go to amazon.in → Account → "Request Your Information" → "Your Orders" → download `Retail.OrderHistory.1.csv`, then use the already-built importer documented in the 2026-07-21 handoff above.
 4. **EPM + Infinia milestone data** — EPM monthly reward text from iMobile; Infinia quarterly threshold from HDFC app (§7 Known Issues).
 
 **Next agent — code work:**
-1. **Amazon CSV importer** — once KP provides `Retail.OrderHistory.1.csv`: parse it, upsert into `orders` table (source='amazon_csv'), match to txns by amount+date. Fields: Order Date, Order ID, Title, Category, ASIN, Quantity, Purchase Price Per Unit.
+1. **Amazon CSV validation/import** — once KP provides `Retail.OrderHistory.1.csv`, run the existing dry-run + apply commands in the 2026-07-21 handoff; inspect real headers only if the parser reports an empty/wrong result.
 2. **Shopify remaining gap (203 itemless)** — investigate the top unmatched senders among the 226 shopify-sourced orders; most are likely theme variants or shipping-status emails that slipped through `isShippingStatusEmail`. Run `scripts/reparse-orders.ts` (dry-run) to see what category they fall into.
 3. **Razorpay remaining gap (186 itemless)** — these are mostly legit gateway-only emails (no items to find). But 57 DO have items — investigate whether those 57 match the "same-purchase duplicate" pattern (i.e., a richer merchant email exists alongside them). If yes, the dedup already handles it; if not, check what merchant they're for.
 4. **KP visual click-through feedback** — after KP reviews the Orders tab live, implement any UX polish he requests (e.g., badge styling, sort order, filter presets).
