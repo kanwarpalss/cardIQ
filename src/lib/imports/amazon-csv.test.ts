@@ -46,4 +46,23 @@ describe("parseAmazonOrderHistory", () => {
   it("returns [] for a CSV that isn't an order-history export", () => {
     expect(parseAmazonOrderHistory("foo,bar\n1,2\n")).toEqual([]);
   });
+
+  // Real Amazon.in export schema: "Shipment Item Subtotal" is a per-SHIPMENT
+  // total repeated on every item row (here 123.97 = 54.99+33.99+34.99 across the
+  // first three items). Summing it would triple-count → 528. The true per-item
+  // charged figure is "Total Amount"; the order total must be their sum ≈ 305.62.
+  // (order 114-7490334-2986640, 2026-07 export.)
+  it("uses per-item Total Amount, not the repeated Shipment Item Subtotal", () => {
+    const real =
+      "Order Date,Order ID,Currency,Unit Price,Shipment Item Subtotal,Total Amount,Original Quantity,Product Name\n" +
+      "2025-11-30T05:23:00Z,114-777,USD,54.99,123.97,60.01,1,Little Tikes Story Dream Machine\n" +
+      "2025-11-30T05:23:00Z,114-777,USD,33.99,123.97,37.09,1,SEREED Baby Balance Bike\n" +
+      "2025-11-30T05:23:00Z,114-777,USD,34.99,123.97,38.18,1,CMYK Wavelength Party Game\n" +
+      "2025-11-30T05:23:00Z,114-777,USD,89.60,89.60,97.78,1,POLO RALPH LAUREN Sunglasses\n" +
+      "2025-11-30T05:23:00Z,114-777,USD,66.49,66.49,72.56,1,Yoto Mini 2024 Edition\n";
+    const [order] = parseAmazonOrderHistory(real, null);
+    expect(order.items.map((i) => i.price)).toEqual([60.01, 37.09, 38.18, 97.78, 72.56]);
+    expect(order.total).toBeCloseTo(305.62, 2);
+    expect(order.total).not.toBeCloseTo(528, 0); // guards against the shipment-subtotal regression
+  });
 });

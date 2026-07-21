@@ -25,8 +25,12 @@ import { createClient } from "@supabase/supabase-js";
 import { mergeBlinkitOrders, parseBlinkitOrderDetails, parseBlinkitOrders } from "../src/lib/imports/blinkit-json";
 
 const APPLY = process.argv.includes("--apply");
-const fileArg = process.argv[process.argv.indexOf("--file") + 1];
-const detailsArg = process.argv[process.argv.indexOf("--details-file") + 1];
+const flagValue = (flag: string): string | undefined => {
+  const i = process.argv.indexOf(flag);
+  return i >= 0 ? process.argv[i + 1] : undefined;
+};
+const fileArg = flagValue("--file");
+const detailsArg = flagValue("--details-file");
 
 async function main() {
   if (!fileArg || fileArg.startsWith("--")) {

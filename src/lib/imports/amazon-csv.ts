@@ -79,7 +79,12 @@ export function parseAmazonOrderHistory(
   const iName = col(headers, "product", "name") >= 0 ? col(headers, "product", "name") : col(headers, "title");
   const iQty = col(headers, "quantity");
   const iUnit = [col(headers, "unit", "price"), col(headers, "per", "unit"), col(headers, "purchase", "price")].find((x) => x >= 0) ?? -1;
-  const iItemTotal = [col(headers, "item", "subtotal"), col(headers, "item", "total"), col(headers, "total", "owed")].find((x) => x >= 0) ?? -1;
+  // Per-item charged amount. "Total Amount"/"Total Owed" are per-item (incl tax,
+  // matching what the card was billed). "Shipment Item Subtotal" is a SHIPMENT
+  // aggregate REPEATED on every item row of the shipment — summing it triple-
+  // counts multi-item shipments, so it's only a last resort behind true per-item
+  // columns (real Amazon.in export, order 114-7490334-2986640).
+  const iItemTotal = [col(headers, "total", "amount"), col(headers, "total", "owed"), col(headers, "item", "subtotal"), col(headers, "item", "total")].find((x) => x >= 0) ?? -1;
   const iCur = col(headers, "currency");
   if (iOrder < 0 || iName < 0) return []; // not a recognisable order-history CSV
 

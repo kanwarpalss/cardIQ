@@ -22,7 +22,15 @@ import { createClient } from "@supabase/supabase-js";
 import { parseAmazonOrderHistory } from "../src/lib/imports/amazon-csv";
 
 const APPLY = process.argv.includes("--apply");
-const fileArg = process.argv[process.argv.indexOf("--file") + 1];
+// By default only INR (Amazon.in) rows import, so order totals stay comparable
+// to the INR card ledger. --all-currencies keeps USD/SGD/etc. too — useful when
+// foreign purchases were paid on a card whose email carries the same figure.
+const ALL_CURRENCIES = process.argv.includes("--all-currencies");
+const flagValue = (flag: string): string | undefined => {
+  const i = process.argv.indexOf(flag);
+  return i >= 0 ? process.argv[i + 1] : undefined;
+};
+const fileArg = flagValue("--file");
 
 async function main() {
   if (!fileArg || fileArg.startsWith("--")) {
@@ -30,8 +38,8 @@ async function main() {
     process.exit(1);
   }
   const csv = readFileSync(fileArg, "utf8");
-  const orders = parseAmazonOrderHistory(csv);
-  console.log(`Parsed ${orders.length} Amazon orders (${orders.reduce((n, o) => n + o.items.length, 0)} items) from ${fileArg}`);
+  const orders = parseAmazonOrderHistory(csv, ALL_CURRENCIES ? null : "INR");
+  console.log(`Parsed ${orders.length} Amazon orders (${orders.reduce((n, o) => n + o.items.length, 0)} items; currencies: ${ALL_CURRENCIES ? "all" : "INR only"}) from ${fileArg}`);
   if (orders.length === 0) { console.log("Nothing to import — is this the Retail.OrderHistory CSV?"); return; }
 
   const sb = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
