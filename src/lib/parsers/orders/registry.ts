@@ -77,6 +77,23 @@ function fromDomain(sender: string, domain: string): boolean {
   return addr.endsWith("@" + domain) || addr.endsWith("." + domain);
 }
 
+// Pure logistics / courier intermediaries. They only ever relay fulfilment
+// status ("shipped", "reached your city", "delivered") for a purchase made
+// elsewhere — the real merchant sends its own order email. Their mail must NEVER
+// become an order: merchant_name would be the courier (useless in the ledger),
+// and they evade same-purchase dedup (courier name ≠ merchant, no shared
+// order_ref, dated days after the charge). Confirmed sender: info@net.shiprocket.in.
+const LOGISTICS_DOMAINS = [
+  "shiprocket.in", "delhivery.com", "bluedart.com", "ekartlogistics.com",
+  "xpressbees.com", "dtdc.com", "ecomexpress.in", "shadowfax.in", "gati.com",
+  "aftership.com", "clickpost.in",
+];
+
+/** A courier/logistics relay whose mail is always a status ping, never an order. */
+export function isLogisticsSender(sender: string): boolean {
+  return LOGISTICS_DOMAINS.some((d) => fromDomain(sender, d));
+}
+
 const ORDER_SENDER_PARSERS: Array<{
   match: (sender: string) => boolean;
   parse: (subject: string, text: string, html: string) => ParsedOrder | null;
@@ -104,6 +121,9 @@ export function parseOrderEmail(
 }
 
 function runParsers(sender: string, subject: string, text: string, html: string): ParsedOrder | null {
+  // 0. Courier/logistics relays never carry a real order — reject before any
+  //    parser can mistake their status ping (with a total) for a purchase.
+  if (isLogisticsSender(sender)) return null;
   // 1. Known marketplaces — sender-gated, richest extraction. A marketplace
   //    match is authoritative: if its parser returns null (e.g. a Swiggy
   //    cancellation), that's a real "not an order", not a fall-through.

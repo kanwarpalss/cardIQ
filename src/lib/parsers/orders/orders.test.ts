@@ -835,6 +835,28 @@ describe("parseOrderEmail — Bath & Body Works (apparelgroup 'QTY n ₹' format
   });
 });
 
+// ── Courier/logistics relays (Shiprocket: info@net.shiprocket.in) are never
+// orders. Their status pings carry a total and often one spurious item, so the
+// items==0 shipping guard misses them, and phrases like "reached your city" /
+// "has been picked" aren't in the transit regex. They must be rejected by
+// SENDER, before any parser runs. (Real leak: 13 Shiprocket rows shadowed real
+// Birkenstock/Levi's/Cosmix orders, 2026-07 audit.) ──
+describe("parseOrderEmail — logistics-intermediary senders are rejected", () => {
+  const body = "Hi Kanwar, your order total is ₹5,793. Order confirmed. Track your shipment.";
+  it("drops a Shiprocket 'delivered' ping even though it has a total + an item", () => {
+    expect(parseOrderEmail("Shiprocket <info@net.shiprocket.in>",
+      "Kanwar Pal Singh, your Birkenstock order has been delivered", body, "")).toBeNull();
+  });
+  it("drops a Shiprocket 'reached your city' ping (phrase absent from the transit regex)", () => {
+    expect(parseOrderEmail("Shiprocket <info@net.shiprocket.in>",
+      "your Cosmix order has reached your city", body, "")).toBeNull();
+  });
+  it("does NOT reject a real merchant that merely mentions a courier in the body", () => {
+    expect(parseOrderEmail("BIRKENSTOCK <orders@birkenstock.example>",
+      "Order #525889 confirmed", body + " Shipped via Shiprocket.", "")).not.toBeNull();
+  });
+});
+
 // ── The Postbox item-name hygiene. The real #118863 confirmation repeats the
 // variant and appends the brand, so the naive capture was
 // "Spark - Stationery Zipper Case / Classic Tan Classic Tan The Postbox". The
