@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/client";
 import OverviewTab from "@/components/OverviewTab";
 import SpendTab    from "@/components/SpendTab";
 import OrdersTab   from "@/components/OrdersTab";
+import VouchersTab from "@/components/VouchersTab";
 import ReviewTab   from "@/components/ReviewTab";
 import InsightsTab from "@/components/InsightsTab";
 import RewardsTab  from "@/components/RewardsTab";
@@ -14,14 +15,14 @@ import DiningTab   from "@/components/DiningTab";
 import ChatTab     from "@/components/ChatTab";
 import CardsTab    from "@/components/CardsTab";
 
-const TABS = ["Overview", "Spend", "Orders", "Insights", "Rewards", "Offers", "Loyalty", "Dining", "Chat", "Review", "Cards"] as const;
+const TABS = ["Overview", "Spend", "Orders", "Vouchers", "Insights", "Rewards", "Offers", "Loyalty", "Dining", "Chat", "Review", "Cards"] as const;
 type Tab = (typeof TABS)[number];
 
 // Sidebar groups — "Review" and "Cards" live at the bottom rail (Review is a
 // tucked-away validation inbox; Cards doubles as settings).
 const NAV_GROUPS: { label: string | null; tabs: Tab[] }[] = [
   { label: null,      tabs: ["Overview"] },
-  { label: "Money",   tabs: ["Spend", "Orders", "Insights"] },
+  { label: "Money",   tabs: ["Spend", "Orders", "Vouchers", "Insights"] },
   { label: "Perks",   tabs: ["Rewards", "Offers", "Loyalty"] },
   { label: "Explore", tabs: ["Dining", "Chat"] },
 ];
@@ -40,6 +41,9 @@ const TAB_ICONS: Record<Tab, React.ReactNode> = {
   ),
   Orders: (
     <svg {...ICON_PROPS}><path d="M3 5.5h10l-.9 7.2a1 1 0 0 1-1 .8H4.9a1 1 0 0 1-1-.8L3 5.5zM5.8 5.5V4a2.2 2.2 0 0 1 4.4 0v1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+  ),
+  Vouchers: (
+    <svg {...ICON_PROPS}><path d="M2 5.5A1.5 1.5 0 0 1 3.5 4h9A1.5 1.5 0 0 1 14 5.5V7a1 1 0 0 0 0 2v1.5A1.5 1.5 0 0 1 12.5 12h-9A1.5 1.5 0 0 1 2 10.5V9a1 1 0 0 0 0-2V5.5z" strokeLinejoin="round"/><path d="M9.7 4.5v7" strokeDasharray="1.4 1.4"/></svg>
   ),
   Review: (
     <svg {...ICON_PROPS}><circle cx="8" cy="8" r="6"/><path d="M5.4 8.1 7.1 9.8 10.6 6" strokeLinecap="round" strokeLinejoin="round"/></svg>
@@ -195,6 +199,7 @@ export default function Home() {
         {tab === "Overview" && <OverviewTab onOpenSpend={openSpendForCard} onNavigate={navigate} />}
         {tab === "Spend"    && <SpendTab focusCard={spendFocus} />}
         {tab === "Orders"   && <OrdersTab />}
+        {tab === "Vouchers" && <VouchersTab />}
         {tab === "Review"   && <ReviewTab onChanged={refreshReviewCount} />}
         {tab === "Insights" && <InsightsTab />}
         {tab === "Rewards"  && <RewardsTab onNavigate={navigate} />}

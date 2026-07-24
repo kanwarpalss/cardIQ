@@ -76,6 +76,23 @@ export async function GET() {
     if (data.length < PAGE) break;
   }
 
+  // Vouchers (V2 feature C) — keyed by their funding txn_id on the client, so a
+  // GYFTR charge in the Spend list can show WHICH brand voucher it bought
+  // ("Gyftr → Pure Home + Living"). Missing table (015 not run) → no labels.
+  const vouchers: Array<Record<string, unknown>> = [];
+  for (let vFrom = 0; ; vFrom += PAGE) {
+    const { data, error } = await supabase
+      .from("vouchers")
+      .select("id, brand, brand_key, face_value, txn_id")
+      .eq("user_id", user.id)
+      .not("txn_id", "is", null)
+      .range(vFrom, vFrom + PAGE - 1);
+    if (error) break; // missing table / transient → degrade to no voucher labels
+    if (!data?.length) break;
+    vouchers.push(...(data as Array<Record<string, unknown>>));
+    if (data.length < PAGE) break;
+  }
+
   const [{ data: cards }, { data: settings }] = await Promise.all([
     supabase.from("cards").select("id, last4, nickname, product_key, anniversary_date").eq("user_id", user.id),
     supabase.from("user_settings").select("last_gmail_sync_at").eq("user_id", user.id).single(),
@@ -84,6 +101,7 @@ export async function GET() {
   return NextResponse.json({
     transactions: all,
     orders,
+    vouchers,
     cards: cards || [],
     last_sync: settings?.last_gmail_sync_at ?? null,
   });

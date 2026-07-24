@@ -38,6 +38,9 @@ interface Props {
   subcategories: Record<string, string[]>;
   /** Matched order emails keyed by txn id. */
   ordersByTxn: Map<string, OrderRow>;
+  /** Vouchers a charge funded, keyed by txn id — shows the brand a GYFTR charge
+   *  bought ("Gyftr → Pure Home + Living"). Optional; absent → no labels. */
+  vouchersByTxn?: Map<string, { brand: string; face_value: number }[]>;
   /** All distinct existing notes — used for autofill suggestions. */
   existingNotes: string[];
   onMerchantSave: (old_name: string, new_name: string, category: string, subcategory: string | null) => Promise<void>;
@@ -109,7 +112,7 @@ function ConfidenceChip({ level, status }: { level: OrderRow["match_confidence"]
 }
 
 export default function TransactionsTable({
-  transactions, cards, categories, subcategories, ordersByTxn, existingNotes,
+  transactions, cards, categories, subcategories, ordersByTxn, vouchersByTxn, existingNotes,
   onMerchantSave, onCategoryChange, onNotesChange, onNotesBulk,
 }: Props) {
   // ── Filters ──
@@ -450,6 +453,12 @@ export default function TransactionsTable({
             const enrichedName = order?.merchant_name && order.match_confidence !== "low"
               ? order.merchant_name
               : null;
+            // Vouchers this charge bought (e.g. a GYFTR charge → the brands).
+            // Distinct brand names, in first-seen order.
+            const vouchers = vouchersByTxn?.get(t.id);
+            const voucherBrands = vouchers
+              ? [...new Set(vouchers.map((v) => v.brand))]
+              : [];
             const subOptions = subcategories[editCatValue] ?? [];
             const merchantSubOptions = subcategories[editMerchantCat] ?? [];
             // Scope-choice count — only computed while this row is being edited.
@@ -528,6 +537,11 @@ export default function TransactionsTable({
                         </span>
                         {enrichedName && (
                           <span className="text-2xs text-mist/35">via {t.merchant}</span>
+                        )}
+                        {voucherBrands.length > 0 && (
+                          <span className="text-2xs text-gold/70 truncate" title={`Voucher${voucherBrands.length > 1 ? "s" : ""} bought: ${voucherBrands.join(", ")}`}>
+                            → {voucherBrands.slice(0, 2).join(", ")}{voucherBrands.length > 2 ? ` +${voucherBrands.length - 2}` : ""} voucher{voucherBrands.length > 1 || (vouchers && vouchers.length > 1) ? "s" : ""}
+                          </span>
                         )}
                       </button>
                     </div>

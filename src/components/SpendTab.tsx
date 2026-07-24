@@ -21,7 +21,8 @@ type Txn = {
 };
 type CardRow = { id: string; last4: string; nickname: string | null; product_key: string; anniversary_date: string | null };
 type OrderApiRow = OrderRow & { txn_id: string | null };
-type AllData = { transactions: Txn[]; orders?: OrderApiRow[]; cards: CardRow[]; last_sync: string | null };
+type VoucherApiRow = { id: string; brand: string; brand_key: string; face_value: number | string; txn_id: string | null };
+type AllData = { transactions: Txn[]; orders?: OrderApiRow[]; vouchers?: VoucherApiRow[]; cards: CardRow[]; last_sync: string | null };
 
 // ── Utils ────────────────────────────────────────────────────────────────────
 const fmt  = (n: number) => "₹" + Math.round(n).toLocaleString("en-IN");
@@ -199,6 +200,20 @@ export default function SpendTab({ focusCard }: { focusCard?: { last4: string } 
     const map = new Map<string, OrderRow>();
     for (const o of allData?.orders ?? []) {
       if (o.txn_id) map.set(o.txn_id, o);
+    }
+    return map;
+  }, [allData]);
+
+  // Vouchers a charge funded, keyed by that funding txn id — lets a GYFTR row
+  // show the brand it bought ("Gyftr → Pure Home + Living"). One charge can buy
+  // several brands/denominations in one go, so it's a list.
+  const vouchersByTxn = useMemo(() => {
+    const map = new Map<string, { brand: string; face_value: number }[]>();
+    for (const v of allData?.vouchers ?? []) {
+      if (!v.txn_id) continue;
+      const list = map.get(v.txn_id) ?? [];
+      list.push({ brand: v.brand, face_value: Number(v.face_value) });
+      map.set(v.txn_id, list);
     }
     return map;
   }, [allData]);
@@ -589,6 +604,7 @@ export default function SpendTab({ focusCard }: { focusCard?: { last4: string } 
             categories={allCategories}
             subcategories={subcategorySuggestions}
             ordersByTxn={ordersByTxn}
+            vouchersByTxn={vouchersByTxn}
             existingNotes={existingNotes}
             onMerchantSave={handleMerchantSave}
             onCategoryChange={handleTxnCategoryChange}
