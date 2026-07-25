@@ -18,7 +18,7 @@ import { parseGyftrVouchers } from "../src/lib/parsers/orders/gyftr";
 import { parseOrderEmail, type OrderSource } from "../src/lib/parsers/orders/registry";
 import { matchOrderToTxn, matchSplitOrderToTxn, reviewStatusFor, type TxnLite } from "../src/lib/order-match";
 import { matchVoucherBatchToCharge } from "../src/lib/voucher-match";
-import { compatibleVoucherKeys, normalizeBrand, reconcileVouchers, type VoucherPurchase, type VoucherPaidOrder } from "../src/lib/voucher-bridge";
+import { compatibleVoucherKeys, normalizeBrand, reconcileWithInferred, isInferredFifoEligible, type VoucherPurchase, type VoucherPaidOrder } from "../src/lib/voucher-bridge";
 
 const APPLY = process.argv.includes("--apply");
 const PAGE = 1000;
@@ -221,16 +221,36 @@ async function main() {
       orderedAt: o.order_at, evidence: "inferred_split", split });
   }
 
-  const bridge = reconcileVouchers(vps, candidates);
+  // Inferred-FIFO layer (Invariant #7 v2): unmatched, same-brand orders the two
+  // evidence passes above did NOT claim, drawn down against leftover balance.
+  // Expressed purely as voucher_draws tagged `inferred_fifo` — no card charge,
+  // no payment_evidence write (draws carry the amount + funding txn).
+  const evidenceIds = new Set(candidates.map((c) => c.id));
+  const inferredCandidates: VoucherPaidOrder[] = orders
+    .filter((o) => !evidenceIds.has(o.id) && isInferredFifoEligible({
+      kind: o.kind, duplicateOf: o.duplicate_of, reviewStatus: o.review_status,
+      txnId: o.txn_id, voucherPaidAmount: o.voucher_paid_amount, source: o.source,
+      total: Number(o.total_amount), itemCount: o.items?.length ?? 0,
+    }))
+    .map((o) => ({ id: o.id, brand: orderBrand(o), amount: Number(o.total_amount), orderedAt: o.order_at }));
+  const inferredById = new Map(inferredCandidates.map((c) => [c.id, c]));
+
+  const bridge = reconcileWithInferred(vps, candidates, inferredCandidates);
   const candidateById = new Map(candidates.map((c) => [c.id, c]));
   const drawsByOrder = new Map<string, any[]>();
-  let inferredSplits = 0;
+  let inferredSplits = 0, inferredFifoOrders = 0;
   for (const attr of bridge.orders) {
-    const c = candidateById.get(attr.orderId)!;
-    if (c.split && attr.status !== "attributed") { cardUpdates.delete(c.id); continue; }
-    if (!attr.draws.length) continue;
-    drawsByOrder.set(c.id, attr.draws.map((d) => ({ ...d, evidence: c.evidence })));
-    if (c.split) inferredSplits++;
+    const c = candidateById.get(attr.orderId);
+    if (c) {
+      if (c.split && attr.status !== "attributed") { cardUpdates.delete(c.id); continue; }
+      if (!attr.draws.length) continue;
+      drawsByOrder.set(c.id, attr.draws.map((d) => ({ ...d, evidence: c.evidence })));
+      if (c.split) inferredSplits++;
+    } else if (inferredById.has(attr.orderId)) {
+      if (!attr.draws.length) continue;
+      drawsByOrder.set(attr.orderId, attr.draws.map((d) => ({ ...d, evidence: "inferred_fifo" })));
+      inferredFifoOrders++;
+    }
   }
 
   if (APPLY) {
@@ -266,6 +286,7 @@ async function main() {
     vouchersMatched: matchedVouchers,
     explicitVoucherOrders: explicitSplits,
     inferredSplitOrders: inferredSplits,
+    inferredFifoOrders,
     voucherAttributedOrders: drawsByOrder.size,
     voucherAttributedAmount: Math.round([...drawsByOrder.values()].flat().reduce((sum, d) => sum + Number(d.amount), 0) * 100) / 100,
     attributedOrders: bridge.orders.filter((a) => a.draws.length > 0).map((a) => {

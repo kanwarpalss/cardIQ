@@ -250,6 +250,112 @@ export function reconcileVouchers(
   return { orders: attributions, vouchers: voucherStates };
 }
 
+// ── Inferred-FIFO attribution (Invariant #7 v2, 2026-07-24) ──────────────────
+//
+// The evidence-only rule above leaves most genuinely-spent vouchers reading as
+// "unused": a wallet/voucher spend (Amazon Pay balance, Swiggy Money, a Shopify
+// store-credit checkout) rarely states "paid from gift card" in a parseable way,
+// so no evidence candidate is ever built for it. KP accepted a best-effort layer
+// (chosen over strict evidence-only) to close that gap — with two guardrails that
+// keep it honest and stop it from becoming the old blunt same-brand heuristic:
+//
+//   1. Evidence ALWAYS wins. Inferred draws only touch balance the evidence pass
+//      left behind (two passes below), so a receipt-stated draw is never
+//      displaced by a guess.
+//   2. Only UNMATCHED orders qualify. An order already tied to a card charge was
+//      paid by that card — attributing it to a voucher too would double-count the
+//      same spend. `isInferredFifoEligible` excludes anything with a txn.
+//
+// Inferred draws are tagged `inferred_fifo` by the caller so the UI can show
+// "likely used" rather than claiming certainty it doesn't have.
+
+/** The order fields the eligibility rule reads — shaped so the runner and the
+ *  live sync feed it identically (one rule, no drift). */
+export type InferredEligibleOrder = {
+  kind: string;
+  duplicateOf: unknown;    // truthy → a same-purchase duplicate; never attribute
+  reviewStatus: unknown;   // "rejected" → KP unlinked it; respect that
+  txnId: unknown;          // truthy → paid by a card charge; NOT voucher-funded
+  voucherPaidAmount: unknown; // non-null → already an evidence candidate
+  source: string;          // "razorpay" → gateway echo, not a real merchant order
+  total: number;
+  itemCount: number;       // 0 → a bare confirmation, too thin to trust
+};
+
+/**
+ * Is this order a candidate for inferred-FIFO voucher attribution? A real,
+ * non-duplicate, un-rejected order with item detail, a positive total, NO card
+ * charge, not already evidence-attributed, and not a payment-gateway echo.
+ * Brand/date gating is intentionally NOT here — reconcileVouchers only ever
+ * draws a same-brand voucher bought in time, so the pool does that filtering.
+ */
+export function isInferredFifoEligible(o: InferredEligibleOrder): boolean {
+  return (
+    o.kind === "order" &&
+    !o.duplicateOf &&
+    o.reviewStatus !== "rejected" &&
+    !o.txnId &&
+    o.voucherPaidAmount == null &&
+    o.source !== "razorpay" &&
+    o.total > 0 &&
+    o.itemCount > 0
+  );
+}
+
+/**
+ * Two-tier reconciliation. Evidence orders claim voucher balance first; inferred
+ * orders then draw down only what's LEFT, per brand, FIFO. Returns merged order
+ * attributions and final voucher states — the drawn/remaining a caller persists.
+ *
+ * Determinism is inherited from reconcileVouchers (oldest voucher + oldest order
+ * first, id tie-break), so the same inputs always yield the same ledger.
+ */
+export function reconcileWithInferred(
+  vouchers: VoucherPurchase[],
+  evidenceOrders: VoucherPaidOrder[],
+  inferredOrders: VoucherPaidOrder[],
+  options: BridgeOptions = {}
+): BridgeResult {
+  const tolerance = options.reconcileTolerance ?? DEFAULTS.reconcileTolerance;
+
+  // Pass 1 — evidence. Authoritative; it drains balance before any guess runs.
+  const pass1 = reconcileVouchers(vouchers, evidenceOrders, options);
+
+  // Pass 2 — inferred, against the leftover balance. Residual vouchers keep the
+  // SAME id/brand/date/card so FIFO semantics carry across (a voucher half-used
+  // by evidence offers only its remainder to inferred orders).
+  const remainingById = new Map(pass1.vouchers.map((v) => [v.voucherId, v.remaining]));
+  const residual: VoucherPurchase[] = vouchers.map((v) => ({
+    ...v,
+    faceValue: remainingById.has(v.id) ? remainingById.get(v.id)! : v.faceValue,
+  }));
+  const pass2 = reconcileVouchers(residual, inferredOrders, options);
+
+  // Merge voucher states: total drawn = evidence + inferred; remaining is pass 2's
+  // (it worked off pass 1's leftover); orderIds concatenated in draw order.
+  const merged = new Map<string, VoucherState>();
+  for (const v of pass1.vouchers) merged.set(v.voucherId, { ...v });
+  for (const v of pass2.vouchers) {
+    const prev = merged.get(v.voucherId);
+    if (!prev) { merged.set(v.voucherId, v); continue; }
+    const drawn = round2(prev.drawn + v.drawn);
+    merged.set(v.voucherId, {
+      voucherId: v.voucherId,
+      brand: v.brand,
+      faceValue: prev.faceValue,
+      drawn,
+      remaining: v.remaining,
+      reconciled: v.remaining <= tolerance,
+      orderIds: [...prev.orderIds, ...v.orderIds],
+    });
+  }
+
+  // Each order is in exactly one pass (evidence and inferred sets are disjoint by
+  // construction — an evidence order has voucherPaidAmount != null, which
+  // isInferredFifoEligible excludes).
+  return { orders: [...pass1.orders, ...pass2.orders], vouchers: [...merged.values()] };
+}
+
 /** Money rounding: keep paise but kill float dust (0.1+0.2 style drift). */
 function round2(n: number): number {
   return Math.round(n * 100) / 100;
