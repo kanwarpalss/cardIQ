@@ -2,7 +2,7 @@
 
 > Project brain. Updated every session.
 > Static architecture doc lives in ARCHITECTURE.md — don't duplicate it here.
-> Last updated: 2026-07-21
+> Last updated: 2026-07-26
 
 ---
 
@@ -119,8 +119,11 @@ A one-stop credit-card destination: syncs bank transaction emails from Gmail (Ax
 | 2026-07-21 | Match each Gyftr issuance email as one purchase batch | Match each voucher code to a separate charge | A single Gyftr charge can issue many codes. Aggregate face value plus a bounded 75–110% discount/fee window matches the real card charge without reusing it per code; indistinguishable candidates are refused. |
 | 2026-07-21 | Voucher drawdowns require payment evidence | Infer that every same-brand order used vouchers | Brand affinity alone creates fictional spending. Drawdowns now require an amount stated in the receipt or an exact order-total remainder covered by compatible voucher balance and a unique direct-card charge. |
 | 2026-07-21 | Allow audited multi-brand voucher families | Require merchant and voucher brand keys to be identical | Multi-brand products such as Luxe can pay Birkenstock. These relationships live in an explicit allowlist; unrelated brands never cross-match. |
+| 2026-07-26 | Review shows only an existing, same-user card charge | Treat `review_status='pending'` as proof that a pair exists | De-duplication intentionally leaves duplicate emails in `pending` after releasing their card charge. Status alone therefore created 276 empty “pairs.” The route now requires both `txn_id` and a resolvable charge; historic empty entries were returned to `unmatched` without deleting orders. |
 
 ## §6 Current State (as of 2026-07-22)
+
+**New 2026-07-26 (Review queue integrity cleanup):** The Review tab had 294 pending entries, of which only 18 had a real card charge; the other 276 were unpaired (272 duplicate emails plus 4 unmatched primary orders). All 276 were safely moved from `pending` to `unmatched`; no orders or transactions were deleted. `GET /api/orders/review` now rejects any row without a `txn_id`, a resolvable transaction, and same-user ownership, so empty/random pairs cannot reappear. `scripts/audit-review-queue.ts` reports live integrity and `scripts/clean-review-queue.ts` is dry-run by default for any future repair. Final audit: 18 pending / 18 real pairs / 0 broken. The full suite, TypeScript, and lint completed cleanly (437 unit cases).
 
 **New 2026-07-22 (Blinkit + Amazon bulk import · Amazon money-bug fix · Orders cleanup):** commits `76ba31f`, `7e65159`
 - **Imports applied live:** 84 Blinkit orders (complete baskets — 352 items with every qty+price, via the DevTools collector) and 433 new Amazon orders from the official amazon.in `Your Amazon Orders/Order History.csv` export (14 years, 2012→2026; 729 INR + 43 USD + 2 SGD rows; 43 already-present skipped by order_ref). DB now holds 84 blinkit / 484 amazon rows.
@@ -291,6 +294,8 @@ A one-stop credit-card destination: syncs bank transaction emails from Gmail (Ax
 ## §9 Session Handoff Notes (2026-07-22)
 
 ### Start Here — Current, Verified State
+
+**Latest (2026-07-26) — Review queue cleaned and guarded:** Review now contains 18 genuine order↔charge pairs and no empty/broken rows. 276 `pending` rows with no card charge were returned to `unmatched` (orders and transactions retained). The API applies a read-time same-user/existing-charge guard; use `npx tsx scripts/audit-review-queue.ts` before any future manual cleanup, and `scripts/clean-review-queue.ts` remains dry-run by default.
 
 **Latest (2026-07-22) — Blinkit + Amazon imports DONE, Orders cleaned:** Both non-email imports are now applied live (superseding the "0 Blinkit / 0 Amazon CSV" note below). DB: **2,380 orders — 2,110 visible / 270 duplicates hidden / 413 charge-matched**; 84 Blinkit (`blinkit-json:`) + 484 Amazon (`amazon-csv:` + email). The Amazon CSV run caught + fixed a totals-inflation money bug (shipment-subtotal double-count). Courier senders (Shiprocket etc.) are now parser-rejected and 13 existing rows deleted. Commits `76ba31f` + `7e65159` are **local on `main`, NOT yet pushed to Vercel** — `git push origin main` when ready to deploy. Next: re-run `scripts/sync-orders-offline.ts --apply` after any future import; consider widening bank sync if KP wants more of the 517 imports matched (most are pre-bank-history or foreign-currency, so unmatched is expected, not a bug).
 

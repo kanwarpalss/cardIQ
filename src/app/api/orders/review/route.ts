@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { isMissingTableError, isMissingColumnError } from "@/lib/supabase/errors";
+import { ordersWithValidReviewCharge } from "@/lib/review-queue";
 
 // The order-review queue (V2 feature C, migration 014).
 //
@@ -40,6 +41,7 @@ export async function GET(req: Request) {
       .select("id, source, kind, order_ref, merchant_name, total_amount, order_at, items, match_confidence, review_status, txn_id, raw_subject")
       .eq("user_id", user.id)
       .eq("review_status", status)
+      .not("txn_id", "is", null)
       .order("order_at", { ascending: false })
       .range(from, from + PAGE - 1);
 
@@ -61,16 +63,25 @@ export async function GET(req: Request) {
   const txnIds = [...new Set(orders.map((o) => o.txn_id).filter(Boolean) as string[])];
   const txnById = new Map<string, Record<string, unknown>>();
   for (let i = 0; i < txnIds.length; i += PAGE) {
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from("transactions")
-      .select("id, card_last4, amount_inr, txn_at, merchant, category")
+      .select("id, user_id, card_last4, amount_inr, txn_at, merchant, category")
       .eq("user_id", user.id)
       .in("id", txnIds.slice(i, i + PAGE));
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
     for (const t of data ?? []) txnById.set(t.id as string, t);
   }
-  for (const o of orders) o.txn = o.txn_id ? txnById.get(o.txn_id as string) ?? null : null;
+  const realPairs = ordersWithValidReviewCharge(
+    orders as Array<Record<string, unknown> & { id: string; txn_id: string | null }>,
+    [...txnById.values()] as Array<{ id: string; user_id: string }>,
+    user.id
+  );
+  for (const o of realPairs) {
+    const { user_id: _userId, ...txn } = txnById.get(o.txn_id!)!;
+    o.txn = txn;
+  }
 
-  return NextResponse.json({ orders });
+  return NextResponse.json({ orders: realPairs });
 }
 
 export async function POST(req: Request) {
