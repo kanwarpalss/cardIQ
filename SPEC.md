@@ -2,9 +2,17 @@
 
 > Project brain. Updated every session.
 > Static architecture doc lives in ARCHITECTURE.md — don't duplicate it here.
-> Last updated: 2026-07-26
+> Last updated: 2026-07-27
 
 ---
+
+## 2026-07-27 Session Note
+
+- Review queue remains clean: only order/charge pairs can be pending review.
+- Corrected Birkenstock order #525889 in the live ledger: ₹5,000 Birkenstock gift card funded by Amazon Pay + ₹793 direct card debit. The prior inferred Luxe draw was replaced with this user-confirmed evidence.
+- Applied Supabase migrations for human-confirmed payment evidence and `vouchers.funding_source`; Amazon Pay voucher records are distinct from unmatched card-funded vouchers.
+- Google OAuth callback failures now return to Login with a clear retry message instead of a silent `/` → `/login` loop. Production release `48cf6b2` is Ready on Vercel.
+
 
 ## §1 What This Is
 
