@@ -36,9 +36,14 @@ export type ParsedTxn = {
 };
 
 // (currency code) (amount) spent on credit card no. XX(last4)
-const SUBJECT_DEBIT_RE  = /([A-Z]{3})\s+([\d,]+(?:\.\d{1,2})?)\s+spent\s+on\s+credit\s+card\s+no\.\s+XX(\d{4})/i;
-const SUBJECT_CREDIT_RE = /([A-Z]{3})\s+([\d,]+(?:\.\d{1,2})?)\s+(?:refund\s+)?credited\s+(?:to\s+)?(?:your\s+)?credit\s+card\s+(?:no\.\s+)?XX(\d{4})/i;
-const BODY_AMOUNT_RE    = /Transaction\s+Amount[:\s]+([A-Z]{3})\s+([\d,]+(?:\.\d{1,2})?)/i;
+// Axis sometimes omits the leading zero for a sub-unit foreign transaction
+// (e.g. "SGD .1"). Accept it here so the strict Axis parser owns the email;
+// otherwise it falls through to the generic parser, which can mistake the
+// later "Available Limit: INR …" line for the purchase amount.
+const MONEY_RE = "(?:\\d[\\d,]*(?:\\.\\d{1,2})?|\\.\\d{1,2})";
+const SUBJECT_DEBIT_RE  = new RegExp(`([A-Z]{3})\\s+(${MONEY_RE})\\s+spent\\s+on\\s+credit\\s+card\\s+no\\.\\s+XX(\\d{4})`, "i");
+const SUBJECT_CREDIT_RE = new RegExp(`([A-Z]{3})\\s+(${MONEY_RE})\\s+(?:refund\\s+)?credited\\s+(?:to\\s+)?(?:your\\s+)?credit\\s+card\\s+(?:no\\.\\s+)?XX(\\d{4})`, "i");
+const BODY_AMOUNT_RE    = new RegExp(`Transaction\\s+Amount[:\\s]+([A-Z]{3})\\s+(${MONEY_RE})`, "i");
 // For foreign-currency txns Axis usually includes "Indian Rupee Equivalent: INR XXX"
 const BODY_INR_EQUIV_RE = /Indian\s+Rupee\s+Equivalent[:\s]+INR\s+([\d,]+(?:\.\d{1,2})?)/i;
 // Multiple merchant patterns to handle HTML-stripped vs. plain text
@@ -90,6 +95,7 @@ export function parseAxisTxn(subject: string, body: string, snippet: string = ""
   const bodyAmt = BODY_AMOUNT_RE.exec(combined);
   const bodyCurrency = bodyAmt?.[1]?.toUpperCase() ?? subjectCurrency;
   const bodyAmount   = bodyAmt ? parseAmount(bodyAmt[2]) : parseAmount(sm[2]);
+  if (!(bodyAmount > 0)) return null;
 
   // Foreign-currency txn:
   //   • If "Indian Rupee Equivalent: INR X" is present → amount_inr = X

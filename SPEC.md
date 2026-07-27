@@ -12,6 +12,7 @@
 - Corrected Birkenstock order #525889 in the live ledger: ₹5,000 Birkenstock gift card funded by Amazon Pay + ₹793 direct card debit. The prior inferred Luxe draw was replaced with this user-confirmed evidence.
 - Applied Supabase migrations for human-confirmed payment evidence and `vouchers.funding_source`; Amazon Pay voucher records are distinct from unmatched card-funded vouchers.
 - Google OAuth callback failures now return to Login with a clear retry message instead of a silent `/` → `/login` loop. Production release `48cf6b2` is Ready on Vercel.
+- Repaired one historical Axis parsing error: `SGD .1` at UNIQLO CITY had been stored as the ₹11,87,242.78 available-credit-limit figure. It now records SGD 0.10 (no INR equivalent); the parser and a fallback-path regression test prevent this class from recurring. Audit found no other foreign-currency alerts stored as INR.
 
 
 ## §1 What This Is

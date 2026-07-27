@@ -11,7 +11,7 @@ import { parseAxisTxn } from "@/lib/parsers/axis";
 import { parseHdfcTxn } from "@/lib/parsers/hdfc";
 import { parseIciciTxn } from "@/lib/parsers/icici";
 import { parseHsbcTxn } from "@/lib/parsers/hsbc";
-import { parseTxnEmail } from "@/lib/parsers/registry";
+import { parseTxnEmail, parseTxnEmailWithFallback } from "@/lib/parsers/registry";
 
 // ─── AXIS ──────────────────────────────────────────────────────────────────
 describe("parseAxisTxn", () => {
@@ -86,6 +86,56 @@ describe("parseAxisTxn", () => {
     expect(out?.amount_inr).toBe(0);
     expect(out?.merchant_raw).toBe("SOFITEL BAL");
     expect(out?.txn_type).toBe("debit");
+  });
+
+  it("parses a leading-decimal foreign amount instead of treating the available limit as spend", () => {
+    const out = parseAxisTxn(
+      "SGD .1 spent on credit card no. XX4455",
+      "Transaction Amount: SGD .1 Merchant Name: UNIQLO CITY Axis Bank Credit Card No. XX4455 " +
+      "Date & Time: 22-04-2026, 16:48:22 IST Available Limit*: INR 1187242.78 Total Credit Limit*: INR 1217000",
+      ""
+    );
+    expect(out).toMatchObject({
+      card_last4: "4455",
+      currency: "SGD",
+      amount_original: 0.1,
+      amount_inr: 0,
+      merchant_raw: "UNIQLO CITY",
+      txn_type: "debit",
+    });
+  });
+
+  it("does not fall through to the generic parser and capture Axis's available limit", () => {
+    const out = parseTxnEmailWithFallback(
+      "Axis Bank Alerts <alerts@axis.bank.in>",
+      "SGD .1 spent on credit card no. XX4455",
+      "Transaction Amount: SGD .1 Merchant Name: UNIQLO CITY Axis Bank Credit Card No. XX4455 " +
+      "Available Limit*: INR 1187242.78 Total Credit Limit*: INR 1217000",
+      "",
+      new Set(["4455"])
+    );
+    expect(out).toMatchObject({ currency: "SGD", amount_original: 0.1, amount_inr: 0 });
+    expect(out?.low_confidence).toBeUndefined();
+  });
+
+  it("uses Axis's explicit INR equivalent, never the available-credit field", () => {
+    const out = parseAxisTxn(
+      "SGD .10 spent on credit card no. XX4455",
+      "Available Limit: INR 1187242.78 Transaction Amount: SGD .10 Indian Rupee Equivalent: INR 6.31 Merchant Name: UNIQLO CITY",
+      ""
+    );
+    expect(out).toMatchObject({ currency: "SGD", amount_original: 0.1, amount_inr: 6.31, merchant_raw: "UNIQLO CITY" });
+  });
+
+  it.each(["SGD .", "SGD 0"])("rejects malformed or zero foreign amount %s instead of capturing an available limit", (amount) => {
+    const out = parseTxnEmailWithFallback(
+      "Axis Bank Alerts <alerts@axis.bank.in>",
+      `${amount} spent on credit card no. XX4455`,
+      `Transaction Amount: ${amount} Merchant Name: UNIQLO CITY Available Limit*: INR 1187242.78`,
+      "",
+      new Set(["4455"])
+    );
+    expect(out).toBeNull();
   });
 
   it("ignores non-transactional Axis emails", () => {

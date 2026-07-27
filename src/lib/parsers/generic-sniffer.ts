@@ -30,8 +30,12 @@ export type GenericParsed = ParsedTxn & { low_confidence: true };
 // would also match "ing" (as in "ending 5906") and capture the card
 // number as the amount. Lowercase variants for `Rs`/`Rp` are spelled
 // out explicitly.
-const AMOUNT_NEAR_CURRENCY_RE =
-  /(?:[A-Z]{3}|\b(?:Rs|RS|rs|Rp|RP|rp|RM)\.?\b|[\u20B9$\u20AC\u00A3\u00A5\u20A9\u20AB\u0E3F])\s*([\d,]+(?:\.\d{1,2})?)/;
+const MONEY_RE = "(?:\\d[\\d,]*(?:\\.\\d{1,2})?|\\.\\d{1,2})";
+const AMOUNT_NEAR_CURRENCY_RE = new RegExp(
+  `(?:[A-Z]{3}|\\b(?:Rs|RS|rs|Rp|RP|rp|RM)\\.?\\b|[\\u20B9$\\u20AC\\u00A3\\u00A5\\u20A9\\u20AB\\u0E3F])\\s*(${MONEY_RE})`
+);
+const DECLARED_TRANSACTION_AMOUNT_RE = /Transaction\s+Amount[:\s]+([A-Z]{3})\s+(\S+)/i;
+const VALID_MONEY_TOKEN_RE = /^(?:\d[\d,]*(?:\.\d{1,2})?|\.\d{1,2})$/;
 
 // Card last4 reference: matches XX1234, **1234, ending 1234, ending with 1234,
 // "card no. 1234". Captures the 4 digits.
@@ -109,6 +113,14 @@ export function genericSniff(
   // 2. Must contain a transactional verb.
   if (!TXN_VERB_RE.test(combined)) return null;
 
+  // A structured bank alert's own Transaction Amount field beats all later
+  // numbers. If it declares a malformed foreign amount, don't fall through to
+  // an Available Limit / Total Credit Limit INR figure elsewhere in the email.
+  const declared = DECLARED_TRANSACTION_AMOUNT_RE.exec(combined);
+  if (declared && declared[1].toUpperCase() !== "INR" && !VALID_MONEY_TOKEN_RE.test(declared[2])) {
+    return null;
+  }
+
   // 3. Must contain a card last4 that the user actually has.
   const last4Match = LAST4_RE.exec(combined);
   if (!last4Match) return null;
@@ -123,6 +135,7 @@ export function genericSniff(
   const amtMatch = AMOUNT_NEAR_CURRENCY_RE.exec(combined);
   if (!amtMatch) return null;
   const amount = parseAmountStr(amtMatch[1]);
+  if (!(amount > 0)) return null;
 
   // Run the centralized detector on the matched fragment + a small window
   // around it so we use the strongest local currency signal (rather than a
