@@ -23,13 +23,19 @@ const ORDER_REF_RE =
 
 // Total labels in priority order — most specific first so "Amount Paid"
 // beats a bare "Total". Each is paired with a nearby money value.
+//
+// Every single-word label MUST be boundary-anchored: an unanchored /paid/
+// matches the "paid" buried inside "PREPAID-DISCOUNT" and then captures the
+// discount line's -₹10 instead of the real total (Pure Home #PHL135542, a
+// ₹7,432 order mis-read as ₹10 — 2026-07-25 fix). \bpaid\b still catches
+// "you paid" / "Paid ₹…" but never a substring of a larger word.
 const TOTAL_LABELS = [
   /amount\s+paid/i,
   /grand\s+total/i,
   /order\s+total/i,
   /total\s+payable/i,
   /net\s+payable/i,
-  /(?:you\s+)?paid/i,
+  /(?:you\s+)?\bpaid\b/i,
   /total\s+amount/i,
   new RegExp(String.raw`(?<![a-z])total(?!\s+excl)`, "i"),
 ];

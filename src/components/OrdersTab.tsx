@@ -10,7 +10,8 @@ import { useEffect, useMemo, useState } from "react";
 
 type Item = { name: string; qty?: number | null; price?: number | null };
 type LedgerTxn = { card_last4: string; amount_inr: number | string; txn_at: string; merchant: string | null };
-type VoucherDraw = { voucherId: string; amount: number; cardTxnId?: string | null; evidence?: "email" | "inferred_split" };
+type DrawEvidence = "manual" | "email" | "inferred_split" | "inferred_fifo";
+type VoucherDraw = { voucherId: string; amount: number; cardTxnId?: string | null; evidence?: DrawEvidence };
 type Order = {
   id: string;
   source: string;
@@ -31,13 +32,26 @@ type Order = {
   card_paid_amount?: number | string | null;
   voucher_paid_amount?: number | string | null;
   voucher_brand_key?: string | null;
-  payment_evidence?: "email" | "inferred_split" | null;
+  payment_evidence?: "manual" | "email" | "inferred_split" | null;
   duplicate_of?: string | null;   // same purchase, reported by another entity
 };
 
 /** Paid from a voucher balance (traced order → voucher → card charge). */
 function isVoucherFunded(o: Order): boolean {
   return Array.isArray(o.voucher_draws) && o.voucher_draws.length > 0;
+}
+
+/** KP verified this order's split by hand — the strongest evidence we hold. */
+function isManuallyVerified(o: Order): boolean {
+  return o.payment_evidence === "manual" || (o.voucher_draws ?? []).some((d) => d.evidence === "manual");
+}
+
+/** Voucher attribution we're only INFERRING (best-effort FIFO), not confirming.
+ *  True when every draw is an inferred_fifo guess — the UI shows "likely", and
+ *  these are the orders worth asking KP to verify. */
+function isLikelyVoucher(o: Order): boolean {
+  const draws = o.voucher_draws ?? [];
+  return draws.length > 0 && draws.every((d) => d.evidence === "inferred_fifo") && !isManuallyVerified(o);
 }
 
 /** A duplicate report of another order's purchase (gateway/shipper vs merchant). */
@@ -72,23 +86,174 @@ function isCardLinked(o: Order): o is Order & { txn: LedgerTxn } {
 
 /** Where this order sits relative to a card charge — the ledger's link badge. */
 function LinkBadge({ o }: { o: Order }) {
+  const chip = "text-2xs px-1.5 py-0.5 rounded-md border whitespace-nowrap";
   if (isDuplicate(o)) {
-    return <span className="text-2xs px-1.5 py-0.5 rounded-md border whitespace-nowrap text-mist/45 border-rim bg-raised" title="Same purchase, reported by another entity (gateway/shipper)">⧉ duplicate</span>;
+    return <span className={`${chip} text-mist/45 border-rim bg-raised`} title="Same purchase, reported by another entity (gateway/shipper)">⧉ duplicate</span>;
+  }
+  // Human-verified split — the strongest badge; green like a confirmed card link.
+  if (isManuallyVerified(o)) {
+    return <span className={`${chip} text-emerald border-emerald/30 bg-emerald/5`} title="You verified this order's voucher + card split by hand">✓ verified{isCardLinked(o) ? ` ••${o.txn.card_last4}` : ""}</span>;
   }
   if (isCardLinked(o) && isVoucherFunded(o)) {
-    return <span className="text-2xs px-1.5 py-0.5 rounded-md border whitespace-nowrap text-amber border-amber/30 bg-amber/5">◈ split ••{o.txn.card_last4}</span>;
+    return <span className={`${chip} text-amber border-amber/30 bg-amber/5`}>◈ split ••{o.txn.card_last4}</span>;
   }
   if (isCardLinked(o)) {
-    return <span className="text-2xs px-1.5 py-0.5 rounded-md border whitespace-nowrap text-emerald border-emerald/30 bg-emerald/5">✓ card ••{o.txn.card_last4}</span>;
+    return <span className={`${chip} text-emerald border-emerald/30 bg-emerald/5`}>✓ card ••{o.txn.card_last4}</span>;
   }
   if (isVoucherFunded(o)) {
-    // Paid from a voucher — traced to the funding card charge via the voucher.
-    return <span className="text-2xs px-1.5 py-0.5 rounded-md border whitespace-nowrap text-amber border-amber/30 bg-amber/5">◈ voucher{o.voucher_txn ? ` ••${o.voucher_txn.card_last4}` : ""}</span>;
+    // A best-effort FIFO guess reads "likely" (hollow ◇, dimmed) so it never
+    // masquerades as certainty; a receipt/split-backed draw reads confident (◈).
+    if (isLikelyVoucher(o)) {
+      return <span className={`${chip} text-amber/60 border-amber/20 bg-amber/[0.03]`} title="Best-effort match — tap to verify">◇ likely voucher</span>;
+    }
+    return <span className={`${chip} text-amber border-amber/30 bg-amber/5`}>◈ voucher{o.voucher_txn ? ` ••${o.voucher_txn.card_last4}` : ""}</span>;
   }
   if (o.review_status === "pending" && o.txn) {
-    return <span className="text-2xs px-1.5 py-0.5 rounded-md border whitespace-nowrap text-gold border-gold/30 bg-gold/5">≈ review pending</span>;
+    return <span className={`${chip} text-gold border-gold/30 bg-gold/5`}>≈ review pending</span>;
   }
-  return <span className="text-2xs px-1.5 py-0.5 rounded-md border whitespace-nowrap text-mist/50 border-rim bg-raised">unlinked</span>;
+  return <span className={`${chip} text-mist/50 border-rim bg-raised`}>unlinked</span>;
+}
+
+// "" → null (unset); a valid non-negative amount → the number; anything else →
+// NaN, which the caller rejects. Keeps the verify form from writing junk.
+const num = (s: string): number | null => {
+  const t = s.trim();
+  if (!t) return null;
+  const n = Number(t.replace(/,/g, ""));
+  return Number.isFinite(n) && n >= 0 ? n : NaN;
+};
+
+/**
+ * Verify how this order was actually paid — the human-confirmed split KP alone
+ * knows (the receipt rarely says). Writes payment_evidence="manual", the top
+ * tier: the reconcile then draws these vouchers first and never overwrites it.
+ * The voucher family is auto-derived from the merchant, so KP only enters money.
+ */
+function VerifyPayment({ order, onSaved }: { order: Order; onSaved: () => void }) {
+  const total = order.total_amount == null ? null : Number(order.total_amount);
+  const already = isManuallyVerified(order);
+  const [open, setOpen]     = useState(false);
+  const [voucher, setVoucher] = useState("");
+  const [card, setCard]     = useState("");
+  const [saving, setSaving] = useState(false);
+  const [err, setErr]       = useState<string | null>(null);
+
+  function begin() {
+    // Prefill with the best current guess so KP nudges rather than types from 0.
+    const v = order.voucher_paid_amount ?? order.voucher_amount ?? null;
+    const c = order.card_paid_amount ?? (total != null && v != null ? Math.round((total - Number(v)) * 100) / 100 : null);
+    setVoucher(v == null ? "" : String(v));
+    setCard(c == null || Number(c) <= 0 ? "" : String(c));
+    setErr(null);
+    setOpen(true);
+  }
+
+  async function save(clear = false) {
+    const v = clear ? null : num(voucher);
+    const c = clear ? null : num(card);
+    if (Number.isNaN(v) || Number.isNaN(c)) { setErr("Enter valid amounts (₹, no letters)."); return; }
+    setSaving(true); setErr(null);
+    try {
+      const res = await fetch("/api/orders/payment", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: order.id, voucherPaidAmount: v, cardPaidAmount: c, totalAmount: total ?? undefined }),
+      });
+      const json = await res.json().catch(() => ({}));
+      if (!res.ok) { setErr(json?.message || json?.error || "Save failed"); return; }
+      setOpen(false);
+      onSaved();
+    } catch { setErr("Couldn't reach the server. Try again."); }
+    finally { setSaving(false); }
+  }
+
+  if (!open) {
+    return (
+      <button onClick={begin}
+        className="text-2xs px-2 py-1 rounded-md border border-rim text-mist/60 hover:text-gold hover:border-gold/30 transition-all">
+        {already ? "✎ Edit verified split" : "✎ Verify payment"}
+      </button>
+    );
+  }
+
+  const sum = (num(voucher) || 0) + (num(card) || 0);
+  const off = total != null && Math.abs(sum - total) > 1;
+
+  return (
+    <div className="rounded-lg border border-gold/25 bg-ink/60 p-3 space-y-2.5 max-w-md">
+      <div className="text-2xs text-mist/60">
+        How was this <span className="text-mist/90 font-medium">{fmt(total)}</span> order paid? Enter what you know — vouchers draw down first.
+      </div>
+      <div className="flex items-center gap-2">
+        <label className="text-2xs text-mist/55 w-24 shrink-0">Voucher ₹</label>
+        <input value={voucher} onChange={(e) => setVoucher(e.target.value)} inputMode="decimal" placeholder="0"
+          className="flex-1 bg-ink border border-rim rounded px-2 py-1 text-xs text-mist tabular-nums focus:border-gold/40 outline-none" />
+      </div>
+      <div className="flex items-center gap-2">
+        <label className="text-2xs text-mist/55 w-24 shrink-0">Card ₹</label>
+        <input value={card} onChange={(e) => setCard(e.target.value)} inputMode="decimal" placeholder="0"
+          className="flex-1 bg-ink border border-rim rounded px-2 py-1 text-xs text-mist tabular-nums focus:border-gold/40 outline-none" />
+      </div>
+      <div className={`text-2xs ${off ? "text-gold" : "text-mist/45"}`}>
+        Sum {fmt(sum)}{total != null ? ` of ${fmt(total)}` : ""}{off ? " · doesn’t match the order total (that’s OK if a discount/rounding applies)" : " ✓"}
+      </div>
+      {err && <div className="text-2xs text-ruby">{err}</div>}
+      <div className="flex items-center gap-2 pt-0.5">
+        <button onClick={() => save(false)} disabled={saving}
+          className="text-2xs px-2.5 py-1 rounded-md bg-gold/15 text-gold border border-gold/30 hover:bg-gold/25 disabled:opacity-40 transition-all">
+          {saving ? "Saving…" : "Save"}
+        </button>
+        <button onClick={() => setOpen(false)} disabled={saving}
+          className="text-2xs px-2 py-1 rounded-md text-mist/50 hover:text-mist transition-all">Cancel</button>
+        {already && (
+          <button onClick={() => save(true)} disabled={saving}
+            className="text-2xs px-2 py-1 rounded-md text-ruby/70 hover:text-ruby ml-auto transition-all">Clear verification</button>
+        )}
+      </div>
+    </div>
+  );
+}
+
+/** The plain-English "how this was paid" line inside an expanded order. */
+function PaymentDetail({ o }: { o: Order }) {
+  const brand = o.voucher_brand_key ? `${voucherLabel(o.voucher_brand_key)} ` : "";
+  // 1. Human-verified — strongest, said explicitly.
+  if (isManuallyVerified(o)) {
+    const v = o.voucher_paid_amount ?? o.voucher_amount ?? null;
+    const c = o.card_paid_amount ?? (isCardLinked(o) ? o.txn.amount_inr : null);
+    return (
+      <span className="text-emerald/80">
+        ✓ You verified: {v != null ? `${fmt(v)} ${brand}voucher` : ""}{v != null && c != null ? " + " : ""}
+        {c != null ? `${fmt(c)} on card${isCardLinked(o) ? ` ••${o.txn.card_last4}` : ""}` : ""}
+      </span>
+    );
+  }
+  // 2. Evidence-backed split (receipt-stated or exact-remainder).
+  if (isCardLinked(o) && isVoucherFunded(o)) {
+    return (
+      <span className="text-amber/80">
+        Paid via {fmt(o.voucher_amount)} {brand}voucher + {fmt(o.card_paid_amount ?? o.txn.amount_inr)} on card ••{o.txn.card_last4}
+        {o.payment_evidence === "inferred_split" ? " · inferred from exact payment remainder" : " · stated in receipt"}
+      </span>
+    );
+  }
+  // 3. Card only.
+  if (isCardLinked(o)) {
+    return <span>Paid on card ••{o.txn.card_last4} · {fmt(o.txn.amount_inr)} · {day(o.txn.txn_at)}</span>;
+  }
+  // 4. Voucher only — a best-effort guess reads "likely" and dimmer.
+  if (isVoucherFunded(o)) {
+    const likely = isLikelyVoucher(o);
+    return (
+      <span className={likely ? "text-amber/55" : "text-amber/80"}>
+        {likely ? "Likely paid via " : "Paid via "}{fmt(o.voucher_amount)} {brand}voucher
+        {o.voucher_txn ? ` → bought on card ••${o.voucher_txn.card_last4} · ${day(o.voucher_txn.txn_at)}` : ""}
+        {likely ? " · best-effort match — verify to confirm" : ""}
+      </span>
+    );
+  }
+  // 5. Nothing lines up.
+  return <span>Not linked to a card charge{o.review_status === "pending" ? " (pending review)" : ""}</span>;
 }
 
 export default function OrdersTab() {
@@ -347,24 +512,12 @@ export default function OrdersTab() {
                       ) : (
                         <div className="text-xs text-mist/40 italic">No line-item detail in this email.</div>
                       )}
-                      <div className="flex flex-wrap gap-x-6 gap-y-1 text-2xs text-mist/50 pt-1 border-t border-wire">
-                        {o.order_ref && <span>Order #{o.order_ref}</span>}
-                        {isCardLinked(o) && isVoucherFunded(o) ? (
-                          <span className="text-amber/80">
-                            Paid via {fmt(o.voucher_amount)} {o.voucher_brand_key ? `${voucherLabel(o.voucher_brand_key)} ` : ""}voucher
-                            {` + ${fmt(o.card_paid_amount ?? o.txn.amount_inr)} on card ••${o.txn.card_last4}`}
-                            {o.payment_evidence === "inferred_split" ? " · inferred from exact payment remainder" : " · stated in receipt"}
-                          </span>
-                        ) : isCardLinked(o) ? (
-                          <span>Paid on card ••{o.txn.card_last4} · {fmt(o.txn.amount_inr)} · {day(o.txn.txn_at)}</span>
-                        ) : isVoucherFunded(o) ? (
-                          <span className="text-amber/80">
-                            Paid via {fmt(o.voucher_amount)} voucher
-                            {o.voucher_txn ? ` → bought on card ••${o.voucher_txn.card_last4} · ${day(o.voucher_txn.txn_at)}` : ""}
-                          </span>
-                        ) : (
-                          <span>Not linked to a card charge{o.review_status === "pending" ? " (pending review)" : ""}</span>
-                        )}
+                      <div className="pt-1 border-t border-wire space-y-2">
+                        <div className="flex flex-wrap gap-x-6 gap-y-1 text-2xs text-mist/50">
+                          {o.order_ref && <span>Order #{o.order_ref}</span>}
+                          <PaymentDetail o={o} />
+                        </div>
+                        {o.kind === "order" && !isDuplicate(o) && <VerifyPayment order={o} onSaved={load} />}
                       </div>
                     </div>
                   )}

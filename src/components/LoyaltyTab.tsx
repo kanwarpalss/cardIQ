@@ -45,6 +45,7 @@ export default function LoyaltyTab() {
   const [error, setError] = useState<string | null>(null);
   const [form, setForm] = useState<FormState | null>(null);
   const [saving, setSaving] = useState(false);
+  const [search, setSearch] = useState("");
 
   async function load() {
     const [loyaltyRes, cardsRes] = await Promise.all([
@@ -71,11 +72,15 @@ export default function LoyaltyTab() {
   }, [cards]);
 
   const grouped = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    const src = q
+      ? rows.filter((r) => `${r.program_name} ${r.tier ?? ""} ${r.member_id ?? ""} ${r.notes ?? ""}`.toLowerCase().includes(q))
+      : rows;
     const m = new Map<string, LoyaltyRow[]>();
     for (const g of GROUPS) m.set(g.type, []);
-    for (const r of rows) (m.get(r.program_type) ?? m.get("other")!).push(r);
+    for (const r of src) (m.get(r.program_type) ?? m.get("other")!).push(r);
     return m;
-  }, [rows]);
+  }, [rows, search]);
 
   function set<K extends keyof FormState>(key: K, value: FormState[K]) {
     setForm((f) => (f ? { ...f, [key]: value } : f));
@@ -259,6 +264,13 @@ export default function LoyaltyTab() {
         <>
         {cardPerks.length > 0 && rows.length > 0 && (
           <h2 className="text-xs uppercase tracking-widest text-mist/60 pt-1">Your personal accounts</h2>
+        )}
+        {rows.length > 1 && (
+          <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search programs — name, tier, member #…"
+            className="w-full sm:max-w-sm bg-ink border border-rim rounded-xl px-3 py-2 text-sm text-mist placeholder:text-mist/30 focus:border-gold/40 outline-none" />
+        )}
+        {search.trim() && [...grouped.values()].every((l) => l.length === 0) && (
+          <div className="text-sm text-mist/55 py-4">No programs match your search.</div>
         )}
         {GROUPS.map(({ type, label, icon }) => {
           const list = grouped.get(type) ?? [];

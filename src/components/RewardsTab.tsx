@@ -21,6 +21,8 @@ export default function RewardsTab({ onNavigate }: { onNavigate: (tab: string) =
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const [search, setSearch] = useState("");
+
   // Per-card add-snapshot form state
   const [formCard, setFormCard] = useState<string | null>(null); // card_id with open form
   const [balance, setBalance] = useState("");
@@ -52,6 +54,14 @@ export default function RewardsTab({ onNavigate }: { onNavigate: (tab: string) =
     }
     return m;
   }, [rows]);
+
+  const shown = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    if (!q) return cards;
+    return cards.filter((c) =>
+      `${cardLabel(c)} ${CARD_REGISTRY[c.product_key]?.rewards?.program ?? ""}`.toLowerCase().includes(q)
+    );
+  }, [cards, search]);
 
   function openForm(cardId: string) {
     setFormCard(cardId);
@@ -104,6 +114,11 @@ export default function RewardsTab({ onNavigate }: { onNavigate: (tab: string) =
       {migrationNeeded && <MissingTableNotice feature="Rewards" />}
       {error && <div className="rounded-xl border border-ruby/30 bg-ruby/5 text-ruby text-sm px-4 py-3">{error}</div>}
 
+      {cards.length > 1 && (
+        <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search cards…"
+          className="w-full sm:max-w-xs bg-ink border border-rim rounded-xl px-3 py-2 text-sm text-mist placeholder:text-mist/30 focus:border-gold/40 outline-none" />
+      )}
+
       {cards.length === 0 && !migrationNeeded && (
         <div className="rounded-2xl border border-rim bg-surface p-8 shadow-card text-center">
           <div className="font-serif text-lg font-semibold text-mist mb-1">No cards yet</div>
@@ -115,7 +130,7 @@ export default function RewardsTab({ onNavigate }: { onNavigate: (tab: string) =
         </div>
       )}
 
-      {cards.map((card) => {
+      {shown.map((card) => {
         const spec = CARD_REGISTRY[card.product_key];
         const current = latest.get(card.id);
         const history = byCard.get(card.id) ?? [];

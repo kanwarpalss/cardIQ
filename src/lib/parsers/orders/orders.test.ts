@@ -883,3 +883,65 @@ describe("parseOrderEmail — Postbox item name is cleaned of brand/qty residue"
     expect(o!.items[0].name.match(/Spark/g)).toHaveLength(1);
   });
 });
+
+// ── Pure Home & Living #PHL135542 — the "PREPAID-DISCOUNT" total trap. ──────────
+// REAL email (msg 19f76dd0cbc7f781, 2026-07-18). A ₹7,432 order was stored as
+// ₹10: the generic parser's total-label list had an unanchored /paid/ that
+// matched the "paid" inside "PRE-PAID-DISCOUNT" and grabbed the discount's
+// "-₹ 10". Both parse paths must read ₹7,432:
+//   • live sync → HTML has cdn.shopify.com → Shopify parser (was already correct)
+//   • offline reparse (html="") → no Shopify signature → generic parser (the bug)
+const PUREHOME_SENDER = '"Pure Home & Living" <customercare@purehomeandliving.com>';
+const PUREHOME_SUBJECT = "Your order is confirmed ☑️";
+// Condensed real plaintext body (the money-bearing section, verbatim wording).
+const PUREHOME_TEXT =
+  "Your Order is Confirmed! Excellent choice Kanwar Pal! " +
+  "Your Pure Home + Living order #PHL135542 has been placed successfully and will be dispatched soon. " +
+  "ORDER DETAILS " +
+  "Set of 2 Clear and Gold Dinner Plate with Goil Foil Rim × 2 ₹ 3,298 " +
+  "Clear and Gold Serving Bowl with Gold Foil Rim × 2 ₹ 1,448 " +
+  "Set of 2 Clear and Gold Side Bowl with Gold Foil Rim × 2 ₹ 1,098 " +
+  "Set of 2 Clear and Gold Serving Bowls with Gold Foil Rim × 2 ₹ 1,598 " +
+  "Discount PREPAID-DISCOUNT -₹ 10 " +
+  "Subtotal (Inclusive of all taxes) ₹ 7,432 Shipping + COD Charges ₹ 0 Taxes ₹ 1,134 " +
+  "Payment Method Total ₹ 7,432 You saved ₹ 10";
+// Condensed real HTML — keeps the cdn.shopify.com marker (routes to Shopify) and
+// the subtotal structure (Discount/-₹10 above the ₹7,432 grand Total).
+const PUREHOME_HTML =
+  '<img src="https://cdn.shopify.com/s/files/1/0694/2428/3942/files/black-new.png" alt="Pure Home &amp; Living"/>' +
+  "<h3>ORDER DETAILS</h3>" +
+  '<span class="order-list__item-title">Set of 2 Clear and Gold Dinner Plate with Goil Foil Rim × 2</span>' +
+  '<p class="order-list__item-price">₹ 3,298</p>' +
+  '<span class="order-list__item-title">Clear and Gold Serving Bowl with Gold Foil Rim × 2</span>' +
+  '<p class="order-list__item-price">₹ 1,448</p>' +
+  '<span class="order-list__item-title">Set of 2 Clear and Gold Side Bowl with Gold Foil Rim × 2</span>' +
+  '<p class="order-list__item-price">₹ 1,098</p>' +
+  '<span class="order-list__item-title">Set of 2 Clear and Gold Serving Bowls with Gold Foil Rim × 2</span>' +
+  '<p class="order-list__item-price">₹ 1,598</p>' +
+  '<tr class="subtotal-line"><td><span>Discount</span> <span>PREPAID-DISCOUNT</span></td><td><strong>-₹ 10</strong></td></tr>' +
+  '<tr class="subtotal-line"><td><span>Subtotal (Inclusive of all taxes)</span></td><td><strong>₹ 7,432</strong></td></tr>' +
+  '<tr class="subtotal-line"><td><span>Shipping + COD Charges</span></td><td><strong>₹ 0</strong></td></tr>' +
+  '<tr class="subtotal-line"><td><span>Taxes</span></td><td><strong>₹ 1,134</strong></td></tr>' +
+  '<tr class="subtotal-line"><td><span>Payment Method</span></td><td></td></tr>' +
+  '<tr class="subtotal-line subtotal-line--total"><td><span>Total</span></td><td><strong>₹ 7,432</strong></td></tr>' +
+  '<p class="total-discount">You saved <span>₹ 10</span></p>';
+
+describe("parseOrderEmail — Pure Home 'PREPAID-DISCOUNT' must not become the total", () => {
+  it("offline reparse (html='') reads ₹7,432, NOT the -₹10 discount (the bug)", () => {
+    const o = parseOrderEmail(PUREHOME_SENDER, PUREHOME_SUBJECT, PUREHOME_TEXT, "");
+    expect(o).not.toBeNull();
+    expect(o!.source).toBe("generic");         // no Shopify signature in text alone
+    expect(o!.total_amount).toBe(7432);         // was 10 before the \bpaid\b fix
+    expect(o!.order_ref).toBe("PHL135542");
+    expect(o!.merchant_name).toBe("Pure Home & Living");
+  });
+
+  it("live path (HTML present) routes to Shopify and also reads ₹7,432 with all 4 items", () => {
+    const o = parseOrderEmail(PUREHOME_SENDER, PUREHOME_SUBJECT, PUREHOME_TEXT, PUREHOME_HTML);
+    expect(o).not.toBeNull();
+    expect(o!.source).toBe("shopify");
+    expect(o!.total_amount).toBe(7432);
+    expect(o!.items).toHaveLength(4);
+    expect(o!.items[0]).toMatchObject({ name: "Set of 2 Clear and Gold Dinner Plate with Goil Foil Rim", qty: 2, price: 3298 });
+  });
+});

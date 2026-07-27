@@ -136,6 +136,10 @@ async function main() {
     if (!mail) continue;
     const parsed = parseOrderEmail(mail.raw_from ?? "", mail.raw_subject ?? "", mail.raw_body ?? "", "");
     if (!parsed) continue;
+    // Human-confirmed splits are immutable: KP verified the voucher/card
+    // breakdown by hand, so a reparse must NEVER overwrite it (or the total it
+    // was verified against). "manual" is the top evidence tier (2026-07-26).
+    if (o.payment_evidence === "manual") continue;
     // A merchant email may omit payment methods entirely (Birkenstock). Keep a
     // previously proven inference unless the parser now has explicit evidence;
     // otherwise an idempotent rebuild would erase its own result.
@@ -181,12 +185,15 @@ async function main() {
     ...orders.filter((o) => o.txn_id && o.source !== "razorpay").map((o) => o.txn_id as string),
   ]);
 
-  type Candidate = VoucherPaidOrder & { evidence: "email" | "inferred_split"; split?: ReturnType<typeof matchSplitOrderToTxn> };
+  type Candidate = VoucherPaidOrder & { evidence: "manual" | "email" | "inferred_split"; split?: ReturnType<typeof matchSplitOrderToTxn> };
   const candidates: Candidate[] = orders
     .filter((o) => o.kind === "order" && !o.duplicate_of && o.review_status !== "rejected" && Number(o.voucher_paid_amount) > 0)
     .map((o) => ({ id: o.id, brand: orderBrand(o), voucherBrand: o.voucher_brand_key,
       amount: Number(o.voucher_paid_amount), orderedAt: o.order_at,
-      evidence: o.payment_evidence === "inferred_split" ? "inferred_split" : "email" }));
+      // Human-confirmed wins over receipt-parsed wins over inferred. The draw
+      // carries this so the UI can show "confirmed by you" vs "from receipt".
+      evidence: o.payment_evidence === "manual" ? "manual"
+        : o.payment_evidence === "inferred_split" ? "inferred_split" : "email" }));
 
   // Explicit splits can claim their exact direct-card portion first.
   const cardUpdates = new Map<string, NonNullable<ReturnType<typeof matchSplitOrderToTxn>> | { txnId: string; confidence: "high" | "medium" | "low"; cardAmount: number; voucherAmount: number }>();

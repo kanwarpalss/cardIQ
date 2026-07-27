@@ -19,6 +19,10 @@ export type LedgerVoucher = {
 export type LedgerDraw = {
   voucherId: string;
   amount: number;
+  /** How sure we are of this draw: "manual" (KP verified) / "email" /
+   *  "inferred_split" are evidence; "inferred_fifo" is a best-effort guess.
+   *  Threaded through so the UI can mark a guessed drawdown "likely". */
+  evidence?: string;
 };
 
 /** An order that drew from one or more vouchers. */
@@ -36,6 +40,8 @@ export type LedgerSpend = {
   merchant: string;
   amount: number;
   orderAt: string;
+  /** Confidence of this spend (see LedgerDraw.evidence). Absent = legacy draw. */
+  evidence?: string;
 };
 
 /** Per-voucher spend summary. `remaining` is always clamped to [0, faceValue]:
@@ -81,7 +87,11 @@ export function summarizeVoucherLedger(
       const amt = Number(d.amount);
       if (!Number.isFinite(amt) || amt === 0) continue;
       summary.drawn += amt;
-      summary.spends.push({ orderId: o.id, merchant: o.merchant, amount: round2(amt), orderAt: o.orderAt });
+      const spend: LedgerSpend = { orderId: o.id, merchant: o.merchant, amount: round2(amt), orderAt: o.orderAt };
+      // Only carry evidence when present — a legacy draw without it stays a bare
+      // spend (keeps toEqual assertions on old fixtures exact).
+      if (d.evidence != null) spend.evidence = d.evidence;
+      summary.spends.push(spend);
     }
   }
 

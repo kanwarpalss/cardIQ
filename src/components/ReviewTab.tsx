@@ -71,6 +71,7 @@ export default function ReviewTab({ onChanged }: { onChanged?: () => void }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [busyId, setBusyId] = useState<string | null>(null);
+  const [search, setSearch] = useState("");
 
   const load = useCallback(async (s: Status) => {
     setLoading(true);
@@ -93,6 +94,7 @@ export default function ReviewTab({ onChanged }: { onChanged?: () => void }) {
   }, []);
 
   useEffect(() => { load(status); }, [status, load]);
+  useEffect(() => { setSearch(""); }, [status]); // fresh search per queue
 
   async function act(order: ReviewOrder, action: "approve" | "reject") {
     setBusyId(order.id);
@@ -114,7 +116,15 @@ export default function ReviewTab({ onChanged }: { onChanged?: () => void }) {
     }
   }
 
-  const counts = useMemo(() => orders.length, [orders]);
+  const shown = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    if (!q) return orders;
+    return orders.filter((o) =>
+      `${o.merchant_name ?? ""} ${o.order_ref ?? ""} ${o.txn?.merchant ?? ""} ${o.items.map((i) => i.name).join(" ")}`
+        .toLowerCase().includes(q)
+    );
+  }, [orders, search]);
+  const counts = shown.length;
 
   return (
     <div className="max-w-4xl mx-auto px-4 lg:px-8 py-6 space-y-5">
@@ -141,6 +151,11 @@ export default function ReviewTab({ onChanged }: { onChanged?: () => void }) {
         ))}
       </div>
 
+      {!loading && !error && orders.length > 0 && (
+        <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search — merchant, order #, item…"
+          className="w-full sm:max-w-sm bg-ink border border-rim rounded-xl px-3 py-1.5 text-sm text-mist placeholder:text-mist/30 focus:border-gold/40 outline-none" />
+      )}
+
       {error === "migration" ? (
         <div className="rounded-2xl border border-amber/40 bg-amber/5 p-5 text-sm leading-relaxed">
           <div className="font-semibold text-amber mb-1.5">One-time setup needed for the review queue</div>
@@ -165,9 +180,13 @@ export default function ReviewTab({ onChanged }: { onChanged?: () => void }) {
                 : "No rejected matches."}
           </div>
         </div>
+      ) : shown.length === 0 ? (
+        <div className="rounded-2xl border border-rim bg-surface p-10 text-center text-sm text-mist/60">
+          No matches for “{search.trim()}”.
+        </div>
       ) : (
         <div className="space-y-3">
-          {orders.map((o) => (
+          {shown.map((o) => (
             <div key={o.id} className="rounded-2xl border border-rim bg-surface shadow-card overflow-hidden">
               {/* meta row */}
               <div className="flex items-center gap-2 flex-wrap px-4 py-2.5 border-b border-wire bg-raised/40">

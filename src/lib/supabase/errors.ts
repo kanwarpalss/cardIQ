@@ -27,3 +27,17 @@ export function isMissingColumnError(
   if (error.code === "42703" || error.code === "PGRST204") return mentionsColumn;
   return mentionsColumn && /column .* does not exist|could not find the .* column|schema cache/i.test(error.message ?? "");
 }
+
+// "A CHECK constraint rejected the value" — e.g. writing payment_evidence='manual'
+// before migration 018 widens the 017 whitelist. Callers surface a run-the-
+// migration notice instead of a raw 500.
+//   23514 = Postgres check_violation
+export function isCheckViolation(
+  error: { code?: string; message?: string } | null | undefined,
+  constraint: string
+): boolean {
+  if (!error) return false;
+  const mentions = (error.message ?? "").includes(constraint);
+  if (error.code === "23514") return mentions || !error.message;
+  return mentions && /violates check constraint/i.test(error.message ?? "");
+}

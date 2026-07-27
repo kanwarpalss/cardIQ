@@ -26,6 +26,7 @@ export default function OffersTab() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [filter, setFilter] = useState<Filter>("Active");
+  const [search, setSearch] = useState("");
 
   // Add form
   const [formOpen, setFormOpen] = useState(false);
@@ -53,10 +54,12 @@ export default function OffersTab() {
   useEffect(() => { load(); }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const visible = useMemo(() => {
-    const sorted = sortOffersForDisplay(offers);
-    if (filter === "All") return sorted;
-    return sorted.filter((o) => effectiveOfferStatus(o) === filter.toLowerCase());
-  }, [offers, filter]);
+    const q = search.trim().toLowerCase();
+    let sorted = sortOffersForDisplay(offers);
+    if (filter !== "All") sorted = sorted.filter((o) => effectiveOfferStatus(o) === filter.toLowerCase());
+    if (q) sorted = sorted.filter((o) => `${o.title} ${o.merchant ?? ""} ${o.description ?? ""}`.toLowerCase().includes(q));
+    return sorted;
+  }, [offers, filter, search]);
 
   const counts = useMemo(() => {
     const c: Record<string, number> = { Active: 0, Used: 0, Expired: 0, Archived: 0 };
@@ -156,7 +159,11 @@ export default function OffersTab() {
         </section>
       )}
 
-      {/* Status filter */}
+      {/* Search + status filter */}
+      {offers.length > 0 && (
+        <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search offers — title, merchant, details…"
+          className="w-full sm:max-w-sm bg-ink border border-rim rounded-xl px-3 py-2 text-sm text-mist placeholder:text-mist/30 focus:border-gold/40 outline-none" />
+      )}
       <div className="flex gap-1.5 flex-wrap">
         {FILTERS.map((f) => (
           <button key={f} onClick={() => setFilter(f)}
@@ -176,7 +183,9 @@ export default function OffersTab() {
           <p className="text-sm text-mist/60">
             {offers.length === 0
               ? "Nothing tracked yet. Spot a good card offer? Save it before you forget it exists."
-              : `No ${filter.toLowerCase()} offers.`}
+              : search.trim()
+                ? "No offers match your search."
+                : `No ${filter.toLowerCase()} offers.`}
           </p>
         </div>
       ) : (
