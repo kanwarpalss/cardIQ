@@ -9,16 +9,23 @@ export default function LoginPage() {
   const supabase = createClient();
   const [down, setDown] = useState(false);
   const [retrying, setRetrying] = useState(false);
+  const [signInError, setSignInError] = useState<string | null>(null);
 
   // The middleware redirects here with ?error=connection when a server-side
   // Supabase call fails. Surface the friendly notice straight away.
   useEffect(() => {
-    if (new URLSearchParams(window.location.search).get("error") === "connection") {
+    const error = new URLSearchParams(window.location.search).get("error");
+    if (error === "connection") {
       setDown(true);
+    } else if (error === "auth_missing_code") {
+      setSignInError("Google did not return a sign-in code. Please try again.");
+    } else if (error === "auth_callback") {
+      setSignInError("Google sign-in could not finish. Please try again.");
     }
   }, []);
 
   async function signIn() {
+    setSignInError(null);
     // Preflight: clicking the button redirects the browser AWAY to
     // <project>.supabase.co. If that host can't resolve (paused project),
     // the user lands on a raw browser DNS error with no way back. Catch it
@@ -28,7 +35,7 @@ export default function LoginPage() {
       setDown(true);
       return;
     }
-    await supabase.auth.signInWithOAuth({
+    const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
         redirectTo: `${window.location.origin}/auth/callback`,
@@ -36,6 +43,9 @@ export default function LoginPage() {
         queryParams: { access_type: "offline", prompt: "consent" },
       },
     });
+    if (error) {
+      setSignInError("Could not start Google sign-in. Please try again.");
+    }
   }
 
   async function retry() {
@@ -100,6 +110,12 @@ export default function LoginPage() {
             </svg>
             Continue with Google
           </button>
+
+          {signInError && (
+            <p role="alert" className="text-xs text-rose-300 text-center leading-relaxed">
+              {signInError}
+            </p>
+          )}
 
           {/* Fine print */}
           <p className="text-2xs text-mist/55 text-center leading-relaxed">
