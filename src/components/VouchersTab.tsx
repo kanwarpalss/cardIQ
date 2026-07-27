@@ -8,7 +8,7 @@ import { useEffect, useMemo, useState } from "react";
 // always existed — this screen is the window onto it. Sibling of the Orders tab
 // ("what I bought") and Spend tab ("what I paid"); this is "what I pre-loaded".
 
-type Spend = { orderId: string; merchant: string; amount: number; orderAt: string };
+type Spend = { orderId: string; merchant: string; amount: number; orderAt: string; evidence?: string };
 type FundingTxn = { card_last4: string; amount_inr: number; txn_at: string };
 type Voucher = {
   id: string;
@@ -17,9 +17,13 @@ type Voucher = {
   code: string | null;
   face_value: number;
   purchased_at: string;
-  valid_till: string | null;
   drawn: number;
   remaining: number;
+  /** Every drawdown is a best-effort guess (no receipt/verification) — show the
+   *  balance as an estimate, not a settled fact. */
+  likely?: boolean;
+  valid_till: string | null;
+  funding_source?: "card" | "amazon_pay";
   spends: Spend[];
   funding_txn: FundingTxn | null;
 };
@@ -35,18 +39,26 @@ const maskCode = (code: string | null) => (!code ? null : code.length <= 4 ? cod
 const isExpired = (validTill: string | null) =>
   !!validTill && new Date(validTill + "T23:59:59").getTime() < Date.now();
 
-/** Where a voucher sits in its life — the ledger's status badge. */
+/** Where a voucher sits in its life — the ledger's status badge. A drawdown made
+ *  entirely of best-effort guesses reads dimmer + "likely", so an estimated
+ *  balance never looks as settled as a confirmed one. */
 function StatusBadge({ v }: { v: Voucher }) {
+  const chip = "text-2xs px-1.5 py-0.5 rounded-md border whitespace-nowrap";
+  const likelyChip = `${chip} text-amber/55 border-amber/20 bg-amber/[0.03]`;
   if (v.remaining <= 0) {
-    return <span className="text-2xs px-1.5 py-0.5 rounded-md border whitespace-nowrap text-mist/50 border-rim bg-raised">fully spent</span>;
+    return v.likely
+      ? <span className={likelyChip} title="Best-effort match — not yet confirmed">likely spent</span>
+      : <span className={`${chip} text-mist/50 border-rim bg-raised`}>fully spent</span>;
   }
   if (isExpired(v.valid_till)) {
-    return <span className="text-2xs px-1.5 py-0.5 rounded-md border whitespace-nowrap text-ruby border-ruby/30 bg-ruby/5" title="Validity lapsed with balance still on it">⚠ expired · {fmt(v.remaining)} lost</span>;
+    return <span className={`${chip} text-ruby border-ruby/30 bg-ruby/5`} title="Validity lapsed with balance still on it">⚠ expired · {fmt(v.remaining)} lost</span>;
   }
   if (v.drawn > 0) {
-    return <span className="text-2xs px-1.5 py-0.5 rounded-md border whitespace-nowrap text-amber border-amber/30 bg-amber/5">{fmt(v.remaining)} left</span>;
+    return v.likely
+      ? <span className={likelyChip} title="Best-effort match — verify the order to confirm">~{fmt(v.remaining)} left</span>
+      : <span className={`${chip} text-amber border-amber/30 bg-amber/5`}>{fmt(v.remaining)} left</span>;
   }
-  return <span className="text-2xs px-1.5 py-0.5 rounded-md border whitespace-nowrap text-emerald border-emerald/30 bg-emerald/5">unused · {fmt(v.remaining)}</span>;
+  return <span className={`${chip} text-emerald border-emerald/30 bg-emerald/5`}>unused · {fmt(v.remaining)}</span>;
 }
 
 type BalanceFilter = "all" | "withBalance" | "spent";
@@ -221,7 +233,9 @@ export default function VouchersTab() {
                       <div className="flex flex-wrap gap-x-6 gap-y-1 text-2xs text-mist/55">
                         {maskCode(v.code) && <span>Code {maskCode(v.code)}</span>}
                         <span>Face value {fmt(v.face_value)} · spent {fmt(v.drawn)} · {fmt(v.remaining)} left</span>
-                        {v.funding_txn ? (
+                        {v.funding_source === "amazon_pay" ? (
+                          <span className="text-mist/70">Funded via Amazon Pay balance</span>
+                        ) : v.funding_txn ? (
                           <span className="text-mist/70">
                             Bought for {fmt(v.funding_txn.amount_inr)} on card ••{v.funding_txn.card_last4} · {day(v.funding_txn.txn_at)}
                           </span>
@@ -235,7 +249,11 @@ export default function VouchersTab() {
                           <ul className="space-y-1">
                             {v.spends.map((s, i) => (
                               <li key={i} className="flex justify-between gap-3 text-mist/75">
-                                <span>{s.merchant} <span className="text-mist/40">· {day(s.orderAt)}</span></span>
+                                <span>
+                                  {s.merchant} <span className="text-mist/40">· {day(s.orderAt)}</span>
+                                  {s.evidence === "inferred_fifo" && <span className="text-amber/50" title="Best-effort match — verify to confirm"> · likely</span>}
+                                  {s.evidence === "manual" && <span className="text-emerald/60" title="You verified this"> · verified</span>}
+                                </span>
                                 <span className="tabular-nums text-mist/60 shrink-0">−{fmt(s.amount)}</span>
                               </li>
                             ))}

@@ -11,9 +11,10 @@ import { findPdfAttachments, parseOrderFromPdfs, decodeAttachmentData } from "@/
 import { isMissingTableError, isMissingColumnError } from "@/lib/supabase/errors";
 import { parseOrderEmail, ORDER_DISCOVERY_CLAUSES, type OrderSource } from "@/lib/parsers/orders/registry";
 import { parseGyftrVouchers, isGyftrSender } from "@/lib/parsers/orders/gyftr";
+import { parseAmazonPayGiftCardEmail } from "@/lib/amazon-pay-gift-card";
 import { matchOrderToTxn, matchSplitOrderToTxn, orderMatchRank, reviewStatusFor, type TxnLite, type MatchConfidence } from "@/lib/order-match";
 import { matchVoucherBatchToCharge } from "@/lib/voucher-match";
-import { compatibleVoucherKeys, normalizeBrand, reconcileVouchers, type VoucherPurchase, type VoucherPaidOrder } from "@/lib/voucher-bridge";
+import { compatibleVoucherKeys, normalizeBrand, reconcileWithInferred, isInferredFifoEligible, type VoucherPurchase, type VoucherPaidOrder } from "@/lib/voucher-bridge";
 import { planDedup, type DedupRow } from "@/lib/order-dedup";
 
 // Marketplace sources reconcile against a voucher by their PLATFORM name (a
@@ -380,6 +381,44 @@ export async function POST(req: Request) {
                 continue;
               }
 
+              // Amazon Pay's delivery receipt is another voucher issuance. It
+              // is intentionally strict, and a balance-less email is only
+              // recorded as seen: deriving its value from an order remainder
+              // would turn a plausible guess into a false ledger entry.
+              const amazonPayVoucher = parseAmazonPayGiftCardEmail({
+                gmailMessageId: msgId,
+                from: fromHeader,
+                subject,
+                text,
+                receivedAt: new Date(msgInternalDate).toISOString(),
+              });
+              if (amazonPayVoucher) {
+                if (amazonPayVoucher.faceValue == null) {
+                  result.skipped++;
+                } else {
+                  const { error: vErr } = await supabase.from("vouchers").upsert({
+                    user_id: user!.id,
+                    gmail_message_id: msgId,
+                    code: `amazon-pay:${msgId}`,
+                    brand: amazonPayVoucher.brand,
+                    brand_key: amazonPayVoucher.brandKey,
+                    face_value: amazonPayVoucher.faceValue,
+                    purchased_at: amazonPayVoucher.receivedAt,
+                    funding_source: "amazon_pay",
+                    raw_subject: subject,
+                  }, { onConflict: "user_id,gmail_message_id,code" });
+                  if (vErr) result.errors.push(`Amazon Pay voucher upsert ${msgId}: ${vErr.message}`);
+                  else result.new_vouchers++;
+                }
+                seenBatch.push({
+                  user_id: user!.id, gmail_message_id: msgId, txn_id: null,
+                  raw_subject: lastSubject, raw_body: lastBody, raw_from: lastFrom,
+                  internal_date: lastInternalDate,
+                });
+                if (seenBatch.length >= 50) await flushSeenBatch();
+                continue;
+              }
+
               let parsed = parseOrderEmail(fromHeader, subject, text, html);
 
               // PDF-attachment fallback (cost-gated): only when the body yielded
@@ -694,7 +733,7 @@ export async function POST(req: Request) {
             id: string; source: string; kind: "order" | "refund"; merchant_name: string | null;
             total_amount: string | number | null; card_paid_amount: string | number | null;
             voucher_paid_amount: string | number | null; voucher_brand_key: string | null;
-            payment_evidence: "email" | "inferred_split" | null; order_at: string;
+            payment_evidence: "manual" | "email" | "inferred_split" | null; order_at: string;
             txn_id: string | null; review_status: string; duplicate_of: string | null;
             items: unknown[] | null; voucher_draws: unknown[] | null;
           };
@@ -708,13 +747,15 @@ export async function POST(req: Request) {
             if (data.length < PAGE) break;
           }
 
-          type Candidate = VoucherPaidOrder & { evidence: "email" | "inferred_split"; split?: ReturnType<typeof matchSplitOrderToTxn> };
+          type Candidate = VoucherPaidOrder & { evidence: "manual" | "email" | "inferred_split"; split?: ReturnType<typeof matchSplitOrderToTxn> };
           const candidates: Candidate[] = allOrders
             .filter((o) => o.kind === "order" && !o.duplicate_of && o.review_status !== "rejected" && o.voucher_paid_amount != null && Number(o.voucher_paid_amount) > 0)
             .map((o) => ({
               id: o.id, brand: orderBrandKey(o), voucherBrand: o.voucher_brand_key,
               amount: Number(o.voucher_paid_amount), orderedAt: o.order_at,
-              evidence: o.payment_evidence === "inferred_split" ? "inferred_split" : "email",
+              // Human-verified outranks receipt-parsed outranks inferred.
+              evidence: o.payment_evidence === "manual" ? "manual"
+                : o.payment_evidence === "inferred_split" ? "inferred_split" : "email",
             }));
 
           // Gateway-confirmation rows are weak evidence and may relinquish their
@@ -747,13 +788,34 @@ export async function POST(req: Request) {
             splitUsed.add(split.txnId);
           }
 
-          const bridge = reconcileVouchers(vps, candidates);
+          // Inferred-FIFO layer (Invariant #7 v2): unmatched, same-brand orders
+          // the evidence pass didn't claim, drawn down against leftover balance.
+          // Mirrors scripts/reconcile-voucher-ledger.ts — reconcileWithInferred is
+          // the single source of the drawdown, never re-implemented inline.
+          const evidenceIds = new Set(candidates.map((c) => c.id));
+          const inferredCandidates: VoucherPaidOrder[] = allOrders
+            .filter((o) => !evidenceIds.has(o.id) && isInferredFifoEligible({
+              kind: o.kind, duplicateOf: o.duplicate_of, reviewStatus: o.review_status,
+              txnId: o.txn_id, voucherPaidAmount: o.voucher_paid_amount, source: o.source,
+              total: Number(o.total_amount), itemCount: o.items?.length ?? 0,
+            }))
+            .map((o) => ({ id: o.id, brand: orderBrandKey(o), amount: Number(o.total_amount), orderedAt: o.order_at }));
+          const inferredById = new Map(inferredCandidates.map((c) => [c.id, c]));
+
+          const bridge = reconcileWithInferred(vps, candidates, inferredCandidates);
           const candidateById = new Map(candidates.map((o) => [o.id, o]));
           const drawsByOrder = new Map<string, Array<Record<string, unknown>>>();
           for (const attr of bridge.orders) {
-            const candidate = candidateById.get(attr.orderId)!;
+            const candidate = candidateById.get(attr.orderId);
+            if (!candidate) {
+              // Inferred-FIFO order: no card write, just tag the "likely" draws.
+              if (inferredById.has(attr.orderId) && attr.draws.length > 0) {
+                drawsByOrder.set(attr.orderId, attr.draws.map((d) => ({ ...d, evidence: "inferred_fifo" })));
+              }
+              continue;
+            }
             // An inferred split is accepted only when voucher balance covers
-            // the exact remainder. Explicit email evidence may remain partial.
+            // the exact remainder. Explicit email/manual evidence may remain partial.
             if (candidate.split && attr.status !== "attributed") continue;
             if (attr.draws.length === 0) continue;
             drawsByOrder.set(attr.orderId, attr.draws.map((d) => ({ ...d, evidence: candidate.evidence })));

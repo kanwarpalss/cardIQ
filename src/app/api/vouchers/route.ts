@@ -32,7 +32,7 @@ export async function GET() {
   for (let from = 0; ; from += PAGE) {
     const { data, error } = await supabase
       .from("vouchers")
-      .select("id, code, brand, brand_key, face_value, purchased_at, valid_till, txn_id")
+      .select("id, code, brand, brand_key, face_value, purchased_at, valid_till, txn_id, funding_source")
       .eq("user_id", user.id)
       .order("purchased_at", { ascending: false })
       .range(from, from + PAGE - 1);
@@ -67,9 +67,9 @@ export async function GET() {
     merchant: (o.merchant_name as string) || (o.source as string) || "Unknown",
     orderAt: String(o.order_at ?? ""),
     draws: Array.isArray(o.voucher_draws)
-      ? (o.voucher_draws as Array<{ voucherId?: string; amount?: number }>)
+      ? (o.voucher_draws as Array<{ voucherId?: string; amount?: number; evidence?: string }>)
           .filter((d) => d && typeof d.voucherId === "string")
-          .map((d) => ({ voucherId: d.voucherId as string, amount: Number(d.amount) }))
+          .map((d) => ({ voucherId: d.voucherId as string, amount: Number(d.amount), evidence: d.evidence }))
       : [],
   }));
 
@@ -93,6 +93,10 @@ export async function GET() {
   const vouchers = voucherRows.map((v) => {
     const s = summary.get(String(v.id)) ?? { drawn: 0, remaining: Number(v.face_value), spends: [] };
     const txn = v.txn_id ? txnById.get(v.txn_id as string) ?? null : null;
+    // "Likely" = every drawdown on this voucher is a best-effort FIFO guess (no
+    // receipt/verification behind any of them). The UI dims such a balance so KP
+    // knows it's an estimate worth confirming, not a settled fact.
+    const likely = s.drawn > 0 && s.spends.length > 0 && s.spends.every((sp) => sp.evidence === "inferred_fifo");
     return {
       id: v.id,
       brand: v.brand,
@@ -101,8 +105,10 @@ export async function GET() {
       face_value: Number(v.face_value),
       purchased_at: v.purchased_at,
       valid_till: v.valid_till,
+      funding_source: v.funding_source ?? "card",
       drawn: s.drawn,
       remaining: s.remaining,
+      likely,
       spends: s.spends,
       funding_txn: txn
         ? { card_last4: txn.card_last4, amount_inr: Number(txn.amount_inr), txn_at: txn.txn_at }

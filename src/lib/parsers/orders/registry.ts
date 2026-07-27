@@ -32,6 +32,9 @@ export const ORDER_QUERY_SENDERS = [
   "alerts@bigbasket.com",
   "order-update@amazon.in",
   "payments-messages@amazon.in",
+  // Amazon Pay sends brand gift-card delivery receipts from a separate domain.
+  // They are voucher issuances, not Amazon orders.
+  "no-reply@amazonpay.in",
   // Razorpay is the universal payment rail — one "Payment successful for
   // <entity>" email per charge, carrying the exact merchant/amount/time that
   // matches the bank descriptor. Highest-yield single sender.
