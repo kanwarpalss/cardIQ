@@ -435,7 +435,7 @@ Next session candidates: KP's visual click-through feedback (theme taste, expand
 
 ## §10 Deployment
 
-- **Local dev:** Type `cardiq` in any terminal (alias in `~/Library/Mobile Documents/com~apple~CloudDocs/shared-aliases.sh`) → opens browser + starts server on http://localhost:3000
+- **Local dev:** Type `cardiq` in any terminal → it clones or fast-forwards `~/Code/cardIQ` from GitHub `main`, starts CardIQ at http://localhost:3128, and opens it. The iCloud-synced launcher is in `~/Library/Mobile Documents/com~apple~CloudDocs/shared-aliases.sh`; port 3128 is fixed, so a conflicting app causes a plain-English failure rather than a fallback port. Each Mac must hold its own private `.env.local`; it is never copied to GitHub or the shared launcher.
 - **New machine setup:** `echo '[ -f ~/Library/Mobile\ Documents/com~apple~CloudDocs/shared-aliases.sh ] && source ~/Library/Mobile\ Documents/com~apple~CloudDocs/shared-aliases.sh' >> ~/.zshrc`
 - **Production:** Vercel — auto-deploys on `git push origin main`; project imported from kanwarpalss/cardIQ
 - **Vercel env vars:** Loaded via "Import .env" from `~/Code/cardIQ/.env.local` (show hidden files with `Cmd+Shift+.`)

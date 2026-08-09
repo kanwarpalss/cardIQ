@@ -62,7 +62,7 @@ node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"  # use 
 npm run dev
 ```
 
-Open http://localhost:3000, sign in with Google, paste your Anthropic API key in Cards → Settings, add your two Magnus Burgundy cards (last4 `2294` and `4455`).
+Open http://localhost:3128, sign in with Google, paste your Anthropic API key in Cards → Settings, add your two Magnus Burgundy cards (last4 `2294` and `4455`).
 
 ### 4. Vercel
 
@@ -100,7 +100,7 @@ your existing setup** so the new machine sees the same data and account.
 | `GOOGLE_CLIENT_ID` | [console.cloud.google.com](https://console.cloud.google.com) → your project → **APIs & Services → Credentials → OAuth 2.0 Client IDs** → open your client → **Client ID** |
 | `GOOGLE_CLIENT_SECRET` | Same client page → **Client secret** |
 | `ENCRYPTION_KEY` | ⚠️ **Reuse the exact value from your first machine's `.env.local`** (see note below). Only generate a new one if this is a brand-new install with no existing data. |
-| `NEXT_PUBLIC_APP_URL` | Leave as `http://localhost:3000` for local use |
+| `NEXT_PUBLIC_APP_URL` | Leave as `http://localhost:3128` for local use |
 | `CARDIQ_USER_ID` | Optional (Dining tab only). Supabase dashboard → **Authentication → Users →** your row → copy the **UID** |
 
 > ⚠️ **About `ENCRYPTION_KEY` — this is the one that bites people.**
@@ -120,12 +120,25 @@ your existing setup** so the new machine sees the same data and account.
 ### Step 3 — Run
 
 ```bash
-npm run dev      # open http://localhost:3000 and sign in with Google
+npm run dev      # open http://localhost:3128 and sign in with Google
 ```
 
 That's it — your cards and transactions load automatically from Supabase after
-you sign in. The Google OAuth redirect already covers `localhost:3000`, so no
+you sign in. The Google OAuth redirect already covers the Supabase callback, so no
 Google Cloud changes are needed for another *local* machine.
+
+### Launch from any Mac
+
+The iCloud-synced `cardiq` terminal command clones or fast-forwards
+`~/Code/cardIQ` from GitHub `main`, starts CardIQ on its dedicated port
+**3128**, and opens it. It never falls back to another port: if another app
+uses 3128, it stops with a plain-English error instead.
+
+CardIQ's `.env.local` is deliberately not in GitHub or the shared launcher.
+Before the first `cardiq` run on a new Mac, securely copy that file from an
+already configured CardIQ Mac into `~/Code/cardIQ/.env.local`. It contains the
+encryption key required to read the existing Gmail connection. After that
+one-time setup, open a new Terminal window and run `cardiq`.
 
 ## What works in V1
 
