@@ -3,6 +3,11 @@ export type Milestone = {
   reward: string;
 };
 
+export type MilestoneYearStart = {
+  month: number; // 1–12
+  day: number;   // local calendar day
+};
+
 export type RewardProgram = {
   program: string;          // e.g. "EDGE Rewards" — used to label balances
   earn_summary: string;     // human-readable base rate, e.g. "12 pts / ₹200"
@@ -24,6 +29,9 @@ export type CardSpec = {
   rewards?: RewardProgram;  // optional: cashback-only cards may omit
   milestones_monthly: Milestone[];
   milestones_anniversary: Milestone[];
+  // Product-level default for the annual milestone spending year. A saved
+  // cards.anniversary_date overrides this for the individual card.
+  milestone_year_start?: MilestoneYearStart;
   lounge: {
     domestic?: LoungeEntitlement;
     international?: LoungeEntitlement;

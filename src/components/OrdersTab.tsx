@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 // Orders tab (V2 feature C) — the standalone ledger: EVERYTHING you've bought,
 // with item detail, cost and merchant, independent of how you paid. Card-matched
@@ -270,6 +270,10 @@ export default function OrdersTab() {
 
   const [backfilling, setBackfilling] = useState(false);
   const [backfillMsg, setBackfillMsg] = useState<string | null>(null);
+  const [uploadSource, setUploadSource] = useState<"amazon" | "blinkit">("amazon");
+  const [importing, setImporting] = useState(false);
+  const [importMsg, setImportMsg] = useState<string | null>(null);
+  const uploadInput = useRef<HTMLInputElement>(null);
 
   async function load() {
     setLoading(true);
@@ -339,6 +343,28 @@ export default function OrdersTab() {
     }
   }
 
+  async function importOrders(file: File) {
+    if (importing) return;
+    setImporting(true);
+    setImportMsg(null);
+    try {
+      const form = new FormData();
+      form.set("source", uploadSource);
+      form.set("file", file);
+      const res = await fetch("/api/orders/import", { method: "POST", body: form });
+      const json = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(json?.message || "Import failed");
+      const removed = Number(json?.removedDeliveredEmails ?? 0);
+      setImportMsg(`Imported ${json.imported} ${uploadSource === "amazon" ? "Amazon" : "Blinkit"} order${json.imported === 1 ? "" : "s"}${removed ? ` and cleared ${removed} old Amazon delivery email${removed === 1 ? "" : "s"}` : ""}.`);
+      await load();
+    } catch (e) {
+      setImportMsg((e as Error).message || "Couldn't import that file. Try again.");
+    } finally {
+      setImporting(false);
+      if (uploadInput.current) uploadInput.current.value = "";
+    }
+  }
+
   const sources = useMemo(() => {
     const s = new Set(orders.map((o) => o.source));
     return ["all", ...Array.from(s).sort()];
@@ -403,6 +429,21 @@ export default function OrdersTab() {
           </p>
         </div>
         <div className="text-right space-y-1">
+          <div className="flex items-center justify-end gap-2">
+            <select value={uploadSource} onChange={(e) => setUploadSource(e.target.value as "amazon" | "blinkit")} disabled={importing}
+              className="bg-ink border border-rim rounded-lg px-2 py-1.5 text-xs text-mist/75 focus:border-gold/40 outline-none disabled:opacity-40">
+              <option value="amazon">Amazon CSV</option>
+              <option value="blinkit">Blinkit JSON</option>
+            </select>
+            <input ref={uploadInput} type="file" className="hidden"
+              accept={uploadSource === "amazon" ? ".csv,text/csv" : ".json,application/json"}
+              onChange={(e) => { const file = e.target.files?.[0]; if (file) void importOrders(file); }} />
+            <button onClick={() => uploadInput.current?.click()} disabled={importing}
+              className="px-3 py-1.5 rounded-lg text-xs font-medium border border-gold/30 text-gold hover:bg-gold/10 disabled:opacity-40 transition-all">
+              {importing ? "Importing…" : "Import export"}
+            </button>
+          </div>
+          {importMsg && <div className="text-2xs text-mist/55 max-w-xs">{importMsg}</div>}
           <button
             onClick={loadFullHistory}
             disabled={backfilling}

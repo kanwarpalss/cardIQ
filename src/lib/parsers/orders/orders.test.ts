@@ -219,12 +219,8 @@ describe("parseAmazonOrder", () => {
     expect(o!.order_ref).toBe("404-8063799-7205955");
   });
 
-  it("parses the real Delivered subject into an amount-less item-only order", () => {
-    const o = parseAmazonOrder("Delivered: “Emwel Dog Food Mat,...”", "Your package was delivered.", "");
-    expect(o).not.toBeNull();
-    expect(o!.kind).toBe("order");
-    expect(o!.total_amount).toBeUndefined();
-    expect(o!.items).toEqual([{ name: "Emwel Dog Food Mat" }]);
+  it("ignores Delivered emails because Amazon's official export is the source of truth", () => {
+    expect(parseAmazonOrder("Delivered: “Emwel Dog Food Mat,...”", "Your package was delivered.", "")).toBeNull();
   });
 
   it("returns null for review nags, returns, and shipping updates", () => {

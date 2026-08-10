@@ -34,7 +34,7 @@ Next.js 14 (App Router) + TypeScript + Tailwind · Supabase (Postgres + RLS + Go
 
 ## Deployment
 
-- Local dev: `npm run dev` at repo root → http://localhost:3000
+- Local dev: `npm run dev` at repo root → http://localhost:3128. The command refuses to start if another app owns CardIQ's dedicated port.
 - Production: Vercel — auto-deploys on `git push origin main` (solo, direct-to-main)
 - Env vars per SPEC §8 **must** be mirrored in Vercel project settings
 - Supabase migrations run manually in the SQL Editor, in numeric order

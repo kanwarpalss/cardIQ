@@ -146,6 +146,9 @@ export default function PeriodPicker({ from, to, onChange }: Props) {
   return (
     <div className="relative" ref={ref}>
       <button
+        type="button"
+        aria-expanded={open}
+        aria-haspopup="dialog"
         onClick={() => setOpen((v) => !v)}
         className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-rim bg-raised hover:bg-hover text-sm font-medium text-mist transition-all"
       >
@@ -168,6 +171,7 @@ export default function PeriodPicker({ from, to, onChange }: Props) {
               return (
                 <button
                   key={p.label}
+                  type="button"
                   onClick={() => pickPreset(p)}
                   className={`w-full text-left px-4 py-2 text-sm transition-colors ${
                     isActive
@@ -202,6 +206,7 @@ export default function PeriodPicker({ from, to, onChange }: Props) {
               />
             </div>
             <button
+              type="button"
               onClick={applyCustom}
               disabled={!customFrom || !customTo}
               className="w-full px-3 py-1.5 rounded bg-gold-shimmer text-ink text-xs font-semibold hover:opacity-90 disabled:opacity-40 transition-all"

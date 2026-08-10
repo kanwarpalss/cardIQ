@@ -18,14 +18,14 @@
 //     ("? possible match"). Two+ candidates with no name signal → refuse.
 //     (This is how D2C brands whose bank descriptor doesn't match the brand
 //     name — e.g. Postbox billing as "hourglass" — still link up.)
-//   • Amount-less orders (Amazon "Delivered:") need affinity AND a UNIQUE
-//     candidate in a tight ±4-day window, and are always 'low'.
+//   • An order without a real positive amount is never associated. Amazon
+//     delivery notices are fulfilment updates, not payment evidence.
 //
 // Confidence semantics (rendered in the UI):
 //   high   = exact amount + unique candidate, AND (affinity + ≤2 days)
 //            OR (no affinity but ≤5 min apart — same-purchase proximity)  → "✓"
 //   medium = exact amount + unique candidate + ≤5 days (weaker signal)     → "≈"
-//   low    = matched, but ambiguous / no affinity + loose timing / no amt  → "?"
+//   low    = matched, but ambiguous / no affinity + loose timing           → "?"
 
 import type { OrderSource } from "./parsers/orders/types";
 
@@ -72,7 +72,6 @@ export function reviewStatusFor(confidence: MatchConfidence): "confirmed" | "pen
 const AMOUNT_TOLERANCE = 0.75;
 const DAY_MS = 86_400_000;
 const WINDOW_DAYS_WITH_AMOUNT = 5;
-const WINDOW_DAYS_NO_AMOUNT = 4;
 // "Same-purchase" proximity — an order email and its card charge fire within
 // minutes of each other. A unique exact-amount hit inside this window is one
 // event, so we auto-confirm it even without a brand-name match (mirrors the
@@ -101,6 +100,83 @@ const AFFINITY_STOPWORDS = new Set([
 
 function daysApart(a: string, b: string): number {
   return Math.abs(new Date(a).getTime() - new Date(b).getTime()) / DAY_MS;
+}
+
+type AssociationOrder = {
+  kind: "order" | "refund";
+  total_amount: number | null;
+  card_paid_amount?: number | null;
+  order_at: string;
+};
+
+type AssociationTxn = {
+  amount_inr: number;
+  txn_at: string;
+  txn_type: "debit" | "credit";
+};
+
+function positiveFiniteAmount(value: unknown): number | null {
+  return typeof value === "number" && Number.isFinite(value) && value > 0 ? value : null;
+}
+
+function associationAmount(order: AssociationOrder): number | null {
+  // A refund's amount is the refund itself. A card_paid_amount retained from
+  // the original split purchase must never replace it.
+  return positiveFiniteAmount(
+    order.kind === "refund" ? order.total_amount : order.card_paid_amount ?? order.total_amount
+  );
+}
+
+const ISO_INSTANT =
+  /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})(?:\.\d{1,9})?(Z|([+-])(\d{2}):(\d{2}))$/;
+
+function instantMillis(value: string): number | null {
+  const parts = ISO_INSTANT.exec(value);
+  if (!parts) return null;
+
+  const [, year, month, day, hour, minute, second, , , offsetHour, offsetMinute] = parts;
+  const y = Number(year), mo = Number(month), d = Number(day);
+  const calendar = new Date(Date.UTC(y, mo - 1, d));
+  if (
+    calendar.getUTCFullYear() !== y ||
+    calendar.getUTCMonth() !== mo - 1 ||
+    calendar.getUTCDate() !== d ||
+    Number(hour) > 23 ||
+    Number(minute) > 59 ||
+    Number(second) > 59 ||
+    (offsetHour != null && Number(offsetHour) > 23) ||
+    (offsetMinute != null && Number(offsetMinute) > 59)
+  ) {
+    return null;
+  }
+
+  const millis = Date.parse(value);
+  return Number.isFinite(millis) ? millis : null;
+}
+
+function validDaysApart(a: string, b: string): number | null {
+  const first = instantMillis(a);
+  const second = instantMillis(b);
+  return first == null || second == null ? null : Math.abs(first - second) / DAY_MS;
+}
+
+/**
+ * The minimum evidence every persisted order ↔ card-charge link must retain.
+ * This is shared by the matcher, Review API, and Spend enrichment so historic
+ * bad links cannot bypass today's matching rules.
+ */
+export function isOrderTxnPairCompatible(order: AssociationOrder, txn: AssociationTxn): boolean {
+  const matchAmount = associationAmount(order);
+  const txnAmount = positiveFiniteAmount(txn.amount_inr);
+  if (matchAmount == null || txnAmount == null) return false;
+
+  const wantType = order.kind === "refund" ? "credit" : "debit";
+  if (txn.txn_type !== wantType) return false;
+
+  const gap = validDaysApart(order.order_at, txn.txn_at);
+  return gap != null
+    && gap <= WINDOW_DAYS_WITH_AMOUNT
+    && Math.abs(txnAmount - matchAmount) <= AMOUNT_TOLERANCE;
 }
 
 /** Significant lowercase tokens (len ≥ 4, non-stopword) of a merchant string. */
@@ -142,29 +218,14 @@ export function matchOrderToTxn(
   txns: TxnLite[],
   usedTxnIds: ReadonlySet<string> = new Set()
 ): OrderMatch | null {
-  const wantType = order.kind === "refund" ? "credit" : "debit";
-
-  // ── Amount-less orders (Amazon Delivered): unique-affinity-only, low. ──
-  const matchAmount = order.card_paid_amount ?? order.total_amount;
-  if (matchAmount == null) {
-    const candidates = txns.filter(
-      (t) =>
-        t.txn_type === wantType &&
-        !usedTxnIds.has(t.id) &&
-        hasOrderTxnAffinity(order, t) &&
-        daysApart(order.order_at, t.txn_at) <= WINDOW_DAYS_NO_AMOUNT
-    );
-    if (candidates.length !== 1) return null; // ambiguity → refuse to guess
-    return { txnId: candidates[0].id, confidence: "low" };
-  }
+  const matchAmount = associationAmount(order);
+  if (matchAmount == null) return null;
 
   // ── Amount-bearing orders. ──
   const sameAmount = txns.filter(
     (t) =>
-      t.txn_type === wantType &&
       !usedTxnIds.has(t.id) &&
-      Math.abs(t.amount_inr - matchAmount) <= AMOUNT_TOLERANCE &&
-      daysApart(order.order_at, t.txn_at) <= WINDOW_DAYS_WITH_AMOUNT
+      isOrderTxnPairCompatible(order, t)
   );
   if (sameAmount.length === 0) return null;
 
@@ -209,15 +270,18 @@ export function matchSplitOrderToTxn(
   availableVoucherBalance: number,
   usedTxnIds: ReadonlySet<string> = new Set()
 ): SplitOrderMatch | null {
-  if (order.kind !== "order" || order.total_amount == null || order.total_amount <= AMOUNT_TOLERANCE) return null;
-  if (order.card_paid_amount != null || availableVoucherBalance <= AMOUNT_TOLERANCE) return null;
+  const orderTotal = positiveFiniteAmount(order.total_amount);
+  const voucherBalance = positiveFiniteAmount(availableVoucherBalance);
+  if (order.kind !== "order" || orderTotal == null || orderTotal <= AMOUNT_TOLERANCE) return null;
+  if (order.card_paid_amount != null || voucherBalance == null || voucherBalance <= AMOUNT_TOLERANCE) return null;
 
   const candidates = txns.filter((t) => {
     if (t.txn_type !== "debit" || usedTxnIds.has(t.id) || !hasOrderTxnAffinity(order, t)) return false;
-    if (daysApart(order.order_at, t.txn_at) > 2) return false;
-    if (!(t.amount_inr > 0 && t.amount_inr < order.total_amount! - AMOUNT_TOLERANCE)) return false;
-    const remainder = order.total_amount! - t.amount_inr;
-    return remainder <= availableVoucherBalance + AMOUNT_TOLERANCE;
+    const gap = validDaysApart(order.order_at, t.txn_at);
+    const txnAmount = positiveFiniteAmount(t.amount_inr);
+    if (gap == null || gap > 2 || txnAmount == null || txnAmount >= orderTotal - AMOUNT_TOLERANCE) return false;
+    const remainder = orderTotal - txnAmount;
+    return remainder <= voucherBalance + AMOUNT_TOLERANCE;
   });
   if (candidates.length !== 1) return null;
   const t = candidates[0];
@@ -225,7 +289,7 @@ export function matchSplitOrderToTxn(
     txnId: t.id,
     confidence: "high",
     cardAmount: t.amount_inr,
-    voucherAmount: Math.round((order.total_amount - t.amount_inr) * 100) / 100,
+    voucherAmount: Math.round((orderTotal - t.amount_inr) * 100) / 100,
   };
 }
 

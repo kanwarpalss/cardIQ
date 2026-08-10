@@ -3,9 +3,14 @@
 import { useEffect, useMemo, useState } from "react";
 import { CARD_REGISTRY } from "@/lib/cards/registry";
 import { CATEGORIES, SUBCATEGORIES } from "@/lib/categories";
-import { anniversaryWindowStart } from "@/lib/format";
-import PeriodPicker      from "./PeriodPicker";
-import MerchantPanel     from "./MerchantPanel";
+import { ymd } from "@/lib/format";
+import {
+  buildSpendSearchContext,
+  filterSpendTransactions,
+  summarizeSpendTransactions,
+} from "@/lib/spend-filter";
+import SpendBreakdowns   from "./SpendBreakdowns";
+import SpendFilterPanel  from "./SpendFilterPanel";
 import SyncPanel         from "./SyncPanel";
 import TransactionsTable, { type OrderRow, type CategoryPatch } from "./TransactionsTable";
 import ForeignCurrencyPanel from "./ForeignCurrencyPanel";
@@ -19,55 +24,52 @@ type Txn = {
   subcategory?: string | null;
   txn_at: string; txn_type: "debit" | "credit"; notes?: string | null;
 };
-type CardRow = { id: string; last4: string; nickname: string | null; product_key: string; anniversary_date: string | null };
+type CardRow = { id: string; last4: string; nickname: string | null; product_key: string };
 type OrderApiRow = OrderRow & { txn_id: string | null };
 type VoucherApiRow = { id: string; brand: string; brand_key: string; face_value: number | string; txn_id: string | null };
 type AllData = { transactions: Txn[]; orders?: OrderApiRow[]; vouchers?: VoucherApiRow[]; cards: CardRow[]; last_sync: string | null };
 
 // ── Utils ────────────────────────────────────────────────────────────────────
 const fmt  = (n: number) => "₹" + Math.round(n).toLocaleString("en-IN");
-const ymd  = (d: Date)   => d.toISOString().slice(0, 10);
 const cardLabel = (c: CardRow) => c.nickname || CARD_REGISTRY[c.product_key]?.display_name || c.product_key;
+const cardSearchLabel = (c: CardRow) =>
+  [c.nickname, CARD_REGISTRY[c.product_key]?.display_name, c.product_key]
+    .filter(Boolean)
+    .join(" ");
+
+function amountBoundary(value: string): number | null {
+  if (!value.trim()) return null;
+  return Number(value);
+}
 
 function defaultRange() {
   const d = new Date();
   return {
     from: ymd(new Date(d.getFullYear(), d.getMonth(), 1)),
-    to:   ymd(new Date(d.getFullYear(), d.getMonth() + 1, 0)),
+    to:   ymd(d),
   };
 }
-
-const MERCHANT_PAGE = 10;
-const CATEGORY_PAGE = 10;   // mirror MERCHANT_PAGE for visual consistency
 
 // ── Component ────────────────────────────────────────────────────────────────
 // `focusCard` is a deep-link from Overview card tiles: a fresh object per click
 // (identity change re-fires the effect even for the same card).
 export default function SpendTab({ focusCard }: { focusCard?: { last4: string } | null }) {
-  const init = defaultRange();
+  const [initialRange] = useState(defaultRange);
+  const init = initialRange;
   const [fromDate, setFromDate] = useState(init.from);
   const [toDate,   setToDate]   = useState(init.to);
   const [selectedCards, setSelectedCards] = useState<Set<string>>(new Set(["all"]));
   const [txnType, setTxnType]   = useState<"all" | "debit" | "credit">("all");
   const [categoryFilter, setCategoryFilter] = useState<string | null>(null);
+  const [subcategoryFilter, setSubcategoryFilter] = useState<string | null>(null);
+  const [merchantFilter, setMerchantFilter] = useState<string | null>(null);
+  const [search, setSearch] = useState("");
+  const [amountMin, setAmountMin] = useState("");
+  const [amountMax, setAmountMax] = useState("");
 
   const [allData,  setAllData]  = useState<AllData | null>(null);
   const [loading,  setLoading]  = useState(false);
   const [recat,    setRecat]    = useState<string | null>(null);
-
-  // Merchant table state
-  const [merchantSort,  setMerchantSort]  = useState<"total" | "count" | "name">("total");
-  const [merchantPage,  setMerchantPage]  = useState(1);
-  const [merchantQuery, setMerchantQuery] = useState("");
-  const [showAllMerchants, setShowAllMerchants] = useState(false);
-
-  // Category panel — same UX as merchants (filter + sort + paginate). The
-  // category list is small for most users (<20) but power users with
-  // user-defined buckets can have 50+ — so we paginate from the start.
-  const [categorySort,  setCategorySort]  = useState<"total" | "count" | "name">("total");
-  const [categoryPage,  setCategoryPage]  = useState(1);
-  const [categoryQuery, setCategoryQuery] = useState("");
-  const [showAllCategories, setShowAllCategories] = useState(false);
 
   // ── Data fetch ─────────────────────────────────────────────────────────────
   async function loadAll() {
@@ -79,7 +81,6 @@ export default function SpendTab({ focusCard }: { focusCard?: { last4: string } 
   }
 
   useEffect(() => { loadAll(); }, []);
-  useEffect(() => { setMerchantPage(1); setCategoryPage(1); }, [fromDate, toDate, selectedCards, txnType, categoryFilter]);
   useEffect(() => {
     if (focusCard) setSelectedCards(new Set([focusCard.last4]));
   }, [focusCard]);
@@ -94,6 +95,20 @@ export default function SpendTab({ focusCard }: { focusCard?: { last4: string } 
       else next.add(last4);
       return next;
     });
+  }
+
+  function resetFilters() {
+    const range = defaultRange();
+    setFromDate(range.from);
+    setToDate(range.to);
+    setSelectedCards(new Set(["all"]));
+    setTxnType("all");
+    setCategoryFilter(null);
+    setSubcategoryFilter(null);
+    setMerchantFilter(null);
+    setSearch("");
+    setAmountMin("");
+    setAmountMax("");
   }
 
   async function recategorize() {
@@ -111,6 +126,7 @@ export default function SpendTab({ focusCard }: { focusCard?: { last4: string } 
       body: JSON.stringify({ old_name, new_name, category, subcategory }),
     });
     if (!res.ok) return;
+    if (merchantFilter === old_name) setMerchantFilter(new_name);
     setAllData((prev) => prev ? {
       ...prev,
       transactions: prev.transactions.map((t) =>
@@ -172,6 +188,12 @@ export default function SpendTab({ focusCard }: { focusCard?: { last4: string } 
     return Array.from(set);
   }, [allData]);
 
+  const allMerchants = useMemo(() => {
+    const set = new Set<string>();
+    for (const t of allData?.transactions ?? []) set.add(t.merchant?.trim() || "(missing)");
+    return Array.from(set).sort((a, b) => a.localeCompare(b));
+  }, [allData]);
+
   const existingNotes = useMemo(() => {
     const set = new Set<string>();
     for (const t of allData?.transactions ?? []) {
@@ -194,6 +216,18 @@ export default function SpendTab({ focusCard }: { focusCard?: { last4: string } 
     }
     return Object.fromEntries(Object.entries(map).map(([k, v]) => [k, Array.from(v)]));
   }, [allData]);
+
+  const filterSubcategories = useMemo(() => {
+    const set = new Set<string>();
+    if (categoryFilter) {
+      for (const value of subcategorySuggestions[categoryFilter] ?? []) set.add(value);
+    } else {
+      for (const values of Object.values(subcategorySuggestions)) {
+        for (const value of values) set.add(value);
+      }
+    }
+    return Array.from(set).sort((a, b) => a.localeCompare(b));
+  }, [categoryFilter, subcategorySuggestions]);
 
   // Matched order emails keyed by transaction id (expand-row enrichment).
   const ordersByTxn = useMemo(() => {
@@ -218,451 +252,233 @@ export default function SpendTab({ focusCard }: { focusCard?: { last4: string } 
     return map;
   }, [allData]);
 
+  const searchContext = useMemo(() => buildSpendSearchContext(
+    allData?.transactions ?? [],
+    (allData?.cards ?? []).map((card) => ({ last4: card.last4, label: cardSearchLabel(card) })),
+    ordersByTxn,
+    vouchersByTxn,
+  ), [allData, ordersByTxn, vouchersByTxn]);
+
+  const minAmount = amountBoundary(amountMin);
+  const maxAmount = amountBoundary(amountMax);
+  const amountError =
+    (minAmount !== null && (!Number.isFinite(minAmount) || minAmount < 0)) ||
+    (maxAmount !== null && (!Number.isFinite(maxAmount) || maxAmount < 0))
+      ? "Amounts must be zero or more."
+      : minAmount !== null && maxAmount !== null && minAmount > maxAmount
+        ? "Minimum cannot exceed maximum."
+        : null;
+
   const filteredTxns = useMemo(() => {
     if (!allData) return [];
-    const fromMs = new Date(fromDate + "T00:00:00").getTime();
-    const toMs   = new Date(toDate   + "T23:59:59").getTime();
-    const cardSet = selectedCards.has("all") ? null : selectedCards;
-    return allData.transactions.filter((t) => {
-      const ts = new Date(t.txn_at).getTime();
-      if (ts < fromMs || ts > toMs) return false;
-      if (cardSet && !cardSet.has(t.card_last4)) return false;
-      if (txnType !== "all" && t.txn_type !== txnType) return false;
-      if (categoryFilter && t.category !== categoryFilter) return false;
-      return true;
+    return filterSpendTransactions(allData.transactions, {
+      from: fromDate,
+      to: toDate,
+      selectedCards,
+      txnType,
+      category: categoryFilter,
+      subcategory: subcategoryFilter,
+      merchant: merchantFilter,
+      search,
+      amountMin: minAmount,
+      amountMax: maxAmount,
+      searchContext,
     });
-  }, [allData, fromDate, toDate, selectedCards, txnType, categoryFilter]);
+  }, [
+    allData,
+    fromDate,
+    toDate,
+    selectedCards,
+    txnType,
+    categoryFilter,
+    subcategoryFilter,
+    merchantFilter,
+    search,
+    minAmount,
+    maxAmount,
+    searchContext,
+  ]);
+  const filterKey = [
+    fromDate,
+    toDate,
+    [...selectedCards].sort().join(","),
+    txnType,
+    categoryFilter ?? "",
+    subcategoryFilter ?? "",
+    merchantFilter ?? "",
+    search,
+    amountMin,
+    amountMax,
+  ].join("|");
 
-  // Currency split: keep INR txns for all the ₹-denominated panels (totals,
-  // merchants, categories, milestones) and route foreign-currency txns to a
-  // dedicated panel. Legacy rows with a NULL original_currency are treated
-  // as INR (true for everything synced before multi-currency support).
-  const inrTxns = useMemo(
-    () => filteredTxns.filter((t) => !t.original_currency || t.original_currency.toUpperCase() === "INR"),
-    [filteredTxns]
-  );
-  const foreignTxns = useMemo(
-    () => filteredTxns.filter((t) => t.original_currency && t.original_currency.toUpperCase() !== "INR"),
-    [filteredTxns]
-  );
-
-  // Anniversary-milestone spend is INDEPENDENT of the view period (from/to
-  // pickers above) — it always tracks the card's own anniversary year, using
-  // the full unfiltered transaction history. Keyed by last4.
-  const anniversarySpendByCard = useMemo(() => {
-    const out: Record<string, number> = {};
-    if (!allData) return out;
-    const cardsByLast4 = new Map(allData.cards.map((c) => [c.last4, c]));
-    for (const t of allData.transactions) {
-      if (t.txn_type !== "debit") continue;
-      if (t.original_currency && t.original_currency.toUpperCase() !== "INR") continue;
-      const card = cardsByLast4.get(t.card_last4);
-      const spec = card ? CARD_REGISTRY[card.product_key] : undefined;
-      if (!spec?.milestones_anniversary?.length) continue; // only compute where it'll be shown
-      const start = anniversaryWindowStart(card!.anniversary_date);
-      if (new Date(t.txn_at) < start) continue;
-      out[t.card_last4] = (out[t.card_last4] || 0) + Number(t.amount_inr);
-    }
-    return out;
-  }, [allData]);
-
-  const aggregates = useMemo(() => {
-    // INR-ONLY aggregates. Foreign txns get their own panel below.
-    const debits  = inrTxns.filter((t) => t.txn_type === "debit");
-    const credits = inrTxns.filter((t) => t.txn_type === "credit");
-    const total_debit  = debits.reduce((s, t) => s + Number(t.amount_inr), 0);
-    const total_credit = credits.reduce((s, t) => s + Number(t.amount_inr), 0);
-
-    const totals: Record<string, number> = {};
-    for (const t of debits) totals[t.card_last4] = (totals[t.card_last4] || 0) + Number(t.amount_inr);
-
-    const merchantMap: Record<string, { total: number; count: number; category: string; subcategory: string | null }> = {};
-    for (const t of debits) {
-      const k = t.merchant || "(missing)";
-      if (!merchantMap[k]) merchantMap[k] = { total: 0, count: 0, category: t.category || "Uncategorized", subcategory: t.subcategory ?? null };
-      merchantMap[k].total += Number(t.amount_inr);
-      merchantMap[k].count++;
-    }
-    const by_merchant = Object.entries(merchantMap)
-      .map(([merchant, v]) => ({ merchant, ...v }))
-      .sort((a, b) => b.total - a.total);
-
-    const categoryMap: Record<string, { total: number; count: number }> = {};
-    for (const t of debits) {
-      const k = t.category || "Uncategorized";
-      if (!categoryMap[k]) categoryMap[k] = { total: 0, count: 0 };
-      categoryMap[k].total += Number(t.amount_inr);
-      categoryMap[k].count++;
-    }
-    const by_category = Object.entries(categoryMap)
-      .map(([category, v]) => ({ category, ...v }))
-      .sort((a, b) => b.total - a.total);
-
-    return {
-      summary: { total_debit, total_credit, net: total_debit - total_credit,
-        txn_count: inrTxns.length, debit_count: debits.length, credit_count: credits.length },
-      by_merchant, by_category, totals,
-    };
-  }, [inrTxns]);
-
-  const filteredMerchants = useMemo(() => {
-    let list = aggregates.by_merchant;
-    if (merchantQuery) {
-      const q = merchantQuery.toLowerCase();
-      list = list.filter((m) => m.merchant.toLowerCase().includes(q) || m.category.toLowerCase().includes(q));
-    }
-    return [...list].sort((a, b) => {
-      if (merchantSort === "name")  return a.merchant.localeCompare(b.merchant);
-      if (merchantSort === "count") return b.count - a.count;
-      return b.total - a.total;
-    });
-  }, [aggregates.by_merchant, merchantQuery, merchantSort]);
-
-  const visibleMerchants = showAllMerchants
-    ? filteredMerchants.slice((merchantPage - 1) * MERCHANT_PAGE, merchantPage * MERCHANT_PAGE)
-    : filteredMerchants.slice(0, MERCHANT_PAGE);
-  const merchantPageCount  = Math.ceil(filteredMerchants.length / MERCHANT_PAGE);
-  const maxMerchantTotal   = filteredMerchants[0]?.total ?? 1;
-
-  // Same filter+sort+paginate pattern for categories.
-  const filteredCategories = useMemo(() => {
-    let list = aggregates.by_category;
-    if (categoryQuery) {
-      const q = categoryQuery.toLowerCase();
-      list = list.filter((c) => c.category.toLowerCase().includes(q));
-    }
-    return [...list].sort((a, b) => {
-      if (categorySort === "name")  return a.category.localeCompare(b.category);
-      if (categorySort === "count") return b.count - a.count;
-      return b.total - a.total;
-    });
-  }, [aggregates.by_category, categoryQuery, categorySort]);
-
-  const visibleCategories = showAllCategories
-    ? filteredCategories.slice((categoryPage - 1) * CATEGORY_PAGE, categoryPage * CATEGORY_PAGE)
-    : filteredCategories.slice(0, CATEGORY_PAGE);
-  const categoryPageCount = Math.ceil(filteredCategories.length / CATEGORY_PAGE);
-  const maxCategoryFiltered = filteredCategories[0]?.total ?? 1;
+  // This same filtered array feeds the totals, table, and compact breakdown.
+  const aggregates = useMemo(() => summarizeSpendTransactions(filteredTxns), [filteredTxns]);
+  const { inrTxns, foreignTxns } = aggregates;
 
   // ── Render ─────────────────────────────────────────────────────────────────
   return (
     <div className="max-w-6xl mx-auto px-6 py-8 space-y-6 pb-20">
 
-      {/* ── Sync panel ────────────────────────────────────────────────────── */}
-      <section className="rounded-2xl border border-rim bg-surface p-5 shadow-card">
-        <div className="flex items-start justify-between gap-4 flex-wrap">
-          <div>
-            <h2 className="font-serif text-base font-semibold text-gold mb-0.5">Gmail Sync</h2>
-            <p className="text-xs text-mist/60">Emails are archived locally once and never re-downloaded.</p>
-          </div>
-          <button onClick={recategorize}
-            className="text-xs text-mist/60 hover:text-mist/70 transition-colors whitespace-nowrap">
-            Re-categorize
-          </button>
-        </div>
-        <div className="mt-4">
-          <SyncPanel onSyncComplete={loadAll} />
-        </div>
-        {recat && (
-          <div className={`mt-3 text-xs px-3 py-2 rounded-lg border ${
-            recat.startsWith("✓") ? "border-emerald/30 bg-emerald/5 text-emerald" : "border-ruby/30 bg-ruby/5 text-ruby"
-          }`}>{recat}</div>
-        )}
-      </section>
-
-      {/* ── View filters ──────────────────────────────────────────────────── */}
-      <section className="rounded-2xl border border-rim bg-surface p-5 shadow-card space-y-4">
-
-        {/* Period row */}
-        <div className="flex items-center gap-3 flex-wrap">
-          <span className="text-2xs uppercase tracking-widest text-mist/55 w-12 shrink-0">Period</span>
-          <PeriodPicker
-            from={fromDate}
-            to={toDate}
-            onChange={(f, t) => { setFromDate(f); setToDate(t); }}
-          />
-        </div>
-
-        {/* Cards row */}
-        {allData && allData.cards.length > 0 && (
-          <div className="flex items-center gap-3 flex-wrap">
-            <span className="text-2xs uppercase tracking-widest text-mist/55 w-12 shrink-0">Cards</span>
-            <div className="flex flex-wrap gap-1.5">
-              <FilterPill active={selectedCards.has("all")} onClick={() => toggleCard("all")}>All</FilterPill>
-              {allData.cards.map((c) => (
-                <FilterPill key={c.id} active={selectedCards.has(c.last4)} onClick={() => toggleCard(c.last4)}>
-                  {cardLabel(c)} <span className="opacity-50 font-normal">··{c.last4}</span>
-                </FilterPill>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Type row */}
-        <div className="flex items-center gap-3 flex-wrap">
-          <span className="text-2xs uppercase tracking-widest text-mist/55 w-12 shrink-0">Type</span>
-          <div className="flex gap-1.5">
-            {(["all", "debit", "credit"] as const).map((t) => (
-              <FilterPill key={t} active={txnType === t} onClick={() => setTxnType(t)}>
-                <span className="capitalize">{t}</span>
-              </FilterPill>
-            ))}
-          </div>
-          {categoryFilter && (
-            <button onClick={() => setCategoryFilter(null)}
-              className="ml-auto text-xs text-mist/60 hover:text-mist/70 flex items-center gap-1 transition-colors">
-              <span className="text-gold/60 font-medium">{categoryFilter}</span>
-              <span>× clear</span>
-            </button>
-          )}
-        </div>
-      </section>
+      <SpendFilterPanel
+        search={search}
+        onSearchChange={setSearch}
+        from={fromDate}
+        to={toDate}
+        onPeriodChange={(from, to) => { setFromDate(from); setToDate(to); }}
+        merchant={merchantFilter}
+        merchants={allMerchants}
+        onMerchantChange={setMerchantFilter}
+        category={categoryFilter}
+        categories={allCategories}
+        onCategoryChange={(value) => {
+          setCategoryFilter(value);
+          if (value && subcategoryFilter && !(subcategorySuggestions[value] ?? []).includes(subcategoryFilter)) {
+            setSubcategoryFilter(null);
+          }
+        }}
+        subcategory={subcategoryFilter}
+        subcategories={filterSubcategories}
+        onSubcategoryChange={setSubcategoryFilter}
+        amountMin={amountMin}
+        amountMax={amountMax}
+        onAmountMinChange={setAmountMin}
+        onAmountMaxChange={setAmountMax}
+        amountError={amountError}
+        selectedCards={selectedCards}
+        cards={(allData?.cards ?? []).map((card) => ({
+          id: card.id,
+          last4: card.last4,
+          label: cardLabel(card),
+        }))}
+        onToggleCard={toggleCard}
+        txnType={txnType}
+        onTxnTypeChange={setTxnType}
+        resultCount={filteredTxns.length}
+        onReset={resetFilters}
+      />
 
       {loading && !allData && (
         <div className="flex items-center justify-center py-16 text-mist/55 text-sm">Loading…</div>
       )}
 
+      {allData && (
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+          <StatTile
+            label="Total spend"
+            value={fmt(aggregates.summary.total_debit)}
+            sub={`${aggregates.summary.debit_count} INR spend${aggregates.summary.debit_count === 1 ? "" : "s"}`}
+            accent="gold"
+          />
+          <StatTile
+            label="Refunded"
+            value={fmt(aggregates.summary.total_credit)}
+            sub={`${aggregates.summary.credit_count} INR refund${aggregates.summary.credit_count === 1 ? "" : "s"}`}
+            accent="emerald"
+          />
+          <StatTile
+            label="Net spend"
+            value={fmt(aggregates.summary.net)}
+            sub="spends − refunds"
+            accent="gold"
+          />
+          <StatTile
+            label="Results"
+            value={String(filteredTxns.length)}
+            sub={foreignTxns.length > 0
+              ? `${inrTxns.length} INR · ${foreignTxns.length} foreign`
+              : `${inrTxns.length} INR transaction${inrTxns.length === 1 ? "" : "s"}`}
+            accent="muted"
+          />
+        </div>
+      )}
+
       {allData && filteredTxns.length === 0 && (
-        <div className="text-center py-16 text-mist/55 text-sm">
-          No transactions in this range. Try widening the period or syncing Gmail.
+        <div className="rounded-2xl border border-rim bg-surface text-center py-12 px-5 text-mist/55 text-sm">
+          No transactions match these filters. Try removing one filter or widening the period.
         </div>
       )}
 
       {allData && filteredTxns.length > 0 && (
         <>
-          {/* ── Summary tiles ──────────────────────────────────────────── */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            <StatTile label="Spent"       value={fmt(aggregates.summary.total_debit)}  sub={`${aggregates.summary.debit_count} debits`}    accent="gold" />
-            <StatTile label="Refunded"    value={fmt(aggregates.summary.total_credit)} sub={`${aggregates.summary.credit_count} credits`}   accent="emerald" />
-            <StatTile label="Net"         value={fmt(aggregates.summary.net)}           sub="debits − refunds"                              accent="gold" />
-            <StatTile label="Transactions" value={String(aggregates.summary.txn_count)} sub={`${fromDate.slice(0,7)} → ${toDate.slice(0,7)}`} accent="muted" />
-          </div>
-
-          {/* ── Milestone bars — only for cards with a real, sourced milestone.
-               Monthly-milestone cards use the selected period's spend; cards
-               with only an anniversary milestone use anniversary-to-date spend
-               (independent of the period picker) so the number stays honest
-               regardless of what range is selected. Cards with neither show
-               nothing rather than a fabricated bar. ───────────────────────── */}
-          {txnType !== "credit" && !categoryFilter && allData.cards.some(
-            (c) => selectedCards.has("all") || selectedCards.has(c.last4)
-          ) && allData.cards.some((c) => {
-            const spec = CARD_REGISTRY[c.product_key];
-            return spec?.milestones_monthly?.length || spec?.milestones_anniversary?.length;
-          }) && (
-            <section className="rounded-2xl border border-rim bg-surface p-5 shadow-card space-y-4">
-              <h3 className="text-2xs uppercase tracking-widest text-mist/55">Milestones</h3>
-              {allData.cards
-                .filter((c) => selectedCards.has("all") || selectedCards.has(c.last4))
-                .map((card) => {
-                  const spec = CARD_REGISTRY[card.product_key];
-                  const monthly = spec?.milestones_monthly?.[0];
-                  const annualTiers = spec?.milestones_anniversary ?? [];
-                  // A card can have BOTH (EPM: ₹1.5L monthly + annual voucher/fee
-                  // tiers) — show each on its own bar. Cards with neither show
-                  // nothing, never a fabricated bar.
-                  const bars: React.ReactNode[] = [];
-
-                  if (monthly) {
-                    const spent = aggregates.totals[card.last4] || 0;
-                    const pct   = Math.min((spent / monthly.spend_inr) * 100, 100);
-                    bars.push(
-                      <MilestoneBar key={`${card.id}-m`} label={cardLabel(card)} sub={card.last4}
-                        spent={spent} target={monthly.spend_inr} pct={pct}
-                        caption={`${Math.round(pct)}% of ${fmt(monthly.spend_inr)} monthly milestone`} />
-                    );
-                  }
-
-                  if (annualTiers.length > 0) {
-                    const spent = anniversarySpendByCard[card.last4] || 0;
-                    const next  = annualTiers.find((m) => spent < m.spend_inr) ?? annualTiers[annualTiers.length - 1];
-                    const pct   = Math.min((spent / next.spend_inr) * 100, 100);
-                    const reached = spent >= annualTiers[annualTiers.length - 1].spend_inr;
-                    bars.push(
-                      <MilestoneBar key={`${card.id}-a`}
-                        label={monthly ? "" : cardLabel(card)} sub={monthly ? "" : card.last4}
-                        spent={spent} target={next.spend_inr} pct={pct} reached={reached}
-                        caption={
-                          reached
-                            ? `All anniversary-year milestones reached (${fmt(spent)} since anniversary)`
-                            : `${Math.round(pct)}% of ${fmt(next.spend_inr)} anniversary-year milestone — ${next.reward}`
-                        } />
-                    );
-                  }
-
-                  return bars.length > 0 ? bars : null;
-                })}
-            </section>
+          {inrTxns.length > 0 && (
+            <TransactionsTable
+              resultKey={filterKey}
+              transactions={inrTxns}
+              cards={allData.cards}
+              categories={allCategories}
+              subcategories={subcategorySuggestions}
+              ordersByTxn={ordersByTxn}
+              vouchersByTxn={vouchersByTxn}
+              existingNotes={existingNotes}
+              onMerchantSave={handleMerchantSave}
+              onCategoryChange={handleTxnCategoryChange}
+              onNotesChange={handleTxnNotesChange}
+              onNotesBulk={handleNotesBulk}
+            />
           )}
-
-          {/* ── Category + Merchant panels ─────────────────────────────── */}
-          <div className="grid md:grid-cols-2 gap-4">
-
-            {/* Category */}
-            <section className="rounded-2xl border border-rim bg-surface p-5 shadow-card space-y-3">
-              <div className="flex items-center justify-between">
-                <h3 className="text-2xs uppercase tracking-widest text-mist/55">By category</h3>
-                <span className="text-2xs text-mist/55">
-                  {filteredCategories.length}
-                  {filteredCategories.length !== aggregates.by_category.length && ` / ${aggregates.by_category.length}`}
-                </span>
-              </div>
-              <div className="flex gap-2">
-                <input type="text" placeholder="Filter…" value={categoryQuery}
-                  onChange={(e) => { setCategoryQuery(e.target.value); setCategoryPage(1); }}
-                  className="flex-1 bg-ink border border-rim rounded-lg px-3 py-1.5 text-xs text-mist placeholder:text-mist/25 focus:border-gold/40 outline-none" />
-                <select value={categorySort} onChange={(e) => setCategorySort(e.target.value as typeof categorySort)}
-                  className="bg-ink border border-rim rounded-lg px-2 py-1.5 text-xs text-mist/70 focus:border-gold/40 outline-none">
-                  <option value="total">By total</option>
-                  <option value="count">By count</option>
-                  <option value="name">By name</option>
-                </select>
-              </div>
-              <div className="space-y-1.5">
-                {visibleCategories.map((c) => {
-                  const active = categoryFilter === c.category;
-                  return (
-                    <button key={c.category} onClick={() => setCategoryFilter(active ? null : c.category)}
-                      className={`w-full text-left px-3 py-2 -mx-3 rounded-xl transition-all ${
-                        active ? "bg-gold/8" : "hover:bg-raised"
-                      }`}>
-                      <div className="flex justify-between items-baseline text-sm">
-                        <span className={active ? "text-gold" : "text-mist/80"}>{c.category}</span>
-                        <span className={active ? "text-gold font-semibold" : "text-mist/60 font-medium"}>
-                          {fmt(c.total)}
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-2 mt-1.5">
-                        <div className="flex-1 h-0.5 bg-ink rounded-full overflow-hidden">
-                          <div className="h-full bg-gold/50 rounded-full transition-all"
-                            style={{ width: `${(c.total / maxCategoryFiltered) * 100}%` }} />
-                        </div>
-                        <span className="text-2xs text-mist/25 w-10 text-right shrink-0">{c.count}×</span>
-                      </div>
-                    </button>
-                  );
-                })}
-              </div>
-              {filteredCategories.length > CATEGORY_PAGE && (
-                <div className="pt-2 border-t border-wire flex items-center justify-between">
-                  <button onClick={() => { setShowAllCategories((v) => !v); setCategoryPage(1); }}
-                    className="text-xs text-mist/60 hover:text-gold transition-colors">
-                    {showAllCategories ? "Show top 10" : `Show all ${filteredCategories.length}`}
-                  </button>
-                  {showAllCategories && categoryPageCount > 1 && (
-                    <Pager page={categoryPage} count={categoryPageCount} onChange={setCategoryPage} />
-                  )}
-                </div>
-              )}
-            </section>
-
-            {/* Merchant */}
-            <section className="rounded-2xl border border-rim bg-surface p-5 shadow-card space-y-3">
-              <div className="flex items-center justify-between">
-                <h3 className="text-2xs uppercase tracking-widest text-mist/55">By merchant</h3>
-                <span className="text-2xs text-mist/55">
-                  {filteredMerchants.length}
-                  {filteredMerchants.length !== aggregates.by_merchant.length && ` / ${aggregates.by_merchant.length}`}
-                </span>
-              </div>
-              <div className="flex gap-2">
-                <input type="text" placeholder="Filter…" value={merchantQuery}
-                  onChange={(e) => { setMerchantQuery(e.target.value); setMerchantPage(1); }}
-                  className="flex-1 bg-ink border border-rim rounded-lg px-3 py-1.5 text-xs text-mist placeholder:text-mist/25 focus:border-gold/40 outline-none" />
-                <select value={merchantSort} onChange={(e) => setMerchantSort(e.target.value as typeof merchantSort)}
-                  className="bg-ink border border-rim rounded-lg px-2 py-1.5 text-xs text-mist/70 focus:border-gold/40 outline-none">
-                  <option value="total">By total</option>
-                  <option value="count">By count</option>
-                  <option value="name">By name</option>
-                </select>
-              </div>
-              <MerchantPanel
-                merchants={visibleMerchants}
-                maxTotal={maxMerchantTotal}
-                categories={allCategories}
-                subcategories={subcategorySuggestions}
-                onSave={handleMerchantSave}
-              />
-              {filteredMerchants.length > MERCHANT_PAGE && (
-                <div className="pt-2 border-t border-wire flex items-center justify-between">
-                  <button onClick={() => { setShowAllMerchants((v) => !v); setMerchantPage(1); }}
-                    className="text-xs text-mist/60 hover:text-gold transition-colors">
-                    {showAllMerchants ? "Show top 10" : `Show all ${filteredMerchants.length}`}
-                  </button>
-                  {showAllMerchants && merchantPageCount > 1 && (
-                    <Pager page={merchantPage} count={merchantPageCount} onChange={setMerchantPage} />
-                  )}
-                </div>
-              )}
-            </section>
-          </div>
-
-          {/* ── Transactions table (INR only) ───────────────────────────────── */}
-          <TransactionsTable
-            transactions={inrTxns}
-            cards={allData.cards}
-            categories={allCategories}
-            subcategories={subcategorySuggestions}
-            ordersByTxn={ordersByTxn}
-            vouchersByTxn={vouchersByTxn}
-            existingNotes={existingNotes}
-            onMerchantSave={handleMerchantSave}
-            onCategoryChange={handleTxnCategoryChange}
-            onNotesChange={handleTxnNotesChange}
-            onNotesBulk={handleNotesBulk}
-          />
 
           {/* ── Foreign currency panel (renders only if foreign txns exist) ── */}
           <ForeignCurrencyPanel transactions={foreignTxns} />
+
+          {(aggregates.by_category.length > 0 || aggregates.by_merchant.length > 0) && (
+            <SpendBreakdowns
+              categories={aggregates.by_category}
+              merchants={aggregates.by_merchant}
+              categoryFilter={categoryFilter}
+              onCategoryFilter={(value) => {
+                setCategoryFilter(value);
+                setSubcategoryFilter(null);
+              }}
+              allCategories={allCategories}
+              subcategories={subcategorySuggestions}
+              onMerchantSave={handleMerchantSave}
+            />
+          )}
         </>
       )}
+
+      <section className="rounded-2xl border border-rim bg-surface px-5 py-4 shadow-card">
+        <details>
+          <summary className="cursor-pointer list-none flex items-center justify-between gap-4">
+            <div>
+              <h2 className="text-sm font-medium text-mist/75">Update spend data</h2>
+              <p className="text-2xs text-mist/40 mt-0.5">Gmail sync and re-categorization tools</p>
+            </div>
+            <span className="text-xs text-gold/60">Open tools ▾</span>
+          </summary>
+          <div className="pt-4 mt-4 border-t border-wire">
+            <div className="flex items-start justify-between gap-4 flex-wrap">
+              <p className="text-xs text-mist/55">
+                Emails are read once and their transaction data is stored locally.
+              </p>
+              <button
+                type="button"
+                onClick={recategorize}
+                className="text-xs text-mist/60 hover:text-gold transition-colors whitespace-nowrap"
+              >
+                Re-categorize
+              </button>
+            </div>
+            <div className="mt-4">
+              <SyncPanel onSyncComplete={loadAll} />
+            </div>
+            {recat && (
+              <div className={`mt-3 text-xs px-3 py-2 rounded-lg border ${
+                recat.startsWith("✓")
+                  ? "border-emerald/30 bg-emerald/5 text-emerald"
+                  : "border-ruby/30 bg-ruby/5 text-ruby"
+              }`}>
+                {recat}
+              </div>
+            )}
+          </div>
+        </details>
+      </section>
     </div>
   );
 }
 
 // ── Sub-components ────────────────────────────────────────────────────────────
-
-function FilterPill({ active, onClick, children }: {
-  active: boolean; onClick: () => void; children: React.ReactNode;
-}) {
-  return (
-    <button onClick={onClick}
-      className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-all ${
-        active
-          ? "bg-gold text-ink shadow-glow-gold"
-          : "bg-raised border border-rim hover:border-gold/30 text-mist/60 hover:text-mist"
-      }`}>
-      {children}
-    </button>
-  );
-}
-
-function MilestoneBar({ label, sub, spent, target, pct, caption, reached }: {
-  label: string; sub: string; spent: number; target: number; pct: number; caption: string; reached?: boolean;
-}) {
-  const done = reached ?? pct >= 100;
-  return (
-    <div className="space-y-2">
-      <div className="flex justify-between text-sm">
-        <span className="text-mist/80">
-          {label}
-          {sub && <span className="opacity-30 text-xs ml-1.5">··{sub}</span>}
-        </span>
-        <span className="font-semibold text-gold tabular-nums">{fmt(spent)}</span>
-      </div>
-      <div className="h-1.5 bg-ink rounded-full overflow-hidden">
-        <div className="h-full bg-gold-shimmer rounded-full transition-all duration-700"
-          style={{ width: `${pct}%` }} />
-      </div>
-      <div className="flex justify-between text-2xs text-mist/55">
-        <span>{caption}</span>
-        {done
-          ? <span className="text-emerald">Reached ✓</span>
-          : <span>{fmt(target - spent)} to go</span>}
-      </div>
-    </div>
-  );
-}
 
 function StatTile({ label, value, sub, accent }: {
   label: string; value: string; sub: string; accent: "gold" | "emerald" | "muted";
@@ -673,18 +489,6 @@ function StatTile({ label, value, sub, accent }: {
       <div className="text-2xs uppercase tracking-widest text-mist/55 mb-2">{label}</div>
       <div className={`font-serif text-2xl font-semibold tabular-nums ${valClass}`}>{value}</div>
       <div className="text-2xs text-mist/55 mt-1">{sub}</div>
-    </div>
-  );
-}
-
-function Pager({ page, count, onChange }: { page: number; count: number; onChange: (p: number) => void }) {
-  return (
-    <div className="flex items-center gap-1.5 text-xs">
-      <button disabled={page <= 1} onClick={() => onChange(page - 1)}
-        className="px-2 py-1 rounded border border-rim hover:border-gold/30 disabled:opacity-20 transition-all">‹</button>
-      <span className="text-mist/60 tabular-nums">{page}/{count}</span>
-      <button disabled={page >= count} onClick={() => onChange(page + 1)}
-        className="px-2 py-1 rounded border border-rim hover:border-gold/30 disabled:opacity-20 transition-all">›</button>
     </div>
   );
 }

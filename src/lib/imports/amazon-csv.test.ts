@@ -47,6 +47,14 @@ describe("parseAmazonOrderHistory", () => {
     expect(parseAmazonOrderHistory("foo,bar\n1,2\n")).toEqual([]);
   });
 
+  it("drops rows with missing or invalid dates rather than inventing today's date", () => {
+    const malformed =
+      "Order Date,Order ID,Currency,Total Amount,Quantity,Product Name\n" +
+      "not-a-date,402-bad-1,INR,999,1,Wrong-time candidate\n" +
+      "2026-02-30T10:00:00Z,402-bad-2,INR,999,1,Normalised-time candidate\n";
+    expect(parseAmazonOrderHistory(malformed)).toEqual([]);
+  });
+
   // Real Amazon.in export schema: "Shipment Item Subtotal" is a per-SHIPMENT
   // total repeated on every item row (here 123.97 = 54.99+33.99+34.99 across the
   // first three items). Summing it would triple-count → 528. The true per-item

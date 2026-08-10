@@ -4,9 +4,10 @@
   "private": true,
   "scripts": {
     "predev": "node scripts/check-sync.mjs",
-    "dev": "next dev",
+    "dev": "node scripts/require-cardiq-port.mjs && next dev --port 3128",
     "build": "next build",
-    "start": "next start",
+    "start": "node scripts/require-cardiq-port.mjs && next start --port 3128",
+    "health": "curl -fsS --connect-timeout 3 http://127.0.0.1:3128/login >/dev/null && echo 'CardIQ is available at http://localhost:3128'",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",

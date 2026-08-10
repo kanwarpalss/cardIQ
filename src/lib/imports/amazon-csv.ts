@@ -57,7 +57,18 @@ function money(raw: string | undefined): number | undefined {
 /** Best-effort ISO date from Amazon's varied date formats. */
 function toIso(raw: string | undefined): string | undefined {
   if (!raw) return undefined;
-  const d = new Date(raw.trim());
+  const value = raw.trim();
+  const calendar = /^(\d{4})-(\d{2})-(\d{2})/.exec(value);
+  if (calendar) {
+    const year = Number(calendar[1]), month = Number(calendar[2]), day = Number(calendar[3]);
+    const exact = new Date(Date.UTC(year, month - 1, day));
+    if (
+      exact.getUTCFullYear() !== year ||
+      exact.getUTCMonth() !== month - 1 ||
+      exact.getUTCDate() !== day
+    ) return undefined;
+  }
+  const d = new Date(value);
   return Number.isNaN(d.getTime()) ? undefined : d.toISOString();
 }
 
@@ -86,7 +97,7 @@ export function parseAmazonOrderHistory(
   // columns (real Amazon.in export, order 114-7490334-2986640).
   const iItemTotal = [col(headers, "total", "amount"), col(headers, "total", "owed"), col(headers, "item", "subtotal"), col(headers, "item", "total")].find((x) => x >= 0) ?? -1;
   const iCur = col(headers, "currency");
-  if (iOrder < 0 || iName < 0) return []; // not a recognisable order-history CSV
+  if (iOrder < 0 || iDate < 0 || iName < 0) return []; // not a recognisable order-history CSV
 
   const byOrder = new Map<string, ImportedOrder>();
   for (let r = 1; r < rows.length; r++) {
@@ -95,6 +106,10 @@ export function parseAmazonOrderHistory(
     const name = (row[iName] ?? "").trim();
     if (!orderRef || !name || /^(not available|not applicable|n\/a)$/i.test(name)) continue;
     if (onlyCurrency && iCur >= 0 && (row[iCur] ?? "").trim().toUpperCase() !== onlyCurrency) continue;
+    const orderedAt = toIso(row[iDate]);
+    // Never invent "now" for a malformed export row: a fabricated date can
+    // make a real amount latch onto an unrelated current card charge.
+    if (!orderedAt) continue;
 
     const qty = iQty >= 0 ? parseInt(row[iQty], 10) : NaN;
     const unit = money(row[iUnit]);
@@ -111,7 +126,7 @@ export function parseAmazonOrderHistory(
     } else {
       byOrder.set(orderRef, {
         orderRef,
-        orderedAt: toIso(row[iDate]) ?? new Date().toISOString(),
+        orderedAt,
         merchant: "Amazon",
         total: item.price ?? null,
         items: [item],

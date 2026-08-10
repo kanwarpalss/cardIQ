@@ -3,6 +3,8 @@
 import { Fragment, useEffect, useMemo, useState } from "react";
 import { CARD_REGISTRY } from "@/lib/cards/registry";
 import { formatCategory } from "@/lib/categories";
+import { groupVoucherSpendDetails, hasExpandableSpendDetails } from "@/lib/spend-details";
+import TransactionSpendDetails from "./TransactionSpendDetails";
 
 type Txn = {
   id: string; card_last4: string; amount_inr: number;
@@ -30,6 +32,8 @@ export type OrderRow = {
 export type CategoryPatch = { category?: string; subcategory?: string | null };
 
 interface Props {
+  /** Changes only when the shared Spend filters change; edits keep their page. */
+  resultKey: string;
   transactions: Txn[];
   cards: CardRow[];
   /** Canonical + custom categories — shown in the dropdown. */
@@ -78,54 +82,21 @@ function suggestNotes(query: string, existing: string[], max = 5): string[] {
 
 const PAGE = 25;
 const fmt = (n: number) => "₹" + Math.round(n).toLocaleString("en-IN");
-const fmtExact = (n: number) => "₹" + Number(n).toLocaleString("en-IN", { maximumFractionDigits: 2 });
 const cardLabel = (c: CardRow) =>
   c.nickname || CARD_REGISTRY[c.product_key]?.display_name || c.product_key;
-
-const SOURCE_LABELS: Record<string, string> = {
-  swiggy: "Swiggy", zomato: "Zomato", bigbasket: "BigBasket", amazon: "Amazon", blinkit: "Blinkit",
-  shopify: "Shopify", generic: "Online",
-};
 
 // Sentinels for the subcategory dropdown (real values are free text).
 const SUB_NONE  = "__none";
 const SUB_OTHER = "__other";
 
-/** Confidence marker for a matched order — honesty rendered as UI. A match KP
- *  has confirmed (or that auto-confirmed at high confidence) reads as settled
- *  truth regardless of how it was originally scored; pre-014 links fall back to
- *  the raw confidence nuance. */
-function ConfidenceChip({ level, status }: { level: OrderRow["match_confidence"]; status?: OrderRow["review_status"] }) {
-  if (status === "confirmed") {
-    return <span className="text-2xs px-1.5 py-0.5 rounded-md border whitespace-nowrap text-emerald border-emerald/30 bg-emerald/5">✓ confirmed</span>;
-  }
-  if (!level) return null;
-  const map = {
-    high:   { label: "✓ matched",        cls: "text-emerald border-emerald/30 bg-emerald/5" },
-    medium: { label: "≈ likely match",   cls: "text-gold border-gold/30 bg-gold/5" },
-    low:    { label: "? possible match", cls: "text-mist/60 border-rim bg-raised" },
-  } as const;
-  const { label, cls } = map[level];
-  return (
-    <span className={`text-2xs px-1.5 py-0.5 rounded-md border whitespace-nowrap ${cls}`}>{label}</span>
-  );
-}
-
 export default function TransactionsTable({
-  transactions, cards, categories, subcategories, ordersByTxn, vouchersByTxn, existingNotes,
+  resultKey, transactions, cards, categories, subcategories, ordersByTxn, vouchersByTxn, existingNotes,
   onMerchantSave, onCategoryChange, onNotesChange, onNotesBulk,
 }: Props) {
-  // ── Filters ──
-  const [search, setSearch]   = useState("");
-  const [amtMin, setAmtMin]   = useState("");
-  const [amtMax, setAmtMax]   = useState("");
+  // Filtering is owned by SpendTab so the table and every metric always use
+  // the exact same rows. This component only sorts, paginates, and edits.
   const [sort, setSort]       = useState<{ col: SortCol; dir: "asc" | "desc" }>({ col: "date", dir: "desc" });
   const [page, setPage]       = useState(1);
-
-  // ── Category chip filters (feature D) — multi-select; picking exactly one
-  // category surfaces its subcategory chips as a second tier. ──
-  const [selectedCats, setSelectedCats] = useState<Set<string>>(new Set());
-  const [selectedSubs, setSelectedSubs] = useState<Set<string>>(new Set());
 
   // ── Order-details expansion (rows with a matched order email) ──
   const [expandedId, setExpandedId] = useState<string | null>(null);
@@ -163,47 +134,6 @@ export default function TransactionsTable({
     [cards]
   );
 
-  // ── Chip data (feature D): categories present in the current txn set,
-  // busiest first; sub-chips appear only when exactly one category is picked.
-  const categoryChips = useMemo(() => {
-    const counts = new Map<string, number>();
-    for (const t of transactions) {
-      const c = t.category || "Uncategorized";
-      counts.set(c, (counts.get(c) ?? 0) + 1);
-    }
-    return Array.from(counts.entries()).sort((a, b) => b[1] - a[1]);
-  }, [transactions]);
-
-  const subChips = useMemo(() => {
-    if (selectedCats.size !== 1) return [];
-    const cat = Array.from(selectedCats)[0];
-    const counts = new Map<string, number>();
-    for (const t of transactions) {
-      if ((t.category || "Uncategorized") !== cat || !t.subcategory) continue;
-      counts.set(t.subcategory, (counts.get(t.subcategory) ?? 0) + 1);
-    }
-    return Array.from(counts.entries()).sort((a, b) => b[1] - a[1]);
-  }, [transactions, selectedCats]);
-
-  function toggleCatChip(c: string) {
-    setSelectedCats((prev) => {
-      const next = new Set(prev);
-      if (next.has(c)) next.delete(c); else next.add(c);
-      return next;
-    });
-    setSelectedSubs(new Set()); // sub-selection belongs to a single category
-    setPage(1);
-  }
-
-  function toggleSubChip(s: string) {
-    setSelectedSubs((prev) => {
-      const next = new Set(prev);
-      if (next.has(s)) next.delete(s); else next.add(s);
-      return next;
-    });
-    setPage(1);
-  }
-
   // ── Sort column toggle ──
   function toggleSort(col: SortCol) {
     setSort((prev) =>
@@ -219,32 +149,9 @@ export default function TransactionsTable({
     return <span className="text-gold ml-0.5 text-[10px]">{sort.dir === "asc" ? "↑" : "↓"}</span>;
   }
 
-  // ── Filter + sort pipeline ──
+  // ── Sort pipeline ──
   const processed = useMemo(() => {
-    const q   = search.trim().toLowerCase();
-    const min = amtMin ? parseFloat(amtMin) : null;
-    const max = amtMax ? parseFloat(amtMax) : null;
-
-    const filtered = transactions.filter((t) => {
-      if (q) {
-        const order      = ordersByTxn.get(t.id);
-        const inMerchant = t.merchant?.toLowerCase().includes(q) ?? false;
-        const inNotes    = t.notes?.toLowerCase().includes(q)    ?? false;
-        // Order enrichment is searchable too: restaurant/store name + items.
-        const inOrder    = order
-          ? (order.merchant_name?.toLowerCase().includes(q) ?? false) ||
-            order.items.some((it) => it.name.toLowerCase().includes(q))
-          : false;
-        if (!inMerchant && !inNotes && !inOrder) return false;
-      }
-      if (min !== null && t.amount_inr < min) return false;
-      if (max !== null && t.amount_inr > max) return false;
-      if (selectedCats.size > 0 && !selectedCats.has(t.category || "Uncategorized")) return false;
-      if (selectedSubs.size > 0 && (!t.subcategory || !selectedSubs.has(t.subcategory))) return false;
-      return true;
-    });
-
-    filtered.sort((a, b) => {
+    return [...transactions].sort((a, b) => {
       let cmp = 0;
       switch (sort.col) {
         case "date":     cmp = new Date(a.txn_at).getTime() - new Date(b.txn_at).getTime(); break;
@@ -255,9 +162,7 @@ export default function TransactionsTable({
       }
       return sort.dir === "asc" ? cmp : -cmp;
     });
-
-    return filtered;
-  }, [transactions, search, amtMin, amtMax, sort, cardNicknameMap, ordersByTxn, selectedCats, selectedSubs]);
+  }, [transactions, sort, cardNicknameMap]);
 
   const totalPages = Math.max(1, Math.ceil(processed.length / PAGE));
   const visible    = processed.slice((page - 1) * PAGE, page * PAGE);
@@ -268,6 +173,9 @@ export default function TransactionsTable({
   useEffect(() => {
     setPage((p) => Math.min(Math.max(1, p), totalPages));
   }, [totalPages]);
+  useEffect(() => {
+    setPage(1);
+  }, [resultKey]);
 
   // ── Merchant edit helpers ──
   function startMerchantEdit(t: Txn) {
@@ -355,72 +263,15 @@ export default function TransactionsTable({
   return (
     <div className="rounded-2xl border border-rim bg-surface shadow-card overflow-hidden">
 
-      {/* Filter bar */}
-      <div className="px-5 py-3 border-b border-wire flex items-center gap-2 flex-wrap">
+      <div className="px-5 py-3 border-b border-wire flex items-center justify-between gap-3">
         <h3 className="text-2xs uppercase tracking-widest text-mist/55 shrink-0">Transactions</h3>
-        <input type="text" placeholder="Search merchant, item or note…" value={search}
-          onChange={(e) => { setSearch(e.target.value); setPage(1); }}
-          className="flex-1 min-w-[150px] max-w-xs bg-ink border border-rim rounded-lg px-3 py-1.5 text-xs text-mist placeholder:text-mist/25 focus:border-gold/40 outline-none" />
-        <input type="number" placeholder="Min ₹" value={amtMin}
-          onChange={(e) => { setAmtMin(e.target.value); setPage(1); }}
-          className="w-20 bg-ink border border-rim rounded-lg px-2 py-1.5 text-xs text-mist placeholder:text-mist/25 focus:border-gold/40 outline-none" />
-        <input type="number" placeholder="Max ₹" value={amtMax}
-          onChange={(e) => { setAmtMax(e.target.value); setPage(1); }}
-          className="w-20 bg-ink border border-rim rounded-lg px-2 py-1.5 text-xs text-mist placeholder:text-mist/25 focus:border-gold/40 outline-none" />
-        <span className="text-2xs text-mist/55 ml-auto shrink-0">
-          {processed.length === transactions.length
-            ? `${processed.length} transactions`
-            : `${processed.length} of ${transactions.length}`}
+        <span className="text-2xs text-mist/55 shrink-0">
+          {processed.length} INR transaction{processed.length === 1 ? "" : "s"}
         </span>
       </div>
 
-      {/* ── Category chips (feature D) — click to filter; pick exactly one
-           category to reveal its subcategory chips. ── */}
-      {categoryChips.length > 1 && (
-        <div className="px-5 py-2 border-b border-wire space-y-1.5">
-          <div className="flex items-center gap-1.5 flex-wrap">
-            {categoryChips.map(([c, n]) => {
-              const active = selectedCats.has(c);
-              return (
-                <button key={c} onClick={() => toggleCatChip(c)}
-                  className={`px-2 py-0.5 rounded-lg text-2xs font-medium border transition-all ${
-                    active
-                      ? "bg-gold text-ink border-gold"
-                      : "bg-ink border-rim text-mist/60 hover:border-gold/30 hover:text-mist"
-                  }`}>
-                  {c} <span className={active ? "opacity-60" : "opacity-40"}>{n}</span>
-                </button>
-              );
-            })}
-            {selectedCats.size > 0 && (
-              <button onClick={() => { setSelectedCats(new Set()); setSelectedSubs(new Set()); setPage(1); }}
-                className="text-2xs text-mist/50 hover:text-mist ml-1 transition-colors">
-                × clear
-              </button>
-            )}
-          </div>
-          {subChips.length > 0 && (
-            <div className="flex items-center gap-1.5 flex-wrap pl-3">
-              <span className="text-2xs text-mist/35">↳</span>
-              {subChips.map(([s, n]) => {
-                const active = selectedSubs.has(s);
-                return (
-                  <button key={s} onClick={() => toggleSubChip(s)}
-                    className={`px-2 py-0.5 rounded-lg text-2xs border transition-all ${
-                      active
-                        ? "bg-gold/80 text-ink border-gold"
-                        : "bg-ink border-rim text-mist/50 hover:border-gold/30 hover:text-mist"
-                    }`}>
-                    {s} <span className={active ? "opacity-60" : "opacity-40"}>{n}</span>
-                  </button>
-                );
-              })}
-            </div>
-          )}
-        </div>
-      )}
-
-      <table className="w-full text-sm">
+      <div className="overflow-x-auto">
+      <table className="w-full min-w-[760px] text-sm">
         <thead className="border-b border-wire">
           <tr>
             {(["date", "merchant", "category", "card"] as const).map((col) => (
@@ -442,10 +293,8 @@ export default function TransactionsTable({
             const isNoteEditing     = editNoteId === t.id;
             const noteSuggestions   = isNoteEditing ? suggestNotes(editNoteText, existingNotes) : [];
             const order             = ordersByTxn.get(t.id);
-            // A linked order can legitimately carry no line items (service
-            // invoices, gateway confirmations, etc.). Do not offer an empty
-            // expansion affordance in that case.
-            const hasOrderItems     = Boolean(order?.items?.length);
+            const voucherGroups     = groupVoucherSpendDetails(vouchersByTxn?.get(t.id));
+            const hasSpendDetails   = hasExpandableSpendDetails(order?.items, voucherGroups);
             const isExpanded        = expandedId === t.id;
             // "Auto-rename": for confident matches the order's real merchant
             // (restaurant/store) leads and the bank's name becomes the
@@ -453,12 +302,6 @@ export default function TransactionsTable({
             const enrichedName = order?.merchant_name && order.match_confidence !== "low"
               ? order.merchant_name
               : null;
-            // Vouchers this charge bought (e.g. a GYFTR charge → the brands).
-            // Distinct brand names, in first-seen order.
-            const vouchers = vouchersByTxn?.get(t.id);
-            const voucherBrands = vouchers
-              ? [...new Set(vouchers.map((v) => v.brand))]
-              : [];
             const subOptions = subcategories[editCatValue] ?? [];
             const merchantSubOptions = subcategories[editMerchantCat] ?? [];
             // Scope-choice count — only computed while this row is being edited.
@@ -522,9 +365,12 @@ export default function TransactionsTable({
                     </div>
                   ) : (
                     <div className="flex items-start gap-1">
-                      {hasOrderItems && (
+                      {hasSpendDetails && (
                         <button onClick={() => setExpandedId(isExpanded ? null : t.id)}
-                          title={isExpanded ? "Hide order details" : "Show order details"}
+                          title={isExpanded ? "Hide spend details" : "Show spend details"}
+                          aria-expanded={isExpanded}
+                          aria-controls={`spend-details-${t.id}`}
+                          aria-label={isExpanded ? "Hide spend details" : "Show spend details"}
                           className={`shrink-0 mt-0.5 text-2xs transition-transform ${isExpanded ? "rotate-90 text-gold" : "text-gold/60 hover:text-gold"}`}>
                           ▶
                         </button>
@@ -537,11 +383,6 @@ export default function TransactionsTable({
                         </span>
                         {enrichedName && (
                           <span className="text-2xs text-mist/35">via {t.merchant}</span>
-                        )}
-                        {voucherBrands.length > 0 && (
-                          <span className="text-2xs text-gold/70 truncate" title={`Voucher${voucherBrands.length > 1 ? "s" : ""} bought: ${voucherBrands.join(", ")}`}>
-                            → {voucherBrands.slice(0, 2).join(", ")}{voucherBrands.length > 2 ? ` +${voucherBrands.length - 2}` : ""} voucher{voucherBrands.length > 1 || (vouchers && vouchers.length > 1) ? "s" : ""}
-                          </span>
                         )}
                       </button>
                     </div>
@@ -686,50 +527,20 @@ export default function TransactionsTable({
                 </td>
               </tr>
 
-              {/* ── Expanded order details ── */}
-              {isExpanded && order && hasOrderItems && (
-                <tr className="border-b border-wire bg-ink/40">
-                  <td colSpan={5} className="px-5 py-3">
-                    <div className="ml-6 space-y-2">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <span className="text-2xs uppercase tracking-widest text-gold/70">
-                          {SOURCE_LABELS[order.source] ?? order.source}
-                          {order.kind === "refund" ? " refund" : " order"}
-                        </span>
-                        {order.merchant_name && (
-                          <span className="text-xs text-mist/80">{order.merchant_name}</span>
-                        )}
-                        <ConfidenceChip level={order.match_confidence} status={order.review_status} />
-                        {order.order_ref && (
-                          <span className="text-2xs text-mist/40 ml-auto tabular-nums">#{order.order_ref}</span>
-                        )}
-                      </div>
-                      <ul className="space-y-0.5">
-                        {order.items.map((it, i) => (
-                          <li key={i} className="flex items-baseline gap-2 text-xs">
-                            <span className="text-mist/70">
-                              {it.qty != null && it.qty !== 1 ? `${it.qty} × ` : ""}{it.name}
-                            </span>
-                            {it.price != null && (
-                              <span className="text-mist/40 tabular-nums ml-auto">{fmtExact(it.price)}</span>
-                            )}
-                          </li>
-                        ))}
-                      </ul>
-                      {order.total_amount != null && (
-                        <div className="text-2xs text-mist/50 pt-1 border-t border-wire/50">
-                          Order total {fmtExact(Number(order.total_amount))}
-                        </div>
-                      )}
-                    </div>
-                  </td>
-                </tr>
+              {/* ── Expanded spend details: orders and vouchers share one UI ── */}
+              {isExpanded && hasSpendDetails && (
+                <TransactionSpendDetails
+                  transactionId={t.id}
+                  order={order}
+                  voucherGroups={voucherGroups}
+                />
               )}
               </Fragment>
             );
           })}
         </tbody>
       </table>
+      </div>
 
       {totalPages > 1 && (
         <div className="px-5 py-3 border-t border-wire flex items-center justify-between">

@@ -29,6 +29,8 @@ export const HDFC_INFINIA: CardSpec = {
   milestones_anniversary: [
     { spend_inr: 1000000, reward: "Renewal fee (₹12,500 + GST) waived" },
   ],
+  // HDFC tracks Infinia milestone/renewal spend from 1 Apr through 31 Mar.
+  milestone_year_start: { month: 4, day: 1 },
 
   lounge: {
     domestic: {

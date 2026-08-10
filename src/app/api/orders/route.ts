@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { isObsoleteAmazonDeliveryOrder } from "@/lib/imports/order-upload";
 import { createClient } from "@/lib/supabase/server";
 import { isMissingTableError, isMissingColumnError } from "@/lib/supabase/errors";
 
@@ -19,7 +20,7 @@ import { isMissingTableError, isMissingColumnError } from "@/lib/supabase/errors
 
 // Columns present since the orders table existed — always safe to select.
 const SAFE_COLUMNS =
-  "id, source, kind, order_ref, merchant_name, total_amount, order_at, items, txn_id, match_confidence, raw_subject";
+  "id, source, kind, gmail_message_id, order_ref, merchant_name, total_amount, order_at, items, txn_id, match_confidence, raw_subject";
 // Added by later migrations (014/015/016). Each is dropped from the query if its
 // migration hasn't been run, so the ledger still renders on a partial schema.
 const OPTIONAL_COLUMNS = [
@@ -59,7 +60,10 @@ export async function GET() {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
     if (!data?.length) break;
-    all.push(...(data as unknown as Array<Record<string, unknown>>));
+    // Existing Amazon Delivered email rows are hidden immediately. A later
+    // Amazon CSV upload also removes them from the database, but this keeps
+    // the ledger truthful for users who imported their export previously.
+    all.push(...(data as unknown as Array<Record<string, unknown>>).filter((order) => !isObsoleteAmazonDeliveryOrder(order)));
     if (data.length < PAGE) break;
   }
 

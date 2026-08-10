@@ -3,7 +3,8 @@
 export const fmtINR = (n: number) => "₹" + Math.round(n).toLocaleString("en-IN");
 export const fmtNum = (n: number) => Math.round(n).toLocaleString("en-IN");
 
-export const ymd = (d: Date) => d.toISOString().slice(0, 10);
+export const ymd = (d: Date) =>
+  `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 
 /** Whole days from today (local midnight) to the given YYYY-MM-DD. Negative = past. */
 export function daysUntil(dateStr: string): number {

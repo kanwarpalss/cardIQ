@@ -196,6 +196,24 @@ describe("matchSplitOrderToTxn — conservative voucher inference", () => {
       txn({ id: "b", merchant: "Birkenstock", amount_inr: 1293 }),
     ], 5000)).toBeNull();
   });
+
+  it("refuses invalid dates and non-finite money", () => {
+    expect(matchSplitOrderToTxn(
+      order({ ...birkenstock, order_at: "2026-02-30T19:21:11Z" }),
+      [txn({ merchant: "Birkenstock India", amount_inr: 793 })],
+      5000
+    )).toBeNull();
+    expect(matchSplitOrderToTxn(
+      birkenstock,
+      [txn({ merchant: "Birkenstock India", amount_inr: Number.POSITIVE_INFINITY })],
+      5000
+    )).toBeNull();
+    expect(matchSplitOrderToTxn(
+      birkenstock,
+      [txn({ merchant: "Birkenstock India", amount_inr: 793 })],
+      Number.POSITIVE_INFINITY
+    )).toBeNull();
+  });
 });
 
 describe("matchOrderToTxn — refunds", () => {
@@ -207,30 +225,62 @@ describe("matchOrderToTxn — refunds", () => {
     expect(matchOrderToTxn(refund, [debit])).toBeNull();
     expect(matchOrderToTxn(refund, [debit, credit])).toEqual({ txnId: "c", confidence: "high" });
   });
+
+  it("uses the refund amount even if the original split card portion was retained", () => {
+    const splitRefund = order({ source: "amazon", kind: "refund", total_amount: 100, card_paid_amount: 20 });
+    expect(matchOrderToTxn(
+      splitRefund,
+      [txn({ txn_type: "credit", amount_inr: 100 })]
+    )).toEqual({ txnId: "t1", confidence: "medium" });
+    expect(matchOrderToTxn(
+      splitRefund,
+      [txn({ txn_type: "credit", amount_inr: 20 })]
+    )).toBeNull();
+  });
 });
 
-describe("matchOrderToTxn — amount-less orders (Amazon Delivered)", () => {
+describe("matchOrderToTxn — missing or invalid payment evidence", () => {
   const delivered = order({ source: "amazon", kind: "order", total_amount: null });
 
-  it("unique affine candidate in ±4 days → low, never higher", () => {
-    const m = matchOrderToTxn(delivered, [txn({ merchant: "AMZN Mktp IN", amount_inr: 999 })]);
-    expect(m).toEqual({ txnId: "t1", confidence: "low" });
+  it("never associates an amount-less Amazon delivery notice", () => {
+    expect(matchOrderToTxn(delivered, [txn({ merchant: "AMZN Mktp IN", amount_inr: 999 })])).toBeNull();
   });
 
-  it("two affine candidates → refuses to guess", () => {
-    const m = matchOrderToTxn(delivered, [
-      txn({ id: "a", merchant: "Amazon" }),
-      txn({ id: "b", merchant: "Amazon Pay" }),
-    ]);
-    expect(m).toBeNull();
+  it("rejects zero, negative, NaN, and infinite order amounts", () => {
+    for (const total_amount of [0, -1, Number.NaN, Number.POSITIVE_INFINITY]) {
+      expect(matchOrderToTxn(order({ total_amount }), [txn({ amount_inr: total_amount })])).toBeNull();
+    }
   });
 
-  it("no affinity → no match, regardless of dates", () => {
-    expect(matchOrderToTxn(delivered, [txn({ merchant: "Flipkart" })])).toBeNull();
+  it("rejects zero, negative, NaN, and infinite transaction amounts", () => {
+    for (const amount_inr of [0, -1, Number.NaN, Number.POSITIVE_INFINITY]) {
+      expect(matchOrderToTxn(order({}), [txn({ amount_inr })])).toBeNull();
+    }
   });
 
-  it("outside ±4 days → no match", () => {
-    expect(matchOrderToTxn(delivered, [txn({ merchant: "Amazon", txn_at: "2026-07-11T05:20:00Z" })])).toBeNull();
+  it("an explicit zero card portion does not fall back to the full order total", () => {
+    expect(matchOrderToTxn(
+      order({ total_amount: 5_000, card_paid_amount: 0 }),
+      [txn({ amount_inr: 5_000 })]
+    )).toBeNull();
+  });
+
+  it("invalid order or transaction dates never associate", () => {
+    expect(matchOrderToTxn(order({ order_at: "not-a-date" }), [txn({})])).toBeNull();
+    expect(matchOrderToTxn(order({}), [txn({ txn_at: "not-a-date" })])).toBeNull();
+    expect(matchOrderToTxn(order({ order_at: "2026-02-30T05:20:00Z" }), [txn({})])).toBeNull();
+    expect(matchOrderToTxn(order({ order_at: "2026-07-06T05:20:00" }), [txn({})])).toBeNull();
+  });
+
+  it("rejects runtime string money instead of relying on JavaScript coercion", () => {
+    expect(matchOrderToTxn(
+      order({ total_amount: "365" as unknown as number }),
+      [txn({ amount_inr: 365 })]
+    )).toBeNull();
+    expect(matchOrderToTxn(
+      order({ total_amount: 365 }),
+      [txn({ amount_inr: "365" as unknown as number })]
+    )).toBeNull();
   });
 });
 
@@ -258,21 +308,18 @@ describe("matchOrderToTxn — claimed transactions", () => {
 describe("matchOrderToTxn — exact boundaries", () => {
   it("amount diff of exactly ₹0.75 matches; ₹0.76 does not", () => {
     expect(matchOrderToTxn(order({ total_amount: 365 }), [txn({ amount_inr: 365.75 })])).not.toBeNull();
-    expect(matchOrderToTxn(order({ total_amount: 365 }), [txn({ amount_inr: 365.76 })])).toBeNull();
+    expect(matchOrderToTxn(order({ total_amount: 365 }), [txn({ amount_inr: 365.7500001 })])).toBeNull();
   });
 
-  it("exactly 5.0 days apart matches; a minute past does not", () => {
-    expect(matchOrderToTxn(order({ order_at: "2026-07-06T05:20:00Z" }), [txn({ txn_at: "2026-07-11T05:20:00Z" })]))
+  it("exactly 5.0 days apart matches; one millisecond past does not", () => {
+    expect(matchOrderToTxn(order({ order_at: "2026-07-06T05:20:00.000Z" }), [txn({ txn_at: "2026-07-11T05:20:00.000Z" })]))
       .toEqual({ txnId: "t1", confidence: "medium" });
-    expect(matchOrderToTxn(order({ order_at: "2026-07-06T05:20:00Z" }), [txn({ txn_at: "2026-07-11T05:21:00Z" })]))
+    expect(matchOrderToTxn(order({ order_at: "2026-07-06T05:20:00.000Z" }), [txn({ txn_at: "2026-07-11T05:20:00.001Z" })]))
       .toBeNull();
   });
 
-  it("total_amount 0 goes down the amount-bearing path (== null check, not truthy)", () => {
-    // A ₹0 order matching a ₹0 txn at 'high' proves the amount path ran —
-    // the amount-less path can never return better than 'low'.
-    const m = matchOrderToTxn(order({ total_amount: 0 }), [txn({ amount_inr: 0 })]);
-    expect(m).toEqual({ txnId: "t1", confidence: "high" });
+  it("₹0 is not a real charge association", () => {
+    expect(matchOrderToTxn(order({ total_amount: 0 }), [txn({ amount_inr: 0 })])).toBeNull();
   });
 });
 

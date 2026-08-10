@@ -51,6 +51,14 @@ describe("parseBlinkitOrders (shape-tolerant)", () => {
     expect(parseBlinkitOrders({ hello: "world", nums: [1, 2, 3] })).toEqual([]);
   });
 
+  it("drops conventional orders with no trustworthy date", () => {
+    expect(parseBlinkitOrders({
+      order_id: "NO-DATE",
+      total: 99,
+      items: [{ name: "Mystery item", price: 99 }],
+    })).toEqual([]);
+  });
+
   it("reads Blinkit's real order-history widget shape", () => {
     const orders = parseBlinkitOrders({
       response: { snippets: [{
@@ -115,6 +123,21 @@ describe("parseBlinkitOrders (shape-tolerant)", () => {
     );
     expect(merged[0].items).toHaveLength(2);
     expect(merged[0].items[1]).toEqual({ name: "Orange Carrot", qty: 3, price: 45 });
+  });
+
+  it("inherits a history date for undated details and drops undated detail-only captures", () => {
+    const undatedDetails = parseBlinkitOrderDetails({ response: { snippets: [
+      { widget_type: "z_v3_image_text_snippet_type_30", data: {
+        title: { text: "Milk" }, subtitle1: { text: "x 1" }, subtitle3: { text: "₹60" },
+      }, tracking: { common_attributes: { order_id: "BLK-DATE", product_id: "1" } } },
+    ] } });
+    const history = [{
+      orderRef: "BLK-DATE", orderedAt: "2026-07-10T08:15:00.000Z",
+      merchant: "Blinkit", total: 60, items: [{ name: "Milk" }],
+    }];
+
+    expect(mergeBlinkitOrders(history, undatedDetails)[0].orderedAt).toBe("2026-07-10T08:15:00.000Z");
+    expect(mergeBlinkitOrders([], undatedDetails)).toEqual([]);
   });
 
   it("discovers order/cart pairs from tracking and detail-action URLs", () => {

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { isMissingColumnError } from "@/lib/supabase/errors";
+import { ordersWithValidReviewCharge, type ReviewQueueOrder } from "@/lib/review-queue";
 
 // Returns ALL transactions for the user (plus matched orders for the
 // expand-row enrichment). Client filters/aggregates from this.
@@ -11,6 +12,12 @@ import { isMissingColumnError } from "@/lib/supabase/errors";
 // orders come back empty. Core spend view must never depend on new migrations.
 
 const TXN_COLUMNS = "id, card_last4, amount_inr, original_currency, original_amount, merchant, category, txn_at, txn_type, card_id, notes";
+
+function dbNumber(value: unknown): number | null {
+  if (value == null || value === "") return null;
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : null;
+}
 
 export async function GET() {
   const supabase = createClient();
@@ -52,19 +59,28 @@ export async function GET() {
   //   • Missing review_status (014 not run) → degrade to "any linked order"
   //     (pre-014 behaviour), so Spend keeps working before the migration.
   const orders: Array<Record<string, unknown>> = [];
-  let orderCols = "id, source, kind, order_ref, merchant_name, total_amount, order_at, items, txn_id, match_confidence, review_status";
+  let orderCols = "id, source, kind, order_ref, merchant_name, total_amount, card_paid_amount, order_at, items, txn_id, match_confidence, review_status";
   let confirmedOnly = true;
+  let hasCardPaidAmount = true;
   for (let oFrom = 0; ; oFrom += PAGE) {
     let q = supabase
       .from("orders")
       .select(orderCols)
       .eq("user_id", user.id)
       .range(oFrom, oFrom + PAGE - 1);
-    q = confirmedOnly ? q.eq("review_status", "confirmed") : q.not("txn_id", "is", null);
+    // Load every link for validation first. Filtering to confirmed before the
+    // one-charge/one-order check would miss a pending+confirmed double claim.
+    q = q.not("txn_id", "is", null);
     const { data, error } = await q;
     if (error) {
+      if (isMissingColumnError(error, "card_paid_amount") && hasCardPaidAmount) {
+        orderCols = orderCols.replace(", card_paid_amount", "");
+        hasCardPaidAmount = false;
+        oFrom -= PAGE;
+        continue;
+      }
       if (isMissingColumnError(error, "review_status") && confirmedOnly) {
-        orderCols = "id, source, kind, order_ref, merchant_name, total_amount, order_at, items, txn_id, match_confidence";
+        orderCols = `id, source, kind, order_ref, merchant_name, total_amount${hasCardPaidAmount ? ", card_paid_amount" : ""}, order_at, items, txn_id, match_confidence`;
         confirmedOnly = false;
         oFrom -= PAGE; // redo this page with the pre-014 query
         continue;
@@ -98,9 +114,33 @@ export async function GET() {
     supabase.from("user_settings").select("last_gmail_sync_at").eq("user_id", user.id).single(),
   ]);
 
+  const normalizedOrderLinks: Array<Record<string, unknown> & ReviewQueueOrder> = orders.map((order) => ({
+    ...order,
+    id: order.id as string,
+    txn_id: order.txn_id as string | null,
+    kind: order.kind as "order" | "refund",
+    total_amount: dbNumber(order.total_amount),
+    card_paid_amount: dbNumber(order.card_paid_amount),
+    order_at: order.order_at as string,
+  }));
+  const validLinkedOrders = ordersWithValidReviewCharge(
+    normalizedOrderLinks,
+    all.map((txn) => ({
+      id: txn.id as string,
+      user_id: user.id,
+      amount_inr: dbNumber(txn.amount_inr) ?? Number.NaN,
+      txn_at: txn.txn_at as string,
+      txn_type: txn.txn_type as "debit" | "credit",
+    })),
+    user.id
+  );
+  const validOrders = confirmedOnly
+    ? validLinkedOrders.filter((order) => order.review_status === "confirmed")
+    : validLinkedOrders;
+
   return NextResponse.json({
     transactions: all,
-    orders,
+    orders: validOrders,
     vouchers,
     cards: cards || [],
     last_sync: settings?.last_gmail_sync_at ?? null,

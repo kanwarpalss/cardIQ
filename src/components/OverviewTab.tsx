@@ -4,7 +4,8 @@ import { useEffect, useMemo, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { isMissingTableError } from "@/lib/supabase/errors";
 import { CARD_REGISTRY } from "@/lib/cards/registry";
-import { fmtINR, fmtNum, fmtDate, anniversaryWindowStart } from "@/lib/format";
+import { fmtINR, fmtNum, fmtDate } from "@/lib/format";
+import { currentMilestoneYear, spendInWindow } from "@/lib/milestones";
 import {
   latestBalanceByCard, estimatePoints, sortOffersForDisplay,
   effectiveOfferStatus, expiryState,
@@ -89,21 +90,17 @@ export default function OverviewTab({
     };
   }, [allData]);
 
-  // Anniversary-milestone spend ignores the "this month" window above — it
-  // always tracks the card's own anniversary year (mirrors SpendTab).
+  // Card-specific milestone spend uses the product's documented year start,
+  // with an individual saved override when KP changes it in Cards.
   const anniversarySpendByCard = useMemo(() => {
     const out: Record<string, number> = {};
     if (!allData) return out;
-    const cardsByLast4 = new Map(allData.cards.map((c) => [c.last4, c]));
-    for (const t of allData.transactions) {
-      if (t.txn_type !== "debit") continue;
-      if (t.original_currency && t.original_currency.toUpperCase() !== "INR") continue;
-      const card = cardsByLast4.get(t.card_last4);
-      const spec = card ? CARD_REGISTRY[card.product_key] : undefined;
+    const now = new Date();
+    for (const card of allData.cards) {
+      const spec = CARD_REGISTRY[card.product_key];
       if (!spec?.milestones_anniversary?.length) continue;
-      const start = anniversaryWindowStart(card!.anniversary_date);
-      if (new Date(t.txn_at) < start) continue;
-      out[t.card_last4] = (out[t.card_last4] || 0) + Number(t.amount_inr);
+      const window = currentMilestoneYear(card.anniversary_date, spec.milestone_year_start, now);
+      out[card.last4] = spendInWindow(allData.transactions, card.last4, window, now);
     }
     return out;
   }, [allData]);

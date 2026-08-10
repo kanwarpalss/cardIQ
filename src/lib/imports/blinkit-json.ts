@@ -8,6 +8,7 @@ import type { OrderItem } from "../parsers/orders/types";
 import type { ImportedOrder } from "./amazon-csv";
 
 type JsonObject = Record<string, unknown>;
+type ImportedOrderDetail = Omit<ImportedOrder, "orderedAt"> & { orderedAt: string | null };
 export type BlinkitOrderTarget = { orderId: string; cartId: string };
 
 const ITEM_ARRAY_KEYS = ["items", "products", "cart_items", "order_items", "line_items", "productlist"];
@@ -83,10 +84,12 @@ function widgetOrder(snippet: JsonObject, now: Date): ImportedOrder | null {
     .filter((name): name is string => Boolean(name));
   const uniqueNames = [...new Set(names)];
   if (uniqueNames.length === 0) return null;
+  const orderedAt = parseDisplayDate(textAt(header?.subtitle), now);
+  if (!orderedAt) return null;
 
   return {
     orderRef,
-    orderedAt: parseDisplayDate(textAt(header?.subtitle), now) ?? now.toISOString(),
+    orderedAt,
     merchant: "Blinkit",
     total: num(textAt(header?.left_underlined_subtitle)) ?? null,
     items: uniqueNames.map((name) => ({ name })),
@@ -135,10 +138,10 @@ function conventionalOrder(o: JsonObject): ImportedOrder | null {
   const id = str(pick(o, ID_KEYS));
   const date = pick(o, DATE_KEYS);
   const parsedDate = date != null ? new Date(typeof date === "number" ? date : String(date)) : null;
-  if (!id || items.length === 0) return null;
+  if (!id || items.length === 0 || !parsedDate || Number.isNaN(parsedDate.getTime())) return null;
   return {
     orderRef: id,
-    orderedAt: parsedDate && !Number.isNaN(parsedDate.getTime()) ? parsedDate.toISOString() : new Date().toISOString(),
+    orderedAt: parsedDate.toISOString(),
     merchant: "Blinkit",
     total: num(pick(o, TOTAL_KEYS)) ?? (items.reduce((sum, item) => sum + (item.price ?? 0), 0) || null),
     items,
@@ -173,7 +176,7 @@ export function parseBlinkitOrders(json: unknown, now = new Date()): ImportedOrd
 }
 
 /** The full-order page exposes every product as its own detail snippet. */
-function detailOrderFromResponse(response: JsonObject): ImportedOrder | null {
+function detailOrderFromResponse(response: JsonObject): ImportedOrderDetail | null {
   const snippets = asObjects(response.snippets);
   const productSnippets = snippets.filter((snippet) => {
     const data = isObject(snippet.data) ? snippet.data : null;
@@ -212,7 +215,7 @@ function detailOrderFromResponse(response: JsonObject): ImportedOrder | null {
   const placed = snippets.find((snippet) => textAt((isObject(snippet.data) ? snippet.data : {}).title)?.toLowerCase() === "order placed");
   const placedText = textAt((isObject(placed?.data) ? placed.data : {}).subtitle2);
   const dateMatch = /placed on (?:[a-z]+,\s*)?(\d{1,2})\s+([a-z]{3})'?(\d{2,4}),\s*(\d{1,2}):(\d{2})\s*(am|pm)/i.exec(placedText ?? "");
-  let orderedAt = new Date().toISOString();
+  let orderedAt: string | null = null;
   if (dateMatch) {
     const month = new Date(`${dateMatch[2]} 1, 2000`).getMonth();
     const year = dateMatch[3].length === 2 ? 2000 + Number(dateMatch[3]) : Number(dateMatch[3]);
@@ -223,8 +226,8 @@ function detailOrderFromResponse(response: JsonObject): ImportedOrder | null {
 }
 
 /** Parse one detail response, or an array of captured detail responses. */
-export function parseBlinkitOrderDetails(json: unknown): ImportedOrder[] {
-  const found: ImportedOrder[] = [];
+export function parseBlinkitOrderDetails(json: unknown): ImportedOrderDetail[] {
+  const found: ImportedOrderDetail[] = [];
   const seen = new Set<unknown>();
   const visit = (node: unknown) => {
     if (!node || typeof node !== "object" || seen.has(node)) return;
@@ -242,11 +245,21 @@ export function parseBlinkitOrderDetails(json: unknown): ImportedOrder[] {
 }
 
 /** Detail responses replace the truncated history-card line items by order id. */
-export function mergeBlinkitOrders(history: ImportedOrder[], details: ImportedOrder[]): ImportedOrder[] {
+export function mergeBlinkitOrders(
+  history: ImportedOrder[],
+  details: ImportedOrderDetail[]
+): ImportedOrder[] {
   const detailByRef = new Map(details.map((order) => [order.orderRef, order]));
-  const merged = history.map((order) => detailByRef.get(order.orderRef) ?? order);
+  const merged = history.map((order) => {
+    const detail = detailByRef.get(order.orderRef);
+    return detail ? { ...detail, orderedAt: detail.orderedAt ?? order.orderedAt } : order;
+  });
   const historyRefs = new Set(history.map((order) => order.orderRef));
-  return [...merged, ...details.filter((order) => !historyRefs.has(order.orderRef))];
+  const datedOrphans = details
+    .filter((order): order is ImportedOrderDetail & { orderedAt: string } =>
+      !historyRefs.has(order.orderRef) && order.orderedAt != null
+    );
+  return [...merged, ...datedOrphans];
 }
 
 /** Find the order/cart pairs required by Blinkit's full-detail endpoint. */

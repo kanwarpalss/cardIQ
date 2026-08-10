@@ -17,6 +17,7 @@ for (const line of readFileSync(join(process.cwd(), ".env.local"), "utf8").split
 }
 
 import { createClient } from "@supabase/supabase-js";
+import { ordersWithValidReviewCharge } from "../src/lib/review-queue";
 
 const PAGE = 1_000;
 
@@ -41,15 +42,23 @@ const supabase = createClient(
 async function main() {
   const pending = await loadAll(
     "orders",
-    "id, user_id, source, kind, merchant_name, total_amount, order_at, txn_id, review_status, match_confidence, duplicate_of, order_ref",
+    "id, user_id, source, kind, merchant_name, total_amount, card_paid_amount, order_at, txn_id, review_status, match_confidence, duplicate_of, order_ref",
     (q) => q.eq("review_status", "pending")
   );
-  const txnIds = [...new Set(pending.map((order) => order.txn_id).filter(Boolean))];
-  const txns = await loadAll(
-    "transactions",
-    "id, user_id, amount_inr, txn_at, merchant, txn_type",
-    (q) => txnIds.length ? q.in("id", txnIds) : q.limit(0)
+  const linked = await loadAll(
+    "orders",
+    "id, user_id, kind, total_amount, card_paid_amount, order_at, txn_id",
+    (q) => q.not("txn_id", "is", null)
   );
+  const txnIds = [...new Set(linked.map((order) => order.txn_id).filter(Boolean))];
+  const txns: any[] = [];
+  for (let i = 0; i < txnIds.length; i += 100) {
+    txns.push(...await loadAll(
+      "transactions",
+      "id, user_id, amount_inr, txn_at, merchant, txn_type",
+      (q) => q.in("id", txnIds.slice(i, i + 100))
+    ));
+  }
   const txnById = new Map(txns.map((txn) => [txn.id, txn]));
 
   const noTxnId = pending.filter((order) => !order.txn_id);
@@ -58,11 +67,26 @@ async function main() {
     const txn = txnById.get(order.txn_id);
     return txn && txn.user_id !== order.user_id;
   });
-  const realPairs = pending.filter((order) => {
-    const txn = txnById.get(order.txn_id);
-    return txn && txn.user_id === order.user_id;
-  });
-  const broken = [...noTxnId, ...missingTxn, ...wrongUserTxn];
+  const validIds = new Set<string>();
+  for (const userId of new Set(linked.map((order) => order.user_id as string))) {
+    const userOrders = linked
+      .filter((order) => order.user_id === userId)
+      .map((order) => ({
+        ...order,
+        total_amount: order.total_amount == null ? null : Number(order.total_amount),
+        card_paid_amount: order.card_paid_amount == null ? null : Number(order.card_paid_amount),
+      }));
+    const userTxns = txns
+      .filter((txn) => txn.user_id === userId)
+      .map((txn) => ({ ...txn, amount_inr: Number(txn.amount_inr) }));
+    for (const order of ordersWithValidReviewCharge(userOrders, userTxns, userId)) {
+      validIds.add(order.id);
+    }
+  }
+  const realPairs = pending.filter((order) => validIds.has(order.id));
+  const broken = pending.filter((order) => !validIds.has(order.id));
+  const structurallyBroken = new Set([...noTxnId, ...missingTxn, ...wrongUserTxn].map((order) => order.id));
+  const incompatible = broken.filter((order) => !structurallyBroken.has(order.id));
   const byShape = Object.fromEntries(
     Object.entries(broken.reduce<Record<string, number>>((counts, order) => {
       const key = `${order.source} | ${order.kind} | ${order.duplicate_of ? "duplicate" : "primary"}`;
@@ -77,6 +101,7 @@ async function main() {
     noTxnId: noTxnId.length,
     missingTxn: missingTxn.length,
     wrongUserTxn: wrongUserTxn.length,
+    incompatibleAmountDateTypeOrDuplicateClaim: incompatible.length,
     brokenBreakdown: byShape,
     broken: broken.map((order) => ({
       id: order.id, source: order.source, kind: order.kind, merchant: order.merchant_name,
