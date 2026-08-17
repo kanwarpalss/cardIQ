@@ -6,9 +6,13 @@ export const fmtNum = (n: number) => Math.round(n).toLocaleString("en-IN");
 export const ymd = (d: Date) =>
   `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 
-/** Whole days from today (local midnight) to the given YYYY-MM-DD. Negative = past. */
-export function daysUntil(dateStr: string): number {
-  const today = new Date();
+/**
+ * Whole days from today (local midnight) to the given YYYY-MM-DD. Negative = past.
+ * `now` is injectable so expiry logic can be tested against fixed dates instead
+ * of the wall clock — callers in the app omit it and get the real today.
+ */
+export function daysUntil(dateStr: string, now: Date = new Date()): number {
+  const today = new Date(now);
   today.setHours(0, 0, 0, 0);
   const target = new Date(dateStr + "T00:00:00");
   return Math.round((target.getTime() - today.getTime()) / 86_400_000);

@@ -1,7 +1,17 @@
-// Shown when a query hits a table that doesn't exist yet — i.e. migration 009
-// hasn't been run in the Supabase SQL Editor. Plain-English, self-healing:
-// disappears on its own once the migration is applied.
-export default function MissingTableNotice({ feature }: { feature: string }) {
+// Shown when a query hits a table/column that doesn't exist yet — i.e. a
+// migration hasn't been run in the Supabase SQL Editor. Plain-English,
+// self-healing: disappears on its own once the migration is applied.
+export default function MissingTableNotice({
+  feature,
+  migration = "009_rewards_offers_loyalty.sql",
+  what = "The database table for this section doesn't exist yet.",
+}: {
+  feature: string;
+  /** Filename inside supabase/migrations/ the user needs to run. */
+  migration?: string;
+  /** Overrides the first sentence — e.g. for a missing COLUMN rather than a table. */
+  what?: string;
+}) {
   return (
     <div className="rounded-2xl border border-amber/40 bg-amber/5 p-5 text-sm leading-relaxed">
       <div className="flex items-center gap-2 font-semibold text-amber mb-1.5">
@@ -11,10 +21,10 @@ export default function MissingTableNotice({ feature }: { feature: string }) {
         One-time setup needed for {feature}
       </div>
       <p className="text-mist/75">
-        The database table for this section doesn&apos;t exist yet. Open your Supabase
-        project → <span className="text-mist font-medium">SQL Editor</span>, paste the contents of{" "}
+        {what} Open your Supabase project →{" "}
+        <span className="text-mist font-medium">SQL Editor</span>, paste the contents of{" "}
         <code className="text-amber/90 bg-ink px-1.5 py-0.5 rounded text-xs">
-          supabase/migrations/009_rewards_offers_loyalty.sql
+          supabase/migrations/{migration}
         </code>{" "}
         and click <span className="text-mist font-medium">Run</span>. This page will work
         immediately after — no redeploy needed.

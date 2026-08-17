@@ -20,7 +20,7 @@ function localYmd(offsetDays: number): string {
 
 const bal = (over: Partial<RewardBalanceRow>): RewardBalanceRow => ({
   id: "x", card_id: "c1", program: "P", balance: 0, as_of: "2026-01-01",
-  notes: null, created_at: "2026-01-01T00:00:00Z", ...over,
+  points_expire_on: null, notes: null, created_at: "2026-01-01T00:00:00Z", ...over,
 });
 
 const offer = (over: Partial<OfferRow>): OfferRow => ({

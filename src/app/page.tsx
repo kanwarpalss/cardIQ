@@ -2,28 +2,33 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { loadRedemptions } from "@/lib/redemptions-data";
+import { countExpiringSoon } from "@/lib/redemptions";
 import OverviewTab from "@/components/OverviewTab";
 import SpendTab    from "@/components/SpendTab";
 import OrdersTab   from "@/components/OrdersTab";
 import VouchersTab from "@/components/VouchersTab";
 import ReviewTab   from "@/components/ReviewTab";
 import InsightsTab from "@/components/InsightsTab";
-import RewardsTab  from "@/components/RewardsTab";
+import RedemptionsTab from "@/components/RedemptionsTab";
 import OffersTab   from "@/components/OffersTab";
-import LoyaltyTab  from "@/components/LoyaltyTab";
 import DiningTab   from "@/components/DiningTab";
 import ChatTab     from "@/components/ChatTab";
 import CardsTab    from "@/components/CardsTab";
 
-const TABS = ["Overview", "Spend", "Orders", "Vouchers", "Insights", "Rewards", "Offers", "Loyalty", "Dining", "Chat", "Review", "Cards"] as const;
+const TABS = ["Overview", "Spend", "Orders", "Vouchers", "Insights", "Redemptions", "Offers", "Dining", "Chat", "Review", "Cards"] as const;
 type Tab = (typeof TABS)[number];
 
 // Sidebar groups — "Review" and "Cards" live at the bottom rail (Review is a
 // tucked-away validation inbox; Cards doubles as settings).
+//
+// "Redemptions" replaced the old separate Rewards + Loyalty tabs (2026-08-14).
+// Those were two doors onto the same question — "what am I holding?" — which is
+// precisely why holdings kept being forgotten. Same tables, one view.
 const NAV_GROUPS: { label: string | null; tabs: Tab[] }[] = [
   { label: null,      tabs: ["Overview"] },
   { label: "Money",   tabs: ["Spend", "Orders", "Vouchers", "Insights"] },
-  { label: "Perks",   tabs: ["Rewards", "Offers", "Loyalty"] },
+  { label: "Perks",   tabs: ["Redemptions", "Offers"] },
   { label: "Explore", tabs: ["Dining", "Chat"] },
 ];
 
@@ -51,14 +56,11 @@ const TAB_ICONS: Record<Tab, React.ReactNode> = {
   Insights: (
     <svg {...ICON_PROPS}><circle cx="8" cy="8" r="6"/><path d="M8 2v6l4.2 2.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
   ),
-  Rewards: (
+  Redemptions: (
     <svg {...ICON_PROPS}><path d="M8 1.5 9.8 5.6l4.2.4-3.2 2.9.9 4.3L8 11l-3.7 2.2.9-4.3L2 6l4.2-.4L8 1.5z" strokeLinejoin="round"/></svg>
   ),
   Offers: (
     <svg {...ICON_PROPS}><path d="M8.6 1.8 14 7.2a1.5 1.5 0 0 1 0 2.1l-4.7 4.7a1.5 1.5 0 0 1-2.1 0L1.8 8.6A1 1 0 0 1 1.5 8V2.5a1 1 0 0 1 1-1H8a1 1 0 0 1 .6.3z" strokeLinejoin="round"/><circle cx="5" cy="5" r="1" fill="currentColor" stroke="none"/></svg>
-  ),
-  Loyalty: (
-    <svg {...ICON_PROPS}><path d="M14 2 7.5 8.5M14 2l-3.5 12-2.7-5.8L2 5.5 14 2z" strokeLinecap="round" strokeLinejoin="round"/></svg>
   ),
   Dining: (
     <svg {...ICON_PROPS}><path d="M5 2v5a1 1 0 0 1-2 0V2M4 7v7" strokeLinecap="round"/><path d="M11 2v12M9 2c0 2 0 4 2 5" strokeLinecap="round"/></svg>
@@ -89,6 +91,10 @@ export default function Home() {
   const [spendFocus, setSpendFocus] = useState<{ last4: string } | null>(null);
   // Count of order matches awaiting review — drives the "Review" nav badge.
   const [reviewCount, setReviewCount] = useState(0);
+  // Holdings expiring within 30 days — drives the "Redemptions" nav badge.
+  // Loaded here (not inside the tab) so the warning is visible WITHOUT opening
+  // the section, which is the entire point of the feature.
+  const [expiringCount, setExpiringCount] = useState(0);
   const supabase = createClient();
 
   const refreshReviewCount = useCallback(async () => {
@@ -100,6 +106,14 @@ export default function Home() {
     } catch { /* silent — badge is a nicety, never blocks the app */ }
   }, []);
   useEffect(() => { refreshReviewCount(); }, [refreshReviewCount]);
+
+  const refreshExpiringCount = useCallback(async () => {
+    try {
+      const { expiring } = await loadRedemptions();
+      setExpiringCount(countExpiringSoon(expiring));
+    } catch { /* silent — badge is a nicety, never blocks the app */ }
+  }, []);
+  useEffect(() => { refreshExpiringCount(); }, [refreshExpiringCount]);
 
   async function signOut() {
     await supabase.auth.signOut();
@@ -117,7 +131,9 @@ export default function Home() {
 
   const navItem = (t: Tab, compact = false) => {
     const active = tab === t;
-    const badge = t === "Review" && reviewCount > 0 ? reviewCount : 0;
+    // Review's badge is neutral (a queue); Redemptions' is amber (a deadline).
+    const badge = t === "Review" ? reviewCount : t === "Redemptions" ? expiringCount : 0;
+    const urgent = t === "Redemptions";
     return (
       <button key={t} onClick={() => setTab(t)}
         className={compact
@@ -132,7 +148,13 @@ export default function Home() {
         <span className={active ? "text-gold" : "text-mist/50"}>{TAB_ICONS[t]}</span>
         {t}
         {badge > 0 && (
-          <span className={`${compact ? "" : "ml-auto"} text-2xs px-1.5 py-0.5 rounded-full bg-gold/15 text-gold border border-gold/25 tabular-nums leading-none`}>
+          <span
+            title={urgent ? `${badge} expiring in the next 30 days` : undefined}
+            className={`${compact ? "" : "ml-auto"} text-2xs px-1.5 py-0.5 rounded-full border tabular-nums leading-none ${
+              urgent
+                ? "bg-amber/15 text-amber border-amber/30"
+                : "bg-gold/15 text-gold border-gold/25"
+            }`}>
             {badge}
           </span>
         )}
@@ -202,9 +224,10 @@ export default function Home() {
         {tab === "Vouchers" && <VouchersTab />}
         {tab === "Review"   && <ReviewTab onChanged={refreshReviewCount} />}
         {tab === "Insights" && <InsightsTab />}
-        {tab === "Rewards"  && <RewardsTab onNavigate={navigate} />}
+        {tab === "Redemptions" && (
+          <RedemptionsTab onNavigate={navigate} onExpiringChange={refreshExpiringCount} />
+        )}
         {tab === "Offers"   && <OffersTab />}
-        {tab === "Loyalty"  && <LoyaltyTab />}
         {tab === "Dining"   && <DiningTab />}
         {tab === "Chat"     && <ChatTab />}
         {tab === "Cards"    && <CardsTab />}

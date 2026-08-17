@@ -12,6 +12,8 @@ export type RewardBalanceRow = {
   program: string;
   balance: number;
   as_of: string;      // YYYY-MM-DD
+  /** Added in migration 021. null = points don't expire (never "expires today"). */
+  points_expire_on: string | null;
   notes: string | null;
   created_at: string; // ISO timestamp
 };
@@ -108,9 +110,13 @@ export type ExpiryState =
   | { kind: "soon"; days: number }         // expires within the window
   | { kind: "ok"; days: number };
 
-export function expiryState(dateStr: string | null, soonWindowDays = 30): ExpiryState {
+export function expiryState(
+  dateStr: string | null,
+  soonWindowDays = 30,
+  now: Date = new Date()
+): ExpiryState {
   if (!dateStr) return { kind: "none" };
-  const d = daysUntil(dateStr);
+  const d = daysUntil(dateStr, now);
   if (d < 0) return { kind: "expired", days: -d };
   if (d <= soonWindowDays) return { kind: "soon", days: d };
   return { kind: "ok", days: d };

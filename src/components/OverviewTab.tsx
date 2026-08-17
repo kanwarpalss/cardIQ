@@ -221,9 +221,9 @@ export default function OverviewTab({
       <div className="grid lg:grid-cols-3 gap-4 items-start">
 
         {/* Rewards */}
-        <Panel title="Reward balances" onOpen={() => onNavigate("Rewards")}>
+        <Panel title="Reward balances" onOpen={() => onNavigate("Redemptions")}>
           {latestBalances.size === 0 ? (
-            <PanelEmpty body="Track your point balances per card — enter them once, update whenever." cta="Add a balance →" onClick={() => onNavigate("Rewards")} />
+            <PanelEmpty body="Track your point balances per card — enter them once, update whenever." cta="Add a balance →" onClick={() => onNavigate("Redemptions")} />
           ) : (
             <ul className="space-y-3">
               {cards.filter((c) => latestBalances.has(c.id)).map((c) => {
@@ -283,9 +283,9 @@ export default function OverviewTab({
         </Panel>
 
         {/* Loyalty */}
-        <Panel title="Loyalty status" onOpen={() => onNavigate("Loyalty")}>
+        <Panel title="Loyalty status" onOpen={() => onNavigate("Redemptions")}>
           {sortedLoyalty.length === 0 ? (
-            <PanelEmpty body="Airline and hotel statuses in one place — tiers, points, expiry dates." cta="Add a program →" onClick={() => onNavigate("Loyalty")} />
+            <PanelEmpty body="Airline and hotel statuses in one place — tiers, points, expiry dates." cta="Add a program →" onClick={() => onNavigate("Redemptions")} />
           ) : (
             <ul className="space-y-3">
               {sortedLoyalty.slice(0, 5).map((l) => {
