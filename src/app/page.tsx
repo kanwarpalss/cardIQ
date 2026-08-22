@@ -10,7 +10,7 @@ import OrdersTab   from "@/components/OrdersTab";
 import VouchersTab from "@/components/VouchersTab";
 import ReviewTab   from "@/components/ReviewTab";
 import InsightsTab from "@/components/InsightsTab";
-import RedemptionsTab from "@/components/RedemptionsTab";
+import RedemptionsTab, { type Sub as RedemptionSub } from "@/components/RedemptionsTab";
 import OffersTab   from "@/components/OffersTab";
 import DiningTab   from "@/components/DiningTab";
 import ChatTab     from "@/components/ChatTab";
@@ -89,6 +89,8 @@ export default function Home() {
   const [tab, setTab] = useState<Tab>("Overview");
   // New object identity per click so re-clicking the same card re-applies the filter.
   const [spendFocus, setSpendFocus] = useState<{ last4: string } | null>(null);
+  // Same pattern for deep-linking into a Redemptions sub-section.
+  const [redemptionFocus, setRedemptionFocus] = useState<{ sub: RedemptionSub } | null>(null);
   // Count of order matches awaiting review — drives the "Review" nav badge.
   const [reviewCount, setReviewCount] = useState(0);
   // Holdings expiring within 30 days — drives the "Redemptions" nav badge.
@@ -120,8 +122,13 @@ export default function Home() {
     location.reload();
   }
 
-  function navigate(t: string) {
-    if ((TABS as readonly string[]).includes(t)) setTab(t as Tab);
+  // `sub` deep-links into a tab's inner section — currently only Redemptions
+  // has them. Without it, Overview's "Add a balance →" landed on Redemptions'
+  // default Miles sub-section instead of Card points (fixed 2026-08-17).
+  function navigate(t: string, sub?: string) {
+    if (!(TABS as readonly string[]).includes(t)) return;
+    if (t === "Redemptions" && sub) setRedemptionFocus({ sub: sub as RedemptionSub });
+    setTab(t as Tab);
   }
 
   function openSpendForCard(last4: string) {
@@ -225,7 +232,8 @@ export default function Home() {
         {tab === "Review"   && <ReviewTab onChanged={refreshReviewCount} />}
         {tab === "Insights" && <InsightsTab />}
         {tab === "Redemptions" && (
-          <RedemptionsTab onNavigate={navigate} onExpiringChange={refreshExpiringCount} />
+          <RedemptionsTab onNavigate={navigate} onExpiringChange={refreshExpiringCount}
+            focusSub={redemptionFocus} />
         )}
         {tab === "Offers"   && <OffersTab />}
         {tab === "Dining"   && <DiningTab />}

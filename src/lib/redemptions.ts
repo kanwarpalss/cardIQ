@@ -78,6 +78,43 @@ export function sortVouchersForDisplay(
   });
 }
 
+// ── Form input parsing ──────────────────────────────────────────────────────
+// Lives here, not inline in the component, because these are MONEY and COUNT
+// fields — boundary territory that deserves tests rather than an eyeballed
+// `isFinite` check in a submit handler.
+
+export type ParsedAmount =
+  | { ok: true; value: number | null }   // null = field left blank (optional)
+  | { ok: false; error: string };
+
+/** Strips Indian-format separators; blank is a legitimate "not stated". */
+const clean = (raw: string) => raw.replace(/[,\s₹]/g, "");
+
+/**
+ * A granted voucher's stated cash value. Optional, but when given must be a
+ * real non-negative amount — a certificate "worth" −₹500 is meaningless, and
+ * unlike a reward-point balance there is no clawback/correction case that
+ * would justify a negative.
+ */
+export function parseVoucherValue(raw: string): ParsedAmount {
+  if (!raw.trim()) return { ok: true, value: null };
+  const n = Number(clean(raw));
+  if (!Number.isFinite(n)) return { ok: false, error: "Value must be a number." };
+  if (n < 0) return { ok: false, error: "Value can't be negative." };
+  return { ok: true, value: n };
+}
+
+/** How many identical certificates are held. Whole number, at least one. */
+export function parseVoucherQuantity(raw: string): ParsedAmount {
+  const trimmed = clean(raw);
+  if (!trimmed) return { ok: true, value: 1 };
+  const n = Number(trimmed);
+  if (!Number.isInteger(n) || n < 1) {
+    return { ok: false, error: "Quantity must be a whole number of 1 or more." };
+  }
+  return { ok: true, value: n };
+}
+
 // ── The unified "expiring soon" roll-up ─────────────────────────────────────
 
 export type RedemptionKind = "miles" | "points" | "voucher";

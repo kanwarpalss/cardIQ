@@ -37,7 +37,8 @@ export default function OverviewTab({
   onOpenSpend, onNavigate,
 }: {
   onOpenSpend: (last4: string) => void;
-  onNavigate: (tab: string) => void;
+  /** `sub` deep-links into a tab's inner section (Redemptions only, today). */
+  onNavigate: (tab: string, sub?: string) => void;
 }) {
   const supabase = createClient();
   const [allData, setAllData] = useState<AllData | null>(null);
@@ -221,9 +222,9 @@ export default function OverviewTab({
       <div className="grid lg:grid-cols-3 gap-4 items-start">
 
         {/* Rewards */}
-        <Panel title="Reward balances" onOpen={() => onNavigate("Redemptions")}>
+        <Panel title="Reward balances" onOpen={() => onNavigate("Redemptions", "points")}>
           {latestBalances.size === 0 ? (
-            <PanelEmpty body="Track your point balances per card — enter them once, update whenever." cta="Add a balance →" onClick={() => onNavigate("Redemptions")} />
+            <PanelEmpty body="Track your point balances per card — enter them once, update whenever." cta="Add a balance →" onClick={() => onNavigate("Redemptions", "points")} />
           ) : (
             <ul className="space-y-3">
               {cards.filter((c) => latestBalances.has(c.id)).map((c) => {
@@ -283,9 +284,9 @@ export default function OverviewTab({
         </Panel>
 
         {/* Loyalty */}
-        <Panel title="Loyalty status" onOpen={() => onNavigate("Redemptions")}>
+        <Panel title="Loyalty status" onOpen={() => onNavigate("Redemptions", "miles")}>
           {sortedLoyalty.length === 0 ? (
-            <PanelEmpty body="Airline and hotel statuses in one place — tiers, points, expiry dates." cta="Add a program →" onClick={() => onNavigate("Redemptions")} />
+            <PanelEmpty body="Airline and hotel statuses in one place — tiers, points, expiry dates." cta="Add a program →" onClick={() => onNavigate("Redemptions", "miles")} />
           ) : (
             <ul className="space-y-3">
               {sortedLoyalty.slice(0, 5).map((l) => {

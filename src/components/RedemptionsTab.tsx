@@ -11,6 +11,7 @@ import {
 } from "@/lib/perks";
 import {
   sortVouchersForDisplay, effectiveVoucherStatus, VOUCHER_TYPE_LABELS,
+  parseVoucherValue, parseVoucherQuantity,
   type PerkVoucherRow, type ExpiringItem,
 } from "@/lib/redemptions";
 import {
@@ -26,7 +27,7 @@ const SUBS = [
   { key: "points",   label: "Card points",    hint: "Point balances per card" },
   { key: "vouchers", label: "Vouchers",       hint: "Certificates you've been granted" },
 ] as const;
-type Sub = (typeof SUBS)[number]["key"];
+export type Sub = (typeof SUBS)[number]["key"];
 
 const inputCls =
   "bg-ink border border-rim rounded-xl px-3 py-2 text-sm text-mist placeholder:text-mist/30 focus:border-gold/40 outline-none";
@@ -457,8 +458,13 @@ function PointsSection({ data, reload, setError, onNavigate }: {
       .insert({ ...base, points_expire_on: expiresOn || null });
 
     // Pre-021 database: the column doesn't exist yet. Save the balance anyway
-    // rather than losing the user's entry — the expiry notice above tells them
-    // why the date didn't stick (EDGE-03: never silently drop).
+    // rather than losing the user's entry — the message below tells them why
+    // the date didn't stick (EDGE-03: never silently drop).
+    //
+    // TODO: delete this fallback after 2026-12-31 (EDGE-08 — a migration
+    // bridge with no deletion date becomes a permanent fixture that can mask
+    // a real schema problem). It is dead the moment migration 021 is applied;
+    // it exists only so a save between deploy and migration isn't lost.
     if (isMissingColumnError(err, "points_expire_on")) {
       ({ error: err } = await supabase.from("reward_balances").insert(base));
       if (!err && expiresOn) {
@@ -680,10 +686,12 @@ function VouchersSection({ data, reload, setError }: {
   async function save() {
     if (!form) return;
     if (!form.brand.trim()) { setError("Brand is required — e.g. Taj, Marriott."); return; }
-    const qty = Number(form.quantity.replace(/[,\s]/g, "") || "1");
-    if (!Number.isInteger(qty) || qty < 1) { setError("Quantity must be a whole number of 1 or more."); return; }
-    const value = form.value_inr.trim() ? Number(form.value_inr.replace(/[,\s]/g, "")) : null;
-    if (value !== null && !isFinite(value)) { setError("Value must be a number."); return; }
+    const qtyParsed = parseVoucherQuantity(form.quantity);
+    if (!qtyParsed.ok) { setError(qtyParsed.error); return; }
+    const valueParsed = parseVoucherValue(form.value_inr);
+    if (!valueParsed.ok) { setError(valueParsed.error); return; }
+    const qty = qtyParsed.value ?? 1;
+    const value = valueParsed.value;
 
     setSaving(true); setError(null);
     const { data: { user } } = await supabase.auth.getUser();
@@ -891,16 +899,26 @@ function VouchersSection({ data, reload, setError }: {
 // ═══════════════════════════════════════════════════════════════════════════
 
 export default function RedemptionsTab({
-  onNavigate, onExpiringChange,
+  onNavigate, onExpiringChange, focusSub,
 }: {
   onNavigate: (tab: string) => void;
   /** Keeps the sidebar badge in step after an edit on this page. */
   onExpiringChange?: () => void;
+  /**
+   * Deep-link target from elsewhere in the app (e.g. Overview's "Add a
+   * balance →" must land on Card points, not the default Miles).
+   * A NEW object identity per click — same pattern as SpendTab's focusCard —
+   * so re-clicking the same link re-applies the jump instead of being
+   * swallowed as an unchanged prop.
+   */
+  focusSub?: { sub: Sub } | null;
 }) {
   const [sub, setSub] = useState<Sub>("miles");
   const [data, setData] = useState<RedemptionsData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => { if (focusSub) setSub(focusSub.sub); }, [focusSub]);
 
   const reload = useCallback(async () => {
     const d = await loadRedemptions();

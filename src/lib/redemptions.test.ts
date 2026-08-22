@@ -4,6 +4,8 @@ import {
   sortVouchersForDisplay,
   collectExpiring,
   countExpiringSoon,
+  parseVoucherValue,
+  parseVoucherQuantity,
   type PerkVoucherRow,
 } from "./redemptions";
 import type { LoyaltyRow, RewardBalanceRow } from "./perks";
@@ -263,6 +265,59 @@ describe("collectExpiring — item shape", () => {
       ],
     }, 30, TODAY);
     expect(items.map((i) => i.label)).toEqual(["Aaa", "Zzz"]);
+  });
+});
+
+// ── Form input parsing (money + counts) ─────────────────────────────────────
+
+describe("parseVoucherValue", () => {
+  it("rejects a negative value — a certificate worth -₹500 is meaningless", () => {
+    // The bug this replaced: an inline isFinite() check accepted -500 happily.
+    const r = parseVoucherValue("-500");
+    expect(r.ok).toBe(false);
+    expect(r.ok === false && r.error).toMatch(/negative/i);
+  });
+
+  it("treats a blank field as 'not stated', not as zero", () => {
+    expect(parseVoucherValue("")).toEqual({ ok: true, value: null });
+    expect(parseVoucherValue("   ")).toEqual({ ok: true, value: null });
+  });
+
+  it("accepts zero — a comped cert with no stated cash value is legitimate", () => {
+    expect(parseVoucherValue("0")).toEqual({ ok: true, value: 0 });
+  });
+
+  it("strips Indian-format separators and a rupee sign", () => {
+    expect(parseVoucherValue("₹1,50,000")).toEqual({ ok: true, value: 150000 });
+  });
+
+  it("rejects non-numeric text rather than silently storing NaN", () => {
+    expect(parseVoucherValue("five thousand").ok).toBe(false);
+    expect(parseVoucherValue("12abc").ok).toBe(false);
+  });
+
+  it("keeps decimals intact", () => {
+    expect(parseVoucherValue("2499.50")).toEqual({ ok: true, value: 2499.5 });
+  });
+});
+
+describe("parseVoucherQuantity", () => {
+  it("defaults a blank field to one", () => {
+    expect(parseVoucherQuantity("")).toEqual({ ok: true, value: 1 });
+  });
+
+  it("rejects zero, negatives and fractions of a certificate", () => {
+    expect(parseVoucherQuantity("0").ok).toBe(false);
+    expect(parseVoucherQuantity("-2").ok).toBe(false);
+    expect(parseVoucherQuantity("1.5").ok).toBe(false);
+  });
+
+  it("accepts a normal whole count", () => {
+    expect(parseVoucherQuantity("3")).toEqual({ ok: true, value: 3 });
+  });
+
+  it("rejects junk instead of coercing it to 1", () => {
+    expect(parseVoucherQuantity("many").ok).toBe(false);
   });
 });
 
