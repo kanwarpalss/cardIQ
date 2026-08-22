@@ -20,6 +20,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { streamNdjson } from "@/lib/gmail/stream-sync";
 
 interface SyncState {
   lastSyncedAt: string | null;
@@ -87,59 +88,6 @@ export default function SyncPanel({ onSyncComplete }: Props) {
 
   useEffect(() => { loadSyncState(); }, [loadSyncState]);
 
-  // ── NDJSON stream helper ────────────────────────────────────────────────
-  // POSTs to a sync endpoint and hands each parsed NDJSON message to onMsg.
-  // Resolves with the final {status:"done"} payload; throws on HTTP errors
-  // or a server-sent {status:"error"}.
-  async function streamNdjson(
-    url: string,
-    lookbackDays: number | undefined,
-    onMsg: (msg: any) => void
-  ): Promise<any> {
-    const res = await fetch(url, {
-      method: "POST",
-      headers: lookbackDays ? { "Content-Type": "application/json" } : undefined,
-      body: lookbackDays ? JSON.stringify({ lookback_days: lookbackDays }) : undefined,
-    });
-
-    if (!res.ok) {
-      const errBody = await res.json().catch(() => ({ message: `HTTP ${res.status}` }));
-      throw new Error(errBody.message || errBody.error || `HTTP ${res.status}`);
-    }
-    if (!res.body) throw new Error("Sync returned no response body");
-
-    const reader  = res.body.getReader();
-    const decoder = new TextDecoder();
-    let buffer = "";
-    let doneMsg: any = null;
-
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-      // NDJSON can split mid-line across chunks → buffer the tail.
-      buffer += decoder.decode(value, { stream: true });
-      const lines = buffer.split("\n");
-      buffer = lines.pop() ?? "";
-      for (const line of lines.filter(Boolean)) {
-        // Parse defensively: a half-received line is normal NDJSON behaviour
-        // and should be ignored. But a fully-parsed message must be handled
-        // OUTSIDE this try — otherwise a server-sent {status:"error"} would
-        // be swallowed by the parse-error catch and the UI hangs forever.
-        let msg: any;
-        try {
-          msg = JSON.parse(line);
-        } catch {
-          continue; // partial / non-JSON chunk — wait for the rest
-        }
-        if (msg.status === "error") throw new Error(msg.message || "Sync failed");
-        if (msg.status === "done") doneMsg = msg;
-        onMsg(msg);
-      }
-    }
-    if (!doneMsg) throw new Error("Sync ended without a result");
-    return doneMsg;
-  }
-
   // ── Run sync ────────────────────────────────────────────────────────────
   // No arg → incremental (only emails newer than the saved cursor).
   // lookbackDays → backfill: re-scan that many days so newly-recognised
@@ -163,9 +111,9 @@ export default function SyncPanel({ onSyncComplete }: Props) {
         if (msg.status === "listing") {
           setProgress(msg.message || "Scanning Gmail for bank emails…");
         } else if (msg.status === "syncing") {
-          if (typeof msg.fetched === "number" && msg.total) {
+          if (typeof msg.fetched === "number" && typeof msg.total === "number" && msg.total) {
             const pct = Math.round((msg.fetched / msg.total) * 100);
-            setProgress(`${pct}% · ${msg.fetched}/${msg.total} emails · ${msg.new_txns ?? 0} new transactions`);
+            setProgress(`${pct}% · ${msg.fetched}/${msg.total} emails · ${Number(msg.new_txns ?? 0)} new transactions`);
           } else if (msg.message) {
             setProgress(msg.message);
           }
@@ -178,28 +126,30 @@ export default function SyncPanel({ onSyncComplete }: Props) {
       let ordersOk = true;
       try {
         const orders = await streamNdjson("/api/gmail/orders/sync", lookbackDays, (msg) => {
-          if (msg.status === "syncing" && typeof msg.fetched === "number" && msg.total) {
-            setProgress(`Order emails: ${msg.fetched}/${msg.total} · ${msg.new_orders ?? 0} parsed`);
+          if (msg.status === "syncing" && typeof msg.fetched === "number" && typeof msg.total === "number" && msg.total) {
+            setProgress(`Order emails: ${msg.fetched}/${msg.total} · ${Number(msg.new_orders ?? 0)} parsed`);
           } else if (msg.message) {
             setProgress(msg.message);
           }
         });
         const parts: string[] = [];
-        if (orders.new_orders) parts.push(`${orders.new_orders} order${orders.new_orders > 1 ? "s" : ""} parsed`);
-        if (orders.matched)    parts.push(`${orders.matched} linked to transactions`);
+        const newOrders = Number(orders.new_orders ?? 0);
+        const matched   = Number(orders.matched ?? 0);
+        if (newOrders) parts.push(`${newOrders} order${newOrders > 1 ? "s" : ""} parsed`);
+        if (matched)   parts.push(`${matched} linked to transactions`);
         if (parts.length) orderNote = ` · ${parts.join(", ")}`;
       } catch (oe) {
         ordersOk = false;
         orderNote = ` · Orders: ${(oe as Error).message}`;
       }
 
-      const n    = bank.new_txns ?? 0;
+      const n    = Number(bank.new_txns ?? 0);
       const errs = (bank.errors as string[] | undefined)?.length ?? 0;
       const errNote = errs > 0 ? ` · ⚠ ${errs} error${errs > 1 ? "s" : ""}` : "";
       setResult(
         (n > 0
           ? `✓ ${n} new transaction${n > 1 ? "s" : ""} added${errNote}`
-          : `✓ Already up to date — ${bank.fetched ?? 0} emails checked${errNote}`) + orderNote
+          : `✓ Already up to date — ${Number(bank.fetched ?? 0)} emails checked${errNote}`) + orderNote
       );
       setResultOk(errs === 0 && ordersOk);
       setProgress(null);

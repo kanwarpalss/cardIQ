@@ -11,6 +11,7 @@ import VouchersTab from "@/components/VouchersTab";
 import ReviewTab   from "@/components/ReviewTab";
 import InsightsTab from "@/components/InsightsTab";
 import RedemptionsTab, { type Sub as RedemptionSub } from "@/components/RedemptionsTab";
+import AutoSync from "@/components/AutoSync";
 import OffersTab   from "@/components/OffersTab";
 import DiningTab   from "@/components/DiningTab";
 import ChatTab     from "@/components/ChatTab";
@@ -169,8 +170,17 @@ export default function Home() {
     );
   };
 
+  // Background Gmail sync — runs on open, on refocus, and periodically while
+  // the tab is open, so the app stays current without anyone pressing Sync.
+  // A successful sync refreshes the nav badges so they reflect the new data.
+  const afterAutoSync = useCallback(() => {
+    refreshReviewCount();
+    refreshExpiringCount();
+  }, [refreshReviewCount, refreshExpiringCount]);
+
   return (
     <div className="min-h-screen bg-ink">
+      <AutoSync onSynced={afterAutoSync} />
 
       {/* ── Desktop sidebar ────────────────────────────────────────────── */}
       <aside className="hidden lg:flex fixed inset-y-0 left-0 w-60 flex-col border-r border-wire bg-ink z-40">
