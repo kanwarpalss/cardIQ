@@ -55,11 +55,10 @@ Next.js 14 (App Router) + TypeScript + Tailwind · Supabase (Postgres + RLS + Go
 - Blinkit has no email/export path: its only complete source is the authenticated browser collector (`scripts/blinkit-browser-collector.ts`). The order-detail endpoint is **POST**, uses the `order_details_v2` deeplink ID format, and Blinkit 429-rate-limits concurrent detail fetches — the collector fetches serially with adaptive backoff, never in parallel. Amazon's complete source is the user's official "Request Your Information" export; the real amazon.in file is `Your Amazon Orders/Order History.csv` (NOT `Retail.OrderHistory.1.csv`, which is Amazon US's filename). Both import scripts dry-run by default; do not claim either history is complete until its real source file has been imported and audited. Amazon's CSV has a `Shipment Item Subtotal` column that repeats a per-SHIPMENT total on every item row of that shipment — never sum it as a per-item price (use `Total Amount`/`Total Owed` instead); this inflated real totals before the 2026-07-22 fix.
 - After any bulk import, run `scripts/sync-orders-offline.ts` (dry-run first, `--apply` to write) to match new orders to card charges and flag same-purchase duplicates without needing a live Gmail session — it calls the same `matchOrderToTxn`/`planDedup` the live sync uses.
 
-## Current Handoff (2026-07-22)
+## Current Handoff
 
-- **Blinkit + Amazon imports are DONE and live** (supersedes the 2026-07-21 "data-pending" state): 84 Blinkit orders (352 items, complete baskets) + 484 Amazon orders (433 new this session, all currencies). DB: 2,380 total orders, 2,110 visible / 270 duplicates hidden / 413 charge-matched.
-- **Live voucher ledger is reconciled:** migration 017 is applied; 567 vouchers, 314 funding-charge links, zero malformed brands, and two fully attributed evidence-backed splits totaling ₹5,931 (IKEA and Birkenstock #525889).
-- **Orders ledger cleaned:** courier/logistics senders (Shiprocket etc.) permanently rejected at parse time (Invariant #8); 13 existing phantom rows deleted (backed up first, none were charge-linked). Legit "delivered"-subject receipts (Swiggy/Instamart/one real UNIQLO order) deliberately left untouched — see `Claude HQ/summaries/cardIQ/order-item-detail-bugfix.md` §K for the full investigation.
-- **Known non-bug limitation:** most of the 517 bulk-imported orders will never show a "paid on card" badge. 57% predate the bank-transaction table (earliest row 2021-05-26); ~20% were paid via UPI/wallet (amount never appears as any card debit); the rest are amount-coincidences the matcher correctly refuses to force-link. A UPI/wallet data source would be the real lever — not a matcher tolerance tweak.
-- **Deployed:** commits `76ba31f` + `7e65159` + `5cc8b85` pushed to `origin/main` (Vercel auto-deploys). Verified `git rev-parse HEAD == origin/main`.
-- **Next session:** no open Blinkit/Amazon work remains. If revisiting orders, start from the SPEC §9 baseline above rather than re-auditing from scratch.
+**The handoff lives in `SPEC.md` §9, not here.** Two rolling logs for one fact
+drift the moment either is edited, and this copy had already gone stale by a
+month (global CLAUDE.md §8: SPEC.md is the single living source of truth; never
+keep a parallel rolling log). Read SPEC.md §9 "Start Here — Current, Verified
+State" for what is true right now, and §6 for how it got that way.

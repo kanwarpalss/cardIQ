@@ -2,7 +2,7 @@
 
 > Project brain. Updated every session.
 > Static architecture doc lives in ARCHITECTURE.md — don't duplicate it here.
-> Last updated: 2026-08-17
+> Last updated: 2026-08-22
 
 ---
 
@@ -152,7 +152,9 @@ A one-stop credit-card destination: syncs bank transaction emails from Gmail (Ax
 | 2026-07-27 | A labelled bank transaction amount is authoritative; fallback must never use a later account balance or credit limit | Let generic amount scanning salvage any number after a strict parser declines | An Axis alert for `SGD .1` failed strict parsing and then picked up ₹11,87,242.78 from `Available Limit`. Valid leading-decimal values now parse; malformed labelled foreign amounts are rejected rather than guessed, and an audit repaired the single affected historical row. |
 | 2026-07-27 | Amazon Pay-funded gift cards require exact issuance evidence and are marked with a separate funding source | Infer Amazon Pay funding from a same-brand or same-value order | An evidence-only record keeps the Birkenstock ₹5,000 gift card separate from card-funded Gyftr vouchers and avoids fictional voucher drawdowns. |
 
-## §6 Current State (as of 2026-08-17)
+## §6 Current State (as of 2026-08-22)
+
+**New 2026-08-22 (automatic background Gmail sync):** CardIQ now syncs itself — no button. Three triggers (app open, window refocus, a 30-minute interval while the tab stays open) all funnel through one tested rule set in `src/lib/gmail/auto-sync.ts`, which the status route and the client both call so they cannot disagree about "stale" (ARCH-04). The **first ever** sync pulls 8 years of mail and runs 20–30 minutes, so `decideAutoSync()` checks for a saved cursor **before** freshness: no cursor → a one-click prompt, never an automatic start (a cursor-less account with an ancient timestamp reads as maximally stale, which is precisely the case that would have fired it; a test pins the ordering). Auto-sync only ever runs the incremental path — it POSTs with no body, so `lookback_days` is never passed automatically. Failure handling is deliberately loud: a dead Google grant becomes a persistent reconnect banner, failures back off 15 minutes via localStorage, corrupt backoff values **fail open**, an unparseable timestamp syncs rather than assuming fresh, and "up to date" is never announced. `SyncPanel`'s NDJSON reader was extracted to `src/lib/gmail/stream-sync.ts` and is now shared rather than copied — that loop encodes an already-fixed bug where a server-sent `{status:"error"}` gets swallowed and the UI hangs forever. 554 unit cases; 5 mutations killed.
 
 **New 2026-08-17 (Redemptions — one roof over miles, card points and granted vouchers):** A single **Redemptions** section replaces the separate Rewards and Loyalty tabs in the sidebar, with three sub-sections (Miles & status · Card points · Vouchers). It is a new VIEW, not new storage: Miles still reads `loyalty_accounts` and Card points still reads `reward_balances`, both from migration 009, so no data was copied or migrated and the two tabs' full add/edit/delete behaviour (including the read-only card-registry lounge block) is preserved. The reason for the merge is that two doors onto "what am I holding?" is why holdings went untracked — a live check found `loyalty_accounts`, `reward_balances` and `offers` all at **0 rows** against 5 cards, i.e. the features existed and had never been used. Migration 021 adds the genuinely missing pieces: `reward_balances.points_expire_on` (card points had a balance but no expiry at all) and a new `perk_vouchers` table for granted certificates. An **Expiring Soon** strip lists everything across all three kinds dying within 30 days, already-expired first, each row jumping to its sub-section; an amber sidebar badge shows the same count and is loaded in `page.tsx` independently of the tab, so the warning is visible without opening the section. `collectExpiring()` in `src/lib/redemptions.ts` is the single definition of "expiring" shared by badge and page (ARCH-04); it excludes no-expiry rows, zero/negative balances, used/archived vouchers, and loyalty **tier** expiry (a lapsing tier is a status change, not redeemable value). `daysUntil()`/`expiryState()` gained an injectable `now` so expiry is testable against fixed dates instead of the wall clock. Pre-migration the section degrades to a plain-English setup notice rather than crashing — verified against the live database, where `perk_vouchers` returns PGRST205 and is correctly detected. Checks: **524 unit cases**, TypeScript, lint, and production build pass; the 25 new cases were mutation-tested (window edge, zero-balance guard, sort order each broken in turn to prove the tests fail). Migration 021 is **not yet applied**, and the authenticated Redemptions screen has not been visually inspected — the login is Google OAuth.
 
@@ -296,6 +298,13 @@ A one-stop credit-card destination: syncs bank transaction emails from Gmail (Ax
 
 ## §7 Known Issues
 
+**Open (2026-08-22):**
+- **Migration 021 unapplied** — Redemptions shows a setup notice instead of the vouchers list; card-point expiry dates won't persist (balance still saves; UI explains why).
+- **`RedemptionsTab.tsx` is 959 lines**, past ARCH-07's 600-line threshold. Four independent sections in one file; a mechanical split into `redemptions/{Miles,Points,Vouchers,ExpiringStrip}.tsx` is the fix. Deliberately not bundled with the lead-review behavioural fixes.
+- **Gmail refresh tokens die every 7 days** until the IMAP migration (Phases 3–6) lands — Google's Testing-mode rule, not a CardIQ defect. Interim workaround is signing out and back in, which mints a fresh token (`prompt=consent` is already sent).
+- **No public `/privacy` or `/terms` routes.** Only relevant if OAuth publishing is ever revisited; the IMAP migration removes the need entirely.
+- **Nothing from 2026-08-17/22 has been verified authenticated** — Redemptions, the Overview deep-link, and the auto-sync pill are unit-tested and building, but unobserved in a signed-in browser.
+
 | Issue | Status | Notes |
 |---|---|---|
 | Historic invalid order↔charge associations | 🟡 MIGRATION 020 READY, NOT APPLIED | Read-only audit: 418 linked rows, 408 compatible, 10 invalid. Five are the exact pending Amazon Delivered guesses KP flagged; five are older confirmed mismatches (three IKEA totals differ from their linked charge, two Shopify rows stored total ₹0). Code hides/refuses all ten immediately after deployment. Migration 020 only clears their link/review metadata (no order or transaction deletion), releases any duplicate claims, and adds the positive-order-amount constraint. |
@@ -336,9 +345,19 @@ A one-stop credit-card destination: syncs bank transaction emails from Gmail (Ax
 | `GOOGLE_CLIENT_SECRET` | Server |
 | `ENCRYPTION_KEY` | Server (AES-256 for stored secrets) |
 
-## §9 Session Handoff Notes (2026-08-17)
+## §9 Session Handoff Notes (2026-08-22)
 
 ### Start Here — Current, Verified State
+
+**Latest (2026-08-22) — auto-sync shipped; IMAP migration gated PASS at Phase 2; THREE things pending:**
+
+1. **Run `supabase/migrations/021_redemptions.sql`** in the Supabase SQL Editor. Redemptions loads without it but shows a setup notice instead of the vouchers list, and card-point expiry silently won't save (the balance still saves and the UI says why). Nothing else is blocked on it.
+2. **Commit `aceda65` (IMAP spike) is LOCAL, not pushed.** Everything through `69e0f40` (auto-sync) is on `origin/main`.
+3. **Nobody has seen any of this session's UI authenticated.** Redemptions, the Overview→Card-points deep-link, and the auto-sync pill are all type-checked, built and unit-tested, but the login is Google OAuth and Claude does not sign in. First click-through is the real test.
+
+**Gmail auth — resolved diagnosis, migration in flight.** KP's recurring "Gmail signed me out" is Google expiring refresh tokens at **7 days** for consent screens in **Testing** status (documented at `src/lib/gmail/errors.ts:7`). It is NOT fixable by keeping the app running — the token lives server-side and Google decides its validity. Publishing to production was attempted and **abandoned**: the Branding page demands app logo + app domain, app domain implies privacy/ToS pages CardIQ doesn't have, and "Internal" user type requires Google Workspace (unavailable on a personal gmail.com). KP chose to drop OAuth entirely. **IMAP + app-password spike Phases 1–2 PASS on live data** — `X-GM-RAW` gives Gmail search syntax verbatim (1,065 msgs on a real query), and IMAP's `emailId` IS `X-GM-MSGID` with `BigInt(emailId).toString(16) === gmail_message_id`, 40/40 already in `gmail_seen_messages`, so **no reingest of 10k+ emails**. `GMAIL_USER`/`GMAIL_APP_PASSWORD` are in `.env.local` (gitignored). **Phases 3–6 not started** — MailSource abstraction → parity run → credential cutover → retire the OAuth scope. Phase 3 edits `api/gmail/sync/route.ts`; start it with fresh context. Full detail: `AI HQ/summaries/cardIQ/gmail-autosync-and-imap-migration.md`.
+
+**Also this session:** local `main` had diverged 1-behind/6-ahead from `origin/main`; `git merge-tree --write-tree` proved the remote commit (`5823e20`, port-3128 launcher) was the SAME change already committed here, so the merge (`7bc421a`) reconciles history and changes zero files. Backup tag `backup/pre-reconcile-20260817-1546`. A `/lead-review` on Redemptions found and fixed a real deep-link regression, an undated migration shim, and a negative-money gap (`cf2d15f`). `RedemptionsTab.tsx` is **959 lines**, over ARCH-07's 600 threshold — a mechanical 4-way split is the obvious next cleanup and was deliberately not bundled with behavioural fixes.
 
 **Latest (2026-08-17) — Redemptions shipped; ONE manual step outstanding:** Run `supabase/migrations/021_redemptions.sql` in the Supabase SQL Editor. Until then Redemptions loads but shows a setup notice instead of the vouchers list, and card-point expiry dates silently won't save (the UI warns and still saves the balance rather than dropping the entry, EDGE-03). After that, log in and click through Redemptions — it has never been seen authenticated. Note the ledger starts genuinely empty: miles, card points and offers were all 0 rows before this session, so nothing will appear until entries are added by hand. Automation of these three sources is explicitly deferred and unstarted. Also reconciled this session: local `main` had diverged from `origin/main` by 1 commit (`5823e20`, the port-3128 launcher) which turned out to be the *same* change already committed independently on this machine — `git merge-tree --write-tree` proved the merged tree byte-identical to local HEAD, so the merge commit reconciles history only and changes no file. Backup tag `backup/pre-reconcile-20260817-1546` holds the pre-merge state. Not yet done: `/lead-review` was suggested (13 files, ~1,200 lines, nav structure + shared modules) and declined for now.
 
