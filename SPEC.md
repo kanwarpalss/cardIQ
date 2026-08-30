@@ -312,7 +312,7 @@ A one-stop credit-card destination: syncs bank transaction emails from Gmail (Ax
 - **Supabase OAuth redirect allow-list looks wide open — SECURITY, deferred by KP (not urgent, revisit deliberately).** While root-causing the Cloudflare login block, an `/auth/v1/authorize` probe with `redirect_to=http://evil.example.com/steal` returned `302 → accounts.google.com`, i.e. Supabase accepted an arbitrary third-party return address. That is the signature of a `*` wildcard in **Supabase → Authentication → URL Configuration → Redirect URLs**. If real, a crafted login link could forward a genuine Google auth code to an attacker's server, who could then exchange it for a CardIQ session. **Not confirmed** — GoTrue may still reject the address at the callback/exchange step, and proving it requires completing a real signed-in OAuth round trip, which was out of scope today. Fix when picked up: replace any wildcard with the explicit set — `http://localhost:3128/**`, `http://mac-mini.tail8f99cb.ts.net:3128/**`, and the Vercel production origin — then re-run the `evil.example.com` probe and confirm it is **REJECTED**. Note this interacts with the IMAP migration: if IMAP replaces Google OAuth entirely, this surface disappears rather than needing a fix.
 - **Migration 021 unapplied** — Redemptions shows a setup notice instead of the vouchers list; card-point expiry dates won't persist (balance still saves; UI explains why).
 - **`RedemptionsTab.tsx` is 959 lines**, past ARCH-07's 600-line threshold. Four independent sections in one file; a mechanical split into `redemptions/{Miles,Points,Vouchers,ExpiringStrip}.tsx` is the fix. Deliberately not bundled with the lead-review behavioural fixes.
-- **Gmail refresh tokens die every 7 days** until the IMAP migration (Phases 3–6) lands — Google's Testing-mode rule, not a CardIQ defect. Interim workaround is signing out and back in, which mints a fresh token (`prompt=consent` is already sent).
+- **Gmail refresh tokens die every 7 days** — Google's Testing-mode rule, not a CardIQ defect. IMAP migration Phases 3–5 are CODE COMPLETE (2026-08-30, `c022ee4`) and fix this permanently, but the live cutover (migration 022 + entering an app password in Cards → Settings) hasn't happened yet — until then this keeps recurring. KP's token is currently dead (`invalid_grant`); interim OAuth workaround is sign-out/sign-in (`prompt=consent` already sent), but the real fix is finishing the cutover.
 - **No public `/privacy` or `/terms` routes.** Only relevant if OAuth publishing is ever revisited; the IMAP migration removes the need entirely.
 - **Nothing from 2026-08-17/22 has been verified authenticated** — Redemptions, the Overview deep-link, and the auto-sync pill are unit-tested and building, but unobserved in a signed-in browser.
 
@@ -356,15 +356,16 @@ A one-stop credit-card destination: syncs bank transaction emails from Gmail (Ax
 | `GOOGLE_CLIENT_SECRET` | Server |
 | `ENCRYPTION_KEY` | Server (AES-256 for stored secrets) |
 
-## §9 Session Handoff Notes (2026-08-29)
+## §9 Session Handoff Notes (2026-08-30)
 
 ### Start Here — Current, Verified State
 
-**Latest (2026-08-29) — IMAP migration Phases 3–5 CODE COMPLETE; live cutover needs KP, not Claude:**
+**Latest (2026-08-30) — IMAP migration Phases 3–5 CODE COMPLETE, committed `c022ee4`, PUSHED to origin/main. `/lead-review` ran clean (2 real findings, both fixed pre-commit). Live cutover still needs KP, not Claude:**
 
 1. **Run `supabase/migrations/022_gmail_app_password.sql`** in the Supabase SQL Editor (adds `user_settings.gmail_user` + `gmail_app_password_encrypted`).
 2. **Enter a Gmail app password in Cards → Settings** (new fields, below "Gmail address"). Create one at myaccount.google.com/apppasswords (needs 2-Step Verification on first). This is a credential — Claude does not and should not type it in.
-3. **Run one sync afterward** and confirm: new transactions/orders land, the Gmail connection card shows 🟢 via IMAP, and no Google sign-in prompt appears. KP's OAuth refresh token is **currently dead** (`invalid_grant` — confirmed live this session), so this is also the actual unblock for "I can't sign in."
+3. **Run one sync afterward** and confirm: new transactions/orders land, the Gmail connection card shows 🟢 via IMAP, and no Google sign-in prompt appears. KP's OAuth refresh token is **currently dead** (`invalid_grant` — confirmed live 2026-08-29), so this is also the actual unblock for "I can't sign in."
+4. **A concurrent/other session left `SPEC.md` §10 mid-edit, uncommitted** — a Tailscale IP vs. MagicDNS hostname fix for a Cloudflare WAF block on Google OAuth's `redirect_to` (CGNAT range `100.64.0.0/10` gets hard-blocked). Not touched or reverted by this session; still sitting in the working tree as of this handoff — resolve or commit it before it goes stale.
 4. All code changes are local on `main`, not pushed. 572 unit cases, TypeScript, lint, and production build pass. `src/lib/gmail/mail-source.ts` is the new abstraction both sync routes call through; full detail in the §6 session note above.
 
 **Latest (2026-08-22) — auto-sync shipped; IMAP migration gated PASS at Phase 2; THREE things pending (Phase 2 items now superseded by Phases 3–5 above — kept for history):**
