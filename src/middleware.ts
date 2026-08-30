@@ -1,5 +1,9 @@
 import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import {
+  canonicalCardiqUrl,
+  hostnameFromAuthority,
+} from "@/lib/canonical-host";
 
 type CookieToSet = { name: string; value: string; options: CookieOptions };
 
@@ -16,6 +20,24 @@ function withTimeout<T>(p: Promise<T>, ms: number): Promise<T> {
 }
 
 export async function middleware(request: NextRequest) {
+  // A raw Tailscale IP inside Supabase's OAuth `redirect_to` is blocked by
+  // Cloudflare before the request reaches Supabase Auth. Canonicalise at the
+  // app boundary so stale launchers, bookmarks, and direct links are safe too.
+  // In a real `next start` server, nextUrl can contain the server's bind host
+  // instead of the hostname the browser requested. Forwarded/Host headers are
+  // therefore the authoritative source; nextUrl remains the safe fallback.
+  const requestedHostname =
+    hostnameFromAuthority(request.headers.get("x-forwarded-host")) ??
+    hostnameFromAuthority(request.headers.get("host")) ??
+    request.nextUrl.hostname;
+  const canonicalUrl = canonicalCardiqUrl(
+    request.nextUrl,
+    requestedHostname
+  );
+  if (canonicalUrl) {
+    return NextResponse.redirect(canonicalUrl);
+  }
+
   const path = request.nextUrl.pathname;
   const isPublic = path.startsWith("/login") || path.startsWith("/auth");
 
