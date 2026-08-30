@@ -46,6 +46,9 @@ export default function CardsTab() {
   const [apiKey,     setApiKey]     = useState("");
   const [profile,    setProfile]    = useState("");
   const [savedKey,   setSavedKey]   = useState(false);
+  const [gmailUser,       setGmailUser]       = useState("");
+  const [gmailAppPassword, setGmailAppPassword] = useState("");
+  const [savedAppPassword, setSavedAppPassword] = useState(false);
   const [formError,  setFormError]  = useState<string | null>(null);
   const [backfillNote, setBackfillNote] = useState<string | null>(null);
   const [saving,     setSaving]     = useState(false);
@@ -61,11 +64,15 @@ export default function CardsTab() {
   async function load() {
     const [{ data: cardsData }, { data: settings }] = await Promise.all([
       supabase.from("cards").select("*").order("created_at"),
-      supabase.from("user_settings").select("anthropic_key_encrypted, profile_text").single(),
+      supabase.from("user_settings")
+        .select("anthropic_key_encrypted, profile_text, gmail_user, gmail_app_password_encrypted")
+        .single(),
     ]);
     setCards((cardsData as CardRow[]) || []);
     setSavedKey(!!settings?.anthropic_key_encrypted);
     setProfile(settings?.profile_text || "");
+    setGmailUser(settings?.gmail_user || "");
+    setSavedAppPassword(!!settings?.gmail_app_password_encrypted);
 
     // Milestones need complete history; Supabase pages are capped, so fetch all
     // rows explicitly rather than silently stopping at the first 1,000.
@@ -159,12 +166,19 @@ export default function CardsTab() {
     const res = await fetch("/api/settings", {
       method: "POST",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({ anthropic_key: apiKey || undefined, profile_text: profile }),
+      body: JSON.stringify({
+        anthropic_key: apiKey || undefined,
+        profile_text: profile,
+        gmail_user: gmailUser || undefined,
+        gmail_app_password: gmailAppPassword || undefined,
+      }),
     });
     setSaving(false);
     if (!res.ok) return;
     setApiKey("");
+    setGmailAppPassword("");
     load();
+    checkGmail();
   }
 
   function beginPeriodEdit(card: CardRow) {
@@ -335,6 +349,29 @@ export default function CardsTab() {
       {/* ── Settings ─────────────────────────────────────────────────── */}
       <section className="rounded-2xl border border-rim bg-surface p-6 shadow-card space-y-5">
         <h2 className="font-serif text-lg font-semibold text-gold">Settings</h2>
+
+        <div className="space-y-1.5">
+          <label className="text-2xs uppercase tracking-widest text-mist/55 block">
+            Gmail address
+          </label>
+          <input type="email" value={gmailUser} onChange={(e) => setGmailUser(e.target.value)}
+            placeholder="you@gmail.com"
+            className="w-full bg-ink border border-rim rounded-xl px-3 py-2 text-sm text-mist placeholder:text-mist/25 focus:border-gold/40 outline-none" />
+        </div>
+
+        <div className="space-y-1.5">
+          <label className="text-2xs uppercase tracking-widest text-mist/55 block">
+            Gmail app password {savedAppPassword && <span className="text-emerald normal-case ml-1">● saved</span>}
+          </label>
+          <input type="password" value={gmailAppPassword} onChange={(e) => setGmailAppPassword(e.target.value)}
+            placeholder={savedAppPassword ? "•••• •••• •••• •••• (enter new to replace)" : "xxxx xxxx xxxx xxxx"}
+            className="w-full bg-ink border border-rim rounded-xl px-3 py-2 text-sm text-mist placeholder:text-mist/25 focus:border-gold/40 outline-none" />
+          <p className="text-2xs text-mist/25">
+            Replaces signing in with Google — this never expires, unlike the 7-day OAuth
+            connection. Create one at myaccount.google.com/apppasswords (needs 2-Step
+            Verification turned on first).
+          </p>
+        </div>
 
         <div className="space-y-1.5">
           <label className="text-2xs uppercase tracking-widest text-mist/55 block">

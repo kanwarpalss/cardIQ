@@ -93,13 +93,15 @@ async function main() {
       let parsed = parseOrderEmail(from, subject, text, html);
       let usedPdf = false;
       if ((parsed?.items.length ?? 0) === 0) {
-        const pdfs = findPdfAttachments(full.data.payload);
-        if (pdfs.length > 0) {
-          const download = async (attachmentId: string) => {
-            const att = await gmail.users.messages.attachments.get({ userId: "me", messageId: msgId, id: attachmentId });
+        const pdfs = findPdfAttachments(full.data.payload).map((p) => ({
+          filename: p.filename,
+          getBytes: async () => {
+            const att = await gmail.users.messages.attachments.get({ userId: "me", messageId: msgId, id: p.attachmentId });
             return decodeAttachmentData(att.data.data);
-          };
-          const fromPdf = await parseOrderFromPdfs(from, pdfs, download);
+          },
+        }));
+        if (pdfs.length > 0) {
+          const fromPdf = await parseOrderFromPdfs(from, pdfs);
           if (fromPdf && fromPdf.items.length > 0) { parsed = fromPdf; usedPdf = true; }
         }
       }

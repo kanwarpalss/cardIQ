@@ -1,7 +1,6 @@
-import { google } from "googleapis";
 import { createClient } from "@/lib/supabase/server";
 import { decrypt } from "@/lib/crypto";
-import { makeGmailOAuthClient, extractBody } from "@/lib/gmail/extract";
+import { pickMailSource } from "@/lib/gmail/mail-source";
 import { friendlyGmailSyncError } from "@/lib/gmail/errors";
 import { parseTxnEmailWithFallback } from "@/lib/parsers/registry";
 import { categorizeFull } from "@/lib/categorize";
@@ -29,9 +28,9 @@ const FIRST_SYNC_LOOKBACK_DAYS = 365 * 8;
 const CURSOR_KEY = "_all";
 
 // ─── helpers ────────────────────────────────────────────────────────────────
-// base64Decode / stripHtml / extractBody / the OAuth client factory moved
-// verbatim to src/lib/gmail/extract.ts (2026-07-11) so the orders sync
-// decodes emails identically. Behaviour unchanged.
+// Email fetching itself (OAuth/REST or IMAP, id-decoding, body extraction)
+// lives behind the MailSource interface in src/lib/gmail/mail-source.ts
+// (2026-08-29 IMAP migration) — this route only ever sees plain strings.
 
 // Guarded stream writes. Once the client disconnects (navigates away, clicks
 // sync twice, or the request is aborted), the ReadableStream controller is
@@ -63,11 +62,31 @@ export async function POST(req: Request) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return new Response(JSON.stringify({ error: "unauthorized" }), { status: 401 });
 
+  const { data: settings } = await supabase
+    .from("user_settings")
+    .select("google_refresh_token_encrypted, gmail_user, gmail_app_password_encrypted")
+    .eq("user_id", user.id)
+    .single();
+
+  const hasImapCreds = !!(settings?.gmail_user && settings?.gmail_app_password_encrypted);
+  const hasOAuthCreds = !!settings?.google_refresh_token_encrypted;
+
+  if (!hasImapCreds && !hasOAuthCreds) {
+    return new Response(
+      JSON.stringify({
+        error: "no_gmail_credential",
+        message: "Add a Gmail app password in Cards → Settings, or sign in with Google.",
+      }),
+      { status: 400 }
+    );
+  }
+
   // ── Fail fast on missing env vars ────────────────────────────────────────
   // Without GOOGLE_CLIENT_ID/SECRET the OAuth2 client cannot exchange the
   // refresh token for an access token. The first Gmail API call fails ~3s in
   // and the streaming response just dies silently. Surface it loudly instead.
-  if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET) {
+  // Only relevant when the account is actually falling back to OAuth.
+  if (!hasImapCreds && (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET)) {
     console.error("[gmail/sync] FATAL: GOOGLE_CLIENT_ID and/or GOOGLE_CLIENT_SECRET missing from .env.local");
     return new Response(
       JSON.stringify({
@@ -75,19 +94,6 @@ export async function POST(req: Request) {
         message: "GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET must be set in .env.local. Restart the dev server after adding them.",
       }),
       { status: 500, headers: { "Content-Type": "application/json" } }
-    );
-  }
-
-  const { data: settings } = await supabase
-    .from("user_settings")
-    .select("google_refresh_token_encrypted")
-    .eq("user_id", user.id)
-    .single();
-
-  if (!settings?.google_refresh_token_encrypted) {
-    return new Response(
-      JSON.stringify({ error: "no_refresh_token", message: "Sign out and sign in again to re-grant Gmail access." }),
-      { status: 400 }
     );
   }
 
@@ -175,9 +181,11 @@ export async function POST(req: Request) {
   const fromClause = [...allSenders].map((s) => `from:${s}`).join(" OR ");
   const query = `(${fromClause}) after:${afterSeconds}`;
 
-  const auth = makeGmailOAuthClient();
-  auth.setCredentials({ refresh_token: decrypt(settings.google_refresh_token_encrypted) });
-  const gmail = google.gmail({ version: "v1", auth });
+  const mailSource = pickMailSource({
+    imapUser: settings!.gmail_user,
+    imapPass: settings!.gmail_app_password_encrypted ? decrypt(settings!.gmail_app_password_encrypted) : undefined,
+    oauthRefreshToken: settings!.google_refresh_token_encrypted ? decrypt(settings!.google_refresh_token_encrypted) : undefined,
+  });
 
   // ── Pre-load ALL previously-seen Gmail message IDs ────────────────────────
   // gmail_seen_messages is our permanent "never re-download" ledger. Every
@@ -253,30 +261,16 @@ export async function POST(req: Request) {
               : `Checking for new emails since ${afterDate}…`,
         });
 
-        const allIds: string[] = [];
-        let pageToken: string | undefined;
-        let pageNum = 0;
-
-        do {
-          const listRes = await gmail.users.messages.list({
-            userId: "me",
-            q: query,
-            maxResults: 100,
-            pageToken,
-          });
-          for (const m of listRes.data.messages || []) {
-            if (m.id) allIds.push(m.id);
-          }
-          pageToken = listRes.data.nextPageToken ?? undefined;
-          pageNum++;
-          // Heartbeat: without this the UI shows a frozen "Scanning…" for the
-          // entire (possibly multi-page) listing phase. Reassure the user that
-          // work is happening by streaming a running count.
+        const allIds = await mailSource.search(query, (foundSoFar) => {
           send(controller, {
             status: "listing",
-            message: `Scanning Gmail… ${allIds.length} email${allIds.length === 1 ? "" : "s"} found so far (page ${pageNum})`,
+            message: `Scanning Gmail… ${foundSoFar} email${foundSoFar === 1 ? "" : "s"} found so far`,
           });
-        } while (pageToken);
+        });
+        send(controller, {
+          status: "listing",
+          message: `Scanning Gmail… ${allIds.length} email${allIds.length === 1 ? "" : "s"} found`,
+        });
 
         if (allIds.length === 0) {
           send(controller, {
@@ -369,22 +363,17 @@ export async function POST(req: Request) {
           let lastInternalDate = 0;
 
           try {
-            const full = await gmail.users.messages.get({
-              userId: "me",
-              id: msgId,
-              format: "full",
-            });
+            const full = await mailSource.fetchMessage(msgId);
 
-            const msgInternalDate = parseInt(full.data.internalDate ?? "0", 10);
+            const msgInternalDate = full.internalDate;
             if (msgInternalDate > maxInternalDate) maxInternalDate = msgInternalDate;
             lastInternalDate = msgInternalDate;
 
-            const headers = full.data.payload?.headers || [];
-            const subject = headers.find((h) => h.name?.toLowerCase() === "subject")?.value || "";
-            const dateHeader = headers.find((h) => h.name?.toLowerCase() === "date")?.value;
-            const fromHeader = headers.find((h) => h.name?.toLowerCase() === "from")?.value || "";
-            const emailBody = extractBody(full.data.payload);
-            const snippet = full.data.snippet || "";
+            const subject = full.subject;
+            const dateHeader = full.dateHeader ?? undefined;
+            const fromHeader = full.from;
+            const emailBody = full.textBody;
+            const snippet = full.snippet;
 
             lastSubject = subject;
             lastBody = emailBody;
@@ -547,6 +536,7 @@ export async function POST(req: Request) {
         console.error("[gmail/sync] stream error:", (e as Error).message || e);
         send(controller, { status: "error", message: friendlyGmailSyncError(e) });
       } finally {
+        await mailSource.close();
         safeClose(controller);
       }
     },

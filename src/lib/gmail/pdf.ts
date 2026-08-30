@@ -55,11 +55,14 @@ export async function extractPdfText(data: Uint8Array): Promise<string> {
   return text;
 }
 
+/** A PDF (or PDF-like) attachment already resolved to a byte-fetcher — the
+ * shape both MailSource implementations normalize to (src/lib/gmail/mail-source.ts). */
+export type FetchablePdf = { filename: string; getBytes(): Promise<Uint8Array> };
+
 /**
- * Download each PDF attachment (via the injected `download` fn), extract its
- * text, run the merchant's PDF parser, and return the RICHEST result (most
- * items) — so the delivery-T&C PDF that sits alongside the real invoice is
- * naturally ignored.
+ * Download each PDF attachment, extract its text, run the merchant's PDF
+ * parser, and return the RICHEST result (most items) — so the delivery-T&C
+ * PDF that sits alongside the real invoice is naturally ignored.
  *
  * GATED: returns null WITHOUT downloading anything unless we have a PDF parser
  * for this sender. Today that's IKEA only; add more senders here as their
@@ -68,8 +71,7 @@ export async function extractPdfText(data: Uint8Array): Promise<string> {
  */
 export async function parseOrderFromPdfs(
   from: string,
-  pdfs: PdfAttachment[],
-  download: (attachmentId: string) => Promise<Uint8Array>,
+  pdfs: FetchablePdf[],
   // Injectable for tests; defaults to the real unpdf extractor in production.
   extract: (data: Uint8Array) => Promise<string> = extractPdfText
 ): Promise<ParsedOrder | null> {
@@ -79,7 +81,7 @@ export async function parseOrderFromPdfs(
   let best: ParsedOrder | null = null;
   for (const p of pdfs) {
     try {
-      const data = await download(p.attachmentId);
+      const data = await p.getBytes();
       const text = await extract(data);
       const parsed = parseIkeaPdf(text);
       if (parsed && parsed.items.length > (best?.items.length ?? 0)) best = parsed;

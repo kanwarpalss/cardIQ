@@ -74,13 +74,15 @@ async function main() {
       // PDF-attachment fallback — same cost gate as the live sync: only when
       // the body recovered no items and a PDF is attached (IKEA et al.).
       if ((parsed?.items.length ?? 0) === 0) {
-        const pdfs = findPdfAttachments(full.data.payload);
-        if (pdfs.length > 0) {
-          const download = async (attachmentId: string) => {
-            const att = await gmail.users.messages.attachments.get({ userId: "me", messageId: o.gmail_message_id, id: attachmentId });
+        const pdfs = findPdfAttachments(full.data.payload).map((p) => ({
+          filename: p.filename,
+          getBytes: async () => {
+            const att = await gmail.users.messages.attachments.get({ userId: "me", messageId: o.gmail_message_id, id: p.attachmentId });
             return decodeAttachmentData(att.data.data);
-          };
-          const fromPdf = await parseOrderFromPdfs(from, pdfs, download);
+          },
+        }));
+        if (pdfs.length > 0) {
+          const fromPdf = await parseOrderFromPdfs(from, pdfs);
           if (fromPdf && fromPdf.items.length > 0) parsed = fromPdf;
         }
       }

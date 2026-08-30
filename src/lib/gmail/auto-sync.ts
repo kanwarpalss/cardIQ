@@ -21,7 +21,13 @@ export const STALE_AFTER_MINUTES = 30;
 export const FAILURE_BACKOFF_MINUTES = 15;
 
 export type SyncStatus = {
-  /** Encrypted Google refresh token present in user_settings. */
+  /**
+   * Some Gmail credential is on file — an IMAP app password OR an encrypted
+   * OAuth refresh token (src/lib/gmail/mail-source.ts picks whichever is
+   * actually usable; either one satisfies this flag). Field name kept as
+   * "hasRefreshToken" post-IMAP-migration to avoid churning this pure
+   * decision function and its tests for a rename with no behavior change.
+   */
   hasRefreshToken: boolean;
   /**
    * A forward cursor exists in gmail_sync_state. FALSE means the next sync is

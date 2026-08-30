@@ -28,7 +28,7 @@ export async function GET() {
   const [settingsRes, cursorRes] = await Promise.all([
     supabase
       .from("user_settings")
-      .select("google_refresh_token_encrypted, last_gmail_sync_at")
+      .select("google_refresh_token_encrypted, gmail_user, gmail_app_password_encrypted, last_gmail_sync_at")
       .eq("user_id", user.id)
       .maybeSingle(),
     supabase
@@ -52,7 +52,10 @@ export async function GET() {
     null;
 
   const status: SyncStatus = {
-    hasRefreshToken: !!settingsRes.data?.google_refresh_token_encrypted,
+    hasRefreshToken: !!(
+      settingsRes.data?.google_refresh_token_encrypted ||
+      (settingsRes.data?.gmail_user && settingsRes.data?.gmail_app_password_encrypted)
+    ),
     hasCursor: cursorRes.data?.last_internal_date != null,
     lastSyncedAt,
   };

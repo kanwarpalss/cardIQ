@@ -1,13 +1,8 @@
 import { createClient } from "@/lib/supabase/server";
 import { decrypt } from "@/lib/crypto";
-import { google } from "googleapis";
-import {
-  makeGmailOAuthClient,
-  extractBody,
-  extractHtml,
-} from "@/lib/gmail/extract";
+import { pickMailSource } from "@/lib/gmail/mail-source";
 import { friendlyGmailSyncError } from "@/lib/gmail/errors";
-import { findPdfAttachments, parseOrderFromPdfs, decodeAttachmentData } from "@/lib/gmail/pdf";
+import { parseOrderFromPdfs } from "@/lib/gmail/pdf";
 import { isMissingTableError, isMissingColumnError } from "@/lib/supabase/errors";
 import { parseOrderEmail, ORDER_DISCOVERY_CLAUSES, type OrderSource } from "@/lib/parsers/orders/registry";
 import { parseGyftrVouchers, isGyftrSender } from "@/lib/parsers/orders/gyftr";
@@ -70,16 +65,6 @@ export async function POST(req: Request) {
   const supabase = createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return new Response(JSON.stringify({ error: "unauthorized" }), { status: 401 });
-
-  if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET) {
-    return new Response(
-      JSON.stringify({
-        error: "missing_google_credentials",
-        message: "GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET must be set in .env.local. Restart the dev server after adding them.",
-      }),
-      { status: 500, headers: { "Content-Type": "application/json" } }
-    );
-  }
 
   // Fail fast (and in plain English) if migration 011 hasn't been run —
   // otherwise every parsed order would silently fail to save.
@@ -160,14 +145,30 @@ export async function POST(req: Request) {
 
   const { data: settings } = await supabase
     .from("user_settings")
-    .select("google_refresh_token_encrypted")
+    .select("google_refresh_token_encrypted, gmail_user, gmail_app_password_encrypted")
     .eq("user_id", user.id)
     .single();
 
-  if (!settings?.google_refresh_token_encrypted) {
+  const hasImapCreds = !!(settings?.gmail_user && settings?.gmail_app_password_encrypted);
+  const hasOAuthCreds = !!settings?.google_refresh_token_encrypted;
+
+  if (!hasImapCreds && !hasOAuthCreds) {
     return new Response(
-      JSON.stringify({ error: "no_refresh_token", message: "Sign out and sign in again to re-grant Gmail access." }),
+      JSON.stringify({
+        error: "no_gmail_credential",
+        message: "Add a Gmail app password in Cards → Settings, or sign in with Google.",
+      }),
       { status: 400 }
+    );
+  }
+
+  if (!hasImapCreds && (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET)) {
+    return new Response(
+      JSON.stringify({
+        error: "missing_google_credentials",
+        message: "GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET must be set in .env.local. Restart the dev server after adding them.",
+      }),
+      { status: 500, headers: { "Content-Type": "application/json" } }
     );
   }
 
@@ -194,9 +195,11 @@ export async function POST(req: Request) {
   // just the five hardcoded senders. Parsers stay strict downstream.
   const query = `(${ORDER_DISCOVERY_CLAUSES.join(" OR ")}) after:${afterSeconds}`;
 
-  const auth = makeGmailOAuthClient();
-  auth.setCredentials({ refresh_token: decrypt(settings.google_refresh_token_encrypted) });
-  const gmail = google.gmail({ version: "v1", auth });
+  const mailSource = pickMailSource({
+    imapUser: settings!.gmail_user,
+    imapPass: settings!.gmail_app_password_encrypted ? decrypt(settings!.gmail_app_password_encrypted) : undefined,
+    oauthRefreshToken: settings!.google_refresh_token_encrypted ? decrypt(settings!.google_refresh_token_encrypted) : undefined,
+  });
 
   // Same pagination discipline as the bank sync: Supabase caps selects at
   // 1000 rows, so drain explicitly or later IDs vanish from the dedupe set.
@@ -255,24 +258,16 @@ export async function POST(req: Request) {
             : "Checking for new order emails…",
         });
 
-        const allIds: string[] = [];
-        let pageToken: string | undefined;
-        do {
-          const listRes = await gmail.users.messages.list({
-            userId: "me",
-            q: query,
-            maxResults: 100,
-            pageToken,
-          });
-          for (const m of listRes.data.messages || []) {
-            if (m.id) allIds.push(m.id);
-          }
-          pageToken = listRes.data.nextPageToken ?? undefined;
+        const allIds = await mailSource.search(query, (foundSoFar) => {
           send(controller, {
             status: "listing",
-            message: `Scanning order emails… ${allIds.length} found so far`,
+            message: `Scanning order emails… ${foundSoFar} found so far`,
           });
-        } while (pageToken);
+        });
+        send(controller, {
+          status: "listing",
+          message: `Scanning order emails… ${allIds.length} found`,
+        });
 
         const idsToFetch = allIds.filter((id) => !knownMsgIds.has(id));
 
@@ -324,17 +319,16 @@ export async function POST(req: Request) {
             let lastInternalDate = 0;
 
             try {
-              const full = await gmail.users.messages.get({ userId: "me", id: msgId, format: "full" });
+              const full = await mailSource.fetchMessage(msgId);
 
-              const msgInternalDate = parseInt(full.data.internalDate ?? "0", 10);
+              const msgInternalDate = full.internalDate;
               if (msgInternalDate > maxInternalDate) maxInternalDate = msgInternalDate;
               lastInternalDate = msgInternalDate;
 
-              const headers = full.data.payload?.headers || [];
-              const subject = headers.find((h) => h.name?.toLowerCase() === "subject")?.value || "";
-              const fromHeader = headers.find((h) => h.name?.toLowerCase() === "from")?.value || "";
-              const text = extractBody(full.data.payload);
-              const html = extractHtml(full.data.payload);
+              const subject = full.subject;
+              const fromHeader = full.from;
+              const text = full.textBody;
+              const html = full.htmlBody;
 
               lastSubject = subject;
               lastBody = text;
@@ -424,18 +418,9 @@ export async function POST(req: Request) {
               // PDF-attachment fallback (cost-gated): only when the body yielded
               // NO items and the message actually carries a PDF. Merchants like
               // IKEA ship every line item in a PDF invoice, never the body.
-              if ((parsed?.items.length ?? 0) === 0) {
-                const pdfs = findPdfAttachments(full.data.payload);
-                if (pdfs.length > 0) {
-                  const download = async (attachmentId: string) => {
-                    const att = await gmail.users.messages.attachments.get({
-                      userId: "me", messageId: msgId, id: attachmentId,
-                    });
-                    return decodeAttachmentData(att.data.data);
-                  };
-                  const fromPdf = await parseOrderFromPdfs(fromHeader, pdfs, download);
-                  if (fromPdf && fromPdf.items.length > 0) parsed = fromPdf;
-                }
+              if ((parsed?.items.length ?? 0) === 0 && full.attachments.length > 0) {
+                const fromPdf = await parseOrderFromPdfs(fromHeader, full.attachments);
+                if (fromPdf && fromPdf.items.length > 0) parsed = fromPdf;
               }
 
               if (!parsed) {
@@ -896,6 +881,7 @@ export async function POST(req: Request) {
         console.error("[gmail/orders] stream error:", (e as Error).message || e);
         send(controller, { status: "error", message: friendlyGmailSyncError(e) });
       } finally {
+        await mailSource.close();
         safeClose(controller);
       }
     },

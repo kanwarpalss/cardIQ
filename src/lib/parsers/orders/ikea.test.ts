@@ -227,38 +227,37 @@ describe("findPdfAttachments", () => {
 
 describe("parseOrderFromPdfs — gating + richest-wins", () => {
   it("returns null WITHOUT downloading for a non-IKEA sender", async () => {
-    const download = vi.fn();
-    const out = await parseOrderFromPdfs("Amazon <x@amazon.in>", [{ filename: "a.pdf", attachmentId: "1", mimeType: "application/pdf", size: 1 }], download);
+    const getBytes = vi.fn();
+    const out = await parseOrderFromPdfs("Amazon <x@amazon.in>", [{ filename: "a.pdf", getBytes }]);
     expect(out).toBeNull();
-    expect(download).not.toHaveBeenCalled();
+    expect(getBytes).not.toHaveBeenCalled();
   });
 
   it("keeps the richest PDF, ignores the T&C, and survives a broken PDF", async () => {
     // Two IKEA attachments arrive per order: the T&C PDF (no items) and the
     // real invoice. A third here is corrupt — it must be skipped, not fatal.
     const pdfs = [
-      { filename: "terms.pdf", attachmentId: "terms", mimeType: "application/pdf", size: 1 },
-      { filename: "broken.pdf", attachmentId: "broken", mimeType: "application/pdf", size: 1 },
-      { filename: "invoice.pdf", attachmentId: "inv", mimeType: "application/pdf", size: 1 },
+      { filename: "terms.pdf", getBytes: async () => new TextEncoder().encode("terms") },
+      { filename: "broken.pdf", getBytes: async () => new TextEncoder().encode("broken") },
+      { filename: "invoice.pdf", getBytes: async () => new TextEncoder().encode("inv") },
     ];
-    const download = async (id: string) => new TextEncoder().encode(id);
     const extract = async (data: Uint8Array) => {
       const id = new TextDecoder().decode(data);
       if (id === "terms") return TERMS_PDF;
       if (id === "broken") throw new Error("Invalid PDF structure");
       return FORMAT_A_SIMPLE;
     };
-    const out = await parseOrderFromPdfs("IKEA <do-not-reply@ikea.com>", pdfs, download, extract);
+    const out = await parseOrderFromPdfs("IKEA <do-not-reply@ikea.com>", pdfs, extract);
     expect(out).not.toBeNull();
     expect(out!.source).toBe("ikea");
     expect(out!.items).toHaveLength(2); // the invoice won; T&C + broken ignored
   });
 
   it("returns null when no attachment yields items", async () => {
-    const pdfs = [{ filename: "terms.pdf", attachmentId: "terms", mimeType: "application/pdf", size: 1 }];
+    const pdfs = [{ filename: "terms.pdf", getBytes: async () => new Uint8Array() }];
     const out = await parseOrderFromPdfs(
       "IKEA <do-not-reply@ikea.com>", pdfs,
-      async () => new Uint8Array(), async () => TERMS_PDF,
+      async () => TERMS_PDF,
     );
     expect(out).toBeNull();
   });
