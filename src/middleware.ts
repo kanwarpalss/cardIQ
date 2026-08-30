@@ -4,6 +4,7 @@ import {
   canonicalCardiqUrl,
   hostnameFromAuthority,
 } from "@/lib/canonical-host";
+import { getSupabaseUrl } from "@/lib/supabase/health";
 
 type CookieToSet = { name: string; value: string; options: CookieOptions };
 
@@ -48,10 +49,15 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next({ request });
   }
 
+  const supabaseUrl = getSupabaseUrl();
+  if (!supabaseUrl) {
+    return NextResponse.redirect(new URL("/login?error=connection", request.url));
+  }
+
   let response = NextResponse.next({ request });
 
   const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    supabaseUrl,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {

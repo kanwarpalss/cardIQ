@@ -12,10 +12,52 @@
  * both the login page and any future `npm run doctor` script.
  */
 
-/** Public Supabase URL, normalised without a trailing slash. */
+const SUPABASE_PROJECT_HOST = /^([a-z0-9]{20})\.supabase\.co$/;
+
+/**
+ * Public Supabase project URL, normalized to its origin.
+ *
+ * Fail closed on malformed values and lookalike hosts. A bare `supabase.co`,
+ * an HTTP URL, credentials, a non-standard port, or an unexpected path is not
+ * a CardIQ project endpoint and must never be used to start authentication.
+ */
 export function getSupabaseUrl(): string {
-  const raw = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
-  return raw.replace(/\/+$/, "");
+  const raw = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim();
+  if (!raw) return "";
+
+  try {
+    const url = new URL(raw);
+    const isProjectHost = SUPABASE_PROJECT_HOST.test(url.hostname);
+    const isRootPath = url.pathname === "/";
+
+    if (
+      url.protocol !== "https:" ||
+      !isProjectHost ||
+      url.username ||
+      url.password ||
+      url.port ||
+      !isRootPath ||
+      url.search ||
+      url.hash
+    ) {
+      return "";
+    }
+
+    return url.origin;
+  } catch {
+    return "";
+  }
+}
+
+/** Same validation as getSupabaseUrl(), but fail loudly for API callers. */
+export function requireSupabaseUrl(): string {
+  const url = getSupabaseUrl();
+  if (!url) {
+    throw new Error(
+      "NEXT_PUBLIC_SUPABASE_URL must be an HTTPS Supabase project URL such as https://yourprojectref.supabase.co"
+    );
+  }
+  return url;
 }
 
 /**
@@ -23,12 +65,9 @@ export function getSupabaseUrl(): string {
  * `https://abcd1234.supabase.co` → `abcd1234`. Returns "" if unparseable.
  */
 export function getProjectRef(): string {
-  try {
-    const host = new URL(getSupabaseUrl()).hostname; // abcd1234.supabase.co
-    return host.split(".")[0] ?? "";
-  } catch {
-    return "";
-  }
+  const url = getSupabaseUrl();
+  if (!url) return "";
+  return new URL(url).hostname.match(SUPABASE_PROJECT_HOST)?.[1] ?? "";
 }
 
 /** Dashboard URL for the configured project (or the dashboard root). */

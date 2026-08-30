@@ -3,10 +3,10 @@
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { checkSupabaseReachable } from "@/lib/supabase/health";
+import { canonicalCardiqUrl } from "@/lib/canonical-host";
 import SupabaseDownNotice from "@/components/SupabaseDownNotice";
 
 export default function LoginPage() {
-  const supabase = createClient();
   const [down, setDown] = useState(false);
   const [retrying, setRetrying] = useState(false);
   const [signInError, setSignInError] = useState<string | null>(null);
@@ -26,6 +26,15 @@ export default function LoginPage() {
 
   async function signIn() {
     setSignInError(null);
+    // Belt and suspenders: middleware normally canonicalizes this before the
+    // page renders. Re-check at the last possible moment so a future matcher
+    // regression still cannot send a raw Tailscale IP to Supabase/Cloudflare.
+    const canonicalUrl = canonicalCardiqUrl(new URL(window.location.href));
+    if (canonicalUrl) {
+      window.location.replace(canonicalUrl);
+      return;
+    }
+
     // Preflight: clicking the button redirects the browser AWAY to
     // <project>.supabase.co. If that host can't resolve (paused project),
     // the user lands on a raw browser DNS error with no way back. Catch it
@@ -35,6 +44,7 @@ export default function LoginPage() {
       setDown(true);
       return;
     }
+    const supabase = createClient();
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {

@@ -3,7 +3,9 @@ import {
   CARDIQ_MAGICDNS_HOST,
   canonicalCardiqUrl,
   hostnameFromAuthority,
+  isRawTailscaleHost,
   isTailscaleCgnatHost,
+  isTailscaleIpv6Host,
 } from "./canonical-host";
 
 describe("isTailscaleCgnatHost", () => {
@@ -63,6 +65,52 @@ describe("hostnameFromAuthority", () => {
       expect(hostnameFromAuthority(authority)).toBeNull();
     }
   );
+
+  it.each([
+    "user@100.81.29.11:3128",
+    "user:pass@100.81.29.11:3128",
+    "100.81.29.11:3128@safe.example",
+    "100.81.29.11:65536",
+    "[::1",
+    "100.81.29.11\u0000:3128",
+    "x".repeat(10_000),
+  ])("rejects a deceptive authority: %j", (authority) => {
+    expect(hostnameFromAuthority(authority)).toBeNull();
+  });
+
+  it("normalizes alternate IPv4 notation before classifying it", () => {
+    const hostname = hostnameFromAuthority("0x64.0x51.0x1d.0xb:3128");
+    expect(hostname).toBe("100.81.29.11");
+    expect(isTailscaleCgnatHost(hostname!)).toBe(true);
+  });
+
+  it("honors the original first forwarded host", () => {
+    expect(
+      hostnameFromAuthority("safe.example, 100.81.29.11:3128")
+    ).toBe("safe.example");
+  });
+});
+
+describe("raw Tailscale IPv6 detection", () => {
+  it.each([
+    "[fd7a:115c:a1e0::1]",
+    "[fd7a:115c:a1e0:abcd::1]",
+    "[::ffff:6440:1]",
+    "[::ffff:647f:ffff]",
+  ])("accepts Tailscale IPv6 host %s", (hostname) => {
+    expect(isTailscaleIpv6Host(hostname)).toBe(true);
+    expect(isRawTailscaleHost(hostname)).toBe(true);
+  });
+
+  it.each([
+    "[fd7a:115c:a1df::1]",
+    "[fd7a:115c:a1e1::1]",
+    "[::ffff:643f:ffff]",
+    "[::ffff:6480:1]",
+    "[2001:db8::1]",
+  ])("rejects non-Tailscale IPv6 host %s", (hostname) => {
+    expect(isTailscaleIpv6Host(hostname)).toBe(false);
+  });
 });
 
 describe("canonicalCardiqUrl", () => {
@@ -84,12 +132,28 @@ describe("canonicalCardiqUrl", () => {
     `http://${CARDIQ_MAGICDNS_HOST}:3128/login`,
     "https://card-iq.vercel.app/login",
     "http://100.64.example.com:3128/login",
-    "http://[::ffff:6440:1]:3128/login",
     "http://100.64.0.1.example.com:3128/login",
     "http://100.64.0.1@safe.example:3128/login",
     "http://localhost:3128/login?next=http%3A%2F%2F100.64.0.1%3A3128",
   ])("does not redirect a safe origin: %s", (rawUrl) => {
     expect(canonicalCardiqUrl(new URL(rawUrl))).toBeNull();
+  });
+
+  it.each([
+    "http://[fd7a:115c:a1e0::1]:3128/login",
+    "http://[::ffff:100.81.29.11]:3128/login",
+  ])("canonicalizes a raw Tailscale IPv6 origin: %s", (rawUrl) => {
+    expect(canonicalCardiqUrl(new URL(rawUrl))?.hostname).toBe(
+      CARDIQ_MAGICDNS_HOST
+    );
+  });
+
+  it("never carries URL credentials into the canonical redirect", () => {
+    const canonical = canonicalCardiqUrl(
+      new URL("http://secret:token@100.81.29.11:3128/login")
+    );
+    expect(canonical?.username).toBe("");
+    expect(canonical?.password).toBe("");
   });
 
   it("preserves encoded URL details without mutating the original object", () => {
