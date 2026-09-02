@@ -3,6 +3,7 @@ import {
   CARDIQ_MAGICDNS_HOST,
   canonicalCardiqUrl,
   hostnameFromAuthority,
+  isMiniHostAlias,
   isRawTailscaleHost,
   isTailscaleCgnatHost,
   isTailscaleIpv6Host,
@@ -179,5 +180,60 @@ describe("canonicalCardiqUrl", () => {
     expect(canonical?.toString()).toBe(
       `http://${CARDIQ_MAGICDNS_HOST}:3901/login?next=%2Forders`
     );
+  });
+
+  describe("non-canonical names that still reach the Mac mini", () => {
+    // These all serve CardIQ fine. They matter because window.location.origin
+    // becomes the OAuth redirect_to, and Supabase matches redirect URLs as
+    // literal strings — an unrecognised one silently falls back to the Site
+    // URL instead of erroring, stranding the login on localhost.
+    it.each(["mac-mini", "mac-mini.local", "MAC-MINI", "Mac-Mini.Local"])(
+      "canonicalises %s to the one FQDN",
+      (host) => {
+        const canonical = canonicalCardiqUrl(
+          new URL(`http://${host}:3901/login?next=%2Forders`)
+        );
+
+        expect(canonical?.toString()).toBe(
+          `http://${CARDIQ_MAGICDNS_HOST}:3901/login?next=%2Forders`
+        );
+      }
+    );
+
+    it("leaves the canonical host alone so it cannot redirect to itself", () => {
+      expect(
+        canonicalCardiqUrl(new URL(`http://${CARDIQ_MAGICDNS_HOST}:3901/login`))
+      ).toBeNull();
+      expect(isMiniHostAlias(CARDIQ_MAGICDNS_HOST)).toBe(false);
+    });
+
+    it.each(["localhost", "127.0.0.1", "cardiq.vercel.app"])(
+      "leaves %s alone so local dev and production are untouched",
+      (host) => {
+        expect(canonicalCardiqUrl(new URL(`http://${host}:3901/login`))).toBeNull();
+      }
+    );
+
+    it.each([
+      "evil-mac-mini.com",
+      "mac-mini.evil.com",
+      "mac-mini.local.evil.com",
+      "notmac-mini",
+      "mac-mini-2",
+    ])("does not treat lookalike host %s as the Mac mini", (host) => {
+      expect(isMiniHostAlias(host)).toBe(false);
+      expect(canonicalCardiqUrl(new URL(`http://${host}/login`))).toBeNull();
+    });
+
+    it("canonicalises the alias when Next.js has normalised nextUrl to localhost", () => {
+      const canonical = canonicalCardiqUrl(
+        new URL("http://localhost:3901/login"),
+        "mac-mini"
+      );
+
+      expect(canonical?.toString()).toBe(
+        `http://${CARDIQ_MAGICDNS_HOST}:3901/login`
+      );
+    });
   });
 });

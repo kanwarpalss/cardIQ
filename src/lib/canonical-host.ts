@@ -37,6 +37,32 @@ export function isTailscaleIpv6Host(hostname: string): boolean {
   return firstTwoIpv4Octets >= 0x6440 && firstTwoIpv4Octets <= 0x647f;
 }
 
+/**
+ * Other addresses that reach this same Mac mini.
+ *
+ * Tailscale's MagicDNS resolves the short machine name on the tailnet, and
+ * Bonjour resolves the `.local` form on the LAN, so `mac-mini:3901` and
+ * `mac-mini.local:3901` both serve CardIQ perfectly well. The problem is OAuth:
+ * the login page derives `redirect_to` from `window.location.origin`, and
+ * Supabase matches redirect URLs as literal strings. Every extra spelling is
+ * another entry someone has to remember to allow-list, and a missing one does
+ * not fail loudly — Supabase silently falls back to the project's Site URL,
+ * which is how a mini-hosted login ends up stranded on `localhost`.
+ *
+ * Canonicalising every alias to the one FQDN means exactly one Supabase entry
+ * can ever be needed, no matter which address was typed.
+ *
+ * Derived from CARDIQ_MAGICDNS_HOST so a future host move cannot leave a stale
+ * alias behind.
+ */
+const MINI_SHORT_NAME = CARDIQ_MAGICDNS_HOST.split(".")[0];
+const MINI_HOST_ALIASES = new Set([MINI_SHORT_NAME, `${MINI_SHORT_NAME}.local`]);
+
+/** True for a non-canonical name that still resolves to the Mac mini. */
+export function isMiniHostAlias(hostname: string): boolean {
+  return MINI_HOST_ALIASES.has(hostname.toLowerCase());
+}
+
 export function isRawTailscaleHost(hostname: string): boolean {
   return isTailscaleCgnatHost(hostname) || isTailscaleIpv6Host(hostname);
 }
@@ -62,14 +88,18 @@ export function hostnameFromAuthority(authority: string | null): string | null {
 }
 
 /**
- * Return the safe MagicDNS equivalent of a raw Tailscale URL. All other URLs
- * return null so callers can continue without redirecting.
+ * Return the canonical MagicDNS equivalent of any URL that reaches the Mac
+ * mini by a non-canonical address — a raw Tailscale IP, the short MagicDNS
+ * name, or the Bonjour `.local` name. All other URLs (localhost, the canonical
+ * host itself, Vercel) return null so callers continue without redirecting.
  */
 export function canonicalCardiqUrl(
   url: URL,
   requestedHostname = url.hostname
 ): URL | null {
-  if (!isRawTailscaleHost(requestedHostname)) return null;
+  if (!isRawTailscaleHost(requestedHostname) && !isMiniHostAlias(requestedHostname)) {
+    return null;
+  }
 
   const canonical = new URL(url.toString());
   canonical.hostname = CARDIQ_MAGICDNS_HOST;
