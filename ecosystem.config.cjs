@@ -4,7 +4,7 @@ module.exports = {
       name: "cardiq",
       cwd: __dirname,
       script: "node_modules/next/dist/bin/next",
-      args: "start --port 3128",
+      args: "start --port 3901",
       interpreter: "/opt/homebrew/bin/node",
       exec_mode: "fork",
       instances: 1,

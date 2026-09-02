@@ -37,7 +37,7 @@ describe("isTailscaleCgnatHost", () => {
     "100.64..1",
     "100.64.NaN.1",
     "100.64.１.1",
-    "100.64.0.1:3128",
+    "100.64.0.1:3901",
     "fd7a:115c:a1e0::1",
     "::ffff:100.64.0.1",
     "mac-mini.tail8f99cb.ts.net",
@@ -50,12 +50,12 @@ describe("isTailscaleCgnatHost", () => {
 
 describe("hostnameFromAuthority", () => {
   it("extracts a raw Tailscale hostname from a Host header with a port", () => {
-    expect(hostnameFromAuthority("100.81.29.11:3128")).toBe("100.81.29.11");
+    expect(hostnameFromAuthority("100.81.29.11:3901")).toBe("100.81.29.11");
   });
 
   it("uses the first value in a forwarded-host chain", () => {
     expect(
-      hostnameFromAuthority("100.81.29.11:3128, internal-proxy:3000")
+      hostnameFromAuthority("100.81.29.11:3901, internal-proxy:3000")
     ).toBe("100.81.29.11");
   });
 
@@ -67,26 +67,26 @@ describe("hostnameFromAuthority", () => {
   );
 
   it.each([
-    "user@100.81.29.11:3128",
-    "user:pass@100.81.29.11:3128",
-    "100.81.29.11:3128@safe.example",
+    "user@100.81.29.11:3901",
+    "user:pass@100.81.29.11:3901",
+    "100.81.29.11:3901@safe.example",
     "100.81.29.11:65536",
     "[::1",
-    "100.81.29.11\u0000:3128",
+    "100.81.29.11\u0000:3901",
     "x".repeat(10_000),
   ])("rejects a deceptive authority: %j", (authority) => {
     expect(hostnameFromAuthority(authority)).toBeNull();
   });
 
   it("normalizes alternate IPv4 notation before classifying it", () => {
-    const hostname = hostnameFromAuthority("0x64.0x51.0x1d.0xb:3128");
+    const hostname = hostnameFromAuthority("0x64.0x51.0x1d.0xb:3901");
     expect(hostname).toBe("100.81.29.11");
     expect(isTailscaleCgnatHost(hostname!)).toBe(true);
   });
 
   it("honors the original first forwarded host", () => {
     expect(
-      hostnameFromAuthority("safe.example, 100.81.29.11:3128")
+      hostnameFromAuthority("safe.example, 100.81.29.11:3901")
     ).toBe("safe.example");
   });
 });
@@ -116,32 +116,32 @@ describe("raw Tailscale IPv6 detection", () => {
 describe("canonicalCardiqUrl", () => {
   it("replaces only the poisoned host and preserves the complete destination", () => {
     const original = new URL(
-      "http://100.81.29.11:3128/login?error=connection&next=%2Forders#retry"
+      "http://100.81.29.11:3901/login?error=connection&next=%2Forders#retry"
     );
 
     const canonical = canonicalCardiqUrl(original);
 
     expect(canonical?.toString()).toBe(
-      `http://${CARDIQ_MAGICDNS_HOST}:3128/login?error=connection&next=%2Forders#retry`
+      `http://${CARDIQ_MAGICDNS_HOST}:3901/login?error=connection&next=%2Forders#retry`
     );
     expect(original.hostname).toBe("100.81.29.11");
   });
 
   it.each([
-    "http://localhost:3128/login",
-    `http://${CARDIQ_MAGICDNS_HOST}:3128/login`,
+    "http://localhost:3901/login",
+    `http://${CARDIQ_MAGICDNS_HOST}:3901/login`,
     "https://card-iq.vercel.app/login",
-    "http://100.64.example.com:3128/login",
-    "http://100.64.0.1.example.com:3128/login",
-    "http://100.64.0.1@safe.example:3128/login",
-    "http://localhost:3128/login?next=http%3A%2F%2F100.64.0.1%3A3128",
+    "http://100.64.example.com:3901/login",
+    "http://100.64.0.1.example.com:3901/login",
+    "http://100.64.0.1@safe.example:3901/login",
+    "http://localhost:3901/login?next=http%3A%2F%2F100.64.0.1%3A3128",
   ])("does not redirect a safe origin: %s", (rawUrl) => {
     expect(canonicalCardiqUrl(new URL(rawUrl))).toBeNull();
   });
 
   it.each([
-    "http://[fd7a:115c:a1e0::1]:3128/login",
-    "http://[::ffff:100.81.29.11]:3128/login",
+    "http://[fd7a:115c:a1e0::1]:3901/login",
+    "http://[::ffff:100.81.29.11]:3901/login",
   ])("canonicalizes a raw Tailscale IPv6 origin: %s", (rawUrl) => {
     expect(canonicalCardiqUrl(new URL(rawUrl))?.hostname).toBe(
       CARDIQ_MAGICDNS_HOST
@@ -150,7 +150,7 @@ describe("canonicalCardiqUrl", () => {
 
   it("never carries URL credentials into the canonical redirect", () => {
     const canonical = canonicalCardiqUrl(
-      new URL("http://secret:token@100.81.29.11:3128/login")
+      new URL("http://secret:token@100.81.29.11:3901/login")
     );
     expect(canonical?.username).toBe("");
     expect(canonical?.password).toBe("");
@@ -172,12 +172,12 @@ describe("canonicalCardiqUrl", () => {
 
   it("can canonicalise the browser host when Next.js normalises nextUrl", () => {
     const canonical = canonicalCardiqUrl(
-      new URL("http://localhost:3128/login?next=%2Forders"),
+      new URL("http://localhost:3901/login?next=%2Forders"),
       "100.81.29.11"
     );
 
     expect(canonical?.toString()).toBe(
-      `http://${CARDIQ_MAGICDNS_HOST}:3128/login?next=%2Forders`
+      `http://${CARDIQ_MAGICDNS_HOST}:3901/login?next=%2Forders`
     );
   });
 });

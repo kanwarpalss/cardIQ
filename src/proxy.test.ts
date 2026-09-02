@@ -11,22 +11,22 @@ afterEach(() => {
 describe("proxy canonical host guard", () => {
   it("redirects a raw Tailscale login request before Supabase OAuth can run", async () => {
     const request = new NextRequest(
-      "http://localhost:3128/login?next=%2Forders",
-      { headers: { host: "100.81.29.11:3128" } }
+      "http://localhost:3901/login?next=%2Forders",
+      { headers: { host: "100.81.29.11:3901" } }
     );
 
     const response = await proxy(request);
 
     expect(response.status).toBe(307);
     expect(response.headers.get("location")).toBe(
-      "http://mac-mini.tail8f99cb.ts.net:3128/login?next=%2Forders"
+      "http://mac-mini.tail8f99cb.ts.net:3901/login?next=%2Forders"
     );
   });
 
   it("keeps the canonical MagicDNS login route public and in place", async () => {
     const request = new NextRequest(
-      "http://localhost:3128/login",
-      { headers: { host: "mac-mini.tail8f99cb.ts.net:3128" } }
+      "http://localhost:3901/login",
+      { headers: { host: "mac-mini.tail8f99cb.ts.net:3901" } }
     );
 
     const response = await proxy(request);
@@ -37,10 +37,10 @@ describe("proxy canonical host guard", () => {
   });
 
   it("prefers the browser-facing forwarded host over an internal Host header", async () => {
-    const request = new NextRequest("http://localhost:3128/login", {
+    const request = new NextRequest("http://localhost:3901/login", {
       headers: {
         host: "internal-proxy:3000",
-        "x-forwarded-host": "100.81.29.11:3128",
+        "x-forwarded-host": "100.81.29.11:3901",
       },
     });
 
@@ -48,32 +48,32 @@ describe("proxy canonical host guard", () => {
 
     expect(response.status).toBe(307);
     expect(response.headers.get("location")).toBe(
-      "http://mac-mini.tail8f99cb.ts.net:3128/login"
+      "http://mac-mini.tail8f99cb.ts.net:3901/login"
     );
   });
 
   it("canonicalizes the raw Tailscale IPv6 host too", async () => {
-    const request = new NextRequest("http://localhost:3128/login", {
-      headers: { host: "[fd7a:115c:a1e0::1]:3128" },
+    const request = new NextRequest("http://localhost:3901/login", {
+      headers: { host: "[fd7a:115c:a1e0::1]:3901" },
     });
 
     const response = await proxy(request);
     expect(response.status).toBe(307);
     expect(response.headers.get("location")).toBe(
-      "http://mac-mini.tail8f99cb.ts.net:3128/login"
+      "http://mac-mini.tail8f99cb.ts.net:3901/login"
     );
   });
 
   it("fails safely to the connection notice when Supabase URL is malformed", async () => {
     process.env.NEXT_PUBLIC_SUPABASE_URL = "https://supabase.co";
-    const request = new NextRequest("http://localhost:3128/orders", {
-      headers: { host: "mac-mini.tail8f99cb.ts.net:3128" },
+    const request = new NextRequest("http://localhost:3901/orders", {
+      headers: { host: "mac-mini.tail8f99cb.ts.net:3901" },
     });
 
     const response = await proxy(request);
     expect(response.status).toBe(307);
     expect(response.headers.get("location")).toBe(
-      "http://localhost:3128/login?error=connection"
+      "http://localhost:3901/login?error=connection"
     );
   });
 });

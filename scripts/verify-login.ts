@@ -7,7 +7,7 @@ import { requireSupabaseUrl } from "../src/lib/supabase/health";
 async function main() {
   config({ path: ".env.local" });
 
-  const port = 3128;
+  const port = 3901;
   const { address: tailscaleIpv4 } = await lookup(CARDIQ_MAGICDNS_HOST, {
     family: 4,
   });

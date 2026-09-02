@@ -4,9 +4,9 @@
   "private": true,
   "scripts": {
     "predev": "node scripts/check-sync.mjs",
-    "dev": "node scripts/require-cardiq-port.mjs && next dev --port 3128",
+    "dev": "node scripts/require-cardiq-port.mjs && next dev --port 3901",
     "build": "next build --webpack",
-    "start": "node scripts/require-cardiq-port.mjs && next start --port 3128",
+    "start": "node scripts/require-cardiq-port.mjs && next start --port 3901",
     "health": "tsx scripts/verify-login.ts",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",

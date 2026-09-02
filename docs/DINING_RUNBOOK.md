@@ -189,7 +189,7 @@ CLI for just that one.
 npm run dev
 ```
 
-Open http://localhost:3128 → sign in → click the **Dining** tab
+Open http://localhost:3901 → sign in → click the **Dining** tab
 (between Spend and Chat — fork-and-knife icon).
 
 **Expected**:
