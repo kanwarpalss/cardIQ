@@ -1,6 +1,6 @@
 /**
  * Keep OAuth failures on the login screen instead of sending the visitor
- * straight back to `/`, where middleware redirects them to `/login` with no
+ * straight back to `/`, where the proxy redirects them to `/login` with no
  * explanation. Reasons are intentionally short and non-sensitive because
  * they are included in the URL.
  */

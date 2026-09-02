@@ -11,7 +11,7 @@ export default function LoginPage() {
   const [retrying, setRetrying] = useState(false);
   const [signInError, setSignInError] = useState<string | null>(null);
 
-  // The middleware redirects here with ?error=connection when a server-side
+  // The proxy redirects here with ?error=connection when a server-side
   // Supabase call fails. Surface the friendly notice straight away.
   useEffect(() => {
     const error = new URLSearchParams(window.location.search).get("error");
@@ -26,7 +26,7 @@ export default function LoginPage() {
 
   async function signIn() {
     setSignInError(null);
-    // Belt and suspenders: middleware normally canonicalizes this before the
+    // Belt and suspenders: the proxy normally canonicalizes this before the
     // page renders. Re-check at the last possible moment so a future matcher
     // regression still cannot send a raw Tailscale IP to Supabase/Cloudflare.
     const canonicalUrl = canonicalCardiqUrl(new URL(window.location.href));

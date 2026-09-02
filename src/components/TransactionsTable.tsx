@@ -144,7 +144,7 @@ export default function TransactionsTable({
     setPage(1);
   }
 
-  function SortIcon({ col }: { col: SortCol }) {
+  function sortIcon(col: SortCol) {
     if (sort.col !== col) return <span className="opacity-20 ml-0.5 text-[10px]">↕</span>;
     return <span className="text-gold ml-0.5 text-[10px]">{sort.dir === "asc" ? "↑" : "↓"}</span>;
   }
@@ -277,12 +277,12 @@ export default function TransactionsTable({
             {(["date", "merchant", "category", "card"] as const).map((col) => (
               <th key={col} onClick={() => toggleSort(col)}
                 className="text-left px-5 py-2.5 text-2xs font-medium uppercase tracking-widest text-mist/55 cursor-pointer hover:text-mist/50 select-none capitalize">
-                {col} <SortIcon col={col} />
+                {col} {sortIcon(col)}
               </th>
             ))}
             <th onClick={() => toggleSort("amount")}
               className="text-right px-5 py-2.5 text-2xs font-medium uppercase tracking-widest text-mist/55 cursor-pointer hover:text-mist/50 select-none">
-              Amount <SortIcon col="amount" />
+              Amount {sortIcon("amount")}
             </th>
           </tr>
         </thead>

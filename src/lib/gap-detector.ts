@@ -38,7 +38,7 @@ interface GapAlert {
  * Returns alerts for any cards with suspicious gaps.
  */
 export async function detectParsingGaps(userId: string): Promise<GapAlert[]> {
-  const supabase = createClient();
+  const supabase = await createClient();
   const alerts: GapAlert[] = [];
 
   // Get all cards for this user

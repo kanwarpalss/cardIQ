@@ -27,7 +27,7 @@ const TXN_SUBJECT_QUERY = [
 ].join(" ");
 
 export async function GET(req: Request) {
-  const supabase = createClient();
+  const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
 

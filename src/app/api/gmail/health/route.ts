@@ -20,7 +20,7 @@ const STALE_THRESHOLD_DAYS = 35; // ~5 weeks — beyond a normal monthly gap
 type MonthBucket = { ym: string; count: number; total_inr: number };
 
 export async function GET() {
-  const supabase = createClient();
+  const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
 

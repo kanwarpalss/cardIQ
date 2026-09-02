@@ -13,7 +13,7 @@ import { isMissingColumnError } from "@/lib/supabase/errors";
 // Does not re-fetch from Gmail — operates entirely on stored raw_body.
 
 export async function POST() {
-  const supabase = createClient();
+  const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
 

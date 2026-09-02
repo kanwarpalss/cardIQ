@@ -38,7 +38,7 @@ import { enrichAmount } from "@/lib/txn-enrich";
 const REPROCESS_LIMIT = 5000;
 
 export async function POST(req: Request) {
-  const supabase = createClient();
+  const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
 

@@ -20,7 +20,7 @@ function withTimeout<T>(p: Promise<T>, ms: number): Promise<T> {
   ]);
 }
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   // A raw Tailscale IP inside Supabase's OAuth `redirect_to` is blocked by
   // Cloudflare before the request reaches Supabase Auth. Canonicalise at the
   // app boundary so stale launchers, bookmarks, and direct links are safe too.

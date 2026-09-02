@@ -4,8 +4,8 @@ import { requireSupabaseUrl } from "./health";
 
 type CookieToSet = { name: string; value: string; options: CookieOptions };
 
-export function createClient() {
-  const cookieStore = cookies();
+export async function createClient() {
+  const cookieStore = await cookies();
   return createServerClient(
     requireSupabaseUrl(),
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -20,7 +20,7 @@ export function createClient() {
               cookieStore.set(name, value, options)
             );
           } catch {
-            // Called from a Server Component — middleware refreshes the session.
+            // Called from a Server Component — the proxy refreshes the session.
           }
         },
       },

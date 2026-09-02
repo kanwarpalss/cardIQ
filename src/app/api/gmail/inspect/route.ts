@@ -59,7 +59,7 @@ function extractBody(payload: any): { plain: string; html_stripped: string } {
 }
 
 export async function GET(req: Request) {
-  const supabase = createClient();
+  const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
 

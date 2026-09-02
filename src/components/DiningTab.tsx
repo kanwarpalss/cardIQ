@@ -75,19 +75,6 @@ export default function DiningTab() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Debounced search
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      void searchRestaurants(query);
-    }, 250);
-    return () => clearTimeout(timer);
-  }, [query]);
-
-  // Session status on mount
-  useEffect(() => {
-    void loadSessions();
-  }, []);
-
   async function searchRestaurants(q: string) {
     setLoading(true);
     setError(null);
@@ -116,6 +103,19 @@ export default function DiningTab() {
       // Silent — banner just won't show.
     }
   }
+
+  // Debounced search
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      void searchRestaurants(query);
+    }, 250);
+    return () => clearTimeout(timer);
+  }, [query]);
+
+  // Session status on mount
+  useEffect(() => {
+    void loadSessions();
+  }, []);
 
   const needsReauth = sessions?.filter((s) => s.state !== "active") ?? [];
 

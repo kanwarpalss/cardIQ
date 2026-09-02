@@ -3,7 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { encrypt } from "@/lib/crypto";
 
 export async function POST(req: Request) {
-  const supabase = createClient();
+  const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
 

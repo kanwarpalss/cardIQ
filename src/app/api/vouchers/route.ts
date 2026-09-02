@@ -23,7 +23,7 @@ import { summarizeVoucherLedger, type LedgerOrder } from "@/lib/voucher-ledger";
 const PAGE = 1000;
 
 export async function GET() {
-  const supabase = createClient();
+  const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
 

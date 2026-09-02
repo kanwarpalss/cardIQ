@@ -20,7 +20,7 @@ import { toInr, RATES_AS_OF } from "@/lib/forex";
  *      so the user can see at a glance "you spent IDR 12.3M ≈ ₹65k abroad".
  */
 export async function GET(req: Request) {
-  const supabase = createClient();
+  const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
 
