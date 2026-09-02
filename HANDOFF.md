@@ -93,7 +93,7 @@ parses them, deduplicates, stores to Supabase, and displays:
 ```bash
 cd /Users/k0s0k30/Code/cardIQ
 # (must be on Eagle WiFi / hotspot / off-Walmart-VPN)
-npm run dev          # localhost:3128
+npm run dev          # localhost:3901
 npx vitest run       # 74/74 must pass
 npx tsc --noEmit     # must be clean
 ./scripts/db.sh push # apply migrations (or paste in dashboard)

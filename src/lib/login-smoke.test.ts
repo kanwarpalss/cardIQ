@@ -2,9 +2,9 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { runLoginSmoke } from "./login-smoke";
 
 const INPUT = {
-  rawLoginUrl: "http://100.81.29.11:3128/login?smoke=1",
+  rawLoginUrl: "http://100.81.29.11:3901/login?smoke=1",
   canonicalLoginUrl:
-    "http://mac-mini.tail8f99cb.ts.net:3128/login?smoke=1",
+    "http://mac-mini.tail8f99cb.ts.net:3901/login?smoke=1",
   oauthAuthorizeUrl:
     "https://abcdefghijklmnopqrst.supabase.co/auth/v1/authorize?provider=google",
   timeoutMs: 1_000,
@@ -41,8 +41,8 @@ describe("runLoginSmoke", () => {
 
   it.each([
     ["wrong host", "http://evil.example/login?smoke=1"],
-    ["wrong path", "http://mac-mini.tail8f99cb.ts.net:3128/"],
-    ["lost query", "http://mac-mini.tail8f99cb.ts.net:3128/login"],
+    ["wrong path", "http://mac-mini.tail8f99cb.ts.net:3901/"],
+    ["lost query", "http://mac-mini.tail8f99cb.ts.net:3901/login"],
     ["redirect loop", INPUT.rawLoginUrl],
   ])("rejects a raw-entry redirect with %s", async (_name, location) => {
     const fetchImpl = vi
