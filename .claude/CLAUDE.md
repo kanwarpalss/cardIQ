@@ -8,7 +8,7 @@
 
 ## Stack
 
-Next.js 14 (App Router) + TypeScript + Tailwind · Supabase (Postgres + RLS + Google OAuth) · Anthropic API (chat) · Vercel hosting · Gmail read-only API.
+Next.js 16.3.4 (App Router) + React 19.2.8 + TypeScript + Tailwind · Supabase (Postgres + RLS + Google OAuth) · Anthropic API (chat) · Vercel hosting · Gmail read-only API.
 
 ## Invariants (break these → break the project)
 
