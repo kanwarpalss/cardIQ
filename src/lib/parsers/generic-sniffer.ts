@@ -51,6 +51,27 @@ const TXN_VERB_RE =
 const MARKETING_SIGNALS_RE =
   /\b(unsubscribe|offer\s+expires|valid\s+(?:till|until)|terms\s+(?:and|&)\s+conditions\s+apply|\d+%\s+(?:off|cashback|discount)|sale\s+ends|book\s+now|click\s+here|special\s+offer)\b/i;
 
+// Bank emails that mention money + a verb + a real card last4, but are NOT a
+// purchase or refund on that card — a false positive the verb/amount/last4
+// checks below can't tell apart on their own:
+//   • "Payment received on your ... Credit Card" — the user paying their OWN
+//     bill. Mistaking this for spend inflated one card's totals by ~₹4L.
+//   • "... Credit Card Statement for the period ..." — a monthly e-statement
+//     summary; its "Minimum/Total Amount Due" figures are balances, not a
+//     transaction.
+//   • "Upcoming AutoPay txn. reminder" / "Pre-debit notification" — a
+//     FUTURE-tense notice ("will be auto debited by ...") for a charge that
+//     hasn't happened yet. The bank sends a separate "spent" confirmation
+//     when it actually processes (which the parsers already capture), so
+//     recording the reminder too double-counts the same charge.
+//   • A "Re: ..." customer-service reply about a reward-points/service-request
+//     dispute — the user's OWN correspondence with the bank, not a bank
+//     transaction alert. A stray number in the reply text (a case ID, a
+//     points balance) was being recorded as spend — one ₹1.5L example.
+const NON_TRANSACTION_NOTIFICATION_RE =
+  /payment\s+received\s+on\s+your\s+.*credit\s+card|credit\s+card\s+statement\s+for\s+the\s+period|upcoming\s+autopay|pre-debit\s+notification/i;
+const SUPPORT_REPLY_THREAD_RE = /^Re:.*\b(reward\s*points|edge\s*rewards|service\s*request)\b/i;
+
 // Strong refund/credit signals — if matched, we mark txn_type=credit.
 const CREDIT_SIGNALS_RE = /\b(refund|reversed|credited|reversal|cashback)\b/i;
 
@@ -61,8 +82,14 @@ const MERCHANT_PATTERNS = [
   /payment\s+to\s+([^.]+?)\s+on\s+\d/i,                          // HSBC-ish
   /at\s+([^.]+?)\s+on\s+\d{2}-\d{2}-\d{4}/i,                     // legacy
   /Info[:\s]+([^.]+?)(?:\.|The\s+Available|$)/i,                 // ICICI-ish
-  /Merchant\s+(?:Name|Details)[:\s]+([^\n\r]+?)(?=\s{2,}|$)/i,   // structured
+  // Structured "Merchant Name: X" reversal-summary emails (Axis). The caller
+  // collapses all whitespace to single spaces before this runs, so a
+  // "2+ spaces" lookahead never fires — anchor on the field that actually
+  // follows instead (mirrors the working pattern in parsers/axis.ts).
+  /Merchant\s+(?:Name|Details)[:\s]+([^\n\r]+?)(?=\s+Axis\s+Bank|\s+HDFC\s+Bank|\s+ICICI\s+Bank|\s+Credit\s+Card|\s{2,}|$)/i,
   /(?:from|to)\s+merchant[:\s]+([^.]+?)(?:\.|$)/i,               // reversal-ish
+  /\bfrom\s+([^.]+?)\s+to\s+(?:HDFC|Axis|ICICI)\s+Bank\s+Credit\s+Card/i, // HDFC reversal: "...from MERCHANT to HDFC Bank..."
+  /\bat\s+([^.]+?)\s+has\s+been\s+reversed\b/i,                  // Axis legacy reversal: "...at MERCHANT has been reversed"
 ];
 
 function parseAmountStr(raw: string): number {
@@ -108,6 +135,13 @@ export function genericSniff(
   while ((m = marketingRe.exec(combined)) !== null) {
     marketingHits++;
     if (marketingHits >= 2) return null;
+  }
+
+  // 1b. Bill-payment / e-statement / autopay-reminder / support-reply veto —
+  // these mention money + a verb + the user's own last4, but aren't a
+  // purchase or refund. See NON_TRANSACTION_NOTIFICATION_RE above.
+  if (NON_TRANSACTION_NOTIFICATION_RE.test(combined) || SUPPORT_REPLY_THREAD_RE.test(combined)) {
+    return null;
   }
 
   // 2. Must contain a transactional verb.
