@@ -1,21 +1,33 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import dynamic from "next/dynamic";
 import { createClient } from "@/lib/supabase/client";
 import { loadRedemptions } from "@/lib/redemptions-data";
 import { countExpiringSoon } from "@/lib/redemptions";
+import type { Sub as RedemptionSub } from "@/components/RedemptionsTab";
 import OverviewTab from "@/components/OverviewTab";
-import SpendTab    from "@/components/SpendTab";
-import OrdersTab   from "@/components/OrdersTab";
-import VouchersTab from "@/components/VouchersTab";
-import ReviewTab   from "@/components/ReviewTab";
-import InsightsTab from "@/components/InsightsTab";
-import RedemptionsTab, { type Sub as RedemptionSub } from "@/components/RedemptionsTab";
 import AutoSync from "@/components/AutoSync";
-import OffersTab   from "@/components/OffersTab";
-import DiningTab   from "@/components/DiningTab";
-import ChatTab     from "@/components/ChatTab";
-import CardsTab    from "@/components/CardsTab";
+
+// Only one tab is ever mounted at a time (see the `tab === "X" &&` gates
+// below), so eagerly importing all eleven pulled every tab's full component
+// tree into the initial page load's JS bundle regardless of which one was
+// actually visible — confirmed via `.next/static/chunks/app/page-*.js`
+// (208KB) before this change. Overview is the default tab and stays eager;
+// everything else loads on demand the first time it's opened (2026-09-03).
+const TAB_LOADING = () => (
+  <div className="flex items-center justify-center py-24 text-sm text-mist/50">Loading…</div>
+);
+const SpendTab       = dynamic(() => import("@/components/SpendTab"), { loading: TAB_LOADING });
+const OrdersTab      = dynamic(() => import("@/components/OrdersTab"), { loading: TAB_LOADING });
+const VouchersTab    = dynamic(() => import("@/components/VouchersTab"), { loading: TAB_LOADING });
+const ReviewTab      = dynamic(() => import("@/components/ReviewTab"), { loading: TAB_LOADING });
+const InsightsTab    = dynamic(() => import("@/components/InsightsTab"), { loading: TAB_LOADING });
+const RedemptionsTab = dynamic(() => import("@/components/RedemptionsTab"), { loading: TAB_LOADING });
+const OffersTab      = dynamic(() => import("@/components/OffersTab"), { loading: TAB_LOADING });
+const DiningTab      = dynamic(() => import("@/components/DiningTab"), { loading: TAB_LOADING });
+const ChatTab        = dynamic(() => import("@/components/ChatTab"), { loading: TAB_LOADING });
+const CardsTab       = dynamic(() => import("@/components/CardsTab"), { loading: TAB_LOADING });
 
 const TABS = ["Overview", "Spend", "Orders", "Vouchers", "Insights", "Redemptions", "Offers", "Dining", "Chat", "Review", "Cards"] as const;
 type Tab = (typeof TABS)[number];
