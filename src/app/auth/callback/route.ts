@@ -2,9 +2,15 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { encrypt } from "@/lib/crypto";
 import { loginRedirectForAuthCallback } from "@/lib/auth-callback";
+import { requestOrigin } from "@/lib/canonical-host";
 
 export async function GET(request: Request) {
   const url = new URL(request.url);
+  // request.url's own origin can reflect the server's bind host rather than
+  // the browser's actual host under `next start` with no reverse proxy in
+  // front of it (the Mac mini's direct PM2 deployment) — every OAuth return
+  // landed on localhost regardless of which host signed in (2026-09-03).
+  const origin = requestOrigin(request.headers, url);
   const code = url.searchParams.get("code");
 
   if (code) {
@@ -22,7 +28,7 @@ export async function GET(request: Request) {
       // Do not expose Supabase's raw OAuth error in the URL. It can contain
       // provider detail; the login page only needs a useful next action.
       console.error("Google OAuth callback did not create a session", error?.message);
-      return NextResponse.redirect(new URL(destination, url.origin));
+      return NextResponse.redirect(new URL(destination, origin));
     }
 
     // Persist the Google refresh token so the Gmail sync route can use it later.
@@ -36,7 +42,7 @@ export async function GET(request: Request) {
       );
     }
 
-    return NextResponse.redirect(new URL("/", url.origin));
+    return NextResponse.redirect(new URL("/", origin));
   }
 
   return NextResponse.redirect(
@@ -46,7 +52,7 @@ export async function GET(request: Request) {
         hasSession: false,
         hasUser: false,
       }),
-      url.origin
+      origin
     )
   );
 }

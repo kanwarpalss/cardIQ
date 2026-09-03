@@ -7,6 +7,8 @@ import {
   isRawTailscaleHost,
   isTailscaleCgnatHost,
   isTailscaleIpv6Host,
+  originFromAuthority,
+  requestOrigin,
 } from "./canonical-host";
 
 describe("isTailscaleCgnatHost", () => {
@@ -89,6 +91,71 @@ describe("hostnameFromAuthority", () => {
     expect(
       hostnameFromAuthority("safe.example, 100.81.29.11:3901")
     ).toBe("safe.example");
+  });
+});
+
+describe("originFromAuthority", () => {
+  it("builds a full origin including port from a Host header", () => {
+    expect(originFromAuthority("mac-mini.tail8f99cb.ts.net:3901", "http")).toBe(
+      "http://mac-mini.tail8f99cb.ts.net:3901"
+    );
+  });
+
+  it("uses the given protocol, not a hardcoded one", () => {
+    expect(originFromAuthority("card-iq.vercel.app", "https")).toBe(
+      "https://card-iq.vercel.app"
+    );
+  });
+
+  it.each([null, "", "user@evil.example:3901"])(
+    "rejects an absent or deceptive authority: %j",
+    (authority) => {
+      expect(originFromAuthority(authority, "http")).toBeNull();
+    }
+  );
+});
+
+describe("requestOrigin", () => {
+  // The exact bug reproduced 2026-09-03: /auth/callback used request.url's
+  // own origin, which under `next start` with no reverse proxy in front of it
+  // reflected the server's bind host (localhost) instead of whichever host
+  // the browser actually used to sign in — stranding every OAuth return on a
+  // dead localhost:3901 regardless of where the login started.
+  it("prefers the real browser host over a misleading fallback URL", () => {
+    const headers = new Headers({ host: "mac-mini.tail8f99cb.ts.net:3901" });
+    const fallbackUrl = new URL("http://localhost:3901/auth/callback");
+
+    expect(requestOrigin(headers, fallbackUrl)).toBe(
+      `http://${CARDIQ_MAGICDNS_HOST}:3901`
+    );
+  });
+
+  it("prefers x-forwarded-host over a plain Host header", () => {
+    const headers = new Headers({
+      host: "internal-proxy:3000",
+      "x-forwarded-host": "card-iq.vercel.app",
+      "x-forwarded-proto": "https",
+    });
+    const fallbackUrl = new URL("http://localhost:3901/auth/callback");
+
+    expect(requestOrigin(headers, fallbackUrl)).toBe("https://card-iq.vercel.app");
+  });
+
+  it("falls back to the given URL when no usable header is present", () => {
+    const headers = new Headers();
+    const fallbackUrl = new URL("http://localhost:3901/auth/callback");
+
+    expect(requestOrigin(headers, fallbackUrl)).toBe("http://localhost:3901");
+  });
+
+  it("takes the protocol from x-forwarded-proto, not the fallback URL", () => {
+    const headers = new Headers({
+      host: "card-iq.vercel.app",
+      "x-forwarded-proto": "https",
+    });
+    const fallbackUrl = new URL("http://localhost:3901/auth/callback");
+
+    expect(requestOrigin(headers, fallbackUrl)).toBe("https://card-iq.vercel.app");
   });
 });
 

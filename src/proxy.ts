@@ -3,6 +3,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import {
   canonicalCardiqUrl,
   hostnameFromAuthority,
+  requestOrigin,
 } from "@/lib/canonical-host";
 import { getSupabaseUrl } from "@/lib/supabase/health";
 
@@ -49,9 +50,15 @@ export async function proxy(request: NextRequest) {
     return NextResponse.next({ request });
   }
 
+  // Same bind-host caveat as the hostname check above: request.url's own
+  // origin is not trustworthy under `next start` with no reverse proxy in
+  // front of it, so every redirect below is built from the header-derived
+  // origin instead (confirmed necessary 2026-09-03 via the /auth/callback bug).
+  const origin = requestOrigin(request.headers, request.nextUrl);
+
   const supabaseUrl = getSupabaseUrl();
   if (!supabaseUrl) {
-    return NextResponse.redirect(new URL("/login?error=connection", request.url));
+    return NextResponse.redirect(new URL("/login?error=connection", origin));
   }
 
   let response = NextResponse.next({ request });
@@ -81,11 +88,11 @@ export async function proxy(request: NextRequest) {
   } catch {
     // Supabase unreachable or hung (e.g. paused free-tier project). Don't 500
     // or hang — send the user to /login, which shows the connection notice.
-    return NextResponse.redirect(new URL("/login?error=connection", request.url));
+    return NextResponse.redirect(new URL("/login?error=connection", origin));
   }
 
   if (!user) {
-    return NextResponse.redirect(new URL("/login", request.url));
+    return NextResponse.redirect(new URL("/login", origin));
   }
   return response;
 }

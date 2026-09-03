@@ -64,7 +64,11 @@ describe("proxy canonical host guard", () => {
     );
   });
 
-  it("fails safely to the connection notice when Supabase URL is malformed", async () => {
+  it("fails safely to the connection notice on the browser's real host, not the server bind host", async () => {
+    // Regression: this redirect used to be built from request.url's own
+    // origin, which reflects the server's bind host under `next start` with
+    // no reverse proxy in front of it — stranding this exact notice on
+    // localhost even when the browser was on the mini (2026-09-03).
     process.env.NEXT_PUBLIC_SUPABASE_URL = "https://supabase.co";
     const request = new NextRequest("http://localhost:3901/orders", {
       headers: { host: "mac-mini.tail8f99cb.ts.net:3901" },
@@ -73,7 +77,7 @@ describe("proxy canonical host guard", () => {
     const response = await proxy(request);
     expect(response.status).toBe(307);
     expect(response.headers.get("location")).toBe(
-      "http://localhost:3901/login?error=connection"
+      "http://mac-mini.tail8f99cb.ts.net:3901/login?error=connection"
     );
   });
 });
