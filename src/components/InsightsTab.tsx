@@ -10,7 +10,8 @@
 // payload SpendTab uses, no new endpoints. INR-only, debits-only, matching
 // SpendTab's rule (foreign-currency txns live in their own panel there).
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
+import { useTransactionsAll } from "@/lib/transactions-cache";
 
 type Txn = {
   id: string; amount_inr: number;
@@ -39,18 +40,9 @@ const monthShort = (key: string) => {
 };
 
 export default function InsightsTab() {
-  const [allData, setAllData] = useState<AllData | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [month, setMonth]     = useState<string>(monthKey(new Date()));
-
-  useEffect(() => {
-    (async () => {
-      try {
-        const res = await fetch("/api/transactions/all");
-        if (res.ok) setAllData(await res.json());
-      } finally { setLoading(false); }
-    })();
-  }, []);
+  const { data: rawAllData, loading } = useTransactionsAll();
+  const allData = rawAllData as AllData | null;
+  const [month, setMonth] = useState<string>(monthKey(new Date()));
 
   // INR debits only — the currency SpendTab totals are denominated in.
   const debits = useMemo(

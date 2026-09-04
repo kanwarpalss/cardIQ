@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { isMissingTableError } from "@/lib/supabase/errors";
+import { useTransactionsAll } from "@/lib/transactions-cache";
 import { CARD_REGISTRY } from "@/lib/cards/registry";
 import { fmtINR, fmtNum, fmtDate } from "@/lib/format";
 import { currentMilestoneYear, spendInWindow } from "@/lib/milestones";
@@ -41,22 +42,20 @@ export default function OverviewTab({
   onNavigate: (tab: string, sub?: string) => void;
 }) {
   const supabase = createClient();
-  const [allData, setAllData] = useState<AllData | null>(null);
+  const { data: rawAllData, loading } = useTransactionsAll();
+  const allData = rawAllData as AllData | null;
   const [rewards, setRewards] = useState<RewardBalanceRow[]>([]);
   const [offers, setOffers] = useState<OfferRow[]>([]);
   const [loyalty, setLoyalty] = useState<LoyaltyRow[]>([]);
   const [migrationNeeded, setMigrationNeeded] = useState(false);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     (async () => {
-      const [txnRes, rewardRes, offerRes, loyaltyRes] = await Promise.all([
-        fetch("/api/transactions/all"),
+      const [rewardRes, offerRes, loyaltyRes] = await Promise.all([
         supabase.from("reward_balances").select("*"),
         supabase.from("offers").select("*"),
         supabase.from("loyalty_accounts").select("*"),
       ]);
-      if (txnRes.ok) setAllData(await txnRes.json());
       if (rewardRes.error || offerRes.error || loyaltyRes.error) {
         const missing = [rewardRes.error, offerRes.error, loyaltyRes.error]
           .some((e) => isMissingTableError(e));
@@ -65,7 +64,6 @@ export default function OverviewTab({
       setRewards((rewardRes.data as RewardBalanceRow[]) ?? []);
       setOffers((offerRes.data as OfferRow[]) ?? []);
       setLoyalty((loyaltyRes.data as LoyaltyRow[]) ?? []);
-      setLoading(false);
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

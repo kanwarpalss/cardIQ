@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { useTransactionsAll, refreshTransactionsAll, patchTransactionsAll } from "@/lib/transactions-cache";
 import { CARD_REGISTRY } from "@/lib/cards/registry";
 import { CATEGORIES, SUBCATEGORIES } from "@/lib/categories";
 import { ymd } from "@/lib/format";
@@ -67,20 +68,10 @@ export default function SpendTab({ focusCard }: { focusCard?: { last4: string } 
   const [amountMin, setAmountMin] = useState("");
   const [amountMax, setAmountMax] = useState("");
 
-  const [allData,  setAllData]  = useState<AllData | null>(null);
-  const [loading,  setLoading]  = useState(false);
+  const { data: rawAllData, loading } = useTransactionsAll();
+  const allData = rawAllData as AllData | null;
   const [recat,    setRecat]    = useState<string | null>(null);
 
-  // ── Data fetch ─────────────────────────────────────────────────────────────
-  async function loadAll() {
-    setLoading(true);
-    try {
-      const res = await fetch("/api/transactions/all");
-      if (res.ok) setAllData(await res.json());
-    } finally { setLoading(false); }
-  }
-
-  useEffect(() => { loadAll(); }, []);
   useEffect(() => {
     if (focusCard) setSelectedCards(new Set([focusCard.last4]));
   }, [focusCard]);
@@ -116,7 +107,7 @@ export default function SpendTab({ focusCard }: { focusCard?: { last4: string } 
     const res  = await fetch("/api/recategorize", { method: "POST" });
     const json = await res.json();
     setRecat(res.ok ? `✓ Re-categorized ${json.updated}/${json.total} transactions` : `Error: ${json.error}`);
-    if (res.ok) loadAll();
+    if (res.ok) refreshTransactionsAll();
   }
 
   async function handleMerchantSave(old_name: string, new_name: string, category: string, subcategory: string | null) {
@@ -127,12 +118,12 @@ export default function SpendTab({ focusCard }: { focusCard?: { last4: string } 
     });
     if (!res.ok) return;
     if (merchantFilter === old_name) setMerchantFilter(new_name);
-    setAllData((prev) => prev ? {
+    patchTransactionsAll((prev) => ({
       ...prev,
-      transactions: prev.transactions.map((t) =>
+      transactions: (prev.transactions as Txn[]).map((t) =>
         t.merchant === old_name ? { ...t, merchant: new_name, category, subcategory } : t
       ),
-    } : prev);
+    }));
   }
 
   async function handleTxnCategoryChange(txnId: string, patch: CategoryPatch) {
@@ -141,9 +132,9 @@ export default function SpendTab({ focusCard }: { focusCard?: { last4: string } 
       body: JSON.stringify(patch),
     });
     if (!res.ok) return;
-    setAllData((prev) => prev ? {
+    patchTransactionsAll((prev) => ({
       ...prev,
-      transactions: prev.transactions.map((t) =>
+      transactions: (prev.transactions as Txn[]).map((t) =>
         t.id === txnId
           ? {
               ...t,
@@ -152,7 +143,7 @@ export default function SpendTab({ focusCard }: { focusCard?: { last4: string } 
             }
           : t
       ),
-    } : prev);
+    }));
   }
 
   async function handleTxnNotesChange(txnId: string, notes: string) {
@@ -161,10 +152,10 @@ export default function SpendTab({ focusCard }: { focusCard?: { last4: string } 
       body: JSON.stringify({ notes }),
     });
     if (!res.ok) return;
-    setAllData((prev) => prev ? {
+    patchTransactionsAll((prev) => ({
       ...prev,
-      transactions: prev.transactions.map((t) => t.id === txnId ? { ...t, notes } : t),
-    } : prev);
+      transactions: (prev.transactions as Txn[]).map((t) => t.id === txnId ? { ...t, notes } : t),
+    }));
   }
 
   async function handleNotesBulk(merchant: string, notes: string) {
@@ -173,10 +164,10 @@ export default function SpendTab({ focusCard }: { focusCard?: { last4: string } 
       body: JSON.stringify({ merchant, notes }),
     });
     if (!res.ok) return;
-    setAllData((prev) => prev ? {
+    patchTransactionsAll((prev) => ({
       ...prev,
-      transactions: prev.transactions.map((t) => t.merchant === merchant ? { ...t, notes } : t),
-    } : prev);
+      transactions: (prev.transactions as Txn[]).map((t) => t.merchant === merchant ? { ...t, notes } : t),
+    }));
   }
 
   // ── Memos ──────────────────────────────────────────────────────────────────
@@ -460,7 +451,7 @@ export default function SpendTab({ focusCard }: { focusCard?: { last4: string } 
               </button>
             </div>
             <div className="mt-4">
-              <SyncPanel onSyncComplete={loadAll} />
+              <SyncPanel onSyncComplete={refreshTransactionsAll} />
             </div>
             {recat && (
               <div className={`mt-3 text-xs px-3 py-2 rounded-lg border ${

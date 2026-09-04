@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { isMissingColumnError } from "@/lib/supabase/errors";
 import { ordersWithValidReviewCharge, type ReviewQueueOrder } from "@/lib/review-queue";
+import { fetchAllPaginated, type PageResult } from "@/lib/paginate";
 
 // Returns ALL transactions for the user (plus matched orders for the
 // expand-row enrichment). Client filters/aggregates from this.
@@ -25,31 +26,30 @@ export async function GET() {
   if (!user) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
 
   const PAGE = 1000;
-  const all: Array<Record<string, unknown>> = [];
-  let from = 0;
   let columns = TXN_COLUMNS + ", subcategory";
 
-  while (true) {
-    const { data, error } = await supabase
+  // The first page's exact count (only requested on that page) tells
+  // fetchAllPaginated how many more pages exist, so they can all be fetched
+  // in parallel instead of one round-trip at a time — a 3000+ row account
+  // was paying for 4+ sequential Supabase round-trips here alone (2026-09-04).
+  const fetchTxnPage = (from: number, pageSize: number) =>
+    supabase
       .from("transactions")
-      .select(columns)
+      .select(columns, from === 0 ? { count: "exact" } : undefined)
       .eq("user_id", user.id)
       .order("txn_at", { ascending: false })
-      .range(from, from + PAGE - 1);
+      .range(from, from + pageSize - 1) as unknown as Promise<PageResult<Record<string, unknown>>>;
 
-    if (error) {
-      if (isMissingColumnError(error, "subcategory") && columns !== TXN_COLUMNS) {
-        columns = TXN_COLUMNS; // migration 012 not run yet — retry without it
-        continue;
-      }
-      return NextResponse.json({ error: error.message }, { status: 500 });
-    }
-    if (!data?.length) break;
-    // Dynamic column string defeats supabase-js's literal-string type parser.
-    all.push(...(data as unknown as Array<Record<string, unknown>>));
-    if (data.length < PAGE) break;
-    from += PAGE;
+  let txnResult = await fetchAllPaginated(fetchTxnPage, PAGE);
+  if (txnResult.error && isMissingColumnError(txnResult.error, "subcategory")) {
+    columns = TXN_COLUMNS; // migration 012 not run yet — retry without it
+    txnResult = await fetchAllPaginated(fetchTxnPage, PAGE);
   }
+  if (txnResult.error) {
+    return NextResponse.json({ error: txnResult.error.message }, { status: 500 });
+  }
+  // Dynamic column string defeats supabase-js's literal-string type parser.
+  const all = txnResult.rows;
 
   // Matched orders (V2 feature C) — keyed by txn_id on the client. Only
   // CONFIRMED matches surface in Spend (migration 014): high-confidence ones

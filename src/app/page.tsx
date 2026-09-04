@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import dynamic from "next/dynamic";
 import { createClient } from "@/lib/supabase/client";
+import { refreshTransactionsAll } from "@/lib/transactions-cache";
 import { loadRedemptions } from "@/lib/redemptions-data";
 import { countExpiringSoon } from "@/lib/redemptions";
 import type { Sub as RedemptionSub } from "@/components/RedemptionsTab";
@@ -188,6 +189,7 @@ export default function Home() {
   const afterAutoSync = useCallback(() => {
     refreshReviewCount();
     refreshExpiringCount();
+    refreshTransactionsAll();
   }, [refreshReviewCount, refreshExpiringCount]);
 
   return (
