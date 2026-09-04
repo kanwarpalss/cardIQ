@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { useVouchersAll } from "@/lib/vouchers-cache";
 
 // Vouchers tab (V2 feature C) — the gift-voucher ledger. Every brand e-voucher
 // bought via Gyftr/SmartBuy: what it's for, the card charge that funded it, and
@@ -64,9 +65,11 @@ function StatusBadge({ v }: { v: Voucher }) {
 type BalanceFilter = "all" | "withBalance" | "spent";
 
 export default function VouchersTab() {
-  const [vouchers, setVouchers] = useState<Voucher[]>([]);
-  const [loading, setLoading]   = useState(true);
-  const [error, setError]       = useState<string | null>(null);
+  const { data: vouchersData, loading, error: fetchError } = useVouchersAll();
+  const vouchers = useMemo(() => (vouchersData?.vouchers as Voucher[]) ?? [], [vouchersData]);
+  const error =
+    fetchError ??
+    (vouchersData?.error === "missing_vouchers_table" ? "migration" : vouchersData?.error ?? null);
 
   const [search, setSearch]   = useState("");
   const [brand, setBrand]     = useState("all");
@@ -74,22 +77,6 @@ export default function VouchersTab() {
   const [page, setPage]       = useState(1);
   const [expanded, setExpanded] = useState<string | null>(null);
 
-  useEffect(() => {
-    (async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const res = await fetch("/api/vouchers");
-        const json = await res.json().catch(() => ({}));
-        if (!res.ok) { setError(json?.error === "missing_vouchers_table" ? "migration" : json?.error || "Failed to load"); setVouchers([]); return; }
-        setVouchers(json.vouchers ?? []);
-      } catch {
-        setError("Couldn't reach the server. Try again.");
-      } finally {
-        setLoading(false);
-      }
-    })();
-  }, []);
   useEffect(() => { setPage(1); }, [search, brand, balance]);
 
   const brands = useMemo(() => {

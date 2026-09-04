@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useOrdersAll, refreshOrdersAll } from "@/lib/orders-cache";
 
 // Orders tab (V2 feature C) — the standalone ledger: EVERYTHING you've bought,
 // with item detail, cost and merchant, independent of how you paid. Card-matched
@@ -257,9 +258,11 @@ function PaymentDetail({ o }: { o: Order }) {
 }
 
 export default function OrdersTab() {
-  const [orders, setOrders]   = useState<Order[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError]     = useState<string | null>(null);
+  const { data: ordersData, loading, error: fetchError } = useOrdersAll();
+  const orders = useMemo(() => (ordersData?.orders as Order[]) ?? [], [ordersData]);
+  const error =
+    fetchError ??
+    (ordersData?.error === "missing_orders_table" ? "migration" : ordersData?.error ?? null);
 
   const [search, setSearch]     = useState("");
   const [source, setSource]     = useState<string>("all");
@@ -275,21 +278,6 @@ export default function OrdersTab() {
   const [importMsg, setImportMsg] = useState<string | null>(null);
   const uploadInput = useRef<HTMLInputElement>(null);
 
-  async function load() {
-    setLoading(true);
-    setError(null);
-    try {
-      const res = await fetch("/api/orders");
-      const json = await res.json().catch(() => ({}));
-      if (!res.ok) { setError(json?.error === "missing_orders_table" ? "migration" : json?.error || "Failed to load"); setOrders([]); return; }
-      setOrders(json.orders ?? []);
-    } catch {
-      setError("Couldn't reach the server. Try again.");
-    } finally {
-      setLoading(false);
-    }
-  }
-  useEffect(() => { load(); }, []);
   useEffect(() => { setPage(1); }, [search, source, link, showDups]);
 
   // Full-history backfill — pulls 8 years of order emails. Long-running
@@ -335,7 +323,7 @@ export default function OrdersTab() {
       const n = done?.new_orders ?? 0;
       const m = done?.matched ?? 0;
       setBackfillMsg(`✓ Done — ${n} new order${n === 1 ? "" : "s"} added${m ? `, ${m} linked to a card` : ""}.`);
-      await load();
+      await refreshOrdersAll();
     } catch (e) {
       setBackfillMsg(`Error: ${(e as Error).message}`);
     } finally {
@@ -356,7 +344,7 @@ export default function OrdersTab() {
       if (!res.ok) throw new Error(json?.message || "Import failed");
       const removed = Number(json?.removedDeliveredEmails ?? 0);
       setImportMsg(`Imported ${json.imported} ${uploadSource === "amazon" ? "Amazon" : "Blinkit"} order${json.imported === 1 ? "" : "s"}${removed ? ` and cleared ${removed} old Amazon delivery email${removed === 1 ? "" : "s"}` : ""}.`);
-      await load();
+      await refreshOrdersAll();
     } catch (e) {
       setImportMsg((e as Error).message || "Couldn't import that file. Try again.");
     } finally {
@@ -558,7 +546,7 @@ export default function OrdersTab() {
                           {o.order_ref && <span>Order #{o.order_ref}</span>}
                           <PaymentDetail o={o} />
                         </div>
-                        {o.kind === "order" && !isDuplicate(o) && <VerifyPayment order={o} onSaved={load} />}
+                        {o.kind === "order" && !isDuplicate(o) && <VerifyPayment order={o} onSaved={refreshOrdersAll} />}
                       </div>
                     </div>
                   )}

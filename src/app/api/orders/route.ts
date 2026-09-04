@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { isObsoleteAmazonDeliveryOrder } from "@/lib/imports/order-upload";
 import { createClient } from "@/lib/supabase/server";
 import { isMissingTableError, isMissingColumnError } from "@/lib/supabase/errors";
+import { fetchAllPaginated, type PageResult } from "@/lib/paginate";
 
 // GET /api/orders — the standalone Orders ledger (V2 feature C).
 //
@@ -34,38 +35,42 @@ export async function GET() {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
 
-  const all: Array<Record<string, unknown>> = [];
+  // The first page's exact count (only requested on that page) tells
+  // fetchAllPaginated how many more pages exist, so they can all be fetched
+  // in parallel instead of one round-trip at a time (2026-09-04, same fix
+  // already applied to /api/transactions/all — a 2500+ row account was
+  // paying for 3+ sequential round-trips here alone).
   const optional = [...OPTIONAL_COLUMNS];
-
-  for (let from = 0; ; from += PAGE) {
-    const { data, error } = await supabase
+  const fetchOrdersPage = (from: number, pageSize: number) =>
+    supabase
       .from("orders")
-      .select([SAFE_COLUMNS, ...optional].join(", "))
+      .select([SAFE_COLUMNS, ...optional].join(", "), from === 0 ? { count: "exact" } : undefined)
       .eq("user_id", user.id)
       .order("order_at", { ascending: false })
-      .range(from, from + PAGE - 1);
+      .range(from, from + pageSize - 1) as unknown as Promise<PageResult<Record<string, unknown>>>;
 
-    if (error) {
-      if (isMissingTableError(error)) {
-        return NextResponse.json({ error: "missing_orders_table", orders: [] }, { status: 400 });
-      }
-      // A later migration isn't run — drop that optional column and retry the
-      // page so the ledger still renders on a partial schema.
-      const missing = optional.find((c) => isMissingColumnError(error, c));
-      if (missing) {
-        optional.splice(optional.indexOf(missing), 1);
-        from -= PAGE;
-        continue;
-      }
-      return NextResponse.json({ error: error.message }, { status: 500 });
+  let result = await fetchAllPaginated(fetchOrdersPage, PAGE);
+  // Migration tolerance: drop optional columns one at a time and retry from
+  // scratch until the column set works, exactly as before — only page 0 ever
+  // needs to renegotiate; once it succeeds, every column is known-good for
+  // the whole table, so the remaining pages fetch in parallel with no risk
+  // of hitting a different missing-column error partway through.
+  while (result.error) {
+    if (isMissingTableError(result.error)) {
+      return NextResponse.json({ error: "missing_orders_table", orders: [] }, { status: 400 });
     }
-    if (!data?.length) break;
-    // Existing Amazon Delivered email rows are hidden immediately. A later
-    // Amazon CSV upload also removes them from the database, but this keeps
-    // the ledger truthful for users who imported their export previously.
-    all.push(...(data as unknown as Array<Record<string, unknown>>).filter((order) => !isObsoleteAmazonDeliveryOrder(order)));
-    if (data.length < PAGE) break;
+    const missing = optional.find((c) => isMissingColumnError(result.error, c));
+    if (!missing) {
+      return NextResponse.json({ error: result.error.message }, { status: 500 });
+    }
+    optional.splice(optional.indexOf(missing), 1);
+    result = await fetchAllPaginated(fetchOrdersPage, PAGE);
   }
+
+  // Existing Amazon Delivered email rows are hidden immediately. A later
+  // Amazon CSV upload also removes them from the database, but this keeps
+  // the ledger truthful for users who imported their export previously.
+  const all = result.rows.filter((order) => !isObsoleteAmazonDeliveryOrder(order));
 
   // Attach the paying transaction for linked orders (two-query, not a PostgREST
   // embed — boringly reliable, and matched-order counts are modest). Voucher-

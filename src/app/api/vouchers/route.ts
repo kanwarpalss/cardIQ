@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { isMissingTableError } from "@/lib/supabase/errors";
 import { summarizeVoucherLedger, type LedgerOrder } from "@/lib/voucher-ledger";
+import { fetchAllPaginated, type PageResult } from "@/lib/paginate";
 
 // GET /api/vouchers — the Gyftr voucher ledger (V2 feature C).
 //
@@ -27,40 +28,43 @@ export async function GET() {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
 
+  // The first page's exact count (only requested on that page) tells
+  // fetchAllPaginated how many more pages exist, so they can all be fetched
+  // in parallel instead of one round-trip at a time (2026-09-04, same fix
+  // already applied to /api/transactions/all and /api/orders).
+
   // 1) Vouchers.
-  const voucherRows: Array<Record<string, unknown>> = [];
-  for (let from = 0; ; from += PAGE) {
-    const { data, error } = await supabase
+  const fetchVoucherPage = (from: number, pageSize: number) =>
+    supabase
       .from("vouchers")
-      .select("id, code, brand, brand_key, face_value, purchased_at, valid_till, txn_id, funding_source")
+      .select(
+        "id, code, brand, brand_key, face_value, purchased_at, valid_till, txn_id, funding_source",
+        from === 0 ? { count: "exact" } : undefined
+      )
       .eq("user_id", user.id)
       .order("purchased_at", { ascending: false })
-      .range(from, from + PAGE - 1);
-    if (error) {
-      if (isMissingTableError(error)) {
-        return NextResponse.json({ error: "missing_vouchers_table", vouchers: [] }, { status: 400 });
-      }
-      return NextResponse.json({ error: error.message }, { status: 500 });
+      .range(from, from + pageSize - 1) as unknown as Promise<PageResult<Record<string, unknown>>>;
+
+  const voucherResult = await fetchAllPaginated(fetchVoucherPage, PAGE);
+  if (voucherResult.error) {
+    if (isMissingTableError(voucherResult.error)) {
+      return NextResponse.json({ error: "missing_vouchers_table", vouchers: [] }, { status: 400 });
     }
-    if (!data?.length) break;
-    voucherRows.push(...(data as Array<Record<string, unknown>>));
-    if (data.length < PAGE) break;
+    return NextResponse.json({ error: voucherResult.error.message }, { status: 500 });
   }
+  const voucherRows = voucherResult.rows;
 
   // 2) Orders that drew from vouchers (for the drawdown math + "spent at").
   //    Missing orders table just means no drawdown detail — degrade to [].
-  const orderRows: Array<Record<string, unknown>> = [];
-  for (let from = 0; ; from += PAGE) {
-    const { data, error } = await supabase
+  const fetchOrderDrawPage = (from: number, pageSize: number) =>
+    supabase
       .from("orders")
-      .select("id, source, merchant_name, order_at, voucher_draws")
+      .select("id, source, merchant_name, order_at, voucher_draws", from === 0 ? { count: "exact" } : undefined)
       .eq("user_id", user.id)
-      .range(from, from + PAGE - 1);
-    if (error) break; // missing table / missing column / transient → no enrichment
-    if (!data?.length) break;
-    orderRows.push(...(data as Array<Record<string, unknown>>));
-    if (data.length < PAGE) break;
-  }
+      .range(from, from + pageSize - 1) as unknown as Promise<PageResult<Record<string, unknown>>>;
+
+  const orderDrawResult = await fetchAllPaginated(fetchOrderDrawPage, PAGE);
+  const orderRows = orderDrawResult.error ? [] : orderDrawResult.rows; // missing table/column/transient → no enrichment
 
   const ledgerOrders: LedgerOrder[] = orderRows.map((o) => ({
     id: String(o.id),
