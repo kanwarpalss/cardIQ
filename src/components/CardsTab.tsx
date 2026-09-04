@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { useTransactionsAll } from "@/lib/transactions-cache";
 import { CARD_REGISTRY } from "@/lib/cards/registry";
 import { getCardArt } from "@/lib/card-art";
 import { fmtDate, fmtINR } from "@/lib/format";
@@ -54,8 +55,18 @@ export default function CardsTab() {
   const [saving,     setSaving]     = useState(false);
   const [gmailStatus, setGmailStatus] = useState<GmailScopeStatus | null>(null);
   const [checkingGmail, setCheckingGmail] = useState(false);
-  const [milestoneTxns, setMilestoneTxns] = useState<MilestoneTxn[]>([]);
-  const [milestoneError, setMilestoneError] = useState<string | null>(null);
+  // Milestones need complete transaction history — shared with Overview/
+  // Spend/Insights via the same cache instead of a fourth independent full
+  // re-fetch on every mount (2026-09-05, found while auditing "are all tabs
+  // fast" after the Orders/Vouchers fix). Order doesn't matter here:
+  // spendInWindow only sums via reduce(), so the cache's descending order
+  // (vs. this tab's old ascending fetch) changes nothing.
+  const { data: allData, error: fetchError } = useTransactionsAll();
+  const milestoneTxns = useMemo(
+    () => (allData?.transactions as MilestoneTxn[]) ?? [],
+    [allData]
+  );
+  const milestoneError = fetchError ? "Milestone spend couldn't be loaded. Try refreshing Cards." : null;
   const [editingPeriod, setEditingPeriod] = useState<string | null>(null);
   const [periodDraft, setPeriodDraft] = useState("");
   const [savingPeriod, setSavingPeriod] = useState(false);
@@ -73,26 +84,6 @@ export default function CardsTab() {
     setProfile(settings?.profile_text || "");
     setGmailUser(settings?.gmail_user || "");
     setSavedAppPassword(!!settings?.gmail_app_password_encrypted);
-
-    // Milestones need complete history; Supabase pages are capped, so fetch all
-    // rows explicitly rather than silently stopping at the first 1,000.
-    const all: MilestoneTxn[] = [];
-    setMilestoneError(null);
-    for (let from = 0; ; from += 1000) {
-      const { data, error } = await supabase.from("transactions")
-        .select("id, card_last4, amount_inr, original_currency, txn_at, txn_type")
-        .order("txn_at", { ascending: true })
-        .order("id", { ascending: true })
-        .range(from, from + 999);
-      if (error) {
-        setMilestoneError("Milestone spend couldn't be loaded. Try refreshing Cards.");
-        break;
-      }
-      const page = (data ?? []) as MilestoneTxn[];
-      all.push(...page);
-      if (page.length < 1000) break;
-    }
-    setMilestoneTxns(all);
   }
 
   async function checkGmail() {
