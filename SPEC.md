@@ -155,7 +155,9 @@ A one-stop credit-card destination: syncs bank transaction emails from Gmail (Ax
 | 2026-07-27 | A labelled bank transaction amount is authoritative; fallback must never use a later account balance or credit limit | Let generic amount scanning salvage any number after a strict parser declines | An Axis alert for `SGD .1` failed strict parsing and then picked up ₹11,87,242.78 from `Available Limit`. Valid leading-decimal values now parse; malformed labelled foreign amounts are rejected rather than guessed, and an audit repaired the single affected historical row. |
 | 2026-07-27 | Amazon Pay-funded gift cards require exact issuance evidence and are marked with a separate funding source | Infer Amazon Pay funding from a same-brand or same-value order | An evidence-only record keeps the Birkenstock ₹5,000 gift card separate from card-funded Gyftr vouchers and avoids fictional voucher drawdowns. |
 
-## §6 Current State (as of 2026-09-03)
+## §6 Current State (as of 2026-09-05)
+
+**Login and performance work closed out 2026-09-05.** `ca0e6f7` is on `main`, `origin/main`, the Mac mini, and Vercel — all four confirmed on the identical commit, working trees clean. This session: fixed the mini's localhost OAuth-return crash (`c41107f`, `requestOrigin()` header-derived redirect origin, confirmed via real Google sign-in — see §7), root-caused the PKCE error that followed as stale debugging-session cookies (no code fix needed, confirmed by KP retrying in a private window), fixed two `cardiq` shell-alias bugs (stale build-detection, no-retry Mini probe), and did a full performance pass: bundle-split the root page (208KB→44.5KB), then found and fixed the real cause — 6 tabs (Overview/Spend/Insights/Orders/Vouchers/Cards) each independently re-fetching complete history with no caching on every mount. All now share one IndexedDB stale-while-revalidate cache (`src/lib/resource-cache.ts`) with parallelized backend pagination (`src/lib/paginate.ts`), verified byte-identical against the live database. Full narrative: `AI HQ/summaries/cardIQ/cloudflare-oauth-login.md` and `performance-overhaul-2026-09.md`.
 
 **OAuth/Cloudflare recovery shipped 2026-09-02; final wrap-up 2026-09-03:** `d2e826d` is on `main`, `origin/main`, Vercel, and the Mac mini. It builds on `34fa44a` (strict OAuth boundary), `dd10c8f` (Next 16/direct-PM2 runtime), `5a42b96` (dedicated port 3901), and integration commit `ef18448`. CardIQ canonicalises raw Tailscale IPv4/IPv6, `mac-mini`, and `mac-mini.local` to `http://mac-mini.tail8f99cb.ts.net:3901` before OAuth. Malformed authorities, URL credentials, deceptive Google destinations, Cloudflare block HTML, hung network calls, and hostname lookalikes all have explicit rejection tests. The health command exercises raw entry → canonical login → CardIQ HTML → Supabase authorize → exact HTTPS `accounts.google.com` handoff without selecting an account.
 
@@ -380,9 +382,11 @@ Verified against the real live database, not synthetic data: 3126 real transacti
 | `GOOGLE_CLIENT_SECRET` | Server |
 | `ENCRYPTION_KEY` | Server (AES-256 for stored secrets) |
 
-## §9 Session Handoff Notes (2026-09-03)
+## §9 Session Handoff Notes (2026-09-05)
 
 ### Start Here — Current, Verified State
+
+**Start here (2026-09-05) — login is fully verified end-to-end (real Google sign-in, not just probes), and all 6 heavy-data tabs are cached and fast.** `ca0e6f7` on `main`/`origin/main`/Mac-mini/Vercel, all confirmed identical, trees clean. Nothing pending from this session — the earlier "Supabase Redirect URLs dashboard audit" item below is now moot (KP already checked it, it was correct; the real bug was elsewhere, see §7). If picking this up fresh: read `AI HQ/summaries/cardIQ/cloudflare-oauth-login.md` and `performance-overhaul-2026-09.md` for the full story before re-deriving anything.
 
 **Start here (2026-09-03) — the CardIQ login recovery is complete.** `d2e826d` is the exact behavior revision on `main`, `origin/main`, Vercel, and the Mac mini. Vercel deployment `dpl_4jKzx5tgXn5UqcUT7Z2Z6SneRgmS` is READY; the Mac mini runs the tracked direct-Next PM2 entry on port 3901; the complete health chain and alias redirects passed. The original Cloudflare path (raw Tailscale address inside Supabase `redirect_to`) and the later short-host path (Supabase falling back to its Site URL) are both closed by one canonical-origin boundary.
 
