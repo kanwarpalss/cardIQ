@@ -68,23 +68,21 @@ export default function OverviewTab({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // ── This-month aggregates (INR only, mirrors SpendTab's convention) ────────
+  // ── This-month aggregates (INR + foreign converted at txn-date rate,
+  //    mirrors SpendTab's convention) ────────────────────────────────────
   const month = useMemo(() => {
     const txns = allData?.transactions ?? [];
     const now = new Date();
     const startMs = new Date(now.getFullYear(), now.getMonth(), 1).getTime();
-    const inr = txns.filter(
-      (t) => new Date(t.txn_at).getTime() >= startMs &&
-             (!t.original_currency || t.original_currency.toUpperCase() === "INR")
-    );
-    const debits = inr.filter((t) => t.txn_type === "debit");
-    const credits = inr.filter((t) => t.txn_type === "credit");
+    const inThisMonth = txns.filter((t) => new Date(t.txn_at).getTime() >= startMs);
+    const debits = inThisMonth.filter((t) => t.txn_type === "debit");
+    const credits = inThisMonth.filter((t) => t.txn_type === "credit");
     const perCard: Record<string, number> = {};
     for (const t of debits) perCard[t.card_last4] = (perCard[t.card_last4] || 0) + Number(t.amount_inr);
     return {
       spend: debits.reduce((s, t) => s + Number(t.amount_inr), 0),
       refunds: credits.reduce((s, t) => s + Number(t.amount_inr), 0),
-      count: inr.length,
+      count: inThisMonth.length,
       perCard,
     };
   }, [allData]);

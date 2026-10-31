@@ -7,8 +7,10 @@
 //   • top items, powered by matched order emails (feature C's items jsonb)
 //
 // All aggregation happens client-side from /api/transactions/all — same
-// payload SpendTab uses, no new endpoints. INR-only, debits-only, matching
-// SpendTab's rule (foreign-currency txns live in their own panel there).
+// payload SpendTab uses, no new endpoints. Debits-only; foreign-currency
+// txns are included at their INR-on-txn-date equivalent, matching
+// SpendTab's convention (2026-10-26 — previously excluded them, same as
+// the stale rule OverviewTab had).
 
 import { useMemo, useState } from "react";
 import { useTransactionsAll } from "@/lib/transactions-cache";
@@ -44,11 +46,10 @@ export default function InsightsTab() {
   const allData = rawAllData as AllData | null;
   const [month, setMonth] = useState<string>(monthKey(new Date()));
 
-  // INR debits only — the currency SpendTab totals are denominated in.
+  // Debits only, INR + foreign (converted at txn-date rate) — same rows
+  // SpendTab's tiles total.
   const debits = useMemo(
-    () => (allData?.transactions ?? []).filter(
-      (t) => t.txn_type === "debit" && (!t.original_currency || t.original_currency.toUpperCase() === "INR")
-    ),
+    () => (allData?.transactions ?? []).filter((t) => t.txn_type === "debit"),
     [allData]
   );
 

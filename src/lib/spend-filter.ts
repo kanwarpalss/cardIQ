@@ -1,3 +1,5 @@
+import { isInr } from "@/lib/currency";
+
 export type SpendFilterTxn = {
   id: string;
   card_last4: string;
@@ -9,6 +11,7 @@ export type SpendFilterTxn = {
   subcategory?: string | null;
   notes?: string | null;
   original_currency?: string | null;
+  original_amount?: number | null;
 };
 
 export type SpendFilters = {
@@ -151,16 +154,29 @@ export function filterSpendTransactions<T extends SpendFilterTxn>(
 }
 
 export function summarizeSpendTransactions<T extends SpendFilterTxn>(transactions: T[]) {
+  // Every transaction already carries its INR equivalent (native INR, or a
+  // foreign amount converted at its own txn-date rate — see txn-enrich.ts).
+  // Totals, the main table, and the breakdowns below use ALL of them; only
+  // `foreignTxns` is split out, and solely to feed the supplemental
+  // ForeignCurrencyPanel (native-currency detail + today's-rate comparison).
   const inrTxns: T[] = [];
   const foreignTxns: T[] = [];
   for (const txn of transactions) {
-    const currency = txn.original_currency?.trim().toUpperCase();
-    if (!currency || currency === "INR") inrTxns.push(txn);
+    if (isInr(txn.original_currency)) inrTxns.push(txn);
     else foreignTxns.push(txn);
   }
 
-  const debits = inrTxns.filter((txn) => txn.txn_type === "debit");
-  const credits = inrTxns.filter((txn) => txn.txn_type === "credit");
+  // filterSpendTransactions() already rejects negative/non-finite amounts
+  // upstream, but this function is exported on its own — a corrupted foreign
+  // row (bad historical-FX write) must not silently poison the whole page's
+  // totals the way it couldn't before (foreign rows used to be quarantined
+  // out of the sum entirely). Fail closed here too, same rule as upstream.
+  const validAmount = (txn: T) => {
+    const n = Number(txn.amount_inr);
+    return Number.isFinite(n) && n >= 0;
+  };
+  const debits = transactions.filter((txn) => txn.txn_type === "debit" && validAmount(txn));
+  const credits = transactions.filter((txn) => txn.txn_type === "credit" && validAmount(txn));
   const totalDebit = debits.reduce((sum, txn) => sum + Number(txn.amount_inr), 0);
   const totalCredit = credits.reduce((sum, txn) => sum + Number(txn.amount_inr), 0);
 
@@ -193,7 +209,7 @@ export function summarizeSpendTransactions<T extends SpendFilterTxn>(transaction
       total_debit: totalDebit,
       total_credit: totalCredit,
       net: totalDebit - totalCredit,
-      txn_count: inrTxns.length,
+      txn_count: transactions.length,
       debit_count: debits.length,
       credit_count: credits.length,
     },

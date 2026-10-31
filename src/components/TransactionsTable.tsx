@@ -3,6 +3,8 @@
 import { Fragment, useEffect, useMemo, useState } from "react";
 import { CARD_REGISTRY } from "@/lib/cards/registry";
 import { formatCategory } from "@/lib/categories";
+import { isInr } from "@/lib/currency";
+import { formatCurrency } from "@/lib/forex";
 import { groupVoucherSpendDetails, hasExpandableSpendDetails } from "@/lib/spend-details";
 import TransactionSpendDetails from "./TransactionSpendDetails";
 
@@ -12,6 +14,8 @@ type Txn = {
   subcategory?: string | null;
   txn_at: string; txn_type: "debit" | "credit";
   notes?: string | null;
+  original_currency?: string | null;
+  original_amount?: number | null;
 };
 type CardRow = { id: string; last4: string; nickname: string | null; product_key: string };
 type SortCol = "date" | "merchant" | "category" | "card" | "amount";
@@ -266,7 +270,7 @@ export default function TransactionsTable({
       <div className="px-5 py-3 border-b border-wire flex items-center justify-between gap-3">
         <h3 className="text-2xs uppercase tracking-widest text-mist/55 shrink-0">Transactions</h3>
         <span className="text-2xs text-mist/55 shrink-0">
-          {processed.length} INR transaction{processed.length === 1 ? "" : "s"}
+          {processed.length} transaction{processed.length === 1 ? "" : "s"}
         </span>
       </div>
 
@@ -519,11 +523,17 @@ export default function TransactionsTable({
                   {cardNicknameMap.get(t.card_last4) ?? `··${t.card_last4}`}
                 </td>
 
-                {/* Amount */}
-                <td className={`px-5 py-3 text-right font-semibold whitespace-nowrap align-top tabular-nums ${
-                  t.txn_type === "credit" ? "text-emerald" : "text-mist/90"
-                }`}>
-                  {t.txn_type === "credit" ? "+" : ""}{fmt(t.amount_inr)}
+                {/* Amount — foreign-currency txns show the INR equivalent (bold)
+                    with the original native amount underneath (muted). */}
+                <td className="px-5 py-3 text-right whitespace-nowrap align-top tabular-nums">
+                  <div className={`font-semibold ${t.txn_type === "credit" ? "text-emerald" : "text-mist/90"}`}>
+                    {t.txn_type === "credit" ? "+" : ""}{fmt(t.amount_inr)}
+                  </div>
+                  {!isInr(t.original_currency) && t.original_amount != null && (
+                    <div className="text-2xs text-mist/45 font-normal mt-0.5">
+                      {formatCurrency(t.original_amount, t.original_currency)}
+                    </div>
+                  )}
                 </td>
               </tr>
 

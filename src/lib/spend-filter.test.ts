@@ -176,7 +176,7 @@ describe("filterSpendTransactions", () => {
     }).map((row) => row.id)).toEqual(["year-start", "year-end"]);
   });
 
-  it("feeds totals and breakdowns from the exact same searched result set", () => {
+  it("feeds totals and breakdowns from the exact same searched result set — foreign txns fold in at their stored INR-on-txn-date amount (2026-10-26)", () => {
     const visible = filterSpendTransactions([
       txn({ id: "spend", amount_inr: 100, merchant: "Huddle", notes: "Pickleball" }),
       txn({ id: "refund", amount_inr: 20, merchant: "Huddle", notes: "Pickleball", txn_type: "credit" }),
@@ -186,23 +186,94 @@ describe("filterSpendTransactions", () => {
 
     const result = summarizeSpendTransactions(visible);
     expect(visible.map((row) => row.id)).toEqual(["spend", "refund", "foreign"]);
+    // inrTxns/foreignTxns still split — now only to feed the supplemental
+    // Foreign Currency panel, not to gate what counts toward totals below.
     expect(result.inrTxns.map((row) => row.id)).toEqual(["spend", "refund"]);
     expect(result.foreignTxns.map((row) => row.id)).toEqual(["foreign"]);
     expect(result.summary).toEqual({
-      total_debit: 100,
+      total_debit: 150, // 100 (INR) + 50 (foreign, at its stored historical rate)
       total_credit: 20,
-      net: 80,
-      txn_count: 2,
-      debit_count: 1,
+      net: 130,
+      txn_count: 3,
+      debit_count: 2,
       credit_count: 1,
     });
     expect(result.by_merchant).toEqual([{
       merchant: "Huddle",
-      total: 100,
-      count: 1,
+      total: 150,
+      count: 2,
       category: "Groceries",
       subcategory: "Supermarket",
     }]);
-    expect(result.by_category).toEqual([{ category: "Groceries", total: 100, count: 1 }]);
+    expect(result.by_category).toEqual([{ category: "Groceries", total: 150, count: 2 }]);
+  });
+});
+
+describe("summarizeSpendTransactions — foreign currency fold-in (2026-10-26)", () => {
+  it("sums a foreign debit into a merchant's total instead of silently halving it", () => {
+    const result = summarizeSpendTransactions([
+      txn({ id: "inr", merchant: "Huddle", amount_inr: 1000, original_currency: null }),
+      txn({ id: "fx", merchant: "Huddle", amount_inr: 500, original_currency: "USD" }),
+    ]);
+    expect(result.by_merchant).toEqual([
+      { merchant: "Huddle", total: 1500, count: 2, category: "Groceries", subcategory: "Supermarket" },
+    ]);
+  });
+
+  it("does not erase a merchant whose only spend is foreign", () => {
+    const result = summarizeSpendTransactions([
+      txn({ id: "solo-fx", merchant: "Duty Free Dubai", category: "Travel", amount_inr: 8000, original_currency: "AED" }),
+    ]);
+    expect(result.by_merchant).toEqual([
+      { merchant: "Duty Free Dubai", total: 8000, count: 1, category: "Travel", subcategory: "Supermarket" },
+    ]);
+    expect(result.by_category).toEqual([{ category: "Travel", total: 8000, count: 1 }]);
+  });
+
+  it("fails closed on a corrupted amount_inr (negative or NaN) instead of letting it poison the page total", () => {
+    const negative = summarizeSpendTransactions([
+      txn({ id: "good", amount_inr: 1000, original_currency: null }),
+      txn({ id: "bad-negative", amount_inr: -500, original_currency: "USD" }),
+    ]);
+    expect(negative.summary.total_debit).toBe(1000);
+    expect(negative.summary.debit_count).toBe(1);
+
+    const nanned = summarizeSpendTransactions([
+      txn({ id: "good2", amount_inr: 1000, original_currency: null }),
+      txn({ id: "bad-nan", amount_inr: Number.NaN, original_currency: "USD" }),
+    ]);
+    expect(nanned.summary.total_debit).toBe(1000);
+    expect(nanned.summary.debit_count).toBe(1);
+  });
+
+  it("includes a ₹0 'FX rate fetch failed' sentinel with zero contribution but a visible count", () => {
+    const result = summarizeSpendTransactions([
+      txn({ id: "fx-zero", merchant: "Flights Intl", amount_inr: 0, original_amount: 75, original_currency: "USD" }),
+    ]);
+    expect(result.summary).toMatchObject({ total_debit: 0, debit_count: 1, txn_count: 1 });
+    expect(result.by_merchant).toEqual([
+      { merchant: "Flights Intl", total: 0, count: 1, category: "Groceries", subcategory: "Supermarket" },
+    ]);
+  });
+
+  it("folds every currency-code shape into totals uniformly; classification (inrTxns/foreignTxns split) is unaffected", () => {
+    const rows = [
+      txn({ id: "undef", merchant: "X", amount_inr: 200 }), // original_currency omitted
+      txn({ id: "null", merchant: "X", amount_inr: 300, original_currency: null }),
+      txn({ id: "empty", merchant: "X", amount_inr: 50, original_currency: "" }),
+      txn({ id: "padded-lower", merchant: "X", amount_inr: 500, original_currency: " usd " }),
+      txn({ id: "explicit-inr", merchant: "X", amount_inr: 40, original_amount: 999, original_currency: "INR", txn_type: "credit" }),
+      txn({ id: "fx-refund", merchant: "X", amount_inr: 120, original_currency: "EUR", txn_type: "credit" }),
+    ];
+    const result = summarizeSpendTransactions(rows);
+    expect(result.inrTxns.map((r) => r.id)).toEqual(["undef", "null", "empty", "explicit-inr"]);
+    expect(result.foreignTxns.map((r) => r.id)).toEqual(["padded-lower", "fx-refund"]);
+    expect(result.summary).toEqual({
+      total_debit: 1050, total_credit: 160, net: 890,
+      txn_count: 6, debit_count: 4, credit_count: 2,
+    });
+    expect(result.by_merchant).toEqual([
+      { merchant: "X", total: 1050, count: 4, category: "Groceries", subcategory: "Supermarket" },
+    ]);
   });
 });
