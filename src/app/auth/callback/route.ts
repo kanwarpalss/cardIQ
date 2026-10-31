@@ -1,10 +1,10 @@
-import { NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
+import { NextRequest, NextResponse } from "next/server";
+import { createAuthFlowClient } from "@/lib/supabase/auth-flow";
 import { encrypt } from "@/lib/crypto";
 import { loginRedirectForAuthCallback } from "@/lib/auth-callback";
 import { requestOrigin } from "@/lib/canonical-host";
 
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
   const url = new URL(request.url);
   // request.url's own origin can reflect the server's bind host rather than
   // the browser's actual host under `next start` with no reverse proxy in
@@ -14,7 +14,7 @@ export async function GET(request: Request) {
   const code = url.searchParams.get("code");
 
   if (code) {
-    const supabase = await createClient();
+    const { supabase, redirect } = createAuthFlowClient(request);
     const { data, error } = await supabase.auth.exchangeCodeForSession(code);
 
     const destination = loginRedirectForAuthCallback({
@@ -28,7 +28,7 @@ export async function GET(request: Request) {
       // Do not expose Supabase's raw OAuth error in the URL. It can contain
       // provider detail; the login page only needs a useful next action.
       console.error("Google OAuth callback did not create a session", error?.message);
-      return NextResponse.redirect(new URL(destination, origin));
+      return redirect(new URL(destination, origin));
     }
 
     // Persist the Google refresh token so the Gmail sync route can use it later.
@@ -42,10 +42,10 @@ export async function GET(request: Request) {
       );
     }
 
-    return NextResponse.redirect(new URL("/", origin));
+    return redirect(new URL("/", origin));
   }
 
-  return NextResponse.redirect(
+  const response = NextResponse.redirect(
     new URL(
       loginRedirectForAuthCallback({
         hasCode: false,
@@ -55,4 +55,6 @@ export async function GET(request: Request) {
       origin
     )
   );
+  response.headers.set("Cache-Control", "private, no-store");
+  return response;
 }

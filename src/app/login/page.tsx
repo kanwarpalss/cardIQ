@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { createClient } from "@/lib/supabase/client";
 import { checkSupabaseReachable } from "@/lib/supabase/health";
 import { canonicalCardiqUrl } from "@/lib/canonical-host";
 import SupabaseDownNotice from "@/components/SupabaseDownNotice";
@@ -21,6 +20,8 @@ export default function LoginPage() {
       setSignInError("Google did not return a sign-in code. Please try again.");
     } else if (error === "auth_callback") {
       setSignInError("Google sign-in could not finish. Please try again.");
+    } else if (error === "auth_start") {
+      setSignInError("Could not start Google sign-in. Please try again.");
     }
   }, []);
 
@@ -44,18 +45,9 @@ export default function LoginPage() {
       setDown(true);
       return;
     }
-    const supabase = createClient();
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
-        scopes: "openid email profile https://www.googleapis.com/auth/gmail.readonly",
-        queryParams: { access_type: "offline", prompt: "consent" },
-      },
-    });
-    if (error) {
-      setSignInError("Could not start Google sign-in. Please try again.");
-    }
+    // The server sets the one-time PKCE cookie on the SAME response that
+    // redirects to Google, so the callback cannot outrun a browser cookie write.
+    window.location.assign(new URL("/auth/start", window.location.href).href);
   }
 
   async function retry() {
