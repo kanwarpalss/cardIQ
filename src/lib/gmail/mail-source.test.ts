@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { toCanonicalId, isPdfAttachment, pickMailSource, GmailApiSource, ImapSource } from "./mail-source";
+import { toCanonicalId, isPdfAttachment, normalizeMojibake, pickMailSource, GmailApiSource, ImapSource } from "./mail-source";
 
 describe("toCanonicalId — decimal emailId to hex gmail_message_id", () => {
   // The spike's proven conversion (scripts/imap-spike.ts): Gmail's REST API
@@ -101,5 +101,23 @@ describe("ImapSource.fetchMessage — id must come from a prior search()", () =>
   it("throws a clear error for an id search() never returned", async () => {
     const src = new ImapSource("kp@gmail.com", "app-password");
     await expect(src.fetchMessage("deadbeef")).rejects.toThrow(/was not returned by a prior search/);
+  });
+});
+
+describe("normalizeMojibake — recovers from mailparser's undecodable-byte marker", () => {
+  // Real sample (2026-10-24, Aurikitchen ₹52250): mailparser stored
+  // U+FFFD in place of whitespace around the amount, which silently broke
+  // BODY_AMOUNT_RE even after axis.ts was fixed for the new subject/body shape.
+  it("collapses U+FFFD to a space so a real transaction regains its field separators", () => {
+    const corrupted = "Transaction amount (INR):� INR� 52250 Merchant name: Aurikitchen";
+    expect(normalizeMojibake(corrupted)).toBe("Transaction amount (INR): INR 52250 Merchant name: Aurikitchen");
+  });
+
+  it("collapses a run of consecutive U+FFFD to a single space", () => {
+    expect(normalizeMojibake("a���b")).toBe("a b");
+  });
+
+  it("leaves clean text untouched", () => {
+    expect(normalizeMojibake("Transaction Amount: INR 1042")).toBe("Transaction Amount: INR 1042");
   });
 });

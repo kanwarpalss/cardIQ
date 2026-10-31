@@ -144,6 +144,23 @@ export function isPdfAttachment(a: { contentType?: string; filename?: string }):
   return a.contentType === "application/pdf" || /\.pdf$/i.test(a.filename || "");
 }
 
+/**
+ * mailparser substitutes U+FFFD (replacement character) for bytes it can't
+ * decode under the charset it detected — observed on real Axis alerts that
+ * mis-declare their encoding (2026-10 incident: "Transaction amount
+ * (INR):� INR� 52250" — the corrupted whitespace broke every
+ * regex expecting a plain space there, so the transaction silently vanished
+ * even after the parser itself was fixed to recognize the new template).
+ * The surrounding content is intact; only the undecodable separator byte is
+ * lost, so collapsing it to a space is a safe, information-preserving
+ * recovery — far better than leaving every parser to special-case it one
+ * regex at a time. Exported so the one-time repair of already-stored rows
+ * (scripts/repair-mojibake-bodies.ts) applies the exact same rule.
+ */
+export function normalizeMojibake(text: string): string {
+  return text.replace(/\s*�+\s*/g, " ");
+}
+
 const ALL_MAIL = "[Gmail]/All Mail";
 
 export class ImapSource implements MailSource {
@@ -220,7 +237,8 @@ export class ImapSource implements MailSource {
     }
 
     const parsed = await simpleParser(raw.source);
-    const text = parsed.text ?? (typeof parsed.html === "string" ? stripHtml(parsed.html) : "");
+    const rawText = parsed.text ?? (typeof parsed.html === "string" ? stripHtml(parsed.html) : "");
+    const text = normalizeMojibake(rawText);
     const html = typeof parsed.html === "string" ? parsed.html : "";
 
     const attachments: NormalizedAttachment[] = (parsed.attachments || [])

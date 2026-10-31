@@ -48,7 +48,9 @@ const TXN_VERB_RE =
 
 // Strong "this is NOT a transaction" signals — used to bail out early to
 // avoid false positives on marketing/promotional emails.
-const MARKETING_SIGNALS_RE =
+// Exported so format-watch.ts's looser (no-verb-required) sweep can reuse
+// the same proven veto instead of re-deriving it (ARCH-04).
+export const MARKETING_SIGNALS_RE =
   /\b(unsubscribe|offer\s+expires|valid\s+(?:till|until)|terms\s+(?:and|&)\s+conditions\s+apply|\d+%\s+(?:off|cashback|discount)|sale\s+ends|book\s+now|click\s+here|special\s+offer)\b/i;
 
 // Bank emails that mention money + a verb + a real card last4, but are NOT a
@@ -68,7 +70,7 @@ const MARKETING_SIGNALS_RE =
 //     dispute — the user's OWN correspondence with the bank, not a bank
 //     transaction alert. A stray number in the reply text (a case ID, a
 //     points balance) was being recorded as spend — one ₹1.5L example.
-const NON_TRANSACTION_NOTIFICATION_RE =
+export const NON_TRANSACTION_NOTIFICATION_RE =
   /payment\s+received\s+on\s+your\s+.*credit\s+card|credit\s+card\s+statement\s+for\s+the\s+period|upcoming\s+autopay|pre-debit\s+notification/i;
 const SUPPORT_REPLY_THREAD_RE = /^Re:.*\b(reward\s*points|edge\s*rewards|service\s*request)\b/i;
 

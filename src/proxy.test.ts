@@ -64,6 +64,38 @@ describe("proxy canonical host guard", () => {
     );
   });
 
+  it("keeps the format-watch cron route public — it has no session cookie to check", async () => {
+    // Called by a weekly cloud routine, not a logged-in browser; the route
+    // enforces its own FORMAT_WATCH_SECRET check instead.
+    const request = new NextRequest(
+      "http://localhost:3901/api/gmail/format-watch",
+      { headers: { host: "mac-mini.tail8f99cb.ts.net:3901" } }
+    );
+
+    const response = await proxy(request);
+
+    expect(response.status).toBe(200);
+    expect(response.headers.get("location")).toBeNull();
+    expect(response.headers.get("x-middleware-next")).toBe("1");
+  });
+
+  it("does not exempt a path merely prefixed by the format-watch route", async () => {
+    // Guards against a future startsWith() refactor accidentally widening
+    // the exemption to something like /api/gmail/format-watch-admin.
+    process.env.NEXT_PUBLIC_SUPABASE_URL = "https://supabase.co";
+    const request = new NextRequest(
+      "http://localhost:3901/api/gmail/format-watch-anything-else",
+      { headers: { host: "mac-mini.tail8f99cb.ts.net:3901" } }
+    );
+
+    const response = await proxy(request);
+
+    expect(response.status).toBe(307);
+    expect(response.headers.get("location")).toBe(
+      "http://mac-mini.tail8f99cb.ts.net:3901/login?error=connection"
+    );
+  });
+
   it("fails safely to the connection notice on the browser's real host, not the server bind host", async () => {
     // Regression: this redirect used to be built from request.url's own
     // origin, which reflects the server's bind host under `next start` with

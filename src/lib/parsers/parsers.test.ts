@@ -12,6 +12,7 @@ import { parseHdfcTxn } from "@/lib/parsers/hdfc";
 import { parseIciciTxn } from "@/lib/parsers/icici";
 import { parseHsbcTxn } from "@/lib/parsers/hsbc";
 import { parseTxnEmail, parseTxnEmailWithFallback } from "@/lib/parsers/registry";
+import { findUnrecognizedFormatCandidates } from "@/lib/parsers/format-watch";
 
 // ─── AXIS ──────────────────────────────────────────────────────────────────
 describe("parseAxisTxn", () => {
@@ -146,6 +147,102 @@ describe("parseAxisTxn", () => {
   it("does not get confused by INR-amount-shaped strings in marketing", () => {
     // "Get INR 500 cashback" should NOT be parsed as a transaction
     expect(parseAxisTxn("Get INR 500 cashback on your next purchase", "marketing body", "")).toBeNull();
+  });
+
+  it("parses the 2026-10 'generic alert' template (real sample, Aurikitchen ₹52250)", () => {
+    // Real sample from kanwarpalss@gmail.com, 24-Oct-2026. Axis dropped the
+    // amount/card from the subject entirely for this template, and the body
+    // has no transactional verb — pre-fix this silently vanished (neither the
+    // strict parser's subject regex nor the generic-sniffer fallback's verb
+    // check could match it).
+    const out = parseAxisTxn(
+      "Transaction alert on Axis Bank Credit Card",
+      "Dear Customer, Here's the summary of your Axis Bank Credit Card transaction: " +
+      "Transaction amount (INR):  INR  52250 Merchant name: Aurikitchen " +
+      "Axis Bank Credit Card No.: XX4455 Date and time: 24-10-2026 12:53:54 IST " +
+      "Available limit (INR): 462486.21 Total credit limit (INR): 1217000",
+      ""
+    );
+    expect(out).toMatchObject({
+      card_last4: "4455",
+      amount_inr: 52250,
+      merchant_raw: "Aurikitchen",
+      txn_type: "debit",
+    });
+  });
+
+  it("does not capture a declined-transaction notice on the generic-alert subject", () => {
+    // "Transaction declined for Transaction alert on Axis Bank Credit Card no.
+    // XX4455" contains the generic-alert subject as a substring — must not
+    // match, since no money actually moved.
+    const out = parseAxisTxn(
+      "Transaction declined for Transaction alert on Axis Bank Credit Card no. XX4455",
+      "Please note that transaction attempt for INR 5107.25 on your Axis Bank Credit Card no. XX4455 has been declined due to security reasons.",
+      ""
+    );
+    expect(out).toBeNull();
+  });
+
+  it("parses the 2022-2025 legacy 'using your card' template (real sample, PayU*Swiggy)", () => {
+    // Real sample from kanwarpalss@gmail.com, 31-Aug-2025. 1444 of these in
+    // one real inbox never parsed: "using" isn't a verb the generic sniffer
+    // recognizes either.
+    const out = parseAxisTxn(
+      "Transaction alert on Axis Bank Credit Card no. XX4455",
+      "31-08-2025 Dear Kanwar Pal Singh Sethi, Thank you for using your credit card no. XX4455 for INR 633 at PayU*Swiggy on 31-08-2025 19:58:40 IST. The total credit limit across all your cards is INR 1217000.",
+      ""
+    );
+    expect(out).toMatchObject({ card_last4: "4455", amount_inr: 633, merchant_raw: "PayU*Swiggy", txn_type: "debit" });
+  });
+
+  it("parses the legacy template's older 'using your Axis Bank Credit Card no.' wording variant", () => {
+    const out = parseAxisTxn(
+      "Transaction alert on Axis Bank Credit Card no. XX1722",
+      "12-01-2024 Dear Kanwar Pal Singh Sethi, Thank you for using your Axis Bank Credit Card no. XX1722 for INR 16638 at MAXLIFEINSU on 12-01-24 15:47:23. The total credit limit on your card is INR 1000000.",
+      ""
+    );
+    expect(out).toMatchObject({ card_last4: "1722", amount_inr: 16638, merchant_raw: "MAXLIFEINSU", txn_type: "debit" });
+  });
+
+  it("parses the legacy template's reversal body as a separate credit, not a duplicate of its debit sibling", () => {
+    // Real sample, 31-Aug-2025: Axis sent a "using your card" debit AND this
+    // "has been reversed" email ~1 second apart for the SAME EXPLOREX TE
+    // charge — a genuine reversal, not a duplicate notification, so both
+    // must be recorded (net zero spend, full history preserved).
+    const out = parseAxisTxn(
+      "Transaction alert on Axis Bank Credit Card no. XX4455",
+      "31-08-2025 Dear Kanwar Pal Singh Sethi, Thank you for banking with us. We wish to inform you that the transaction of INR 1082 on Axis Bank Credit Card no. XX4455 on 31-08-25 00:13:08 IST at EXPLOREX TE has been reversed. If this transaction is not initiated by you, please call 18001035577.",
+      ""
+    );
+    expect(out).toMatchObject({ card_last4: "4455", amount_inr: 1082, merchant_raw: "EXPLOREX TE", txn_type: "credit" });
+  });
+
+  it("parses a legacy reversal with no space between the card number and the following 'on' (real sample quirk)", () => {
+    const out = parseAxisTxn(
+      "Transaction alert on Axis Bank Credit Card no. XX1722",
+      "21-08-2024 Dear Kanwar Pal Singh Sethi, Thank you for banking with us. We wish to inform you that the transaction of USD 1 on Axis Bank Credit Card no. XX1722on 21-08-24 15:24:19 IST at FACEBOOK.CO has been reversed.",
+      ""
+    );
+    expect(out).toMatchObject({ card_last4: "1722", currency: "USD", amount_original: 1, amount_inr: 0, merchant_raw: "FACEBOOK.CO", txn_type: "credit" });
+  });
+
+  it("does not capture a legacy-subject email whose body matches neither known shape", () => {
+    const out = parseAxisTxn("Transaction alert on Axis Bank Credit Card no. XX4455", "Some entirely different body text.", "");
+    expect(out).toBeNull();
+  });
+
+  it("routes the generic-alert template through the registry without needing the low-confidence fallback", () => {
+    const out = parseTxnEmailWithFallback(
+      "Axis Bank Alerts <alerts@axis.bank.in>",
+      "Transaction alert on Axis Bank Credit Card",
+      "Here's the summary of your Axis Bank Credit Card transaction: " +
+      "Transaction amount (INR):  INR  34254 Merchant name: VERNOST MAR " +
+      "Axis Bank Credit Card No.: XX4455 Date and time: 24-10-2026 06:29:04 IST",
+      "",
+      new Set(["4455"])
+    );
+    expect(out).toMatchObject({ card_last4: "4455", amount_inr: 34254, txn_type: "debit" });
+    expect(out?.low_confidence).toBeUndefined();
   });
 });
 
@@ -421,5 +518,55 @@ describe("parseTxnEmail", () => {
   it("returns null for unknown sender", () => {
     const out = parseTxnEmail("noreply@randombank.com", "INR 100 spent", "body", "");
     expect(out).toBeNull();
+  });
+});
+
+// ─── FORMAT WATCH ────────────────────────────────────────────────────────────
+describe("findUnrecognizedFormatCandidates", () => {
+  const BANK_DOMAINS = ["axis.bank.in", "axisbank.com", "hdfcbank.bank.in", "icici.bank.in", "hsbc.co.in"];
+
+  it("flags a known-bank email mentioning the user's own card number, even with no transactional verb", () => {
+    // The actual bug this exists to catch: the 2026-10 Axis "generic alert"
+    // template has no verb at all, so the generic sniffer (which requires
+    // one) would stay silent. This check must not.
+    const out = findUnrecognizedFormatCandidates(
+      [{
+        gmail_message_id: "m1",
+        raw_from: "alerts@axis.bank.in",
+        raw_subject: "Transaction alert on Axis Bank Credit Card",
+        raw_body: "Transaction amount (INR): INR 52250 Merchant name: Aurikitchen Axis Bank Credit Card No.: XX4455",
+      }],
+      new Set(["4455"]),
+      BANK_DOMAINS
+    );
+    expect(out).toHaveLength(1);
+    expect(out[0]).toMatchObject({ gmail_message_id: "m1", matched_last4: "4455" });
+  });
+
+  it("ignores emails from senders outside the known bank domains", () => {
+    const out = findUnrecognizedFormatCandidates(
+      [{ gmail_message_id: "m1", raw_from: "deals@randomshop.com", raw_subject: "Your card ending 4455 gets 10% off", raw_body: "" }],
+      new Set(["4455"]),
+      BANK_DOMAINS
+    );
+    expect(out).toHaveLength(0);
+  });
+
+  it("ignores a known-bank email that doesn't mention any card the user actually has", () => {
+    const out = findUnrecognizedFormatCandidates(
+      [{ gmail_message_id: "m1", raw_from: "alerts@axis.bank.in", raw_subject: "Your statement is ready", raw_body: "View your statement for card ending 9999" }],
+      new Set(["4455"]),           // 9999 is not a card this user has
+      BANK_DOMAINS
+    );
+    expect(out).toHaveLength(0);
+  });
+
+  it("matches the second card number when the first mentioned one isn't the user's", () => {
+    const out = findUnrecognizedFormatCandidates(
+      [{ gmail_message_id: "m1", raw_from: "alerts@axis.bank.in", raw_subject: "s", raw_body: "ending 9999 and also card no. 4455" }],
+      new Set(["4455"]),
+      BANK_DOMAINS
+    );
+    expect(out).toHaveLength(1);
   });
 });

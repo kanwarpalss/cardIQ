@@ -41,7 +41,12 @@ export async function proxy(request: NextRequest) {
   }
 
   const path = request.nextUrl.pathname;
-  const isPublic = path.startsWith("/login") || path.startsWith("/auth");
+  // Exact match, not startsWith: this is the one route a browser session
+  // never calls — a weekly cloud routine with no cookies hits it directly —
+  // so it enforces its own shared-secret check (FORMAT_WATCH_SECRET) instead
+  // of a user session. Keep this list to exact paths only; a prefix match
+  // here would exempt anything nested under it from auth entirely.
+  const isPublic = path.startsWith("/login") || path.startsWith("/auth") || path === "/api/gmail/format-watch";
 
   // Public routes never need an auth round-trip. Skipping the Supabase call
   // here keeps /login instant even when the backend is paused/unreachable —
