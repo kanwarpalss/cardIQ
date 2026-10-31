@@ -32,7 +32,7 @@ export type GenericParsed = ParsedTxn & { low_confidence: true };
 // out explicitly.
 const MONEY_RE = "(?:\\d[\\d,]*(?:\\.\\d{1,2})?|\\.\\d{1,2})";
 const AMOUNT_NEAR_CURRENCY_RE = new RegExp(
-  `(?:[A-Z]{3}|\\b(?:Rs|RS|rs|Rp|RP|rp|RM)\\.?\\b|[\\u20B9$\\u20AC\\u00A3\\u00A5\\u20A9\\u20AB\\u0E3F])\\s*(${MONEY_RE})`
+  `(?:[A-Z]{3}|\\b(?:Rs|RS|rs|Rp|RP|rp|RM)\\b\\.?|[\\u20B9$\\u20AC\\u00A3\\u00A5\\u20A9\\u20AB\\u0E3F])\\s*(${MONEY_RE})`
 );
 const DECLARED_TRANSACTION_AMOUNT_RE = /Transaction\s+Amount[:\s]+([A-Z]{3})\s+(\S+)/i;
 const VALID_MONEY_TOKEN_RE = /^(?:\d[\d,]*(?:\.\d{1,2})?|\.\d{1,2})$/;

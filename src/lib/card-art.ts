@@ -29,6 +29,10 @@ const ART: Record<string, CardArt> = {
     gradient: "linear-gradient(135deg, #14213b 0%, #0a101f 55%, #111c33 100%)",
     accent: "#dfe4ee",
   },
+  hsbc_travelone: {
+    gradient: "linear-gradient(135deg, #5f1420 0%, #2b0a10 55%, #481019 100%)",
+    accent: "#f1dfe2",
+  },
 };
 
 const DEFAULT_ART: CardArt = {

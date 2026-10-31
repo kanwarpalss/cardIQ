@@ -21,9 +21,9 @@
 import type { ParsedTxn } from "./axis";
 import { detectCurrency, isInr } from "../currency";
 
-// Debit
+// Debit. Group 2 is the currency, as in the 2026-09 template below.
 const TXN_RE =
-  /ending\s+with\s+(\d{4})[\s,]+has\s+been\s+used\s+for\s+INR\s+([\d,]+(?:\.\d{1,2})?)\s+for\s+payment\s+to\s+(.+?)\s+on\s+(\d{1,2}\s+\w+\s+\d{4})\s+at\s+(\d{2}:\d{2})/i;
+  /ending\s+with\s+(\d{4})[\s,]+has\s+been\s+used\s+for\s+([A-Z]{3})\s+([\d,]+(?:\.\d{1,2})?)\s+for\s+payment\s+to\s+(.+?)\s+on\s+(\d{1,2}\s+\w+\s+\d{4})\s+at\s+(\d{2}:\d{2})/i;
 
 // 2026-09 debit. Group 2 is the currency: this template states it right next to
 // the amount, so a USD hold needs no help from the generic sniffer.
@@ -68,8 +68,9 @@ function parseDMY(s: string): Date | null {
 export function parseHsbcTxn(subject: string, body: string, snippet: string = ""): ParsedTxn | null {
   const combined = `${body} ${snippet}`.replace(/\s+/g, " ").trim();
 
-  // Checked before the guard below, which would hand a USD alert to the generic
-  // sniffer. That sniffer needs a verb like "debited", and this template has none.
+  // Both debit templates are checked before the guard below, which would hand a
+  // USD alert to the generic sniffer. That sniffer needs a verb like "debited",
+  // and neither template has one.
   const alert = ALERT_2026_RE.exec(combined);
   if (alert) {
     const currency = alert[2].toUpperCase();
@@ -86,19 +87,23 @@ export function parseHsbcTxn(subject: string, body: string, snippet: string = ""
     };
   }
 
-  // Foreign-currency guard — see hdfc.ts for rationale.
-  if (!isInr(detectCurrency(`${subject} ${combined}`))) return null;
-
   const m = TXN_RE.exec(combined);
   if (m) {
+    const currency = m[2].toUpperCase();
+    const amount = parseAmount(m[3]);
+    if (!(amount > 0)) return null;
     return {
       card_last4: m[1],
-      amount_inr: parseAmount(m[2]),
-      merchant_raw: m[3].trim(),
-      txn_at: parseDMonY(m[4]) ?? new Date(),
+      amount_inr: isInr(currency) ? amount : 0,
+      merchant_raw: m[4].trim(),
+      txn_at: parseDMonY(m[5]) ?? new Date(),
       txn_type: "debit",
+      ...(isInr(currency) ? {} : { currency, amount_original: amount }),
     };
   }
+
+  // Foreign-currency guard — see hdfc.ts for rationale.
+  if (!isInr(detectCurrency(`${subject} ${combined}`))) return null;
 
   const c = CREDIT_RE.exec(combined);
   if (c) {

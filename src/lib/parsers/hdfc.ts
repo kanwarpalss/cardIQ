@@ -64,8 +64,8 @@ const BODY_REVERSAL_RE =
 // V2 subject — used for last4 fallback when the body regex fails.
 const SUBJ_V2_DEBIT_RE = /Rs\.?\s*([\d,]+(?:\.\d{1,2})?)\s+debited\s+via\s+Credit\s+Card\s+\*+(\d{4})/i;
 
-// "ending 5906" appears in V1 debit bodies (last4 isn't on a fixed position there).
-const ENDING_LAST4_RE = /ending\s+(\d{4})/i;
+// V1 debit bodies say either "ending 5906" or "Card XX5906", in no fixed position.
+const ENDING_LAST4_RE = /(?:ending\s+|\bXX)(\d{4})\b/i;
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 function parseAmount(raw: string): number {
@@ -130,7 +130,10 @@ export function parseHdfcTxn(subject: string, body: string, snippet: string = ""
   // ── 2. LEGACY debit (V1) ─────────────────────────────────────────────────
   const oldDebit = BODY_DEBIT_LEGACY_RE.exec(combined);
   if (oldDebit) {
-    const last4 = ENDING_LAST4_RE.exec(combined)?.[1] ?? "";
+    const last4 = ENDING_LAST4_RE.exec(combined)?.[1];
+    // No card, no transaction: the registry would refuse an empty one anyway,
+    // and returning null here lets the generic sniffer and format watch see it.
+    if (!last4) return null;
     return {
       card_last4: last4,
       amount_inr: parseAmount(oldDebit[1]),

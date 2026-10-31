@@ -48,6 +48,15 @@ describe("card specs match the bank terms read on 2026-10-31", () => {
     expect(spec.milestones_monthly).toEqual([]); // ₹1.5L is an earn-rate kink, never a milestone
   });
 
+  it("TravelOne states HSBC's published rates, and claims nothing about bills", () => {
+    const spec = CARD_REGISTRY.hsbc_travelone;
+    expect(spec.rewards?.points_per_unit).toBe(2);
+    expect(spec.lounge.domestic?.visits_per_year).toBe(6);
+    expect(spec.lounge.international?.visits_per_year).toBe(4);
+    expect(tiers("hsbc_travelone")).toEqual([800000, 1200000]);
+    expect(spec.bill_rules?.utilities.earns).toMatch(/^Not stated/);
+  });
+
   it("Swiggy tracks its ₹2L fee waiver", () => {
     expect(tiers("hdfc_swiggy")).toEqual([200000]);
   });

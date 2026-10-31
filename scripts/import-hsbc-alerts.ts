@@ -10,7 +10,8 @@
  *      around 2026-09, before the sync searched that domain, and the cursor has
  *      since passed those messages.
  *
- * Also creates the Premier 4502 card row if it's missing.
+ * Also creates the Premier 4502 and TravelOne 3337 card rows if they're missing,
+ * and links 3337's existing rows to its card.
  *
  * Attachments that aren't transactions (OTP, limit, credit notices) are counted
  * and dropped, never stored. A dump row whose card, date, currency and amount
@@ -35,7 +36,10 @@ import { ImapSource, normalizeMojibake, redactOtp } from "../src/lib/gmail/mail-
 import { stripHtml } from "../src/lib/gmail/strip";
 
 const APPLY = process.argv.includes("--apply");
-const PREMIER_LAST4 = "4502";
+const CARD_ROWS = [
+  { last4: "4502", product_key: "hsbc_premier", nickname: "HSBC Premier" },
+  { last4: "3337", product_key: "hsbc_travelone", nickname: "HSBC TravelOne" },
+];
 const DUMP_QUERY = 'from:birsimrat1@gmail.com subject:"hsbc emails" has:attachment';
 const EXPECTED_DUMP_ATTACHMENTS = 50;
 
@@ -103,21 +107,35 @@ async function main() {
   const cardByLast4 = new Map((cardsRes.data || []).map((c) => [c.last4 as string, c.id as string]));
   const merchantMap = new Map((mappingsRes.data || []).map((m) => [(m.raw_name as string).toLowerCase(), m]));
 
-  if (!cardByLast4.has(PREMIER_LAST4)) {
-    console.log(`Card ${PREMIER_LAST4}: ${APPLY ? "creating" : "would create"} HSBC Premier`);
-    if (APPLY) {
-      const { data: card, error } = await sb
-        .from("cards")
-        .insert({ user_id: uid, product_key: "hsbc_premier", nickname: "HSBC Premier", last4: PREMIER_LAST4 })
-        .select("id")
-        .single();
-      if (error || !card) throw new Error(`Card insert failed: ${error?.message}`);
-      cardByLast4.set(PREMIER_LAST4, card.id as string);
+  for (const c of CARD_ROWS) {
+    if (cardByLast4.has(c.last4)) {
+      console.log(`Card ${c.last4}: already exists`);
+    } else {
+      console.log(`Card ${c.last4}: ${APPLY ? "creating" : "would create"} ${c.nickname}`);
+      if (APPLY) {
+        const { data: card, error } = await sb
+          .from("cards")
+          .insert({ user_id: uid, ...c })
+          .select("id")
+          .single();
+        if (error || !card) throw new Error(`Card insert failed: ${error?.message}`);
+        cardByLast4.set(c.last4, card.id as string);
+      }
     }
-  } else {
-    console.log(`Card ${PREMIER_LAST4}: already exists`);
+    const cardId = cardByLast4.get(c.last4);
+    const orphans = await sb.from("transactions").select("id", { count: "exact", head: true })
+      .eq("user_id", uid).eq("card_last4", c.last4).is("card_id", null);
+    if (orphans.error) throw new Error(orphans.error.message);
+    if (orphans.count) {
+      console.log(`Card ${c.last4}: ${APPLY ? "linking" : "would link"} ${orphans.count} existing row(s)`);
+      if (APPLY && cardId) {
+        const { error } = await sb.from("transactions").update({ card_id: cardId })
+          .eq("user_id", uid).eq("card_last4", c.last4).is("card_id", null);
+        if (error) throw new Error(`Link failed: ${error.message}`);
+      }
+    }
   }
-  const knownLast4s = new Set([...cardByLast4.keys(), PREMIER_LAST4]);
+  const knownLast4s = new Set([...cardByLast4.keys(), ...CARD_ROWS.map((c) => c.last4)]);
 
   async function handleMail(mail: Mail, fromDump: boolean): Promise<"txn" | "dup" | "skipped"> {
     const parsed = parseTxnEmailWithFallback(mail.from, mail.subject, mail.body, "", knownLast4s);

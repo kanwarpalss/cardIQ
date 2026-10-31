@@ -51,7 +51,11 @@ export function parseTxnEmail(
 ): ParsedTxn | null {
   const lower = sender.toLowerCase();
   for (const { match, parse } of SENDER_PARSERS) {
-    if (match(lower)) return parse(subject, body, snippet);
+    if (!match(lower)) continue;
+    const result = parse(subject, body, snippet);
+    // A row with no card shows under no card in any tab, so it's as good as
+    // lost. Refusing it leaves the email for format watch to report.
+    return result && /^\d{4}$/.test(result.card_last4) ? result : null;
   }
   return null;
 }
