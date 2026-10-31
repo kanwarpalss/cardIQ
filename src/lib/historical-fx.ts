@@ -188,3 +188,90 @@ export async function getRatesBulk(
   await Promise.all(Array.from({ length: CONCURRENCY }, worker));
   return result;
 }
+
+/**
+ * Today's rate for a set of currencies, as a plain `{ CODE: rate }` map
+ * (null where no source has it). Goes through the exact same cache →
+ * upstream → ±N-day-fallback pipeline as any historical lookup — "today"
+ * is just another date, so it self-updates every calendar day with no
+ * manual table to bump (replaces the old hardcoded RATES/RATES_AS_OF
+ * constant in src/lib/forex.ts).
+ */
+export async function getTodayRates(
+  supabase: SupabaseClient,
+  currencies: string[],
+): Promise<{ asOf: string; rates: Record<string, number | null> }> {
+  const today = new Date();
+  const unique = Array.from(new Set(currencies.map((c) => c.toUpperCase()).filter((c) => c !== "INR")));
+  const bulk = await getRatesBulk(supabase, unique.map((currency) => ({ currency, date: today })));
+  const rates: Record<string, number | null> = {};
+  for (const code of unique) rates[code] = bulk.get(`${code}|${ymd(today)}`) ?? null;
+  return { asOf: ymd(today), rates };
+}
+
+/**
+ * Backfill `amount_inr` for foreign-currency transactions where the rate
+ * was unavailable when first written (sentinel: amount_inr 0 or null).
+ * Idempotent — a transaction with a resolved rate is never re-touched.
+ * Shared by POST /api/transactions/refresh-fx (one user, via session) and
+ * one-off maintenance scripts (service-role client, no user filter).
+ */
+export async function backfillMissingFxRates(
+  supabase: SupabaseClient,
+  opts?: { userId?: string },
+): Promise<{ scanned: number; updated: number; skipped: number; message: string }> {
+  const PAGE = 1000;
+  const rows: Array<{ id: string; original_currency: string; original_amount: number; txn_at: string }> = [];
+  for (let from = 0; ; from += PAGE) {
+    let query = supabase
+      .from("transactions")
+      .select("id, original_currency, original_amount, txn_at, amount_inr")
+      .neq("original_currency", "INR")
+      .or("amount_inr.eq.0,amount_inr.is.null")
+      .range(from, from + PAGE - 1);
+    if (opts?.userId) query = query.eq("user_id", opts.userId);
+    const { data, error } = await query;
+    if (error) throw new Error(`select: ${error.message}`);
+    if (!data || data.length === 0) break;
+    rows.push(...(data as typeof rows));
+    if (data.length < PAGE) break;
+  }
+
+  if (rows.length === 0) return { scanned: 0, updated: 0, skipped: 0, message: "Nothing to refresh." };
+
+  const seen = new Set<string>();
+  const pairs: Array<{ currency: string; date: Date }> = [];
+  for (const r of rows) {
+    const code = String(r.original_currency).toUpperCase();
+    const date = new Date(r.txn_at);
+    const key = `${code}|${ymd(date)}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    pairs.push({ currency: code, date });
+  }
+
+  const rates = await getRatesBulk(supabase, pairs);
+
+  let updated = 0;
+  let skipped = 0;
+  for (const r of rows) {
+    const code = String(r.original_currency).toUpperCase();
+    const date = new Date(r.txn_at);
+    const key = `${code}|${ymd(date)}`;
+    const rate = rates.get(key);
+    if (rate == null) { skipped++; continue; }
+
+    const amount_inr = Math.round(Number(r.original_amount) * rate * 100) / 100;
+    const { error: updErr } = await supabase.from("transactions").update({ amount_inr }).eq("id", r.id);
+    if (!updErr) updated++; else skipped++;
+  }
+
+  return {
+    scanned: rows.length,
+    updated,
+    skipped,
+    message: skipped > 0
+      ? `Updated ${updated}; ${skipped} rows still missing rates (rare currency or unreachable date).`
+      : `Updated ${updated} transactions with historical FX rates.`,
+  };
+}

@@ -91,9 +91,6 @@ const BODY_INR_EQUIV_RE = /Indian\s+Rupee\s+Equivalent[:\s]+INR\s+([\d,]+(?:\.\d
 // Generic-alert template has no card number in the subject — pull it from the
 // body's "Credit Card No.: XX4455" / "Credit Card No. XX4455" field instead.
 const BODY_CARD_LAST4_RE = /Credit\s+Card\s+No\.?\s*[:\s]*XX(\d{4})/i;
-// Generic-alert template has no "spent"/"credited" verb to key off of, so a
-// refund on this template (none observed yet) would need an explicit signal.
-const BODY_REFUND_RE = /\brefund(?:ed)?\b/i;
 // The legacy (2022-2025) template's subject always ends in "no. XXnnnn" —
 // anchored at both ends so it can't match the longer decline subject
 // ("Transaction declined for Transaction alert on Axis Bank Credit Card
@@ -204,9 +201,12 @@ export function parseAxisTxn(subject: string, body: string, snippet: string = ""
   const card_last4 = sm ? sm[3] : BODY_CARD_LAST4_RE.exec(combined)?.[1];
   if (!card_last4) return null;
 
-  const txn_type: "debit" | "credit" = sm
-    ? (creditMatch ? "credit" : "debit")
-    : (BODY_REFUND_RE.test(combined) ? "credit" : "debit");
+  // No generic-alert refund/reversal sample has ever been observed (only
+  // debits, confirmed against every real one on file) — always "debit"
+  // rather than scanning the whole body for the word "refund", which risks
+  // a false flip if it ever shows up in ordinary footer boilerplate (e.g.
+  // "for refund queries, contact...") on a genuine debit.
+  const txn_type: "debit" | "credit" = sm ? (creditMatch ? "credit" : "debit") : "debit";
 
   const subjectCurrency = sm?.[1]?.toUpperCase();
 

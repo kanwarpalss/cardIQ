@@ -11,6 +11,11 @@
 // (b) what those purchases would cost today — useful for "did INR weaken?"
 // trend awareness.
 //
+// "Today" rates come from GET /api/fx/today — a live lookup (same cache +
+// ±7-day-fallback pipeline as historical conversions), fetched once per
+// mount. This replaced a hardcoded rate table that went stale the moment
+// nobody remembered to hand-edit it (2026-10-26 fix).
+//
 // Refresh button only shows if any rows have amount_inr=0 (sentinel for
 // "rate fetch failed"). Clicking it now uses an improved historical-fx
 // pipeline with ±7 day fallback and Frankfurter as a secondary source,
@@ -19,8 +24,8 @@
 // Pagination: long currency lists collapse to top 10 by default; per-
 // currency expanded txn list paginates at 25 rows.
 
-import { useState } from "react";
-import { formatCurrency, toInr, RATES_AS_OF } from "@/lib/forex";
+import { useEffect, useState } from "react";
+import { formatCurrency } from "@/lib/forex";
 
 const TXN_PAGE = 25;
 
@@ -47,6 +52,7 @@ interface Bucket {
   totalInrToday: number;
   count: number;
   missingRateCount: number;
+  missingTodayCount: number;
   txns: ForeignTxn[];
 }
 
@@ -55,10 +61,32 @@ export default function ForeignCurrencyPanel({ transactions }: Props) {
   const [refreshing,       setRefreshing]       = useState(false);
   const [refreshMsg,       setRefreshMsg]       = useState<string | null>(null);
   const [txnPage,          setTxnPage]          = useState<Record<string, number>>({});
+  const [todayRates,       setTodayRates]       = useState<Record<string, number | null>>({});
+  const [todayAsOf,        setTodayAsOf]        = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/api/fx/today")
+      .then((r) => r.json())
+      .then((json: { asOf?: string; rates?: Record<string, number | null> }) => {
+        if (cancelled) return;
+        setTodayRates(json.rates ?? {});
+        setTodayAsOf(json.asOf ?? null);
+      })
+      .catch(() => { /* today's-rate column just shows "—" below */ });
+    return () => { cancelled = true; };
+  }, []);
+
+  function toInrToday(amount: number, currency: string | null | undefined): number | null {
+    if (!currency) return amount;
+    const rate = todayRates[currency.toUpperCase()];
+    return rate == null ? null : amount * rate;
+  }
 
   if (transactions.length === 0) return null;
 
   // ── Group by currency ─────────────────────────────────────────────────
+  const todayLoaded = todayAsOf !== null;
   const buckets: Record<string, Bucket> = {};
   for (const t of transactions) {
     const code = (t.original_currency || "???").toUpperCase();
@@ -69,17 +97,19 @@ export default function ForeignCurrencyPanel({ transactions }: Props) {
       totalInrToday: 0,
       count: 0,
       missingRateCount: 0,
+      missingTodayCount: 0,
       txns: [],
     };
-    const native    = Number(t.original_amount ?? 0);
-    const inrHist   = Number(t.amount_inr ?? 0);
-    const inrToday  = toInr(native, code) ?? 0;     // null → unknown → 0
-    const sign      = t.txn_type === "credit" ? -1 : 1;
+    const native     = Number(t.original_amount ?? 0);
+    const inrHist     = Number(t.amount_inr ?? 0);
+    const inrTodayRaw = toInrToday(native, code);   // null → not loaded yet, or unknown
+    const sign        = t.txn_type === "credit" ? -1 : 1;
 
     buckets[code].totalOriginal      += sign * native;
     buckets[code].totalInrHistorical += sign * inrHist;
-    buckets[code].totalInrToday      += sign * inrToday;
+    buckets[code].totalInrToday      += sign * (inrTodayRaw ?? 0);
     if (inrHist === 0) buckets[code].missingRateCount++;
+    if (inrTodayRaw == null) buckets[code].missingTodayCount++;
     buckets[code].count++;
     buckets[code].txns.push(t);
   }
@@ -90,6 +120,7 @@ export default function ForeignCurrencyPanel({ transactions }: Props) {
   const grandInrHistorical = list.reduce((s, b) => s + b.totalInrHistorical, 0);
   const grandInrToday      = list.reduce((s, b) => s + b.totalInrToday,      0);
   const totalMissing       = list.reduce((s, b) => s + b.missingRateCount,   0);
+  const totalMissingToday  = list.reduce((s, b) => s + b.missingTodayCount,  0);
   const inrDelta           = grandInrToday - grandInrHistorical;
 
   async function refreshRates() {
@@ -172,7 +203,9 @@ export default function ForeignCurrencyPanel({ transactions }: Props) {
                     <div className="text-2xs text-mist/55 font-normal">at txn date</div>
                   </span>
                   <span className="font-medium text-mist/70 tabular-nums text-right text-xs">
-                    ₹{Math.round(b.totalInrToday).toLocaleString("en-IN")}
+                    {todayLoaded
+                      ? `₹${Math.round(b.totalInrToday).toLocaleString("en-IN")}`
+                      : <span className="text-mist/30">…</span>}
                     <div className="text-2xs text-mist/55 font-normal">today</div>
                   </span>
                 </div>
@@ -184,7 +217,7 @@ export default function ForeignCurrencyPanel({ transactions }: Props) {
                   {visibleTxns.map((t) => {
                     const native   = Number(t.original_amount ?? 0);
                     const inrHist  = Number(t.amount_inr ?? 0);
-                    const inrToday = toInr(native, t.original_currency) ?? 0;
+                    const inrToday = toInrToday(native, t.original_currency);
                     return (
                       <div key={t.id} className="px-4 py-2.5 grid grid-cols-[auto_1fr_auto_auto_auto] items-baseline gap-x-4 text-xs">
                         <span className="text-mist/60 tabular-nums">
@@ -206,7 +239,9 @@ export default function ForeignCurrencyPanel({ transactions }: Props) {
                             : <span className="text-amber" title="Click 'Refresh missing rates' to fetch">no rate</span>}
                         </span>
                         <span className="tabular-nums text-right text-mist/50">
-                          ≈ ₹{Math.round(inrToday).toLocaleString("en-IN")}
+                          {inrToday != null
+                            ? `≈ ₹${Math.round(inrToday).toLocaleString("en-IN")}`
+                            : <span className="text-mist/30">…</span>}
                         </span>
                       </div>
                     );
@@ -245,9 +280,14 @@ export default function ForeignCurrencyPanel({ transactions }: Props) {
           </span>
         </div>
         <div className="flex items-center justify-between">
-          <span className="text-mist/50">Total in INR (today&apos;s rates, as of {RATES_AS_OF}):</span>
+          <span className="text-mist/50">
+            Total in INR (today&apos;s live rate{todayAsOf ? `, ${todayAsOf}` : ""}):
+          </span>
           <span className="font-semibold text-mist/80 tabular-nums">
-            ₹{Math.round(grandInrToday).toLocaleString("en-IN")}
+            {todayLoaded ? `₹${Math.round(grandInrToday).toLocaleString("en-IN")}` : "Loading…"}
+            {todayLoaded && totalMissingToday > 0 && (
+              <span className="text-2xs text-amber ml-1">({totalMissingToday} unpriced)</span>
+            )}
           </span>
         </div>
         <div className="flex items-center justify-between pt-1 border-t border-wire/50">

@@ -303,6 +303,37 @@ export default function CardsTab() {
         </div>
       </section>
 
+      {/* ── Bills by card ────────────────────────────────────────────── */}
+      <section className="rounded-2xl border border-rim bg-surface p-6 shadow-card space-y-3">
+        <div>
+          <h2 className="font-serif text-lg font-semibold text-gold">Utility and rent bills</h2>
+          <p className="text-xs text-mist/55 mt-1 leading-relaxed">
+            Banks decide by how the payment is coded, so try a small payment first when a biller is new.
+          </p>
+        </div>
+        <div className="space-y-2">
+          {Object.values(CARD_REGISTRY).map((spec) => (
+            <details key={spec.product_key} className="rounded-xl border border-rim bg-raised px-4 py-3">
+              <summary className="cursor-pointer text-sm font-medium text-mist/90">{spec.display_name}</summary>
+              <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                {([["Utilities", spec.bill_rules?.utilities], ["Rent", spec.bill_rules?.rent]] as const).map(([label, rule]) => (
+                  <div key={label} className="space-y-1 text-xs text-mist/70 leading-relaxed">
+                    <div className="text-2xs uppercase tracking-widest text-mist/55">{label}</div>
+                    <p>{rule?.earns ?? "Not checked yet"}</p>
+                    {rule?.limit && <p>Limit: {rule.limit}</p>}
+                    {rule?.fee && <p>Fee: {rule.fee}</p>}
+                    {rule?.milestones && <p>Milestones: {rule.milestones}</p>}
+                  </div>
+                ))}
+              </div>
+              {spec.benefits_verified_at && (
+                <div className="mt-3 text-right text-2xs text-mist/35">Checked {fmtDate(spec.benefits_verified_at)}</div>
+              )}
+            </details>
+          ))}
+        </div>
+      </section>
+
       {/* ── Gmail connection ─────────────────────────────────────────── */}
       <section className="rounded-2xl border border-rim bg-surface p-6 shadow-card space-y-3">
         <div className="flex items-center justify-between">

@@ -24,6 +24,7 @@ import { parseTxnEmailWithFallback, type ParsedTxn } from "../src/lib/parsers/re
 import { categorize } from "../src/lib/categorize";
 import { cleanMerchant } from "../src/lib/merchant-clean";
 import { enrichAmount } from "../src/lib/txn-enrich";
+import { normalizeMojibake } from "../src/lib/gmail/mail-source";
 
 const APPLY = process.argv.includes("--apply");
 const PAGE = 1000;
@@ -63,7 +64,11 @@ async function main() {
   const samples: string[] = [];
 
   for (const row of rows) {
-    const parsed = parseTxnEmailWithFallback(row.raw_from || "", row.raw_subject || "", row.raw_body || "", "", knownLast4s);
+    // Older app builds stored undecodable separator bytes as U+FFFD. Apply
+    // the same normalization as current IMAP ingestion before retrying them.
+    const subject = normalizeMojibake(row.raw_subject || "");
+    const body = normalizeMojibake(row.raw_body || "");
+    const parsed = parseTxnEmailWithFallback(row.raw_from || "", subject, body, "", knownLast4s);
     if (!parsed) continue;
     newlyParsed++;
 
@@ -99,8 +104,8 @@ async function main() {
           txn_type: parsed.txn_type,
           txn_at: txnAt.toISOString(),
           gmail_message_id: row.gmail_message_id,
-          raw_subject: row.raw_subject,
-          raw_body: row.raw_body,
+          raw_subject: subject,
+          raw_body: body,
         },
         { onConflict: "user_id,gmail_message_id" }
       )
@@ -108,11 +113,14 @@ async function main() {
       .maybeSingle();
 
     if (upsertErr) {
-      console.error(`  upsert failed for ${row.gmail_message_id}: ${upsertErr.message}`);
-      continue;
+      throw new Error(`upsert failed for ${row.gmail_message_id}: ${upsertErr.message}`);
     }
 
-    await sb.from("gmail_seen_messages").update({ txn_id: upserted?.id ?? null }).eq("user_id", uid).eq("gmail_message_id", row.gmail_message_id);
+    if (!upserted?.id) throw new Error(`No transaction returned for ${row.gmail_message_id}`);
+    const { error: linkErr } = await sb.from("gmail_seen_messages")
+      .update({ txn_id: upserted.id, raw_subject: subject, raw_body: body })
+      .eq("user_id", uid).eq("gmail_message_id", row.gmail_message_id);
+    if (linkErr) throw new Error(`link failed for ${row.gmail_message_id}: ${linkErr.message}`);
   }
 
   console.log(`\n${newlyParsed} email(s) now parse as transactions (were previously unmatched).`);

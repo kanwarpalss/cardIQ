@@ -50,7 +50,12 @@ const BODY_DEBIT_LEGACY_RE =
 
 // V1 legacy refund body
 const BODY_REFUND_LEGACY_RE =
-  /refund\s+for\s+Rs\.?\s+([\d,]+(?:\.\d{1,2})?),?\s+from\s+(.+?)\s+is\s+credited\s+to\s+your\s+HDFC\s+Bank\s+Credit\s+Card\s+ending\s+(\d{4})\s+on\s+(\d{2}-\d{2}-\d{4})/i;
+  /refund\s+for\s+Rs\.?(?:A|Â)?\s+([\d,]+(?:\.\d{1,2})?),?\s+from\s+(.+?)\s+is\s+credited\s+to\s+your\s+HDFC\s+Bank\s+Credit\s+Card\s+ending(?:A|Â)?\s+(\d{4})\s+on\s+(\d{2}-\d{2}-\d{4})/i;
+
+// Both are real bank alerts missed by the older formats: the 2026 fraud
+// notification and the 2021–22 reversal wording (not a future reminder).
+const BODY_NOTICED_RE = /Credit\s+Card\s+ending\s+in\s+(\d{4})\s*\.\s*You\s+made\s+a\s+transaction\s+of\s+Rs\.?\s*([\d,]+(?:\.\d{1,2})?)\s+at\s+(.+?)\s+on\s+(\d{2}-\d{2}-\d{4})\s+(\d{2}:\d{2}:\d{2})/i;
+const BODY_REVERSED_LEGACY_RE = /transaction\s+for\s+Rs\.?\s*([\d,]+(?:\.\d{1,2})?),?\s+on\s+your\s+HDFC\s+Bank\s+Credit\s+Card\s+ending\s+(\d{4})\s+at\s+(.+?)\s+on\s+(\d{2}-\d{2}-\d{4})\s+\d{2}:\d{2}:\d{2}\s+(?:is|has\s+been)\s+reversed\b/i;
 
 // V2 reversal body
 const BODY_REVERSAL_RE =
@@ -92,6 +97,23 @@ export function parseHdfcTxn(subject: string, body: string, snippet: string = ""
   // null here and let the generic sniffer handle it (which uses
   // lib/currency.ts and will tag it correctly).
   if (!isInr(detectCurrency(`${subj} ${combined}`))) return null;
+
+  const noticed = BODY_NOTICED_RE.exec(combined);
+  if (noticed) {
+    const amount = parseAmount(noticed[2]);
+    const at = parseDMY(noticed[4]);
+    if (!Number.isFinite(amount) || amount <= 0 || !at || at.getDate() !== Number(noticed[4].slice(0, 2)) || /,,|,$/.test(noticed[2])) return null;
+    return { card_last4: noticed[1], amount_inr: amount,
+      merchant_raw: noticed[3].trim(), txn_at: at, txn_type: "debit" };
+  }
+  const reversedLegacy = BODY_REVERSED_LEGACY_RE.exec(combined);
+  if (reversedLegacy) {
+    const amount = parseAmount(reversedLegacy[1]);
+    const at = parseDMY(reversedLegacy[4]);
+    if (!Number.isFinite(amount) || amount <= 0 || !at || at.getDate() !== Number(reversedLegacy[4].slice(0, 2)) || /,,|,$/.test(reversedLegacy[1])) return null;
+    return { card_last4: reversedLegacy[2], amount_inr: amount,
+      merchant_raw: reversedLegacy[3].trim(), txn_at: at, txn_type: "credit" };
+  }
 
   // ── 1. NEW debit (V2 + V3) — body is canonical, ignore subject wording ───
   const newDebit = BODY_DEBIT_NEW_RE.exec(combined);

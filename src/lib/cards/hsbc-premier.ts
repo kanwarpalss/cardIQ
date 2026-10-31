@@ -6,11 +6,13 @@ export const HSBC_PREMIER: CardSpec = {
   issuer: "HSBC India",
   network: "Mastercard World Elite",
 
-  // 3 reward points per ₹100 on all categories (no cap).
-  // 5x reward points on overseas spends.
+  // HSBC Reward Points T&C and rewards page, read 2026-10-31: 3 points per ₹100.
+  // Fuel earns none. A group of categories (utilities, rent, insurance, tax and
+  // others) earns only up to a shared ₹1,00,000 a month. The T&C file is undated.
+  // The earlier "5x overseas" isn't on either page, so it went.
   rewards: {
     program: "HSBC Reward Points",
-    earn_summary: "3 pts / ₹100 (5x overseas)",
+    earn_summary: "3 pts / ₹100 (no points on fuel; utilities, rent, insurance, tax and others share a ₹1L monthly limit)",
     points_per_unit: 3,
     unit_inr: 100,
   },
@@ -37,17 +39,33 @@ export const HSBC_PREMIER: CardSpec = {
     },
   },
 
-  sources: {
-    deals: "https://www.hsbc.co.in/credit-cards/products/premier/",
-    points: "https://www.hsbc.co.in/credit-cards/products/premier/rewards/",
-    vouchers: "https://www.hsbc.co.in/credit-cards/offers/",
-    lounge: "https://www.hsbc.co.in/credit-cards/products/premier/",
+  // No spend milestones. The ₹20,000 renewal fee is waived by holding a Premier
+  // banking relationship, not by spending. Only MCC 4900 is named as utilities,
+  // so phone and broadband should earn normally. That's an inference.
+  bill_rules: {
+    utilities: {
+      earns: "3 pts / ₹100 (HSBC terms)",
+      limit: "First ₹1,00,000 a month, shared with rent, insurance, tax and others",
+      milestones: "Card has no spend milestones",
+    },
+    rent: {
+      earns: "3 pts / ₹100 (HSBC terms)",
+      limit: "Same shared ₹1,00,000 a month",
+      milestones: "Card has no spend milestones",
+    },
   },
 
-  benefits_verified_at: "2026-07-08",
+  sources: {
+    deals: "https://www.hsbc.bank.in/credit-cards/products/premier/",
+    points: "https://www.hsbc.bank.in/credit-cards/products/premier/rewards/",
+    vouchers: "https://www.hsbc.co.in/credit-cards/offers/",
+    lounge: "https://www.hsbc.bank.in/credit-cards/products/premier/",
+  },
+
+  benefits_verified_at: "2026-10-31",
 
   gmail: {
-    senders: ["hsbc.co.in", "mail.hsbc.co.in"],
+    senders: ["hsbc.co.in", "mail.hsbc.co.in", "hsbc.bank.in"],
     subject_hints: ["transaction", "spent", "purchase", "credit card"],
   },
 };

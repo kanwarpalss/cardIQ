@@ -304,7 +304,7 @@ export default function SpendTab({ focusCard }: { focusCard?: { last4: string } 
 
   // This same filtered array feeds the totals, table, and compact breakdown.
   const aggregates = useMemo(() => summarizeSpendTransactions(filteredTxns), [filteredTxns]);
-  const { inrTxns, foreignTxns } = aggregates;
+  const { foreignTxns } = aggregates;
 
   // ── Render ─────────────────────────────────────────────────────────────────
   return (
@@ -376,8 +376,8 @@ export default function SpendTab({ focusCard }: { focusCard?: { last4: string } 
             label="Results"
             value={String(filteredTxns.length)}
             sub={foreignTxns.length > 0
-              ? `${inrTxns.length} INR · ${foreignTxns.length} foreign`
-              : `${inrTxns.length} INR transaction${inrTxns.length === 1 ? "" : "s"}`}
+              ? `incl. ${foreignTxns.length} foreign currency, converted to INR`
+              : `transaction${filteredTxns.length === 1 ? "" : "s"}`}
             accent="muted"
           />
         </div>
@@ -391,10 +391,10 @@ export default function SpendTab({ focusCard }: { focusCard?: { last4: string } 
 
       {allData && filteredTxns.length > 0 && (
         <>
-          {inrTxns.length > 0 && (
+          {filteredTxns.length > 0 && (
             <TransactionsTable
               resultKey={filterKey}
-              transactions={inrTxns}
+              transactions={filteredTxns}
               cards={allData.cards}
               categories={allCategories}
               subcategories={subcategorySuggestions}

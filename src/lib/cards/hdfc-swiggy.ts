@@ -19,8 +19,12 @@ export const HDFC_SWIGGY: CardSpec = {
     unit_inr: 100,
   },
 
+  // HDFC's terms v4.17 (Oct 2026) list a ₹2L annual spend waiver on the ₹500 fee.
+  // HDFC is moving holders of this card to Swiggy Ornge or BLCK in phases.
   milestones_monthly: [],
-  milestones_anniversary: [],
+  milestones_anniversary: [
+    { spend_inr: 200000, reward: "Annual fee (₹500) waived" },
+  ],
 
   lounge: {
     domestic: {
@@ -30,13 +34,29 @@ export const HDFC_SWIGGY: CardSpec = {
     },
   },
 
+  // HDFC's page for this original card doesn't mention utility bills in the
+  // parts readable on 2026-10-31. The Ornge terms exclude rent but not
+  // utilities, which implies 1% there. The utility fee is HDFC's consumer-card rule.
+  bill_rules: {
+    utilities: {
+      earns: "Unclear on this card; Swiggy Ornge terms imply 1% cashback",
+      fee: "1% on the whole month's utilities once they exceed ₹50,000 (max ₹4,999 a month)",
+      milestones: "HDFC doesn't say whether this counts toward the ₹2L waiver",
+    },
+    rent: {
+      earns: "No cashback on Swiggy Ornge (HDFC terms); this card's terms not readable",
+      fee: "1% of each rent payment (max ₹4,999 a payment)",
+      milestones: "HDFC doesn't say whether this counts toward the ₹2L waiver",
+    },
+  },
+
   sources: {
     deals: "https://www.hdfcbank.com/personal/pay/cards/credit-cards/swiggy-hdfc-bank-credit-card",
     points: "https://www.swiggy.com/",
     vouchers: "https://offers.smartbuy.hdfcbank.com/",
   },
 
-  benefits_verified_at: "2026-07-08",
+  benefits_verified_at: "2026-10-31",
 
   gmail: {
     senders: ["hdfcbank.bank.in", "hdfcbank.net", "hdfcbank.com"],

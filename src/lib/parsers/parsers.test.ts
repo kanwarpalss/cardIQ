@@ -171,6 +171,25 @@ describe("parseAxisTxn", () => {
     });
   });
 
+  it("never flips a generic-alert debit to credit just because 'refund' appears in ordinary footer boilerplate", () => {
+    // boundary-prover finding (2026-10-31): an earlier version scanned the
+    // WHOLE body for the word "refund" to guess txn_type on this template.
+    // No refund/reversal sample has ever been observed on this template —
+    // only debits — so a stray "for refund queries, contact..." footer line
+    // (entirely plausible real bank boilerplate) would have silently flipped
+    // a genuine debit to a credit. Must always be "debit" here.
+    const out = parseAxisTxn(
+      "Transaction alert on Axis Bank Credit Card",
+      "Dear Customer, Here's the summary of your Axis Bank Credit Card transaction: " +
+      "Transaction amount (INR): INR 1500 Merchant name: SOMESHOP " +
+      "Axis Bank Credit Card No.: XX4455 Date and time: 24-10-2026 12:53:54 IST. " +
+      "For refund and other queries, please contact customer care.",
+      ""
+    );
+    expect(out?.txn_type).toBe("debit");
+    expect(out?.amount_inr).toBe(1500);
+  });
+
   it("does not capture a declined-transaction notice on the generic-alert subject", () => {
     // "Transaction declined for Transaction alert on Axis Bank Credit Card no.
     // XX4455" contains the generic-alert subject as a substring — must not

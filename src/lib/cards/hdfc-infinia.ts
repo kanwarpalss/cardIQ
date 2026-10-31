@@ -24,7 +24,12 @@ export const HDFC_INFINIA: CardSpec = {
   // perpetuated. Confirm the real quarterly number from the HDFC app / T&C
   // and add it as its own tier.
   //
+  // HDFC's terms v4.17 (Oct 2026) don't list a quarterly milestone either.
+  //
   // What IS consistently sourced: renewal fee waived on ₹10L annual spend.
+  // Separately, from 1 Apr 2026 keeping Infinia needs ₹18L card spend in the
+  // financial year or a ₹50L relationship value (same terms). That's a
+  // condition, not a reward, so it isn't modeled as a milestone.
   milestones_monthly: [],
   milestones_anniversary: [
     { spend_inr: 1000000, reward: "Renewal fee (₹12,500 + GST) waived" },
@@ -45,6 +50,22 @@ export const HDFC_INFINIA: CardSpec = {
     },
   },
 
+  // HDFC's terms v4.17 (Oct 2026). They don't say whether either bill type
+  // counts toward the ₹10L waiver. Telecom has its own separate 2,000 points.
+  bill_rules: {
+    utilities: {
+      earns: "5 pts / ₹150 (HDFC terms)",
+      limit: "2,000 points a calendar month, about ₹60,000 of spend; telecom has its own 2,000",
+      fee: "1% on the whole month's utilities once they exceed ₹50,000 (max ₹4,999 a month)",
+      milestones: "HDFC doesn't say whether this counts toward the ₹10L waiver",
+    },
+    rent: {
+      earns: "No points (HDFC terms)",
+      fee: "1% of each rent payment (max ₹4,999 a payment)",
+      milestones: "HDFC doesn't say whether this counts toward the ₹10L waiver",
+    },
+  },
+
   sources: {
     deals: "https://www.hdfcbank.com/personal/pay/cards/credit-cards/infinia-metal-credit-card",
     points: "https://offers.smartbuy.hdfcbank.com/",
@@ -52,7 +73,7 @@ export const HDFC_INFINIA: CardSpec = {
     lounge: "https://www.hdfcbank.com/personal/pay/cards/credit-cards/infinia-metal-credit-card/lounge",
   },
 
-  benefits_verified_at: "2026-07-10", // quarterly bonus milestone specifically NOT verified — see comment above
+  benefits_verified_at: "2026-10-31", // quarterly bonus milestone specifically NOT verified — see comment above
 
   gmail: {
     // hdfcbank.bank.in is the new (2025+) alerts domain. Old alerts came
