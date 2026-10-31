@@ -15,7 +15,7 @@ import { detectCurrency, isInr } from "../currency";
 
 // "Credit Card XX9004 has been used for a transaction of INR 6000.00 on Apr 06, 2026 at 10:35:11. Info: MERCHANT"
 const TXN_RE =
-  /Credit\s+Card\s+XX(\d{4})\s+has\s+been\s+used\s+for\s+a\s+transaction\s+of\s+INR\s+([\d,]+(?:\.\d{1,2})?)\s+on\s+(\w+\s+\d{1,2},\s+\d{4})\s+at\s+(\d{2}:\d{2}:\d{2})(?:.*?Info:\s*(.+?))?(?:\.\s|The Available|$)/i;
+  /Credit\s+Card\s+XX(\d{4})\s+has\s+been\s+used\s+for\s+a\s+transaction\s+of\s+([A-Z]{3}|Rs\.?)\s+([\d,]+(?:\.\d{1,2})?)\s+on\s+(\w+\s+\d{1,2},\s+\d{4})(?:\s+at\s+|;\s*)(\d{2}:\d{2}:\d{2})(?:.*?Info:\s*(.+?))?(?:\.\s|The Available|$)/i;
 
 // Credit/reversal: capture amount, last4, AND date — previous version dropped
 // the date and silently used `new Date()` (today's wall clock), which corrupted
@@ -47,22 +47,24 @@ function parseMonDY(s: string): Date | null {
 export function parseIciciTxn(subject: string, body: string, snippet: string = ""): ParsedTxn | null {
   const combined = `${body} ${snippet}`.replace(/\s+/g, " ").trim();
 
-  // Foreign-currency guard — see hdfc.ts for rationale.
-  if (!isInr(detectCurrency(`${subject} ${combined}`))) return null;
-
   const m = TXN_RE.exec(combined);
   if (m) {
+    const currency = /^Rs\.?$/i.test(m[2]) ? "INR" : m[2].toUpperCase();
+    const amount = parseAmount(m[3]);
+    if (!Number.isFinite(amount) || amount <= 0) return null;
     return {
       card_last4: m[1],
-      amount_inr: parseAmount(m[2]),
+      amount_inr: currency === "INR" ? amount : 0,
+      ...(currency === "INR" ? {} : { currency, amount_original: amount }),
       // Strip trailing punctuation — the regex's terminator is greedy enough
       // to include a final period when there's no space after it.
-      merchant_raw: m[5]?.trim().replace(/[.,;]+$/, "") || undefined,
-      txn_at: parseMonDY(m[3]) ?? new Date(),
+      merchant_raw: m[6]?.trim().replace(/[.,;]+$/, "") || undefined,
+      txn_at: parseMonDY(m[4]) ?? new Date(),
       txn_type: "debit",
     };
   }
 
+  if (!isInr(detectCurrency(`${subject} ${combined}`))) return null;
   const c = CREDIT_RE.exec(combined);
   if (c) {
     return {

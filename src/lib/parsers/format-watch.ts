@@ -57,15 +57,20 @@ function isKnownBankSender(sender: string, bankDomains: readonly string[]): bool
 // silently narrow just because that file's regex changes for an unrelated
 // reason.
 const LAST4_NEAR_RE =
-  /(?:XX|\*\*|ending\s+(?:with\s+)?|card\s+(?:no\.?|number)?\s*:?\s*X?X?)\s*(\d{4})\b/gi;
+  /(?:XX|\*\*|ending\s+(?:(?:with|in)\s+)?|card\s+(?:no\.?|number)?\s*:?\s*X?X?)\s*(\d{4})\b/gi;
+
+// A bank's explicit transaction-alert subject is independent evidence that
+// deserves attention even when its card field/template changes. Never let a
+// marketing footer or an unregistered/retired card silently hide this class.
+const EXPLICIT_ALERT_RE = /^(?:Transaction alert on Axis Bank Credit Card(?: no\. XX\d{4})?|We noticed a transaction on your Credit Card|A payment was made using your Credit Card|Alert\s*:\s*Update on your HDFC Bank Credit Card|Transaction alert for your ICICI Bank credit card|Credit Card Transaction Alert|(?:Transaction confirmation|Credit Transaction|Cancellation of transaction) on your Citibank credit card|Provisional credit to your Citibank credit card)$/i;
 
 // Format-watch-specific vetoes — categories that look transactional only
 // because we dropped the verb requirement, each confirmed from the
 // 2026-10-25 real-data run (see file header):
 const RE_THREAD_RE = /^Re:/i;                       // user's own correspondence with the bank
 const DECLINED_RE = /\bdeclined\b/i;                // no money moved
-const AUTOPAY_LIFECYCLE_RE = /autopay.*(activated|reminder)/i; // mandate setup, not the executed charge
-const MARKETING_SENDER_LOCAL_PART_RE = /^(informations?)@/i;  // HDFC's newsletter team, not alerts@hdfcbank.bank.in
+const AUTOPAY_LIFECYCLE_RE = /auto\s*pay.*(activated|reminder)/i; // mandate setup, not the executed charge
+const MARKETING_SENDER_LOCAL_PART_RE = /^informations?$/i;  // local part excludes the @ delimiter
 
 function isBenignNotification(sender: string, subject: string, combined: string): boolean {
   if (RE_THREAD_RE.test(subject)) return true;
@@ -86,7 +91,8 @@ function isBenignNotification(sender: string, subject: string, combined: string)
 
 /**
  * Scan already-fetched, not-yet-matched bank emails (gmail_seen_messages rows
- * with txn_id IS NULL) for ones mentioning a card the user actually has.
+ * with txn_id IS NULL) for explicit transaction alerts, or other suspicious
+ * messages mentioning a card the user actually has.
  * Pure function — no DB/network access — so it's shared by the one-off sweep
  * script and any periodic job without risk of the two drifting apart.
  */
@@ -99,7 +105,8 @@ export function findUnrecognizedFormatCandidates(
   for (const row of rows) {
     if (!isKnownBankSender(row.raw_from, bankDomains)) continue;
     const combined = `${row.raw_subject} ${row.raw_body}`.replace(/\s+/g, " ").trim();
-    if (isBenignNotification(row.raw_from, row.raw_subject, combined)) continue;
+    const explicitAlert = EXPLICIT_ALERT_RE.test(row.raw_subject.trim());
+    if (!explicitAlert && isBenignNotification(row.raw_from, row.raw_subject, combined)) continue;
 
     const re = new RegExp(LAST4_NEAR_RE.source, "gi");
     let m: RegExpExecArray | null;
@@ -110,13 +117,13 @@ export function findUnrecognizedFormatCandidates(
         break;
       }
     }
-    if (!matched) continue;
+    if (!matched && !explicitAlert) continue;
 
     out.push({
       gmail_message_id: row.gmail_message_id,
       sender: row.raw_from,
       subject: row.raw_subject,
-      matched_last4: matched,
+      matched_last4: matched ?? "unknown",
       snippet: combined.slice(0, 200),
       internal_date: row.internal_date ?? null,
     });

@@ -19,6 +19,12 @@ export const CARD_REGISTRY: Record<string, CardSpec> = Object.fromEntries(
   ALL_CARDS.map((c) => [c.product_key, c])
 );
 
+// Citi's retired cards still have real charge/refund history. They have a
+// parser and must remain discoverable without inventing an active card spec.
+export const BANK_EMAIL_SENDERS = [...new Set([
+  ...ALL_CARDS.flatMap((card) => card.gmail.senders), "citicorp.com",
+])];
+
 export function getCardSpec(product_key: string): CardSpec | undefined {
   return CARD_REGISTRY[product_key];
 }

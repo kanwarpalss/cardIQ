@@ -2,6 +2,7 @@ import { parseAxisTxn, type ParsedTxn } from "./axis";
 import { parseHdfcTxn } from "./hdfc";
 import { parseIciciTxn } from "./icici";
 import { parseHsbcTxn } from "./hsbc";
+import { parseCitiTxn } from "./citi";
 import { genericSniff, type GenericParsed } from "./generic-sniffer";
 
 export type { ParsedTxn, GenericParsed };
@@ -26,9 +27,10 @@ const SENDER_PARSERS: Array<{
     parse: parseIciciTxn,
   },
   {
-    match: (s) => s.includes("hsbc.co.in") || s.includes("mail.hsbc"),
+    match: (s) => s.includes("hsbc.co.in") || s.includes("hsbc.bank.in") || s.includes("mail.hsbc"),
     parse: parseHsbcTxn,
   },
+  { match: (s) => s.includes("citicorp.com"), parse: parseCitiTxn },
 ];
 
 // Try all parsers in order — used when sender is unknown (e.g. recategorize from stored raw_body)
@@ -75,6 +77,9 @@ export function parseTxnEmailWithFallback(
   knownLast4s: Set<string>,
 ): (ParsedTxn & { low_confidence?: boolean }) | null {
   const strict = parseTxnEmail(sender, subject, body, snippet);
+  // Citi's balance-adjustment and refund-invitation notices look like charges
+  // to the generic sniffer. Only explicit, evidenced Citi formats are safe.
+  if (sender.toLowerCase().includes("citicorp.com")) return strict;
   if (strict) return strict;
   return genericSniff(subject, body, snippet, knownLast4s);
 }

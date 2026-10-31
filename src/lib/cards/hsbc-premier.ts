@@ -65,7 +65,7 @@ export const HSBC_PREMIER: CardSpec = {
   benefits_verified_at: "2026-10-31",
 
   gmail: {
-    senders: ["hsbc.co.in", "mail.hsbc.co.in"],
+    senders: ["hsbc.co.in", "mail.hsbc.co.in", "hsbc.bank.in"],
     subject_hints: ["transaction", "spent", "purchase", "credit card"],
   },
 };

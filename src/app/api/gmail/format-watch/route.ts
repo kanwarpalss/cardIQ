@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
-import { CARD_REGISTRY } from "@/lib/cards/registry";
+import { BANK_EMAIL_SENDERS } from "@/lib/cards/registry";
 import { findUnrecognizedFormatCandidates, type SeenRow } from "@/lib/parsers/format-watch";
 
 /**
@@ -45,8 +45,7 @@ export async function GET(req: Request) {
   }
   const knownLast4s = new Set((cards || []).map((c) => c.last4));
 
-  const bankDomains = new Set<string>();
-  for (const spec of Object.values(CARD_REGISTRY)) spec.gmail.senders.forEach((d) => bankDomains.add(d));
+  const bankDomains = new Set(BANK_EMAIL_SENDERS);
 
   const rows: SeenRow[] = [];
   for (let from = 0; ; from += PAGE) {

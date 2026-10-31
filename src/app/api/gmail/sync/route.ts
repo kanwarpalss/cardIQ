@@ -7,7 +7,7 @@ import { categorizeFull } from "@/lib/categorize";
 import { isMissingColumnError } from "@/lib/supabase/errors";
 import { cleanMerchant } from "@/lib/merchant-clean";
 import { enrichAmount } from "@/lib/txn-enrich";
-import { CARD_REGISTRY } from "@/lib/cards/registry";
+import { BANK_EMAIL_SENDERS } from "@/lib/cards/registry";
 
 /**
  * Lookback window for the very first ever sync only.
@@ -174,10 +174,7 @@ export async function POST(req: Request) {
   });
 
   // ── Build the combined-sender Gmail query ────────────────────────────────
-  const allSenders = new Set<string>();
-  for (const spec of Object.values(CARD_REGISTRY)) {
-    spec.gmail.senders.forEach((s) => allSenders.add(s));
-  }
+  const allSenders = new Set(BANK_EMAIL_SENDERS);
   const fromClause = [...allSenders].map((s) => `from:${s}`).join(" OR ");
   const query = `(${fromClause}) after:${afterSeconds}`;
 

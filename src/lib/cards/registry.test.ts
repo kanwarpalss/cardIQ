@@ -62,7 +62,7 @@ describe("card specs match the bank terms read on 2026-10-31", () => {
     expect([...senders].sort()).toEqual([
       "axis.bank.in", "axisbank.com",
       "hdfcbank.bank.in", "hdfcbank.com", "hdfcbank.net",
-      "hsbc.co.in",
+      "hsbc.bank.in", "hsbc.co.in",
       "icici.bank.in", "icicibank.com",
       "mail.hsbc.co.in",
     ]);

@@ -16,7 +16,7 @@ for (const line of readFileSync(join(process.cwd(), ".env.local"), "utf8").split
 }
 import { createClient } from "@supabase/supabase-js";
 import { findUnrecognizedFormatCandidates, type SeenRow } from "../src/lib/parsers/format-watch";
-import { CARD_REGISTRY } from "../src/lib/cards/registry";
+import { BANK_EMAIL_SENDERS } from "../src/lib/cards/registry";
 
 const PAGE = 1000;
 
@@ -28,8 +28,7 @@ async function main() {
   const { data: cards } = await sb.from("cards").select("last4, nickname, product_key").eq("user_id", uid);
   const knownLast4s = new Set((cards || []).map((c) => c.last4));
 
-  const bankDomains = new Set<string>();
-  for (const spec of Object.values(CARD_REGISTRY)) spec.gmail.senders.forEach((d) => bankDomains.add(d));
+  const bankDomains = new Set(BANK_EMAIL_SENDERS);
 
   const rows: SeenRow[] = [];
   for (let from = 0; ; from += PAGE) {
