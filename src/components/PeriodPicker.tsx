@@ -69,17 +69,10 @@ const PRESETS: Preset[] = [
     },
   },
   {
-    // "All time" — mirrors the 8-year first-sync window so the user can
-    // see every transaction we've ever ingested. Lets them confirm e.g.
-    // "yes, the foreign-currency panel really does include everything,
-    // and there are still only N foreign txns total".
-    label: "All time (8 yrs)",
-    range: () => {
-      const to = new Date();
-      const from = new Date();
-      from.setFullYear(from.getFullYear() - 8);
-      return [ymd(from), ymd(to)];
-    },
+    // Both empty boundaries mean all recorded history. A rolling lookback
+    // silently hides older recovered transactions as the calendar advances.
+    label: "All time",
+    range: () => ["", ""],
   },
 ];
 

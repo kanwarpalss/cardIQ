@@ -110,7 +110,8 @@ export function filterSpendTransactions<T extends SpendFilterTxn>(
 ): T[] {
   const from = localDay(filters.from);
   const to = localDay(filters.to);
-  if (!from || !to || from.getTime() > to.getTime()) return [];
+  const allTime = filters.from === "" && filters.to === "";
+  if (!allTime && (!from || !to || from.getTime() > to.getTime())) return [];
   if (invalidBoundary(filters.amountMin) || invalidBoundary(filters.amountMax)) return [];
   if (
     filters.amountMin !== null &&
@@ -118,8 +119,10 @@ export function filterSpendTransactions<T extends SpendFilterTxn>(
     filters.amountMin > filters.amountMax
   ) return [];
 
-  const toExclusive = new Date(to);
-  toExclusive.setDate(toExclusive.getDate() + 1);
+  const fromTime = from?.getTime() ?? -Infinity;
+  const toExclusive = to ? new Date(to) : null;
+  toExclusive?.setDate(toExclusive.getDate() + 1);
+  const toTime = toExclusive?.getTime() ?? Infinity;
   const selected = filters.selectedCards.has("all") ? null : filters.selectedCards;
   const searchTerms = normalizeSearch(filters.search).split(" ").filter(Boolean);
 
@@ -127,7 +130,7 @@ export function filterSpendTransactions<T extends SpendFilterTxn>(
     if (!/([zZ]|[+-]\d{2}:\d{2})$/.test(txn.txn_at)) return false;
     const at = new Date(txn.txn_at).getTime();
     const amount = Number(txn.amount_inr);
-    if (!Number.isFinite(at) || at < from.getTime() || at >= toExclusive.getTime()) return false;
+    if (!Number.isFinite(at) || at < fromTime || at >= toTime) return false;
     if (!Number.isFinite(amount) || amount < 0) return false;
     if (selected && !selected.has(txn.card_last4)) return false;
     if (filters.txnType !== "all" && txn.txn_type !== filters.txnType) return false;
