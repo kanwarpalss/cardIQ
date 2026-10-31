@@ -26,22 +26,42 @@ const AGENTS_MD = join(REPO_ROOT, "AGENTS.md");
 // that mention instead of the heading (it did, on the first cut of this test).
 const MARKER = /^## Stack$/m;
 
-/** The shared contract: everything from the "## Stack" heading to EOF, trailing space normalised. */
-function rulesBody(path: string): string {
-  const text = readFileSync(path, "utf8");
+// AI HQ's sync-project-rules writes marker-delimited blocks into AGENTS.md only,
+// for agents that lack Claude Code's hooks. They aren't project rules, and copying
+// them into CLAUDE.md would re-break this test on every template update.
+const GENERATED_BLOCK = /<!-- BEGIN:([\w-]+)\b[\s\S]*?<!-- END:\1 -->/g;
+
+/** The shared contract: "## Stack" to EOF, minus generated blocks, trailing space normalised. */
+function rulesBodyOf(text: string, label: string): string {
   const start = text.search(MARKER);
   if (start === -1) {
-    throw new Error(`${path} has no "## Stack" heading on its own line — the sync check cannot locate the shared rules body.`);
+    throw new Error(`${label} has no "## Stack" heading on its own line — the sync check cannot locate the shared rules body.`);
   }
   return text
     .slice(start)
+    .replace(GENERATED_BLOCK, "")
     .split("\n")
     .map((line) => line.trimEnd())
     .join("\n")
     .trim();
 }
 
+function rulesBody(path: string): string {
+  return rulesBodyOf(readFileSync(path, "utf8"), path);
+}
+
 describe("project rules stay mirrored across CLAUDE.md and AGENTS.md", () => {
+  it("ignores a generated block but still sees a real rule change", () => {
+    const rules = "## Stack\n\n- rule A";
+    const block = "<!-- BEGIN:hq-continuity — generated -->\n\n## Continuity\n\n- anything\n\n<!-- END:hq-continuity -->";
+
+    expect(rulesBodyOf(`${rules}\n\n${block}\n`, "t")).toBe(rulesBodyOf(rules, "t"));
+    expect(rulesBodyOf(`${rules}\n\n- rule B\n\n${block}\n`, "t")).not.toBe(rulesBodyOf(rules, "t"));
+    expect(rulesBodyOf(`${rules}\n\n${block}\n\n- rule B\n`, "t")).not.toBe(rulesBodyOf(rules, "t"));
+    // A block with no END marker must not swallow the rules after it.
+    expect(rulesBodyOf(`${rules}\n\n<!-- BEGIN:hq-continuity -->\n\n- rule B\n`, "t")).not.toBe(rulesBodyOf(rules, "t"));
+  });
+
   it("both files exist and contain a rules body", () => {
     expect(rulesBody(CLAUDE_MD).length).toBeGreaterThan(0);
     expect(rulesBody(AGENTS_MD).length).toBeGreaterThan(0);

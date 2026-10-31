@@ -48,7 +48,6 @@ Next.js 16.3.4 (App Router) + React 19.2.8 + TypeScript + Tailwind · Supabase (
 
 ## Project-specific rules
 
-- SPEC §10 says `cardiq-app/` — repo was flattened 2026-06-28; repo root IS the app. Fix SPEC when next updating it.
 - Sync changes must be tested against real synced data counts (`new_txns`, `gmail_seen_messages` rows), not just code reading (TEST-02).
 - "Load full history" (5-year backfill) is long-running (20–30 min) — never interrupt it, and never trigger it as a casual test.
 - Amounts are money: parser/aggregation logic is boundary-prover territory (₹ formats, lakhs separators, reversals/refunds).
@@ -62,3 +61,46 @@ drift the moment either is edited, and this copy had already gone stale by a
 month (global CLAUDE.md §8: SPEC.md is the single living source of truth; never
 keep a parallel rolling log). Read SPEC.md §9 "Start Here — Current, Verified
 State" for what is true right now, and §6 for how it got that way.
+
+<!-- BEGIN:hq-continuity — generated block, do not hand-edit.
+     Source: AI HQ/System/project-claude-template.md
+     Propagate: python3 ~/"AI HQ/System/bin/sync-project-rules" -->
+
+## Continuity — if your session dies mid-task
+
+KP runs several agents (Claude, Codex, ChatGPT, Grok) and **credits expire
+mid-task**. This section is here because you may be an agent that never reads
+KP's global rulebook — do not assume someone else is handling continuity.
+
+**Before you start**, check whether a previous session was cut off:
+
+```bash
+python3 ~/"AI HQ/System/bin/resume"          # add --json if you parse it
+```
+
+Exit 3 means nothing to resume. Otherwise it prints what the last agent was
+doing, what it had landed, what failed, and what not to redo. **Report that to
+KP and wait** — do not silently continue someone else's plan.
+
+**While you work**, leave a trail so the next agent can pick up from any
+instant. Claude Code does this automatically via hooks; **every other agent
+must do it by hand**:
+
+```bash
+FR=~/"AI HQ/System/flight-recorder.py"
+python3 "$FR" --session "<your-session-id>" --cwd "$PWD" --prompt "<what KP asked>"
+python3 "$FR" --session "<your-session-id>" --note "Edit ok path/to/file.ts"
+python3 "$FR" --session "<your-session-id>" --note "Bash FAIL npm run build"
+python3 "$FR" --session "<your-session-id>" --intent "next=<the very next step>"
+python3 "$FR" --session "<your-session-id>" --close   # only on a clean finish
+```
+
+Update `--intent` every ~15 meaningful actions, and always before a risky or
+long-running step. A journal with no `--close` is what marks the session as
+interrupted, so **never close a session you did not actually finish**.
+
+**Durability:** the journal is ephemeral (14 days) and is for handoff only.
+Anything worth keeping goes in `SPEC.md` §9 at session end — git and SPEC.md
+are the permanent record, the journal is not.
+
+<!-- END:hq-continuity -->
