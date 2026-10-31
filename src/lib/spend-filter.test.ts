@@ -67,6 +67,32 @@ describe("filterSpendTransactions", () => {
     expect(filterSpendTransactions([txn()], { ...filters, from: "2026-05-01" })).toEqual([]);
   });
 
+  it("includes every recorded year for All time while retaining the other filters", () => {
+    const rows = [txn({ id: "old", txn_at: "2013-01-01T00:00:00+05:30" }), txn(), txn({ id: "invalid", txn_at: "not-a-date" }), txn({ id: "wrong-card", card_last4: "2222" })];
+    expect(filterSpendTransactions(rows, { ...filters, from: "", to: "", selectedCards: new Set(["1111"]) }).map(r => r.id)).toEqual(["old", "wanted"]);
+  });
+
+  it.each([["", "2026-04-30"], ["2026-04-01", ""], [" ", " "]])("does not interpret a partial or corrupt range as All time: %j", (from, to) => {
+    expect(filterSpendTransactions([txn()], { ...filters, from, to })).toEqual([]);
+  });
+
+  it("All time removes only date bounds", () => {
+    const rows = [
+      txn({ id: "old", txn_at: "1970-01-01T00:00:00Z" }),
+      txn({ id: "card", card_last4: "2222" }),
+      txn({ id: "credit", txn_type: "credit" }),
+      txn({ id: "category", category: "Dining" }),
+      txn({ id: "search", notes: "Different purchase" }),
+      txn({ id: "amount", amount_inr: 999 }),
+      txn({ id: "infinite", amount_inr: Infinity }),
+      txn({ id: "negative", amount_inr: -1 }),
+      txn({ id: "invalid-date", txn_at: "not-a-date" }),
+      txn({ id: "no-zone", txn_at: "2013-01-01T12:00:00" }),
+    ];
+    expect(filterSpendTransactions(rows, { ...filters, from: "", to: "", selectedCards: new Set(["1111"]), txnType: "debit", category: "Groceries", search: "House supplies", amountMin: 1000, amountMax: 1500 }).map(r => r.id)).toEqual(["old"]);
+    expect(filterSpendTransactions(rows, { ...filters, from: "", to: "", selectedCards: new Set() })).toEqual([]);
+  });
+
   it("treats an empty selected-card set as no selected cards, not all cards", () => {
     expect(filterSpendTransactions([txn()], { ...filters, selectedCards: new Set() })).toEqual([]);
   });
