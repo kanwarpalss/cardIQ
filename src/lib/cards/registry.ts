@@ -1,3 +1,4 @@
+import { AMEX_PLATINUM_TRAVEL } from "./amex-platinum-travel";
 import { AXIS_MAGNUS_BURGUNDY } from "./axis-magnus-burgundy";
 import { HDFC_INFINIA } from "./hdfc-infinia";
 import { HDFC_SWIGGY } from "./hdfc-swiggy";
@@ -11,6 +12,7 @@ const ALL_CARDS: CardSpec[] = [
   HDFC_SWIGGY,
   ICICI_EMERALDE_PRIVATE_METAL,
   HSBC_PREMIER,
+  AMEX_PLATINUM_TRAVEL,
 ];
 
 export const CARD_REGISTRY: Record<string, CardSpec> = Object.fromEntries(

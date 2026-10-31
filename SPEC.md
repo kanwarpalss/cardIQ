@@ -2,7 +2,7 @@
 
 > Project brain. Updated every session.
 > Static architecture doc lives in ARCHITECTURE.md — don't duplicate it here.
-> Last updated: 2026-09-03
+> Last updated: 2026-10-31
 
 ---
 
@@ -155,7 +155,9 @@ A one-stop credit-card destination: syncs bank transaction emails from Gmail (Ax
 | 2026-07-27 | A labelled bank transaction amount is authoritative; fallback must never use a later account balance or credit limit | Let generic amount scanning salvage any number after a strict parser declines | An Axis alert for `SGD .1` failed strict parsing and then picked up ₹11,87,242.78 from `Available Limit`. Valid leading-decimal values now parse; malformed labelled foreign amounts are rejected rather than guessed, and an audit repaired the single affected historical row. |
 | 2026-07-27 | Amazon Pay-funded gift cards require exact issuance evidence and are marked with a separate funding source | Infer Amazon Pay funding from a same-brand or same-value order | An evidence-only record keeps the Birkenstock ₹5,000 gift card separate from card-funded Gyftr vouchers and avoids fictional voucher drawdowns. |
 
-## §6 Current State (as of 2026-09-05)
+## §6 Current State (as of 2026-10-31)
+
+**Card specs refreshed 2026-10-31 from bank terms.** All five `src/lib/cards/` specs were re-read against issuer documents, a new `bill_rules` field (utilities and rent) was added, Amex Platinum Travel joined the registry, and the Cards tab gained a collapsible "Utility and rent bills" section covering all six cards. New `src/lib/cards/registry.test.ts` (10 tests): 8 fail against the previous specs. Corrections: ICICI no longer "uncapped" (1,000 points per statement cycle on utilities, 5,000 on insurance, per T&C of 21 May 2026) and vouchers split to ₹4L and ₹8L; HSBC gained the shared ₹1,00,000 monthly limit and lost the unsourced "5x overseas"; Axis 35-point rate capped at credit limit + ₹1.5L, international lounges unlimited with 4 guest visits, domestic by card swipe from 28 Aug 2026; Swiggy gained the ₹2L fee waiver as a milestone, which adds a progress bar on Overview. Sources are in each spec's comments. Amex has `gmail.senders: []` so the sync query is unchanged.
 
 **Login and performance work closed out 2026-09-05.** `ca0e6f7` is on `main`, `origin/main`, the Mac mini, and Vercel — all four confirmed on the identical commit, working trees clean. This session: fixed the mini's localhost OAuth-return crash (`c41107f`, `requestOrigin()` header-derived redirect origin, confirmed via real Google sign-in — see §7), root-caused the PKCE error that followed as stale debugging-session cookies (no code fix needed, confirmed by KP retrying in a private window), fixed two `cardiq` shell-alias bugs (stale build-detection, no-retry Mini probe), and did a full performance pass: bundle-split the root page (208KB→44.5KB), then found and fixed the real cause — 6 tabs (Overview/Spend/Insights/Orders/Vouchers/Cards) each independently re-fetching complete history with no caching on every mount. All now share one IndexedDB stale-while-revalidate cache (`src/lib/resource-cache.ts`) with parallelized backend pagination (`src/lib/paginate.ts`), verified byte-identical against the live database. Full narrative: `AI HQ/summaries/cardIQ/cloudflare-oauth-login.md` and `performance-overhaul-2026-09.md`.
 
@@ -317,6 +319,10 @@ A one-stop credit-card destination: syncs bank transaction emails from Gmail (Ax
 
 ## §7 Known Issues
 
+**Open 2026-10-31 (card data):** Infinia's quarterly bonus threshold is still not modeled (not in HDFC terms v4.17, Oct 2026); the reward wording for ICICI's ₹1.5L monthly milestone is still pending from KP; whether utilities count toward the Amex ₹4L and ₹7L milestones and Infinia's ₹10L waiver is unsettled; the Swiggy original card's utility cashback is unclear. HSBC `gmail.senders` still lists `hsbc.co.in` although HSBC's site moved to `hsbc.bank.in`: left alone because senders gate the sync, so check real alert mail before changing. The chat assistant doesn't read `bill_rules`. MyGate's code is unproven (older forum reports say MCC 4900; Technofino returns 403 to fetches).
+
+**Open 2026-10-31 (tests):** `project-rules-sync.test.ts` fails in the working tree because of the uncommitted generated `hq-continuity` block in `AGENTS.md`. It isn't from the card work.
+
 **Resolved 2026-09-02:** The recurring Supabase/Cloudflare login block and the adjacent short-host OAuth-return failure are closed in `d2e826d`. All Mac mini aliases and raw Tailscale addresses canonicalise before OAuth, and the direct PM2 process removes the stale-wrapper recurrence path. Release evidence is recorded in §6, §9, and §10.
 
 **Resolved 2026-09-03 (`c41107f`):** the `localhost:3901` OAuth-return crash KP hit on the mini. Supabase's dashboard config was checked first and is correct (KP screenshot: Site URL is the mini, all three Redirect URLs present) — that ruled out the theory in the paragraph below. The real bug: `/auth/callback/route.ts` built every redirect from `new URL(request.url).origin`, and `proxy.ts` had three redirects built from raw `request.url` the same way. Under `next start` with no reverse proxy in front of it (the mini's direct PM2 deployment), that origin reflects the server's own bind host, not the browser's actual Host header — `proxy.ts` already had a header-based workaround for its OWN canonical-host check but never applied it to its other redirects or to the callback route. Reproduced live (no real login needed): curling `/auth/callback?code=fake` on the mini redirected to `localhost:3901`; after the fix, same probe redirects to the mini correctly. Fix: `requestOrigin()`/`originFromAuthority()` in `canonical-host.ts`, applied everywhere a redirect used to trust `request.url`. Three regression tests added/fixed, each verified via `git stash` to actually fail against the pre-fix code (one existing `proxy.test.ts` case had been unknowingly asserting the buggy behavior as correct). Deployed and reverified on the mini live. KP confirmed 2026-09-03 that the mini no longer crashes to localhost — it now correctly loops back to its own `/login?error=auth_callback` on real-login failure, proving the origin fix holds under a real Google round-trip, not just the synthetic probe. Vercel: the same probe on the raw per-deployment URL (bypassing the public alias, which is SSO-gated like `/login`) confirms the fix is in the build; the public alias `card-iq.vercel.app/auth/callback` itself is separately stuck serving a stale cached 404 from Vercel's edge (same `etag`/`last-modified` on every retry regardless of query string or a second fresh deploy — a CDN caching artifact, not a code bug; no dashboard access to purge it directly).
@@ -382,9 +388,15 @@ Verified against the real live database, not synthetic data: 3126 real transacti
 | `GOOGLE_CLIENT_SECRET` | Server |
 | `ENCRYPTION_KEY` | Server (AES-256 for stored secrets) |
 
-## §9 Session Handoff Notes (2026-09-05)
+## §9 Session Handoff Notes (2026-10-31)
 
 ### Start Here — Current, Verified State
+
+**Start here (2026-10-31) — card specs refreshed, not pushed.** The card-spec commit is local on `main`, so the live app doesn't have it yet. The Cards tab section was rendered directly to text, but its layout hasn't been seen on the signed-in page because Google sign-in blocked the check. Other uncommitted work in this tree (login, FX, Spend, `AGENTS.md`, part of this file) predates that commit and was left out of it on purpose.
+
+**▶ Next step, per KP (2026-10-31):** add an indicator on the Cards tab for HDFC Infinia showing spend in the 1 Apr–31 Mar financial year against the ₹18L needed to keep the card, and how much more is needed. HDFC terms v4.17 (Oct 2026): from 1 Apr 2026, ₹18L Infinia card spend (primary + add-ons) in the financial year OR ₹50L relationship value. Reuse the Infinia `milestone_year_start` and `currentMilestoneYear`. It's a retention condition, not a reward, so label it that way rather than as a milestone tier. The terms read so far don't list which spends count: check that before showing "remaining" as exact.
+
+**Also pending:** KP's wife's Amex and HSBC aren't added as cards because their last-4 digits aren't known.
 
 **Start here (2026-09-05) — login is fully verified end-to-end (real Google sign-in, not just probes), and all 6 heavy-data tabs are cached and fast.** `ca0e6f7` on `main`/`origin/main`/Mac-mini/Vercel, all confirmed identical, trees clean. Nothing pending from this session — the earlier "Supabase Redirect URLs dashboard audit" item below is now moot (KP already checked it, it was correct; the real bug was elsewhere, see §7). If picking this up fresh: read `AI HQ/summaries/cardIQ/cloudflare-oauth-login.md` and `performance-overhaul-2026-09.md` for the full story before re-deriving anything.
 

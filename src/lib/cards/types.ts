@@ -21,6 +21,15 @@ export type LoungeEntitlement = {
   guest_policy?: string;
 };
 
+// How a card treats one kind of bill. Plain text on purpose: these rules mix
+// bank terms with unsettled points, and each string says which is which.
+export type BillRule = {
+  earns: string;
+  limit?: string;
+  fee?: string;
+  milestones?: string;
+};
+
 export type CardSpec = {
   product_key: string;
   display_name: string;
@@ -35,6 +44,10 @@ export type CardSpec = {
   lounge: {
     domestic?: LoungeEntitlement;
     international?: LoungeEntitlement;
+  };
+  bill_rules?: {
+    utilities: BillRule;
+    rent: BillRule;
   };
   sources: Record<string, string>; // topic -> URL
   gmail: {
