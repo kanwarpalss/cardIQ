@@ -286,8 +286,8 @@ I'm based in India, optimize for spends...
         │                          │                         │
         ▼                          ▼                         ▼
   ┌──────────────┐         ┌──────────────┐         ┌──────────────┐
-  │ /api/spend   │         │ /api/chat    │         │/api/recategor│
-  │              │         │   (system    │         │   ize        │
+  │ spend-filter │         │ /api/chat    │         │/api/recategor│
+  │ (in browser) │         │   (system    │         │   ize        │
   │ aggregates → │         │    prompt    │         │ re-cooks     │
   │ summary,     │         │    pulls KB) │         │ stored emails│
   │ by_merchant, │         │              │         │ with new     │

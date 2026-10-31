@@ -30,3 +30,6 @@ audit*.log
 # Personal order exports (may contain private data / never commit)
 blinkit-orders.json
 *Retail.OrderHistory*.csv
+
+# Obsidian vault settings (per-machine, not part of the app)
+.obsidian/
