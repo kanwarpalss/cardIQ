@@ -71,11 +71,13 @@ const RE_THREAD_RE = /^Re:/i;                       // user's own correspondence
 const DECLINED_RE = /\bdeclined\b/i;                // no money moved
 const AUTOPAY_LIFECYCLE_RE = /auto\s*pay.*(activated|reminder)/i; // mandate setup, not the executed charge
 const MARKETING_SENDER_LOCAL_PART_RE = /^informations?$/i;  // local part excludes the @ delimiter
+const TRANSACTION_LIMITS_RE = /^transaction\s+limits\b/i;   // HSBC limit-change notice, no money moved
 
 function isBenignNotification(sender: string, subject: string, combined: string): boolean {
   if (RE_THREAD_RE.test(subject)) return true;
   if (DECLINED_RE.test(subject)) return true;
   if (AUTOPAY_LIFECYCLE_RE.test(subject)) return true;
+  if (TRANSACTION_LIMITS_RE.test(subject)) return true;
   const localPart = sender.match(/<?([^<>@\s]+)@/)?.[1] ?? "";
   if (MARKETING_SENDER_LOCAL_PART_RE.test(localPart)) return true;
   if (NON_TRANSACTION_NOTIFICATION_RE.test(combined)) return true;

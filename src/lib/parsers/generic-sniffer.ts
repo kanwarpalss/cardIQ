@@ -70,8 +70,15 @@ export const MARKETING_SIGNALS_RE =
 //     dispute — the user's OWN correspondence with the bank, not a bank
 //     transaction alert. A stray number in the reply text (a case ID, a
 //     points balance) was being recorded as spend — one ₹1.5L example.
+//   • HSBC's "One-Time Password has been generated for a transaction" — states
+//     an amount and merchant, but the alert only follows if the charge goes
+//     through. Worded narrowly because real alerts can warn about OTPs in their
+//     footer ("never share your One-Time Password").
+//   • HSBC's "We have received credits of ₹X ... make the remaining payment of
+//     ₹Y" — reads as a bill payment. Its "payment of" passes the verb check and
+//     would otherwise book ₹X as spend.
 export const NON_TRANSACTION_NOTIFICATION_RE =
-  /payment\s+received\s+on\s+your\s+.*credit\s+card|credit\s+card\s+statement\s+for\s+the\s+period|upcoming\s+autopay|pre-debit\s+notification/i;
+  /payment\s+received\s+on\s+your\s+.*credit\s+card|credit\s+card\s+statement\s+for\s+the\s+period|upcoming\s+autopay|pre-debit\s+notification|one-time\s+password\s*(?:\(otp\)\s*)?has\s+been\s+generated|we\s+have\s+received\s+credits\s+of/i;
 const SUPPORT_REPLY_THREAD_RE = /^Re:.*\b(reward\s*points|edge\s*rewards|service\s*request)\b/i;
 
 // Strong refund/credit signals — if matched, we mark txn_type=credit.

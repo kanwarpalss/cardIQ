@@ -65,6 +65,7 @@ export const HSBC_PREMIER: CardSpec = {
   benefits_verified_at: "2026-10-31",
 
   gmail: {
+    // hsbc.bank.in: alerts moved to hsbc@hsbc.bank.in around 2026-09.
     senders: ["hsbc.co.in", "mail.hsbc.co.in", "hsbc.bank.in"],
     subject_hints: ["transaction", "spent", "purchase", "credit card"],
   },

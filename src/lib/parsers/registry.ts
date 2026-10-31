@@ -27,7 +27,8 @@ const SENDER_PARSERS: Array<{
     parse: parseIciciTxn,
   },
   {
-    match: (s) => s.includes("hsbc.co.in") || s.includes("hsbc.bank.in") || s.includes("mail.hsbc"),
+    // hsbc.bank.in is the new (2026-09+) alerts domain.
+    match: (s) => s.includes("hsbc.co.in") || s.includes("mail.hsbc") || s.includes("hsbc.bank.in"),
     parse: parseHsbcTxn,
   },
   { match: (s) => s.includes("citicorp.com"), parse: parseCitiTxn },
