@@ -8,7 +8,7 @@ import {
   type QuietCardTxn,
   type SeenRow,
 } from "@/lib/parsers/format-watch";
-import { MAILBOX_WINDOW_DAYS, runMailboxWatch } from "@/lib/gmail/mailbox-watch";
+import { archivedWatchSource, MAILBOX_WINDOW_DAYS, runMailboxWatch } from "@/lib/gmail/mailbox-watch";
 import { pickMailSource } from "@/lib/gmail/mail-source";
 import { decrypt } from "@/lib/crypto";
 
@@ -128,7 +128,26 @@ export async function GET(req: Request) {
       imapPass: settingsRow.gmail_app_password_encrypted ? decrypt(settingsRow.gmail_app_password_encrypted) : undefined,
       oauthRefreshToken: settingsRow.google_refresh_token_encrypted ? decrypt(settingsRow.google_refresh_token_encrypted) : undefined,
     });
-    const mailbox = await runMailboxWatch(source, knownLast4s, [...bankDomains]);
+    const archivedSource = archivedWatchSource(source, {
+      async read(id) {
+        const { data, error } = await sb.from("gmail_seen_messages")
+          .select("gmail_message_id, raw_from, raw_subject, raw_body, internal_date")
+          .eq("user_id", uid).eq("gmail_message_id", id).maybeSingle();
+        if (error) throw new Error(`archive read failed: ${error.message}`);
+        if (!data) return null;
+        if (data.raw_body == null) throw new Error("archived email body unavailable");
+        return { ...data, raw_from: data.raw_from ?? "", raw_subject: data.raw_subject ?? "", raw_body: data.raw_body ?? "" };
+      },
+      async write(message) {
+        const { error } = await sb.from("gmail_seen_messages").upsert({
+          user_id: uid, gmail_message_id: message.id,
+          raw_from: message.from, raw_subject: message.subject,
+          raw_body: message.textBody, internal_date: message.internalDate,
+        }, { onConflict: "user_id,gmail_message_id", ignoreDuplicates: true });
+        if (error) throw new Error(`archive write failed: ${error.message}`);
+      },
+    });
+    const mailbox = await runMailboxWatch(archivedSource, knownLast4s, [...bankDomains]);
     mailboxChecked = mailbox.checked;
     if (mailbox.error) checkFailed(mailbox.error);
     for (const c of mailbox.candidates) {

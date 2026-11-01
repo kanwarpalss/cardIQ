@@ -9,6 +9,17 @@ import { findUnrecognizedFormatCandidates } from "@/lib/parsers/format-watch";
 import { CARD_REGISTRY } from "@/lib/cards/registry";
 import { cleanMerchant } from "@/lib/merchant-clean";
 
+describe("HSBC debit amount bounds survive template changes", () => {
+  for (const [name, body] of [
+    ["recent", (amount: string) => `Your HSBC Credit Card xx4502 was used for a transaction of INR ${amount} at MYGATE on 31/10/26. Available limit: INR 66297.00`],
+    ["legacy", (amount: string) => `your Credit card no ending with 3337,has been used for INR ${amount} for payment to ETERNAL LIMITED on 01 May 2026 at 21:22.`],
+  ] as const) {
+    it.each(["9".repeat(400), "9,,55.00"])(`${name} rejects corrupt money %s`, (amount) => {
+      expect(parseTxnEmailWithFallback("hsbc@hsbc.bank.in", "Credit Card Transaction Alert", body(amount), "", new Set(["4502", "3337"]))).toBeNull();
+    });
+  }
+});
+
 const SENDER = "hsbc@hsbc.bank.in";
 const SUBJECT = "Credit Card Transaction Alert";
 const alert = (money: string, merchant: string, date: string) =>

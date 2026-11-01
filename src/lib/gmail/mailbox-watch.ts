@@ -4,7 +4,7 @@
 // A safety net that fails quietly reads as "nothing to report", so every way
 // this can fall short comes back in `error` for the caller to surface.
 
-import type { MailSource } from "./mail-source";
+import type { MailSource, NormalizedMessage } from "./mail-source";
 import {
   buildUnlistedSenderQuery,
   findUnlistedSenderCandidates,
@@ -14,6 +14,31 @@ import {
 
 export const MAILBOX_WINDOW_DAYS = 21;
 export const MAX_MAILBOX_FETCH = 60;
+
+export type WatchArchive = {
+  read: (id: string) => Promise<SeenRow | null>;
+  write: (message: NormalizedMessage) => Promise<void>;
+};
+
+// Use the same body archive as sync: a periodic diagnostic must not download
+// an already-recorded email again, or overwrite its transaction link.
+export function archivedWatchSource(source: MailSource, archive: WatchArchive): MailSource {
+  return {
+    search: (query, progress) => source.search(query, progress),
+    close: () => source.close(),
+    async fetchMessage(id) {
+      const saved = await archive.read(id);
+      if (saved) return {
+        id, from: saved.raw_from, subject: saved.raw_subject,
+        textBody: saved.raw_body, internalDate: saved.internal_date ?? 0,
+        dateHeader: null, htmlBody: "", snippet: "", attachments: [],
+      };
+      const message = await source.fetchMessage(id);
+      await archive.write(message);
+      return message;
+    },
+  };
+}
 
 export type MailboxWatchResult = {
   candidates: FormatWatchCandidate[];
