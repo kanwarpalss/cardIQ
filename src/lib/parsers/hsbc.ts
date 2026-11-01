@@ -23,12 +23,20 @@ import { detectCurrency, isInr } from "../currency";
 
 // Debit. Group 2 is the currency, as in the 2026-09 template below.
 const TXN_RE =
-  /ending\s+with\s+(\d{4})[\s,]+has\s+been\s+used\s+for\s+([A-Z]{3})\s+([\d,]+(?:\.\d{1,2})?)\s+for\s+payment\s+to\s+(.+?)\s+on\s+(\d{1,2}\s+\w+\s+\d{4})\s+at\s+(\d{2}:\d{2})/i;
+  /ending\s+with\s+(\d{4})[\s,]+has\s+been\s+used\s+for\s+([A-Z]{3})\s+(\S+)\s+for\s+payment\s+to\s+(.+?)\s+on\s+(\d{1,2}\s+\w+\s+\d{4})\s+at\s+(\d{2}:\d{2})/i;
 
 // 2026-09 debit. Group 2 is the currency: this template states it right next to
 // the amount, so a USD hold needs no help from the generic sniffer.
 const ALERT_2026_RE =
-  /HSBC\s+Credit\s+Card\s+xx(\d{4})\s+was\s+used\s+for\s+a\s+transaction\s+of\s+([A-Z]{3})\s*([\d,]+(?:\.\d{1,2})?)\s+at\s+(.+?)\s+on\s+(\d{1,2}\/\d{1,2}\/\d{2,4})(?=\.|\s|$)/i;
+  /HSBC\s+Credit\s+Card\s+xx(\d{4})\s+was\s+used\s+for\s+a\s+transaction\s+of\s+([A-Z]{3})\s*(\S+)\s+at\s+(.+?)\s+on\s+(\d{1,2}\/\d{1,2}\/\d{2,4})(?=\.|\s|$)/i;
+
+const VALID_AMOUNT_RE = /^(?:\d+|\d{1,3}(?:,\d{3})+|\d{1,2}(?:,\d{2})*,\d{3})(?:\.\d{1,2})?$/;
+
+// A damaged purchase field must never be reinterpreted as the available
+// balance by the generic fallback (e.g. when a footer says "payment of").
+export function isHsbcPurchaseAlert(body: string, snippet = ""): boolean {
+  return /HSBC\s+Credit\s+Card\s+xx\d{4}\s+was\s+used\s+for\s+a\s+transaction\s+of\b/i.test(`${body} ${snippet}`);
+}
 
 // Credit/refund/reversal — also captures last4 + date.
 const CREDIT_RE =
@@ -61,8 +69,8 @@ function parseDMY(s: string): Date | null {
   const day = Number(m[1]);
   const month = Number(m[2]);
   const year = m[3].length === 2 ? 2000 + Number(m[3]) : Number(m[3]);
-  const d = new Date(year, month - 1, day, 12);
-  return d.getFullYear() === year && d.getMonth() === month - 1 && d.getDate() === day ? d : null;
+  const d = new Date(`${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}T12:00:00+05:30`);
+  return d.getUTCFullYear() === year && d.getUTCMonth() === month - 1 && d.getUTCDate() === day ? d : null;
 }
 
 export function parseHsbcTxn(subject: string, body: string, snippet: string = ""): ParsedTxn | null {
@@ -76,7 +84,7 @@ export function parseHsbcTxn(subject: string, body: string, snippet: string = ""
     const currency = alert[2].toUpperCase();
     const amount = parseAmount(alert[3]);
     const txnAt = parseDMY(alert[5]);
-    if (!Number.isFinite(amount) || !(amount > 0) || /,,|,$/.test(alert[3]) || !txnAt) return null;
+    if (!Number.isFinite(amount) || !(amount > 0) || !VALID_AMOUNT_RE.test(alert[3]) || !txnAt) return null;
     return {
       card_last4: alert[1],
       amount_inr: isInr(currency) ? amount : 0,
@@ -91,7 +99,7 @@ export function parseHsbcTxn(subject: string, body: string, snippet: string = ""
   if (m) {
     const currency = m[2].toUpperCase();
     const amount = parseAmount(m[3]);
-    if (!Number.isFinite(amount) || !(amount > 0) || /,,|,$/.test(m[3])) return null;
+    if (!Number.isFinite(amount) || !(amount > 0) || !VALID_AMOUNT_RE.test(m[3])) return null;
     return {
       card_last4: m[1],
       amount_inr: isInr(currency) ? amount : 0,
