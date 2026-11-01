@@ -1,7 +1,7 @@
 import { parseAxisTxn, type ParsedTxn } from "./axis";
 import { parseHdfcTxn } from "./hdfc";
 import { parseIciciTxn } from "./icici";
-import { parseHsbcTxn } from "./hsbc";
+import { isHsbcPurchaseAlert, parseHsbcTxn } from "./hsbc";
 import { parseCitiTxn } from "./citi";
 import { genericSniff, type GenericParsed } from "./generic-sniffer";
 
@@ -77,6 +77,9 @@ export function parseTxnEmailWithFallback(
   knownLast4s: Set<string>,
 ): (ParsedTxn & { low_confidence?: boolean }) | null {
   const strict = parseTxnEmail(sender, subject, body, snippet);
+  // HSBC's known purchase template either parses precisely or needs review.
+  // Generic fallback can mistake a payment footer + INR balance for spend.
+  if (isHsbcPurchaseAlert(body, snippet)) return strict;
   // Citi's balance-adjustment and refund-invitation notices look like charges
   // to the generic sniffer. Only explicit, evidenced Citi formats are safe.
   if (sender.toLowerCase().includes("citicorp.com")) return strict;

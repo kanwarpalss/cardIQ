@@ -70,8 +70,10 @@ export const MARKETING_SIGNALS_RE =
 //     dispute — the user's OWN correspondence with the bank, not a bank
 //     transaction alert. A stray number in the reply text (a case ID, a
 //     points balance) was being recorded as spend — one ₹1.5L example.
+// HSBC's aggregate credits-against-outstanding notice names no merchant;
+// its "remaining payment of" footer must not turn it into a purchase.
 export const NON_TRANSACTION_NOTIFICATION_RE =
-  /payment\s+received\s+on\s+your\s+.*credit\s+card|credit\s+card\s+statement\s+for\s+the\s+period|upcoming\s+autopay|pre-debit\s+notification/i;
+  /payment\s+received\s+on\s+your\s+.*credit\s+card|we\s+have\s+received\s+credits\b.*?HSBC\s+credit\s+card|credit\s+card\s+statement\s+for\s+the\s+period|upcoming\s+autopay|pre-debit\s+notification/i;
 const SUPPORT_REPLY_THREAD_RE = /^Re:.*\b(reward\s*points|edge\s*rewards|service\s*request)\b/i;
 
 // Strong refund/credit signals — if matched, we mark txn_type=credit.

@@ -18,7 +18,14 @@ import { detectCurrency, isInr } from "../currency";
 const TXN_RE =
   /ending\s+with\s+(\d{4})[\s,]+has\s+been\s+used\s+for\s+INR\s+([\d,]+(?:\.\d{1,2})?)\s+for\s+payment\s+to\s+(.+?)\s+on\s+(\d{1,2}\s+\w+\s+\d{4})\s+at\s+(\d{2}:\d{2})/i;
 
-const NEW_DOMAIN_TXN_RE = /HSBC\s+Credit\s+Card\s+xx(\d{4})\s+was\s+used\s+for\s+a\s+transaction\s+of\s+INR\s*([\d,]+(?:\.\d{1,2})?)\s+at\s+(.+?)\s+on\s+(\d{2})\/(\d{2})\/(\d{2})(?:\.|\s|$)/i;
+const NEW_DOMAIN_TXN_RE = /HSBC\s+Credit\s+Card\s+xx(\d{4})\s+was\s+used\s+for\s+a\s+transaction\s+of\s+([A-Z]{3})\s*(\S+)\s+at\s+(.+?)\s+on\s+(\d{2})\/(\d{2})\/(\d{2})(?:\.|\s|$)/i;
+const VALID_AMOUNT_RE = /^(?:\d+|\d{1,3}(?:,\d{3})+|\d{1,2}(?:,\d{2})*,\d{3})(?:\.\d{1,2})?$/;
+
+// A damaged purchase field must never be reinterpreted as the available
+// balance by the generic fallback (e.g. when a footer says "payment of").
+export function isHsbcPurchaseAlert(body: string, snippet = ""): boolean {
+  return /HSBC\s+Credit\s+Card\s+xx\d{4}\s+was\s+used\s+for\s+a\s+transaction\s+of\b/i.test(`${body} ${snippet}`);
+}
 
 // Credit/refund/reversal — also captures last4 + date.
 const CREDIT_RE =
@@ -46,17 +53,21 @@ function parseDMonY(s: string): Date | null {
 export function parseHsbcTxn(subject: string, body: string, snippet: string = ""): ParsedTxn | null {
   const combined = `${body} ${snippet}`.replace(/\s+/g, " ").trim();
 
-  // Foreign-currency guard — see hdfc.ts for rationale.
-  if (!isInr(detectCurrency(`${subject} ${combined}`))) return null;
-
+  // The amount's own currency is authoritative: real USD Facebook alerts
+  // also contain INR balances. enrichAmount handles conversion downstream.
   const recent = NEW_DOMAIN_TXN_RE.exec(combined);
   if (recent) {
-    const amount = parseAmount(recent[2]);
-    const at = new Date(`20${recent[6]}-${recent[5]}-${recent[4]}T12:00:00+05:30`);
-    if (!Number.isFinite(amount) || amount <= 0 || !Number.isFinite(at.getTime()) || at.getUTCDate() !== Number(recent[4]) || at.getUTCMonth() + 1 !== Number(recent[5]) || /,,|,$/.test(recent[2])) return null;
-    return { card_last4: recent[1], amount_inr: amount,
-      merchant_raw: recent[3].trim(), txn_at: at, txn_type: "debit" };
+    const currency = recent[2].toUpperCase();
+    const amount = Number(recent[3].replace(/,/g, ""));
+    const at = new Date(`20${recent[7]}-${recent[6]}-${recent[5]}T12:00:00+05:30`);
+    if (!VALID_AMOUNT_RE.test(recent[3]) || !Number.isFinite(amount) || amount <= 0 || !Number.isFinite(at.getTime()) || at.getUTCDate() !== Number(recent[5]) || at.getUTCMonth() + 1 !== Number(recent[6])) return null;
+    return { card_last4: recent[1], amount_inr: currency === "INR" ? amount : 0,
+      ...(currency === "INR" ? {} : { currency, amount_original: amount }),
+      merchant_raw: recent[4].trim(), txn_at: at, txn_type: "debit" };
   }
+
+  // Older layouts remain INR-only; never take a foreign alert's INR limit.
+  if (!isInr(detectCurrency(`${subject} ${combined}`))) return null;
 
   const m = TXN_RE.exec(combined);
   if (m) {
