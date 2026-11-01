@@ -40,6 +40,16 @@ The shared sender inventory now includes HSBC's actual `hsbc.bank.in` domain and
 
 Local release checks: **791 tests across 43 files**, TypeScript, ESLint and production build passed. The stale generated development validator for a separately removed route was discarded before the type check; application source was not changed to conceal it.
 
+## Final runtime checks — 1 November 2026
+
+The fresh read-back has **5,921 transactions**, all 1,110 recovery links intact, no duplicate email IDs, no broken links and no remaining strict-parseable unmatched alerts. Later card-number repairs were preserved: stored Infinia charges totalling ₹5,988 and a retired HDFC charge of ₹199 had blank card numbers, which are now assigned from their own alert bodies.
+
+The signed-in Spend page shows **5,921 results under All time**, matching the database. The old eight-year cutoff hid 280 saved transactions and was removed in `202d08d`; Last 30 days still correctly narrows the result to 118. All other filters retain their checks.
+
+Release `de9f0dc` integrates the parser repairs, existing OAuth repair, HSBC/quiet-card/unlisted-sender/cardless safeguards and archive reuse. The exact mini release passed **852 tests across 46 files**, TypeScript, ESLint, production build and login health. Vercel production `dpl_81KfdpAjNfBz9QiLxjUGT4Dq4qsq` is READY on that revision. The mini warning endpoint rejected an invalid credential with 401, then returned 200 after scanning 15,062 unmatched archived emails and 27 mailbox messages. Its only findings were the 35 already-reviewed non-purchase notices; no check failed. Newly read diagnostic bodies are archived once; existing archive rows and transaction links are never overwritten. At that check there were 21,009 archived emails and zero cardless transactions.
+
+HSBC 4502's separately imported 32-event email dump is present, but its historical source remains incomplete (no alerts from 10 August to 18 September; an outstanding-balance notice also exceeds the dump's spend). The chosen email-only history cannot fill charges that were never supplied. American Express aggregate alerts likewise do not establish an individual-transaction history. These limitations prevent an absolute bank-ledger completeness claim.
+
 ## Assurance boundary
 
 This establishes recovery and coverage of the available, identifiable credit-card transaction-alert emails in the audited mailbox scope. It does **not** establish bank-statement completeness. American Express samples are aggregate balance/spend-threshold notices, not a complete individual-transaction feed. Debit-card, bank-account, repayment, OTP and marketing notices are outside credit-card purchase recovery. Charges, fees or credits that never generated an email require statement reconciliation. The existing weekly format-watch task remains the proactive safety net; this audit did not add a second scheduled task.
