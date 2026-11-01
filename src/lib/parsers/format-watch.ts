@@ -71,11 +71,13 @@ const RE_THREAD_RE = /^Re:/i;                       // user's own correspondence
 const DECLINED_RE = /\bdeclined\b/i;                // no money moved
 const AUTOPAY_LIFECYCLE_RE = /auto\s*pay.*(activated|reminder)/i; // mandate setup, not the executed charge
 const MARKETING_SENDER_LOCAL_PART_RE = /^informations?$/i;  // local part excludes the @ delimiter
+const TRANSACTION_LIMITS_RE = /^transaction\s+limits\b/i;   // HSBC limit-change notice, no money moved
 
 function isBenignNotification(sender: string, subject: string, combined: string): boolean {
   if (RE_THREAD_RE.test(subject)) return true;
   if (DECLINED_RE.test(subject)) return true;
   if (AUTOPAY_LIFECYCLE_RE.test(subject)) return true;
+  if (TRANSACTION_LIMITS_RE.test(subject)) return true;
   const localPart = sender.match(/<?([^<>@\s]+)@/)?.[1] ?? "";
   if (MARKETING_SENDER_LOCAL_PART_RE.test(localPart)) return true;
   if (NON_TRANSACTION_NOTIFICATION_RE.test(combined)) return true;
@@ -126,6 +128,117 @@ export function findUnrecognizedFormatCandidates(
       matched_last4: matched ?? "unknown",
       snippet: combined.slice(0, 200),
       internal_date: row.internal_date ?? null,
+    });
+  }
+  return out;
+}
+
+// ─── Mail the sync never fetches ─────────────────────────────────────────────
+//
+// Everything above reads gmail_seen_messages, which only holds mail from senders
+// the sync searches. So a bank moving to a new address can't be seen there: that
+// is how HSBC's 2026 move to hsbc.bank.in stayed hidden. These helpers look at
+// the mailbox itself, from outside that list.
+
+// Issuers KP has held cards with. Matched as Gmail `from:` words, so any new
+// domain with the bank's name in it is covered without knowing the domain.
+const BANK_BRAND_WORDS = ["hsbc", "axis", "hdfc", "icici", "citi", "americanexpress", "aexp"];
+const ALERT_SUBJECT_WORDS = ["alert", "transaction", "spent", "used"];
+
+export function buildUnlistedSenderQuery(bankDomains: readonly string[], windowDays: number): string {
+  const wanted = [
+    ...BANK_BRAND_WORDS.map((w) => `from:${w}`),
+    // A forward whose sender changed to the person who forwarded it.
+    "subject:fwd",
+    "subject:fw",
+    // A bank whose new address has no recognisable name in it.
+    ...ALERT_SUBJECT_WORDS.map((w) => `subject:("credit card" ${w})`),
+  ];
+  const excluded = bankDomains.map((d) => `-from:${d}`);
+  return `(${wanted.join(" OR ")}) ${excluded.join(" ")} newer_than:${windowDays}d`;
+}
+
+// HSBC tags mail between KP's household and their banker with "EXTERNAL:".
+const CORRESPONDENCE_SUBJECT_RE = /^EXTERNAL:/i;
+const FORWARD_PREFIX_RE = /^(?:(?:Fwd?|FW)\s*:\s*)+/i;
+
+export function findUnlistedSenderCandidates(
+  rows: SeenRow[],
+  knownLast4s: Set<string>,
+  bankDomains: readonly string[],
+): FormatWatchCandidate[] {
+  const out: FormatWatchCandidate[] = [];
+  for (const row of rows) {
+    if (isKnownBankSender(row.raw_from, bankDomains)) continue;
+    const subject = row.raw_subject.trim();
+    if (CORRESPONDENCE_SUBJECT_RE.test(subject)) continue;
+
+    const unforwarded = subject.replace(FORWARD_PREFIX_RE, "");
+    const combined = `${subject} ${row.raw_body}`.replace(/\s+/g, " ").trim();
+    const explicitAlert = EXPLICIT_ALERT_RE.test(unforwarded);
+    if (!explicitAlert && isBenignNotification(row.raw_from, unforwarded, combined)) continue;
+
+    const re = new RegExp(LAST4_NEAR_RE.source, "gi");
+    let m: RegExpExecArray | null;
+    let matched: string | null = null;
+    while ((m = re.exec(combined))) {
+      if (knownLast4s.has(m[1])) {
+        matched = m[1];
+        break;
+      }
+    }
+    if (!matched && !explicitAlert) continue;
+
+    out.push({
+      gmail_message_id: row.gmail_message_id,
+      sender: row.raw_from,
+      subject: row.raw_subject,
+      matched_last4: matched ?? "unknown",
+      snippet: combined.slice(0, 200),
+      internal_date: row.internal_date ?? null,
+    });
+  }
+  return out;
+}
+
+// ─── Cards that go quiet ─────────────────────────────────────────────────────
+//
+// Doesn't depend on any email wording or sender, so it also catches causes
+// nobody has thought of yet: a forwarding rule that stopped, an alert setting
+// switched off at the bank, a template that format watch can't recognise.
+
+export type QuietCardTxn = { card_last4: string; txn_type: string; txn_at: string };
+export type QuietCard = { last4: string; lastChargeAt: string; daysQuiet: number; longestGapDays: number };
+
+const DAY_MS = 86400 * 1000;
+export const QUIET_LOOKBACK_DAYS = 120;
+const MIN_CHARGES_TO_JUDGE = 4;
+const MIN_QUIET_DAYS = 21;
+
+export function findQuietCards(txns: QuietCardTxn[], last4s: readonly string[], now: Date): QuietCard[] {
+  const out: QuietCard[] = [];
+  const windowStart = now.getTime() - QUIET_LOOKBACK_DAYS * DAY_MS;
+  for (const last4 of last4s) {
+    const charges = txns
+      .filter((t) => t.card_last4 === last4 && t.txn_type === "debit")
+      .map((t) => ({ at: new Date(t.txn_at).getTime(), raw: t.txn_at }))
+      .filter((t) => Number.isFinite(t.at) && t.at >= windowStart && t.at <= now.getTime())
+      .sort((a, b) => a.at - b.at);
+    if (charges.length < MIN_CHARGES_TO_JUDGE) continue;
+
+    let longestGap = 0;
+    for (let i = 1; i < charges.length; i++) {
+      longestGap = Math.max(longestGap, charges[i].at - charges[i - 1].at);
+    }
+    const last = charges[charges.length - 1];
+    const quiet = now.getTime() - last.at;
+    if (quiet < Math.max(MIN_QUIET_DAYS * DAY_MS, 2 * longestGap)) continue;
+
+    out.push({
+      last4,
+      lastChargeAt: last.raw,
+      daysQuiet: Math.floor(quiet / DAY_MS),
+      longestGapDays: Math.round(longestGap / DAY_MS),
     });
   }
   return out;

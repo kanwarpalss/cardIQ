@@ -4,6 +4,7 @@ import { HDFC_INFINIA } from "./hdfc-infinia";
 import { HDFC_SWIGGY } from "./hdfc-swiggy";
 import { ICICI_EMERALDE_PRIVATE_METAL } from "./icici-emeralde-private-metal";
 import { HSBC_PREMIER } from "./hsbc-premier";
+import { HSBC_TRAVELONE } from "./hsbc-travelone";
 import type { CardSpec } from "./types";
 
 const ALL_CARDS: CardSpec[] = [
@@ -12,6 +13,7 @@ const ALL_CARDS: CardSpec[] = [
   HDFC_SWIGGY,
   ICICI_EMERALDE_PRIVATE_METAL,
   HSBC_PREMIER,
+  HSBC_TRAVELONE,
   AMEX_PLATINUM_TRAVEL,
 ];
 

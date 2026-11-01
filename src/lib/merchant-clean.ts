@@ -69,6 +69,8 @@ const KNOWN_MERCHANTS: { match: RegExp; name: string }[] = [
   { match: /^taj\s+(hotels|group)?/i,  name: "Taj Hotels" },
   { match: /^oyo/i,                    name: "OYO" },
   { match: /^airbnb/i,                 name: "Airbnb" },
+  // "FACEBK *PAYMENT": the star rule below would keep only "Payment".
+  { match: /^facebk\b/i,               name: "Facebook" },
 ];
 
 // Strip leading payment processor prefixes

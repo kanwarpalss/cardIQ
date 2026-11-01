@@ -115,9 +115,9 @@ export class GmailApiSource implements MailSource {
       subject: h("subject"),
       from: h("from"),
       dateHeader: h("date") || null,
-      textBody: extractBody(full.data.payload),
-      htmlBody: extractHtml(full.data.payload),
-      snippet: full.data.snippet || "",
+      textBody: redactOtp(extractBody(full.data.payload)),
+      htmlBody: redactOtp(extractHtml(full.data.payload)),
+      snippet: redactOtp(full.data.snippet || ""),
       attachments,
     };
   }
@@ -159,6 +159,20 @@ export function isPdfAttachment(a: { contentType?: string; filename?: string }):
  */
 export function normalizeMojibake(text: string): string {
   return text.replace(/\s*�+\s*/g, " ");
+}
+
+/**
+ * Masks the code in a bank OTP email. Those emails get fetched like any other
+ * mail from the bank, and the sync stores every fetched body, so the code would
+ * otherwise sit in the database. Applied here so both sources get it.
+ */
+export function redactOtp(text: string): string {
+  // Only short joining words may sit between "OTP" and the code. Allowing any
+  // text would let a footer ("never share your OTP. INR 500 debited") mask a
+  // real amount, and parsers read this text.
+  return text
+    .replace(/\b((?:OTP|one[- ]time\s+password)(?:\s+(?:is|code))?\s*[:\-=]?\s*)\d{4,10}\b(?![.,]\d)/gi, "$1******")
+    .replace(/\b\d{4,10}(?=\s+is\s+(?:your|the)\s+(?:OTP|one[- ]time\s+password)\b)/gi, "******");
 }
 
 const ALL_MAIL = "[Gmail]/All Mail";
@@ -238,8 +252,8 @@ export class ImapSource implements MailSource {
 
     const parsed = await simpleParser(raw.source);
     const rawText = parsed.text ?? (typeof parsed.html === "string" ? stripHtml(parsed.html) : "");
-    const text = normalizeMojibake(rawText);
-    const html = typeof parsed.html === "string" ? parsed.html : "";
+    const text = redactOtp(normalizeMojibake(rawText));
+    const html = typeof parsed.html === "string" ? redactOtp(parsed.html) : "";
 
     const attachments: NormalizedAttachment[] = (parsed.attachments || [])
       .filter(isPdfAttachment)

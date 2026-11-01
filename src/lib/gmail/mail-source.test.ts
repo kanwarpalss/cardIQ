@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { toCanonicalId, isPdfAttachment, normalizeMojibake, pickMailSource, GmailApiSource, ImapSource } from "./mail-source";
+import { toCanonicalId, isPdfAttachment, normalizeMojibake, redactOtp, pickMailSource, GmailApiSource, ImapSource } from "./mail-source";
 
 describe("toCanonicalId — decimal emailId to hex gmail_message_id", () => {
   // The spike's proven conversion (scripts/imap-spike.ts): Gmail's REST API
@@ -119,5 +119,37 @@ describe("normalizeMojibake — recovers from mailparser's undecodable-byte mark
 
   it("leaves clean text untouched", () => {
     expect(normalizeMojibake("Transaction Amount: INR 1042")).toBe("Transaction Amount: INR 1042");
+  });
+});
+
+describe("redactOtp", () => {
+  it("masks the code in HSBC's OTP email and keeps the rest", () => {
+    const out = redactOtp("valid for 5 minutes. OTP: 550958 Transaction details: Amount: INR 2590.65 Merchant: MYGATE");
+    expect(out).toBe("valid for 5 minutes. OTP: ****** Transaction details: Amount: INR 2590.65 Merchant: MYGATE");
+  });
+
+  it("masks the 'OTP 569969' wording too", () => {
+    expect(redactOtp("OTP 569969 for INR 885.00")).toBe("OTP ****** for INR 885.00");
+  });
+
+  it("masks the other wordings banks use", () => {
+    for (const [input, want] of [
+      ["Your OTP is 123456", "Your OTP is ******"],
+      ["OTP is: 123456", "OTP is: ******"],
+      ["123456 is your OTP", "****** is your OTP"],
+      ["one-time password 123456", "one-time password ******"],
+      ["OTP 1234567890", "OTP ******"],
+    ]) expect(redactOtp(input)).toBe(want);
+  });
+
+  it("never masks an amount that follows a footer's mention of OTP", () => {
+    const text = "Never share your OTP. INR 5000 debited. OTP for INR 2590 sent. Your OTP is valid. 1234 is your card.";
+    expect(redactOtp(text)).toBe(text);
+    expect(redactOtp("OTP 123456.78")).toBe("OTP 123456.78");
+  });
+
+  it("leaves amounts, card numbers and ordinary mentions of OTP alone", () => {
+    const text = "INR 2590.65 on card ending with 4502. Never share your OTP with anyone.";
+    expect(redactOtp(text)).toBe(text);
   });
 });

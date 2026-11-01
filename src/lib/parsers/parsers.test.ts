@@ -470,13 +470,13 @@ describe("foreign-currency guards on bank-specific parsers", () => {
     expect(out).toBeNull();
   });
 
-  it("HSBC parser returns null for an AED body", () => {
+  it("HSBC parser books an AED body itself, since the sniffer finds no verb in it", () => {
     const out = parseHsbcTxn(
       "You have used your HSBC Credit Card",
       "your Credit card no ending with 3337, has been used for AED 200.00 for payment to DUBAI MALL on 01 May 2026 at 21:22.",
       "",
     );
-    expect(out).toBeNull();
+    expect(out).toMatchObject({ currency: "AED", amount_original: 200, amount_inr: 0 });
   });
 
   it("HDFC parser still works for INR (regression check on the guard)", () => {
