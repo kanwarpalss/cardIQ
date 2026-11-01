@@ -1,5 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
-import { runMailboxWatch, MAX_MAILBOX_FETCH } from "./mailbox-watch";
+import { archivedWatchSource, runMailboxWatch, MAX_MAILBOX_FETCH } from "./mailbox-watch";
+import type { SeenRow } from "../parsers/format-watch";
 import type { MailSource, NormalizedMessage } from "./mail-source";
 
 const banks = ["hsbc.bank.in"];
@@ -25,6 +26,41 @@ function source(overrides: Partial<MailSource> = {}): MailSource {
     ...overrides,
   };
 }
+
+describe("mailbox watch shares the sync archive", () => {
+  const saved = (m: NormalizedMessage): SeenRow => ({ gmail_message_id: m.id, raw_from: m.from, raw_subject: m.subject, raw_body: m.textBody, internal_date: m.internalDate });
+  it("reuses archived bodies without downloading or writing again", async () => {
+    const transport = source();
+    const archive = { read: vi.fn(async () => saved(message("a", "hsbc@alerts.hsbcindia.com"))), write: vi.fn(async () => {}) };
+    const out = await runMailboxWatch(archivedWatchSource(transport, archive), known, banks);
+    expect(out.candidates).toHaveLength(1);
+    expect(transport.fetchMessage).not.toHaveBeenCalled();
+    expect(archive.write).not.toHaveBeenCalled();
+    expect(transport.close).toHaveBeenCalled();
+  });
+  it("archives each new email before using it, including repeated IDs and later runs", async () => {
+    const rows = new Map<string, SeenRow>();
+    const archive = { read: vi.fn(async (id: string) => rows.get(id) ?? null), write: vi.fn(async (m: NormalizedMessage) => { rows.set(m.id, saved(m)); }) };
+    const transport = source({ search: vi.fn(async () => ["a", "a"]) });
+    await runMailboxWatch(archivedWatchSource(transport, archive), known, banks);
+    await runMailboxWatch(archivedWatchSource(transport, archive), known, banks);
+    expect(transport.fetchMessage).toHaveBeenCalledTimes(1);
+    expect(archive.write).toHaveBeenCalledTimes(1);
+    expect(rows.get("a")?.raw_body).toContain("4502");
+  });
+  it("reports archive read failures instead of silently downloading again", async () => {
+    const transport = source();
+    const out = await runMailboxWatch(archivedWatchSource(transport, { read: async () => { throw new Error("DB unavailable"); }, write: async () => {} }), known, banks);
+    expect(out.error).toMatch(/could not be read/);
+    expect(out.checked).toBe(0);
+    expect(transport.fetchMessage).not.toHaveBeenCalled();
+  });
+  it("reports archive write failures instead of claiming a complete check", async () => {
+    const out = await runMailboxWatch(archivedWatchSource(source(), { read: async () => null, write: async () => { throw new Error("write failed"); } }), known, banks);
+    expect(out.error).toMatch(/could not be read/);
+    expect(out.checked).toBe(0);
+  });
+});
 
 describe("runMailboxWatch", () => {
   it("reports alert-shaped mail from a sender the sync doesn't search", async () => {

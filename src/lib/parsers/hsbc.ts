@@ -76,7 +76,7 @@ export function parseHsbcTxn(subject: string, body: string, snippet: string = ""
     const currency = alert[2].toUpperCase();
     const amount = parseAmount(alert[3]);
     const txnAt = parseDMY(alert[5]);
-    if (!(amount > 0) || !txnAt) return null;
+    if (!Number.isFinite(amount) || !(amount > 0) || /,,|,$/.test(alert[3]) || !txnAt) return null;
     return {
       card_last4: alert[1],
       amount_inr: isInr(currency) ? amount : 0,
@@ -91,7 +91,7 @@ export function parseHsbcTxn(subject: string, body: string, snippet: string = ""
   if (m) {
     const currency = m[2].toUpperCase();
     const amount = parseAmount(m[3]);
-    if (!(amount > 0)) return null;
+    if (!Number.isFinite(amount) || !(amount > 0) || /,,|,$/.test(m[3])) return null;
     return {
       card_last4: m[1],
       amount_inr: isInr(currency) ? amount : 0,
