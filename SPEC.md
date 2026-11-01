@@ -2,7 +2,7 @@
 
 > Project brain. Updated every session.
 > Static architecture doc lives in ARCHITECTURE.md — don't duplicate it here.
-> Last updated: 2026-10-31
+> Last updated: 2026-11-01
 
 ---
 
@@ -434,6 +434,8 @@ Verified against the real live database, not synthetic data: 3126 real transacti
 ## §9 Session Handoff Notes (2026-11-01)
 
 ### Start Here — Current, Verified State
+
+**Latest — HSBC cards closed out, 1 Nov 2026, after Codex's coverage note below:** TravelOne 3337 now has its card row and its 10 rows linked (`import-hsbc-alerts.ts --apply`, run after the deploy because the old code had no spec for it). Premier 4502 stands at 34 rows, ₹56,241.64 in stored rupees, 7 of them USD holds. Two alerts arrived on their own on 1 Nov through auto-forwarding: ₹214.98 Snabbit and a USD 1.00 Facebook hold stored as USD 1 (₹95.01), which is real proof of the foreign-currency path. No forwarded alert or OTP became a wrong row. The 05:13 UTC OTP email arrived before masking was live, so its stored body was masked by hand; 37 older archived emails from Axis, HDFC and Amazon would also change under `redactOtp`, weren't altered, and none is linked to a transaction. The weekly routine `trig_01UifzBYSn6b9cL3dewVMnvG` now has baseline 35 `unparsed` (newest 2026-03-12, all reviewed non-purchases), zero for every other `kind`, and treats a failed call as "did not run", never as all clear. Open for KP: forward the original ₹16,387.79 MYGATE alert; set TravelOne's anniversary in Cards so its ₹8L and ₹12L bars count the right year; no real HSBC reversal email has been seen yet, so that wording stays inferred.
 
 **Latest — HSBC coverage, 1 Nov 2026:** Code `45971a7` is running on the mini and included in READY Vercel source `efc59ec` (`dpl_G53pnZHvEJF841T9sHHZDKuHRsts`). All 884 release tests/typecheck/lint/build/login health passed. No database recovery was reapplied: the 32 attachment purchases already exist exactly once with matching native amounts; today’s ₹214.98 auto-forwarded Snabbit charge is also present. The reported ₹16,387.79 MYGATE alert still needs its original email forwarded; it is absent from the connected source. Forwarding itself is now proven and the HSBC watch is clear. Preserve the laptop’s unrelated uncommitted login patch; it remains on `codex/hsbc-alert-coverage` and is excluded from this release. GitHub main and the mini contain newer work than that laptop checkout.
 
