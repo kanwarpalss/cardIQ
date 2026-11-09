@@ -295,6 +295,7 @@ body:has(.more-drawer[open]) { overflow: hidden; }
   .sync-notice { bottom: calc(80px + env(safe-area-inset-bottom)); left: max(16px, env(safe-area-inset-left)); right: max(16px, env(safe-area-inset-right)); margin-left: auto; max-width: 384px; overflow-wrap: anywhere; }
 }
 @media (max-width: 767px) {
+  .record-filters > input { flex: 1 1 100%; width: 100%; }
   .fx-summary { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; text-align: left; }
   .fx-summary > * { min-width: 0; overflow-wrap: anywhere; }
   .fx-summary > :nth-child(2) { justify-self: end; flex-wrap: wrap; justify-content: end; text-align: right; }

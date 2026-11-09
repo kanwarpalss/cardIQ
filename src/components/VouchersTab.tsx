@@ -152,12 +152,13 @@ export default function VouchersTab() {
       </div>
 
       {/* Filters */}
-      <div className="flex items-center gap-2 flex-wrap">
+      <div className="record-filters flex items-center gap-2 flex-wrap">
         <input
+          aria-label="Search vouchers"
           value={search} onChange={(e) => setSearch(e.target.value)}
           placeholder="Search brand or code…"
           className="flex-1 min-w-[180px] bg-ink border border-rim rounded-lg px-3 py-1.5 text-sm text-mist placeholder:text-mist/30 focus:border-gold/40 outline-none" />
-        <select value={brand} onChange={(e) => setBrand(e.target.value)}
+        <select aria-label="Voucher brand" value={brand} onChange={(e) => setBrand(e.target.value)}
           className="bg-ink border border-rim rounded-lg px-2 py-1.5 text-xs text-mist/75 focus:border-gold/40 outline-none max-w-[180px]">
           {brands.map((b) => <option key={b} value={b}>{b === "all" ? "All brands" : brandLabel.get(b) ?? b}</option>)}
         </select>

@@ -458,12 +458,13 @@ export default function OrdersTab() {
       </div>
 
       {/* Filters */}
-      <div className="flex items-center gap-2 flex-wrap">
+      <div className="record-filters flex items-center gap-2 flex-wrap">
         <input
+          aria-label="Search orders"
           value={search} onChange={(e) => setSearch(e.target.value)}
           placeholder="Search item, merchant, order #…"
           className="flex-1 min-w-[180px] bg-ink border border-rim rounded-lg px-3 py-1.5 text-sm text-mist placeholder:text-mist/30 focus:border-gold/40 outline-none" />
-        <select value={source} onChange={(e) => setSource(e.target.value)}
+        <select aria-label="Order source" value={source} onChange={(e) => setSource(e.target.value)}
           className="bg-ink border border-rim rounded-lg px-2 py-1.5 text-xs text-mist/75 focus:border-gold/40 outline-none">
           {sources.map((s) => <option key={s} value={s}>{s === "all" ? "All sources" : SOURCE_LABELS[s] ?? s}</option>)}
         </select>
