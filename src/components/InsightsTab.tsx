@@ -187,18 +187,20 @@ export default function InsightsTab() {
       {/* Month-over-month bars */}
       <section className="rounded-2xl border border-rim bg-surface p-5 shadow-card">
         <h3 className="text-2xs uppercase tracking-widest text-mist/55 mb-4">Spend by month · click a bar to focus</h3>
-        <div className="flex items-end gap-1.5 sm:gap-2">
+        <p className="text-sm text-teal mb-5">{monthLabel(month)} <strong className="ml-2">{fmt(months.find(item => item.key === month)?.total ?? 0)}</strong></p>
+        <div className="overflow-x-auto pb-2">
+        <div className="insights-chart flex items-end gap-1.5 sm:gap-2">
           {months.map((m) => {
             const focused = m.key === month;
             return (
-              <button key={m.key} onClick={() => setMonth(m.key)} title={`${monthLabel(m.key)} — ${fmt(m.total)}`}
+              <button key={m.key} onClick={() => setMonth(m.key)} aria-pressed={focused} aria-label={`${monthLabel(m.key)}: ${fmt(m.total)}`} title={`${monthLabel(m.key)} — ${fmt(m.total)}`}
                 className="flex-1 flex flex-col items-center gap-1.5 group min-w-0">
                 <span className={`text-2xs tabular-nums truncate max-w-full transition-opacity ${
                   focused ? "text-gold" : "text-mist/35 opacity-0 group-hover:opacity-100"
                 }`}>{m.total > 0 ? fmt(m.total) : ""}</span>
                 <div
                   className={`w-full rounded-t-md transition-all ${
-                    focused ? "bg-gold" : m.total > 0 ? "bg-gold/25 group-hover:bg-gold/45" : "bg-ink"
+                    focused ? "bg-teal" : m.total > 0 ? "bg-plum/25 group-hover:bg-plum/45" : "bg-ink"
                   }`}
                   style={{ height: `${Math.max(3, (m.total / maxMonthTotal) * 120)}px` }}
                 />
@@ -206,6 +208,7 @@ export default function InsightsTab() {
               </button>
             );
           })}
+        </div>
         </div>
       </section>
 
@@ -299,7 +302,7 @@ function Tile({ label, value, sub, accent }: {
     accent === "emerald" ? "text-emerald" :
     accent === "ruby"    ? "text-ruby"    : "text-mist/80";
   return (
-    <div className="rounded-2xl border border-rim bg-surface p-4 shadow-card">
+    <div className="stat-tile">
       <div className="text-2xs uppercase tracking-widest text-mist/55 mb-2">{label}</div>
       <div className={`font-serif text-2xl font-semibold tabular-nums ${valClass}`}>{value}</div>
       <div className="text-2xs text-mist/55 mt-1">{sub}</div>

@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import PeriodPicker from "./PeriodPicker";
 
 export type SpendCardOption = {
@@ -99,13 +100,16 @@ export default function SpendFilterPanel({
   resultCount,
   onReset,
 }: Props) {
+  const [expanded, setExpanded] = useState(false);
+  const activeFilters = [merchant, category, subcategory, amountMin, amountMax,
+    txnType !== "all", !selectedCards.has("all")].filter(Boolean).length;
   return (
-    <section className="rounded-2xl border border-gold/20 bg-surface p-5 shadow-card space-y-5">
+    <section className="spend-filters rounded-2xl border border-wire bg-surface p-4 sm:p-5 shadow-card space-y-4">
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div>
-          <h2 className="font-serif text-lg font-semibold text-gold">Explore your spending</h2>
-          <p className="text-xs text-mist/55 mt-1">
-            Every filter updates the totals, breakdowns, and transactions together.
+          <h2 className="font-serif text-lg font-semibold text-gold">Find your spending</h2>
+          <p className="hidden sm:block text-xs text-mist/60 mt-1">
+            Search a merchant, a card, or that thing you bought.
           </p>
         </div>
         <div className="flex items-center gap-3">
@@ -122,8 +126,8 @@ export default function SpendFilterPanel({
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-3">
-        <label className="lg:col-span-5">
+      <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-3 items-start">
+        <label className="min-w-0 col-span-2 md:col-span-1">
           <FieldLabel>Search everything</FieldLabel>
           <div className="relative">
             <svg
@@ -145,16 +149,24 @@ export default function SpendFilterPanel({
               className={`${controlClass} pl-9`}
             />
           </div>
-          <span className="block text-2xs text-mist/40 mt-1">
+          <span className="hidden sm:block text-2xs text-mist/55 mt-1">
             Try “pickleball”, “HDFC”, “Amazon” or “4,181”
           </span>
         </label>
 
-        <div className="lg:col-span-3">
+        <div className="min-w-0">
           <FieldLabel>Period</FieldLabel>
           <PeriodPicker from={from} to={to} onChange={onPeriodChange} />
         </div>
 
+      <button type="button" className="filter-disclosure self-end md:hidden" aria-expanded={expanded}
+        aria-controls="spend-refinements" onClick={() => setExpanded(value => !value)}>
+        <span>Filters{activeFilters > 0 ? ` · ${activeFilters} active` : ""}</span>
+        <span aria-hidden="true">{expanded ? "−" : "+"}</span>
+      </button>
+      </div>
+      {amountError && !expanded && <p className="md:hidden text-xs text-ruby" role="alert">{amountError}</p>}
+      <div id="spend-refinements" className={`${expanded ? "grid" : "hidden md:grid"} grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-3 border-t border-wire pt-4`}>
         <label className="lg:col-span-4">
           <FieldLabel>Merchant</FieldLabel>
           <select
@@ -242,10 +254,8 @@ export default function SpendFilterPanel({
             ))}
           </div>
         </div>
-      </div>
-
       {cards.length > 0 && (
-        <div className="pt-4 border-t border-wire">
+        <div className="sm:col-span-2 lg:col-span-12 pt-3 border-t border-wire">
           <FieldLabel>Cards</FieldLabel>
           <div className="flex flex-wrap gap-1.5">
             <FilterPill active={selectedCards.has("all")} onClick={() => onToggleCard("all")}>
@@ -263,6 +273,7 @@ export default function SpendFilterPanel({
           </div>
         </div>
       )}
+      </div>
     </section>
   );
 }
