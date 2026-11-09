@@ -1,13 +1,8 @@
 "use client";
 
-// Transfer partners: where each card's points can go, at what ratio, and
-// which routes are worth it. Three layers, top to bottom:
-//   1. Card snapshot — pick a card, type a balance, see every partner tile
-//      with the miles it would become, plus two-step options via bridges.
-//   2. Best routes — curated sweet spots, each resolved against KP's wallet.
-//   3. Partner grid — all programs × all cards in one table.
-// All numbers come from src/lib/transfer-partners (sourced + unit-tested);
-// nothing here does its own ratio maths.
+// One exploration view at a time: compare, recommendations, or calculator.
+// Hidden views stay mounted so searches and calculator inputs survive a switch.
+// Conversion logic remains in the sourced, tested transfer-partners library.
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import CardVisual from "@/components/CardVisual";
@@ -39,6 +34,9 @@ export default function TransferPartners({ data, onAddCard }: {
   const holdings = useMemo(() => holdingsByProgram(data), [data]);
   const transferable = useMemo(() => wallet.filter((c) => c.spec.partners.length), [wallet]);
 
+  const [mode, setMode] = useState<"compare" | "routes" | "card">("compare");
+  const calculator = useRef<HTMLElement>(null);
+  useEffect(() => { if (mode === "card") calculator.current?.scrollIntoView({ behavior: "smooth", block: "start" }); }, [mode]);
   const [selected, setSelected] = useState<string | null>(null);
   const [pointsText, setPointsText] = useState<string | null>(null);
   const [filter, setFilter] = useState<Filter>("all");
@@ -71,18 +69,29 @@ export default function TransferPartners({ data, onAddCard }: {
 
   function pickFromGrid(pk: string, program: ProgramKey) {
     pickCard(pk);
-    setOpenProgram(program); // the detail panel scrolls itself into view
+    setOpenProgram(program);
+    setMode("card");
   }
 
   return (
-    <div className="space-y-10">
+    <div className="space-y-4">
       <WalletSummary wallet={transferable} />
 
       <FreshnessNote wallet={transferable} />
 
+      <div className="view-switch" role="group" aria-label="Explore transfers">
+        {([['compare', 'Compare'], ['routes', 'Best routes'], ['card', 'Calculator']] as const).map(([key, label]) => <button type="button" key={key} aria-pressed={mode === key} onClick={() => setMode(key)}>{label}</button>)}
+      </div>
+      <div hidden={mode !== "compare"}><PartnerGrid wallet={transferable} onPick={pickFromGrid} /></div>
+      <div hidden={mode !== "routes"}><RouteCards wallet={transferable} holdings={holdings} /></div>
       {/* ── 1. Card snapshot ─────────────────────────────────────────────── */}
-      <section className="space-y-4">
-        <div className="flex gap-2 flex-wrap">
+      <section ref={calculator} hidden={mode !== "card"} className="space-y-4 scroll-mt-20">
+        <label className="block sm:hidden text-xs text-mist/65">Card to calculate
+          <select aria-label="Calculator card" value={card.product_key} onChange={e => pickCard(e.target.value)} className="record-select block w-full mt-1">
+            {wallet.map(c => <option key={c.product_key} value={c.product_key}>{c.short} · {c.spec.partners.length} partners</option>)}
+          </select>
+        </label>
+        <div className="hidden sm:flex gap-2 flex-wrap">
           {wallet.map((c) => {
             const active = c.product_key === card.product_key;
             return (
@@ -105,11 +114,7 @@ export default function TransferPartners({ data, onAddCard }: {
           wallet={transferable} holdings={holdings} />
       </section>
 
-      {/* ── 2. Best routes ───────────────────────────────────────────────── */}
-      <RouteCards wallet={transferable} holdings={holdings} />
 
-      {/* ── 3. Grid ──────────────────────────────────────────────────────── */}
-      <PartnerGrid wallet={transferable} onPick={pickFromGrid} />
     </div>
   );
 }
@@ -123,29 +128,10 @@ function WalletSummary({ wallet }: { wallet: WalletCard[] }) {
   const airlines = [...reached].filter((k) => PROGRAMS[k].kind === "airline").length;
   const hotels = count("hotel");
 
-  return (
-    <section className="rounded-2xl border border-rim bg-surface shadow-card overflow-hidden">
-      <div className="p-6 bg-gradient-to-br from-gold/10 via-transparent to-sapphire/5">
-        <div className="text-2xs uppercase tracking-widest text-gold font-semibold">Your transfer reach</div>
-        <div className="font-serif text-2xl font-semibold text-mist mt-1">
-          Your cards reach {airlines} airline and {hotels} hotel programs
-        </div>
-        <div className="mt-4 grid grid-cols-2 sm:grid-cols-5 gap-2">
-          {PROGRAM_GROUPS.map((g) => {
-            const n = count(g.key);
-            return (
-              <div key={g.key} className="rounded-xl bg-surface/80 border border-wire px-3 py-2.5">
-                <div className="flex items-center gap-1.5 text-2xs text-mist/55">
-                  <span className="w-2 h-2 rounded-full" style={{ background: GROUP_STYLE[g.key].bg }} />{g.label}
-                </div>
-                <div className="font-serif text-xl font-semibold text-mist tabular-nums">{n}</div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-    </section>
-  );
+  return <details className="transfer-reach">
+    <summary><span><strong>{airlines + hotels} programs</strong><small>{airlines} airlines · {hotels} hotels</small></span><span className="text-xs text-mist/60">By alliance ⌄</span></summary>
+    <div className="transfer-groups">{PROGRAM_GROUPS.map(g => <span key={g.key}>{g.label} <b>{count(g.key)}</b></span>)}</div>
+  </details>;
 }
 
 function FreshnessNote({ wallet }: { wallet: WalletCard[] }) {
@@ -153,15 +139,10 @@ function FreshnessNote({ wallet }: { wallet: WalletCard[] }) {
   // fresher date than the stalest list on screen.
   const checked = wallet.map((c) => c.spec.checked_on).sort()[0];
   if (!checked) return null;
-  return (
-    <div className="rounded-xl border border-amber/30 bg-amber/5 px-4 py-3 text-xs text-mist/70 leading-relaxed">
-      <span className="font-semibold text-amber">Check before you move points. </span>
-      These lists were checked on {fmtDate(checked)} against public guides; the banks don&apos;t publish a
-      current table, change partners without notice, and transfers can&apos;t be undone. A{" "}
-      <span className="text-amber font-semibold">?</span> means sources disagree, and the less generous figure
-      is shown. Confirm the ratio in your bank app first.
-    </div>
-  );
+  return <details className="disclosure-note">
+    <summary>Checked {fmtDate(checked)} · transfers are final; confirm ratios <span aria-hidden="true">⌄</span></summary>
+    <p className="mt-2">Ratios read card points : partner miles or points. Stars mark all tied best ratios; quantities do not compare the cash value of different points. Public guides can disagree and banks can change partners. A <strong>?</strong> marks disputed information; the less generous figure is shown. Check the bank app before moving points. Card-specific fees, caps and sources are in the calculator.</p>
+  </details>;
 }
 
 // ── Card snapshot ───────────────────────────────────────────────────────────
@@ -198,7 +179,7 @@ function CardSnapshot({
 
   return (
     <div className="rounded-2xl border border-rim bg-surface shadow-card p-5 sm:p-6 space-y-5">
-      <div className="grid gap-5 md:grid-cols-[minmax(0,280px)_1fr] items-start">
+      <div className="grid gap-4 md:grid-cols-[minmax(0,220px)_1fr] items-start">
         <CardVisual productKey={card.product_key} name={card.name} issuer={card.issuer}
           network={reg?.network ?? ""} last4={card.last4s.join(" · ")}>
           <div className="flex justify-between text-xs text-white/70">
@@ -257,6 +238,7 @@ function CardSnapshot({
               ))}
           </div>
 
+          <div className="partner-catalog space-y-3">
           {PROGRAM_GROUPS.map((g) => {
             const tiles = visible.filter((t) => groupOf(PROGRAMS[t.program]) === g.key);
             if (!tiles.length) return null;
@@ -281,10 +263,11 @@ function CardSnapshot({
               </div>
             );
           })}
+          </div>
 
           {twoStep.length > 0 && (
-            <div className="space-y-2">
-              <h4 className="text-xs uppercase tracking-widest text-mist/50 font-semibold">Reachable in two steps</h4>
+            <details className="disclosure-panel">
+              <summary>Two-step opportunities <span>{twoStep.length} routes · expand</span></summary>
               <p className="text-xs text-mist/55">
                 Programs this card reaches best through a real onward move (Avios between airlines, or Marriott
                 into airline miles), either because there&apos;s no direct transfer or because two steps beat it.
@@ -295,7 +278,7 @@ function CardSnapshot({
                     direct={partners.find((t) => t.program === p.hops[1].program)} />
                 ))}
               </div>
-            </div>
+            </details>
           )}
 
           <details className="group rounded-xl border border-wire bg-ink px-4 py-3">

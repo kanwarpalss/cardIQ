@@ -88,3 +88,14 @@ it.each(["Tab", "Escape"])("retains native %s behaviour away from a focus bounda
   expect(first.focus).not.toHaveBeenCalled();
   expect(last.focus).not.toHaveBeenCalled();
 });
+
+it("changing row density resets pagination and preserves the selected sort", () => {
+  hooks.overrides.set(1, 3);
+  const tree = TransactionsTable(props);
+  const selector = elements(tree).find(n => (n.props as Record<string, unknown>)["aria-label"] === "Transactions per page")!;
+  expect(selector.props.value).toBe(10);
+  selector.props.onChange!({target:{value:"50"}});
+  expect(hooks.setters.at(-1)).toHaveBeenCalledWith(50);
+  expect(hooks.setters[1]).toHaveBeenCalledWith(1);
+  expect(hooks.setters[0]).not.toHaveBeenCalled();
+});

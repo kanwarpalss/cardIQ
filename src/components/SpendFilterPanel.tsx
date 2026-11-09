@@ -104,69 +104,29 @@ export default function SpendFilterPanel({
   const activeFilters = [merchant, category, subcategory, amountMin, amountMax,
     txnType !== "all", !selectedCards.has("all")].filter(Boolean).length;
   return (
-    <section className="spend-filters rounded-2xl border border-wire bg-surface p-4 sm:p-5 shadow-card space-y-4">
-      <div className="flex items-start justify-between gap-4 flex-wrap">
-        <div>
-          <h2 className="font-serif text-lg font-semibold text-gold">Find your spending</h2>
-          <p className="hidden sm:block text-xs text-mist/60 mt-1">
-            Search a merchant, a card, or that thing you bought.
-          </p>
-        </div>
-        <div className="flex items-center gap-3">
-          <span className="text-xs text-mist/55 tabular-nums">
-            {resultCount.toLocaleString("en-IN")} result{resultCount === 1 ? "" : "s"}
-          </span>
-          <button
-            type="button"
-            onClick={onReset}
-            className="text-xs px-2.5 py-1.5 rounded-lg border border-rim text-mist/60 hover:text-gold hover:border-gold/30 transition-colors"
-          >
-            Reset all
-          </button>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-3 items-start">
-        <label className="min-w-0 col-span-2 md:col-span-1">
-          <FieldLabel>Search everything</FieldLabel>
+    <section aria-label="Spending filters" className="spend-filters rounded-2xl border border-wire bg-surface p-4 shadow-card space-y-3">
+      <div className="compact-filter-toolbar">
+        <label className="filter-search min-w-0">
+          <span className="sr-only">Search everything</span>
           <div className="relative">
-            <svg
-              aria-hidden="true"
-              className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-mist/35"
-              fill="none"
-              viewBox="0 0 16 16"
-              stroke="currentColor"
-              strokeWidth={1.5}
-            >
-              <circle cx="7" cy="7" r="4.5" />
-              <path d="m10.5 10.5 3 3" />
-            </svg>
-            <input
-              type="search"
-              value={search}
-              onChange={(event) => onSearchChange(event.target.value)}
-              placeholder="Merchant, card, amount, note, item…"
-              className={`${controlClass} pl-9`}
-            />
+            <svg aria-hidden="true" className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-mist/35" fill="none" viewBox="0 0 16 16" stroke="currentColor" strokeWidth={1.5}><circle cx="7" cy="7" r="4.5" /><path d="m10.5 10.5 3 3" /></svg>
+            <input type="search" value={search} onChange={event => onSearchChange(event.target.value)} placeholder="Merchant, card, note, item…" className={`${controlClass} pl-9`} />
           </div>
-          <span className="hidden sm:block text-2xs text-mist/55 mt-1">
-            Try “pickleball”, “HDFC”, “Amazon” or “4,181”
-          </span>
         </label>
-
-        <div className="min-w-0">
-          <FieldLabel>Period</FieldLabel>
-          <PeriodPicker from={from} to={to} onChange={onPeriodChange} />
-        </div>
-
-      <button type="button" className="filter-disclosure self-end md:hidden" aria-expanded={expanded}
-        aria-controls="spend-refinements" onClick={() => setExpanded(value => !value)}>
-        <span>Filters{activeFilters > 0 ? ` · ${activeFilters} active` : ""}</span>
-        <span aria-hidden="true">{expanded ? "−" : "+"}</span>
-      </button>
+        <div className="filter-period"><span className="sr-only">Period</span><PeriodPicker from={from} to={to} onChange={onPeriodChange} /></div>
+        <button type="button" className="filter-disclosure" aria-expanded={expanded} aria-controls="spend-refinements" onClick={() => setExpanded(value => !value)}>
+          <span>Filters{activeFilters > 0 ? ` · ${activeFilters} active` : ""}</span><span aria-hidden="true">{expanded ? "−" : "+"}</span>
+        </button>
+        <button type="button" onClick={onReset} className="filter-reset text-xs text-mist/60 rounded-lg px-2">Reset all</button>
       </div>
-      {amountError && !expanded && <p className="md:hidden text-xs text-ruby" role="alert">{amountError}</p>}
-      <div id="spend-refinements" className={`${expanded ? "grid" : "hidden md:grid"} grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-3 border-t border-wire pt-4`}>
+      <p className="text-xs text-mist/60" role="status">{resultCount.toLocaleString("en-IN")} result{resultCount === 1 ? "" : "s"}</p>
+      {!expanded && activeFilters > 0 && <p className="text-xs text-mist/65" aria-label="Active spend filters">{[
+        merchant && `Merchant: ${merchant}`, category && `Category: ${category}`, subcategory && `Subcategory: ${subcategory}`,
+        amountMin && `Min ₹${amountMin}`, amountMax && `Max ₹${amountMax}`, txnType !== "all" && (txnType === "debit" ? "Spends only" : "Refunds only"),
+        !selectedCards.has("all") && `Cards: ${cards.filter(c => selectedCards.has(c.last4)).map(c => `${c.label} ··${c.last4}`).join(", ") || "none selected"}`,
+      ].filter(Boolean).join(" · ")}</p>}
+      {amountError && !expanded && <p className="text-xs text-ruby" role="alert">{amountError}</p>}
+      <div id="spend-refinements" className={`${expanded ? "grid" : "hidden"} grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-3 border-t border-wire pt-4`}>
         <label className="lg:col-span-4">
           <FieldLabel>Merchant</FieldLabel>
           <select

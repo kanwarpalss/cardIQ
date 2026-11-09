@@ -29,7 +29,7 @@ type Voucher = {
   funding_txn: FundingTxn | null;
 };
 
-const PAGE = 50;
+const PAGE = 10;
 const fmt = (n: number | null | undefined) =>
   n == null ? "—" : "₹" + Math.round(Number(n)).toLocaleString("en-IN");
 const day = (s: string | null) =>
@@ -131,15 +131,14 @@ export default function VouchersTab() {
       <header className="space-y-1">
         <h1 className="font-serif text-2xl text-gold tracking-tight">Vouchers</h1>
         <p className="text-sm text-mist/60 leading-relaxed max-w-xl">
-          Every gift voucher you&apos;ve bought via Gyftr — what it&apos;s for, the card charge that funded it,
-          and how much balance is left. Spending one against an order draws it down here automatically.
+          Purchased vouchers, their funding cards and the balance left.
         </p>
       </header>
 
       {/* Summary tiles */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         {[
-          { label: "Vouchers", value: stats.count.toLocaleString("en-IN") },
+          { label: "All vouchers", value: stats.count.toLocaleString("en-IN") },
           { label: "Face value", value: fmt(stats.face) },
           { label: "Balance left", value: fmt(stats.remaining) },
           { label: "Brands", value: stats.brands.toLocaleString("en-IN") },
@@ -162,16 +161,9 @@ export default function VouchersTab() {
           className="bg-ink border border-rim rounded-lg px-2 py-1.5 text-xs text-mist/75 focus:border-gold/40 outline-none max-w-[180px]">
           {brands.map((b) => <option key={b} value={b}>{b === "all" ? "All brands" : brandLabel.get(b) ?? b}</option>)}
         </select>
-        <div className="flex items-center gap-1">
-          {(["all", "withBalance", "spent"] as BalanceFilter[]).map((b) => (
-            <button key={b} onClick={() => setBalance(b)}
-              className={`px-2.5 py-1.5 rounded-lg text-xs font-medium transition-all ${
-                balance === b ? "bg-surface text-gold border border-gold/25" : "text-mist/55 hover:text-mist border border-transparent"
-              }`}>
-              {b === "all" ? "All" : b === "withBalance" ? "Balance left" : "Fully spent"}
-            </button>
-          ))}
-        </div>
+        <select aria-label="Voucher balance" value={balance} onChange={e => setBalance(e.target.value as BalanceFilter)} className="record-select">
+          <option value="all">All vouchers</option><option value="withBalance">Balance left</option><option value="spent">Fully spent</option>
+        </select>
       </div>
 
       {/* Ledger */}
@@ -263,10 +255,10 @@ export default function VouchersTab() {
           <div className="flex items-center justify-between text-xs text-mist/55">
             <span>{filtered.length.toLocaleString("en-IN")} voucher{filtered.length === 1 ? "" : "s"}</span>
             <div className="flex items-center gap-1.5">
-              <button disabled={page <= 1} onClick={() => setPage((p) => p - 1)}
+              <button aria-label="Previous vouchers page" disabled={page <= 1} onClick={() => setPage((p) => p - 1)}
                 className="px-2 py-1 rounded border border-rim hover:border-gold/30 disabled:opacity-20 transition-all">‹</button>
               <span className="tabular-nums">{page} / {pageCount}</span>
-              <button disabled={page >= pageCount} onClick={() => setPage((p) => p + 1)}
+              <button aria-label="Next vouchers page" disabled={page >= pageCount} onClick={() => setPage((p) => p + 1)}
                 className="px-2 py-1 rounded border border-rim hover:border-gold/30 disabled:opacity-20 transition-all">›</button>
             </div>
           </div>

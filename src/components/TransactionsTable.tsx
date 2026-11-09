@@ -84,7 +84,6 @@ function suggestNotes(query: string, existing: string[], max = 5): string[] {
   return [...startsWith, ...wordStart, ...contains].slice(0, max);
 }
 
-const PAGE = 25;
 const fmt = (n: number) => "₹" + Math.round(n).toLocaleString("en-IN");
 const cardLabel = (c: CardRow) =>
   c.nickname || CARD_REGISTRY[c.product_key]?.display_name || c.product_key;
@@ -128,6 +127,7 @@ export default function TransactionsTable({
   const [editNoteId, setEditNoteId]   = useState<string | null>(null);
   const [editNoteText, setEditNoteText] = useState("");
   const [savingNote, setSavingNote]   = useState(false);
+  const [pageSize, setPageSize] = useState(10);
 
   // NOTE: page is clamped (not reset to 1) after `processed` is computed
   // below — an in-place edit re-creates the transactions array, and resetting
@@ -168,8 +168,8 @@ export default function TransactionsTable({
     });
   }, [transactions, sort, cardNicknameMap]);
 
-  const totalPages = Math.max(1, Math.ceil(processed.length / PAGE));
-  const visible    = processed.slice((page - 1) * PAGE, page * PAGE);
+  const totalPages = Math.max(1, Math.ceil(processed.length / pageSize));
+  const visible    = processed.slice((page - 1) * pageSize, page * pageSize);
 
   // Keep the current page in range when the data or filters change. Clamp
   // rather than reset-to-1 so editing a category/note on page 3 leaves you on
@@ -269,10 +269,16 @@ export default function TransactionsTable({
 
       <div className="px-5 py-3 border-b border-wire flex items-center justify-between gap-3">
         <h3 className="text-2xs uppercase tracking-widest text-mist/55 shrink-0">Transactions</h3>
-        <span className="text-2xs text-mist/55 shrink-0">
+        <span className="transaction-count text-2xs text-mist/55 shrink-0">
           {processed.length} transaction{processed.length === 1 ? "" : "s"}
         </span>
+        <div className="table-density-bar">
+        <label>Rows <select aria-label="Transactions per page" value={pageSize} onChange={event => { setPageSize(Number(event.target.value)); setPage(1); }}>
+          {[10, 25, 50].map(size => <option key={size} value={size}>{size}</option>)}
+        </select></label>
       </div>
+      </div>
+
 
       <div className="mobile-sort-bar">
         <label htmlFor="transaction-sort">Sort by</label>
@@ -567,7 +573,7 @@ export default function TransactionsTable({
       {totalPages > 1 && (
         <div className="px-5 py-3 border-t border-wire flex items-center justify-between">
           <span className="text-2xs text-mist/55 tabular-nums">
-            {(page - 1) * PAGE + 1}–{Math.min(page * PAGE, processed.length)} of {processed.length}
+            {(page - 1) * pageSize + 1}–{Math.min(page * pageSize, processed.length)} of {processed.length}
           </span>
           <div className="flex items-center gap-1.5 text-xs">
             <button aria-label="Previous transactions page" disabled={page <= 1} onClick={() => setPage((p) => p - 1)}

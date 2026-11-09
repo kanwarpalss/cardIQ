@@ -58,7 +58,7 @@ function RouteCard({ route, ranked, holding }: { route: Route; ranked: Ranked[];
   const best = ranked[0];
   const target = PROGRAMS[route.target];
   return (
-    <article className={`rounded-2xl border bg-surface p-5 shadow-card flex flex-col gap-3 ${
+    <article className={`route-card rounded-2xl border bg-surface p-4 shadow-card flex flex-col gap-3 ${
       best ? "border-rim" : "border-dashed border-rim opacity-60"}`}>
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-start gap-3 min-w-0">
@@ -79,12 +79,24 @@ function RouteCard({ route, ranked, holding }: { route: Route; ranked: Ranked[];
 
       {best ? (
         <div className="rounded-xl bg-ink border border-wire p-3 space-y-2">
-          <Chain best={best} />
+          <div className="text-xs text-mist/60">Best via <strong className="text-teal">{best.card.short}</strong>{best.path.hops.length > 1 ? " · two steps" : " · direct"}</div>
           <div className="text-xs text-mist/70">
             <span className="font-semibold text-mist tabular-nums">{fmtNum(SAMPLE)}</span> {best.card.short} points →{" "}
             <span className="font-semibold text-emerald tabular-nums">{fmtNum(best.units)}</span> {target.unit}
             {best.path.hops.length > 1 && <span className="text-mist/45"> · two steps</span>}
           </div>
+
+        </div>
+      ) : (
+        <div className="rounded-xl bg-ink border border-wire p-3 text-xs text-mist/55">
+          None of your cards reach {target.name}.
+        </div>
+      )}
+
+      <details className="route-details">
+        <summary>Why this route &amp; things to know <span aria-hidden="true">⌄</span></summary>
+        <div className="space-y-3 pt-3">
+          {best && <Chain best={best} />}
           {ranked.length > 1 && (
             <div className="text-2xs text-mist/50">
               Also:{" "}
@@ -96,13 +108,6 @@ function RouteCard({ route, ranked, holding }: { route: Route; ranked: Ranked[];
               ))}
             </div>
           )}
-        </div>
-      ) : (
-        <div className="rounded-xl bg-ink border border-wire p-3 text-xs text-mist/55">
-          None of your cards reach {target.name}.
-        </div>
-      )}
-
       <p className="text-sm text-mist/75 leading-relaxed"><span className="font-semibold text-mist">Why: </span>{route.why}</p>
       <p className="text-sm text-mist/75 leading-relaxed">
         <span className="font-semibold text-amber">Watch out: </span>{route.watch}
@@ -112,7 +117,8 @@ function RouteCard({ route, ranked, holding }: { route: Route; ranked: Ranked[];
           className="text-2xs text-mist/45 hover:text-gold underline underline-offset-2 mt-auto">
           Source: {route.source.label}
         </a>
-      )}
+      )}        </div>
+      </details>
     </article>
   );
 }
@@ -136,7 +142,7 @@ export default function RouteCards({ wallet, holdings }: {
         <div>
           <h3 className="font-serif text-xl font-semibold text-mist">Best routes for your cards</h3>
           <p className="text-sm text-mist/60 mt-0.5">
-            Where points go furthest, and the best way to get there from the cards you hold.
+            Best transfer quantities per 10,000 card points. Expand for booking tips and tradeoffs.
           </p>
         </div>
         <div className="flex gap-1 flex-wrap">
@@ -150,10 +156,11 @@ export default function RouteCards({ wallet, holdings }: {
         </div>
       </div>
       <div className="grid gap-4 md:grid-cols-2">
-        {shown.map(({ route, ranked }) => (
+        {shown.slice(0, 4).map(({ route, ranked }) => (
           <RouteCard key={route.id} route={route} ranked={ranked} holding={holdings.get(route.target)} />
         ))}
       </div>
+      {shown.length > 4 && <details className="disclosure-panel" key={tag}><summary>{shown.length - 4} more routes <span>View all recommendations</span></summary><div className="grid gap-4 md:grid-cols-2 mt-3">{shown.slice(4).map(({route,ranked}) => <RouteCard key={route.id} route={route} ranked={ranked} holding={holdings.get(route.target)} />)}</div></details>}
     </section>
   );
 }

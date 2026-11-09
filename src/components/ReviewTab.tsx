@@ -72,6 +72,7 @@ export default function ReviewTab({ onChanged }: { onChanged?: () => void }) {
   const [error, setError] = useState<string | null>(null);
   const [busyId, setBusyId] = useState<string | null>(null);
   const [search, setSearch] = useState("");
+  const [page, setPage] = useState(1);
 
   const load = useCallback(async (s: Status) => {
     setLoading(true);
@@ -125,15 +126,17 @@ export default function ReviewTab({ onChanged }: { onChanged?: () => void }) {
     );
   }, [orders, search]);
   const counts = shown.length;
+  const pages = Math.max(1, Math.ceil(counts / 10));
+  const visiblePage = Math.min(page, pages);
+  useEffect(() => { setPage(1); }, [search, status]);
+  useEffect(() => { setPage(p => Math.min(p, pages)); }, [pages]);
 
   return (
     <div className="max-w-4xl mx-auto px-4 lg:px-8 py-6 space-y-5">
       <header className="space-y-1">
         <h1 className="font-serif text-2xl text-gold tracking-tight">Review matches</h1>
         <p className="text-sm text-mist/60 leading-relaxed">
-          The matcher links your order emails to card charges. High-confidence links are auto-confirmed;
-          the ones below need your eye. <span className="text-mist/80">Approve</span> makes it truth in Spend,
-          <span className="text-mist/80"> Reject</span> unlinks it for good (e.g. you paid with a voucher).
+          Compare suggested order–card matches, then approve or reject. Receipt items are one click away.
         </p>
       </header>
 
@@ -152,7 +155,7 @@ export default function ReviewTab({ onChanged }: { onChanged?: () => void }) {
       </div>
 
       {!loading && !error && orders.length > 0 && (
-        <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search — merchant, order #, item…"
+        <input aria-label="Search review matches" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search — merchant, order #, item…"
           className="w-full sm:max-w-sm bg-ink border border-rim rounded-xl px-3 py-1.5 text-sm text-mist placeholder:text-mist/30 focus:border-gold/40 outline-none" />
       )}
 
@@ -186,7 +189,7 @@ export default function ReviewTab({ onChanged }: { onChanged?: () => void }) {
         </div>
       ) : (
         <div className="space-y-3">
-          {shown.map((o) => (
+          {shown.slice((visiblePage - 1) * 10, visiblePage * 10).map((o) => (
             <div key={o.id} className="rounded-2xl border border-rim bg-surface shadow-card overflow-hidden">
               {/* meta row */}
               <div className="flex items-center gap-2 flex-wrap px-4 py-2.5 border-b border-wire bg-raised/40">
@@ -209,15 +212,16 @@ export default function ReviewTab({ onChanged }: { onChanged?: () => void }) {
                   <div className="text-sm text-mist/85">{o.merchant_name || SOURCE_LABELS[o.source] || o.source}</div>
                   <div className="text-2xs text-mist/45">{day(o.order_at)}</div>
                   {o.items.length > 0 && (
-                    <ul className="pt-1 space-y-0.5">
-                      {o.items.slice(0, 6).map((it, i) => (
+                    <details className="text-xs text-mist/60"><summary>{o.items.length} receipt items</summary>
+                    <ul className="pt-2 space-y-1">
+                      {o.items.map((it, i) => (
                         <li key={i} className="text-xs text-mist/70 flex justify-between gap-3">
-                          <span className="truncate">{it.qty && it.qty > 1 ? `${it.qty}× ` : ""}{it.name}</span>
+                          <span className="min-w-0 break-words">{it.qty && it.qty > 1 ? `${it.qty}× ` : ""}{it.name}</span>
                           {it.price != null && <span className="tabular-nums text-mist/45 shrink-0">{fmt(it.price)}</span>}
                         </li>
                       ))}
-                      {o.items.length > 6 && <li className="text-2xs text-mist/40">+{o.items.length - 6} more…</li>}
                     </ul>
+                    </details>
                   )}
                 </div>
 
@@ -260,6 +264,12 @@ export default function ReviewTab({ onChanged }: { onChanged?: () => void }) {
               </div>
             </div>
           ))}
+          {pages > 1 && <nav className="list-pagination" aria-label="Review pages">
+            <span>{(visiblePage - 1) * 10 + 1}–{Math.min(visiblePage * 10, counts)} of {counts}</span>
+            <button type="button" aria-label="Previous review page" disabled={visiblePage <= 1} onClick={() => { setPage(p => p - 1); window.scrollTo({top:0,behavior:"instant"}); }}>←</button>
+            <span>{visiblePage}/{pages}</span>
+            <button type="button" aria-label="Next review page" disabled={visiblePage >= pages} onClick={() => { setPage(p => p + 1); window.scrollTo({top:0,behavior:"instant"}); }}>→</button>
+          </nav>}
         </div>
       )}
     </div>
