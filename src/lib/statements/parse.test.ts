@@ -59,6 +59,25 @@ describe("classify", () => {
     expect(classify("M-RAZORPAY PAYMENTS ,P:01,0000", "debit")).toBe("emi");
     expect(classify("AMAZON HDFC SMARTBUY MUMBAI", "credit")).toBe("refund");
   });
+
+  it("never mistakes a merchant's name for a bank fee or a bill payment", () => {
+    // Real lines that hid purchases and refunds CardIQ already held.
+    expect(classify("KALMANE KOFFEES CHENNAI", "debit")).toBe("purchase");
+    expect(classify("PINTEREST ADS DUBLIN", "debit")).toBe("purchase");
+    expect(classify("DELTA AIR Baggage Fee NEW YORK", "debit")).toBe("purchase");
+    expect(classify("DS VISA FEE VFS HYDERABAD", "debit")).toBe("purchase");
+    expect(classify("FLIPKART PAYMENTS BANGALORE", "credit")).toBe("refund");
+    expect(classify("Razorpay PaymentsBENGALURU", "credit")).toBe("refund");
+    expect(classify("Airbnb Payments India PVTGurgoan", "credit")).toBe("refund");
+    // The bank's own lines keep their labels.
+    expect(classify("INTERESTCHARGE@3.40%(40.8%ANNUAL)", "debit")).toBe("fee");
+    expect(classify("PRIORITY PASS VISIT FEES", "debit")).toBe("fee");
+    expect(classify("FOREIGN CURRENCY TRANSACTION FEE", "debit")).toBe("fee");
+    expect(classify("BillDeskPayment", "credit")).toBe("payment");
+    expect(classify("BillDesk BBPS CC Payment/DP0162", "credit")).toBe("payment");
+    expect(classify("NEFT CREDIT CARD PAYMENT YES BANK", "credit")).toBe("payment");
+    expect(classify("UPI Payment Received", "credit")).toBe("payment");
+  });
 });
 
 describe("tieOut", () => {

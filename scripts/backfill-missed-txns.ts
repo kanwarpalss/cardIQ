@@ -21,6 +21,7 @@ for (const line of readFileSync(join(process.cwd(), ".env.local"), "utf8").split
 }
 import { createClient } from "@supabase/supabase-js";
 import { parseTxnEmailWithFallback, type ParsedTxn } from "../src/lib/parsers/registry";
+import { loadExcludedMessageIds } from "../src/lib/excluded-messages";
 import { categorize } from "../src/lib/categorize";
 import { cleanMerchant } from "../src/lib/merchant-clean";
 import { enrichAmount } from "../src/lib/txn-enrich";
@@ -40,6 +41,7 @@ async function main() {
   ]);
   const cardByLast4 = new Map((cardsRes.data || []).map((c) => [c.last4, c.id]));
   const knownLast4s = new Set((cardsRes.data || []).map((c) => c.last4));
+  const excludedIds = await loadExcludedMessageIds(sb, uid);
   const merchantMap = new Map((mappingsRes.data || []).map((m) => [m.raw_name.toLowerCase(), m]));
 
   type Row = { gmail_message_id: string; raw_subject: string; raw_body: string; raw_from: string; internal_date: number | null };
@@ -68,7 +70,8 @@ async function main() {
     // the same normalization as current IMAP ingestion before retrying them.
     const subject = normalizeMojibake(row.raw_subject || "");
     const body = normalizeMojibake(row.raw_body || "");
-    const parsed = parseTxnEmailWithFallback(row.raw_from || "", subject, body, "", knownLast4s);
+    // A statement proved this email was never a charge (migration 023).
+    const parsed = excludedIds.has(row.gmail_message_id) ? null : parseTxnEmailWithFallback(row.raw_from || "", subject, body, "", knownLast4s);
     if (!parsed) continue;
     newlyParsed++;
 

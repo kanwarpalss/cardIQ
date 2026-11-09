@@ -8,8 +8,14 @@
  * counted them. Every added row's gmail_message_id starts with "stmt:", so they
  * can be found or removed as a group.
  *
+ * With --remove-unbilled it also removes CardIQ rows a balanced statement proves
+ * were never charged (planRemovals: second copies, released holds, declined or
+ * receipt-only rows). Removed rows are backed up to <dir>/removed-<time>.json and
+ * their emails recorded in excluded_messages (migration 023) first, so no
+ * reprocess, backfill or wipe re-creates them.
+ *
  * READ-ONLY by default; writes <dir>/reconcile-report.json.
- * Run:  npx tsx scripts/statements-reconcile.ts --dir ~/.cardiq-statements [--apply]
+ * Run:  npx tsx scripts/statements-reconcile.ts --dir ~/.cardiq-statements [--remove-unbilled] [--apply]
  */
 import { readFileSync, writeFileSync } from "fs";
 import { join } from "path";
@@ -20,11 +26,13 @@ import { createClient } from "@supabase/supabase-js";
 import { categorizeFull } from "../src/lib/categorize";
 import { cleanMerchant } from "../src/lib/merchant-clean";
 import type { ParsedStatement, StatementLine } from "../src/lib/statements/parse";
-import { alertSpans, matchLines, numberInUse, REISSUED_CARDS, secondPass, statementLineKey, type DbTxn, type StmtLineRef } from "../src/lib/statements/reconcile";
+import { BANK_EMAIL_SENDERS } from "../src/lib/cards/registry";
+import { alertSpans, emiNamesPurchase, followCovered, matchLines, merchantsAgree, numberInUse, planRemovals, REISSUED_CARDS, secondPass, statementLineKey, type DbTxn, type RemovalCandidate, type StmtLineRef } from "../src/lib/statements/reconcile";
 
 type Parsed = ParsedStatement & { uid: number; gmail_id: string; family: string; subject: string; date: string; file: string };
 
 const APPLY = process.argv.includes("--apply");
+const REMOVE = process.argv.includes("--remove-unbilled");
 const dirIdx = process.argv.indexOf("--dir");
 if (dirIdx < 0) throw new Error("Pass --dir <folder>");
 const dir = process.argv[dirIdx + 1];
@@ -73,6 +81,19 @@ async function main() {
     rows.push(...(data ?? []));
     if (!data || data.length < 1000) break;
   }
+  // Who sent each alert: when a bank alert and a merchant receipt both fit one
+  // statement line, the bank's alert keeps it and the receipt is the leftover.
+  const senderOf = new Map<string, string>();
+  for (let from = 0; ; from += 1000) {
+    const { data, error } = await sb.from("gmail_seen_messages").select("gmail_message_id, raw_from").eq("user_id", uid).not("txn_id", "is", null).order("gmail_message_id").range(from, from + 999);
+    if (error) throw new Error(error.message);
+    for (const s of data ?? []) senderOf.set(s.gmail_message_id as string, String(s.raw_from ?? "").toLowerCase());
+    if (!data || data.length < 1000) break;
+  }
+  const fromBank = (gmailId: string) => {
+    const from = senderOf.get(gmailId);
+    return from === undefined || BANK_EMAIL_SENDERS.some((s) => from.includes(s.toLowerCase()));
+  };
   const txns: DbTxn[] = rows.map((r) => ({
     id: r.id as string,
     card_last4: r.card_last4 as string,
@@ -81,6 +102,7 @@ async function main() {
     day: istDay(r.txn_at as string),
     original_currency: (r.original_currency as string | null) ?? null,
     original_amount: r.original_amount == null ? null : Number(r.original_amount),
+    fromBank: fromBank(r.gmail_message_id as string),
   }));
 
   // Reissued cards: numbers printed together on one statement are one account,
@@ -203,8 +225,77 @@ async function main() {
     { mode: 0o600 },
   );
 
+  // ── Rows a balanced statement proves were never charged ───────────────────
+  let removalPlan: ReturnType<typeof planRemovals> | null = null;
+  if (REMOVE) {
+    const statementDays = new Map<string, string[]>();
+    for (const s of used) {
+      for (const c of s.cardLast4s.length ? s.cardLast4s : [FAMILY_DEFAULT_CARD[s.family]].filter(Boolean)) {
+        statementDays.set(accountOf(c), [...(statementDays.get(accountOf(c)) ?? []), s.date.slice(0, 10)]);
+      }
+    }
+    const emiLines = used.flatMap((s) =>
+      (s.lines as StatementLine[]).filter((l) => l.kind === "emi").map((l) => ({ ...l, account: accountOf(l.cardLast4 ?? FAMILY_DEFAULT_CARD[s.family] ?? "?") })),
+    );
+    const dupIds = new Set(likelyDuplicates.map((t) => t.id));
+    const candidateIds = new Set([...likelyDuplicates, ...neverCharged].map((t) => t.id));
+    // Identical copies of one alert: the statement matched one of them arbitrarily.
+    const twinsOf = (t: DbTxn) => txns.filter((x) => x.id !== t.id && !candidateIds.has(x.id) && x.card_last4 === t.card_last4 && x.day === t.day && x.txn_type === t.txn_type && x.amount_inr === t.amount_inr);
+    const lookupIds = [...candidateIds, ...likelyDuplicates.flatMap((t) => twinsOf(t).map((x) => x.id))];
+    const refsByTxn = new Map<string, string[]>();
+    for (let i = 0; i < lookupIds.length; i += 200) {
+      for (const table of ["orders", "vouchers"] as const) {
+        const { data, error } = await sb.from(table).select("*").in("txn_id", lookupIds.slice(i, i + 200));
+        if (error) throw new Error(`${table}: ${error.message}`);
+        for (const r of data ?? []) refsByTxn.set(r.txn_id as string, [...(refsByTxn.get(r.txn_id as string) ?? []), String(r.order_ref ?? r.id)]);
+      }
+    }
+    const candidates: RemovalCandidate[] = [...likelyDuplicates, ...neverCharged].map((t) => {
+      const merchant = (rowById.get(t.id)?.merchant as string | null) ?? null;
+      return {
+        id: t.id,
+        kind: dupIds.has(t.id) ? "duplicate" : "not_on_statement",
+        account: accountOf(t.card_last4),
+        day: t.day,
+        direction: t.txn_type,
+        amount: t.amount_inr,
+        foreign: t.original_currency && t.original_currency !== "INR" && t.original_amount != null ? { currency: t.original_currency, amount: t.original_amount } : null,
+        followCovered: followCovered(statementDays.get(accountOf(t.card_last4)) ?? [], t.day),
+        emiEvidence: t.txn_type === "debit" && emiLines.some((l) => l.account === accountOf(t.card_last4) && l.date >= t.day && Date.parse(l.date) - Date.parse(t.day) <= 45 * 86400000 && (merchantsAgree(merchant, l.description) || emiNamesPurchase(merchant, l.description))),
+      };
+    });
+    removalPlan = planRemovals(candidates);
+    const txnById = new Map(txns.map((t) => [t.id, t]));
+
+    // Which copy of a duplicate goes: first one whose order's payment was refunded
+    // by a release being removed (that payment was cancelled), then one no order
+    // points at, so KP's confirmed order links stay where they are.
+    const cancelledRefs = new Set(removalPlan.remove.filter((x) => x.reason !== "second_copy" && txnById.get(x.id)?.txn_type === "credit").flatMap((x) => refsByTxn.get(x.id) ?? []));
+    const removePreference = (id: string) => ((refsByTxn.get(id) ?? []).some((ref) => cancelledRefs.has(ref)) ? 3 : refsByTxn.has(id) ? 1 : 2);
+    for (const x of removalPlan.remove) {
+      if (x.reason !== "second_copy" || !dupIds.has(x.id)) continue;
+      const pick = [x.id, ...twinsOf(txnById.get(x.id)!).map((t) => t.id)].sort((a, b) => removePreference(b) - removePreference(a))[0];
+      if (pick !== x.id) x.id = pick;
+    }
+    const unlinkedOrders = removalPlan.remove.filter((x) => refsByTxn.has(x.id)).length;
+    if (unlinkedOrders) console.log(`\n${unlinkedOrders} removed row(s) carry an order or voucher; run sync-orders-offline.ts afterwards to re-pair them.`);
+    const describe = (id: string) => {
+      const t = txnById.get(id)!;
+      const r = rowById.get(id)!;
+      return `${t.card_last4} ${t.day} ${t.txn_type === "credit" ? "credit" : "debit "} ${inr(t.amount_inr).padStart(13)}${t.original_currency && t.original_currency !== "INR" ? ` (${t.original_currency} ${t.original_amount})` : ""}  ${String(r.merchant ?? "").slice(0, 28)}  [${String(r.gmail_message_id).slice(0, 16)}]`;
+    };
+    console.log(`\nRemovals (statements prove these were never charged):`);
+    for (const reason of ["second_copy", "hold_released", "not_charged"] as const) {
+      const rs = removalPlan.remove.filter((x) => x.reason === reason);
+      console.log(`  ${reason.padEnd(14)} ${String(rs.length).padStart(4)} rows  ${sum(rs.map((x) => txnById.get(x.id)!))}`);
+      if (process.argv.includes("--list")) for (const x of rs) console.log(`      ${describe(x.id)}`);
+    }
+    console.log(`Kept: ${removalPlan.keep.length} (shown_as_emi = the real purchase; next_statement_missing = KP to review)`);
+    for (const k of removalPlan.keep) console.log(`  ${k.reason.padEnd(22)} ${describe(k.id)}`);
+  }
+
   if (!APPLY) {
-    console.log("\nDry run: nothing written. Re-run with --apply to add the missing lines.");
+    console.log("\nDry run: nothing written. Re-run with --apply to add the missing lines" + (REMOVE ? " and remove the rows above." : "."));
     return;
   }
 
@@ -254,6 +345,43 @@ async function main() {
   const { count, error: cErr } = await sb.from("transactions").select("id", { count: "exact", head: true }).eq("user_id", uid).like("gmail_message_id", "stmt:%");
   if (cErr) throw new Error(cErr.message);
   console.log(`\nWrote ${written} rows. CardIQ now holds ${count} statement-sourced rows.`);
+
+  if (!removalPlan || removalPlan.remove.length === 0) return;
+  // The exclusion list must exist first, or reprocess would re-create every removed row.
+  const probe = await sb.from("excluded_messages").select("gmail_message_id").limit(1);
+  if (probe.error) throw new Error(`Run supabase/migrations/023_excluded_messages.sql in the Supabase SQL Editor first (${probe.error.message}). Nothing was removed.`);
+
+  const removeIds = removalPlan.remove.map((x) => x.id);
+  const reasonOf = new Map(removalPlan.remove.map((x) => [x.id, x.reason]));
+  const full: Record<string, unknown>[] = [];
+  for (let i = 0; i < removeIds.length; i += 200) {
+    const { data, error } = await sb.from("transactions").select("*").in("id", removeIds.slice(i, i + 200));
+    if (error) throw new Error(`Backup read failed: ${error.message}. Nothing was removed.`);
+    full.push(...(data ?? []));
+  }
+  if (full.length !== removeIds.length) throw new Error(`Backup found ${full.length} of ${removeIds.length} rows; CardIQ changed since this run read it. Nothing was removed.`);
+  if (full.some((r) => String(r.gmail_message_id).startsWith("stmt:"))) throw new Error("A statement-sourced row was planned for removal; that is a bug. Nothing was removed.");
+  const backup = join(dir, `removed-${new Date().toISOString().replace(/[:.]/g, "-")}.json`);
+  writeFileSync(backup, JSON.stringify(full.map((r) => ({ ...r, removal_reason: reasonOf.get(r.id as string) })), null, 1), { mode: 0o600 });
+  console.log(`Backed up ${full.length} rows to ${backup}`);
+
+  const exclusions = full.map((r) => ({
+    user_id: uid,
+    gmail_message_id: r.gmail_message_id as string,
+    reason: `statement:${reasonOf.get(r.id as string)}`,
+    detail: `${r.card_last4} ${istDay(r.txn_at as string)} ${r.txn_type} ${r.amount_inr}${r.original_currency !== "INR" ? ` ${r.original_currency} ${r.original_amount}` : ""}`,
+  }));
+  const { error: xErr } = await sb.from("excluded_messages").upsert(exclusions, { onConflict: "user_id,gmail_message_id" });
+  if (xErr) throw new Error(`Recording exclusions failed: ${xErr.message}. Nothing was removed.`);
+
+  let removed = 0;
+  for (let i = 0; i < removeIds.length; i += 200) {
+    const { data, error } = await sb.from("transactions").delete().in("id", removeIds.slice(i, i + 200)).not("gmail_message_id", "like", "stmt:%").select("id");
+    if (error) throw new Error(`Removal failed after ${removed} rows: ${error.message}. Restore from ${backup} if needed.`);
+    removed += data?.length ?? 0;
+  }
+  console.log(`Removed ${removed} of ${removeIds.length} planned rows; their emails are on the excluded list.`);
+  if (removed !== removeIds.length) throw new Error("Fewer rows were removed than planned; check the backup file against CardIQ.");
 }
 
 main().catch((e) => {

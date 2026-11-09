@@ -104,11 +104,16 @@ export function leadingDate(text: string, family: string, statementDate: string 
   return null;
 }
 
-const PAYMENT_RE = /payment|pymt|pymnt|\bbbps\b|\bneft\b|\bimps\b|autopay|auto debit|transfer - ca|tele transfer credit|\be ?pay [a-z]*\d|visa direct|\bcc pay|bill ?desk|cred club/i;
+// Bank payment lines say "PAYMENT"; "FLIPKART PAYMENTS" or "Razorpay PaymentsBENGALURU"
+// is a merchant's legal name, and a credit from it is a refund.
+const PAYMENT_RE = /\bpayment\b|pymt|pymnt|\bbbps\b|\bneft\b|\bimps\b|autopay|auto debit|transfer - ca|tele transfer credit|\be ?pay [a-z]*\d|visa direct|\bcc pay|bill ?desk|cred club/i;
 // Converting a purchase to EMI credits it back and then bills monthly instalments.
 // The original purchase is the real spend, so both sides are bookkeeping.
 const EMI_RE = /offus emi|prin nb:|aggregator\W?emi|emi conversion|emi principal|emi interest|emi\W+prin|,\s?P:\d{2},/i;
-const FEE_RE = /\bfee\b|fees|\bgst\b|igst|cgst|sgst|\btax\b|interest|finance charge|surcharge|late charge|markup|mark-up|charges?\b/i;
+// Whole words only: "KOFFEES" and "PINTEREST" are merchants. A fee a merchant bills
+// (baggage, visa application, convenience) is a purchase from that merchant.
+const FEE_RE = /\bfees?\b|\b[ics]?gst\b|\btax\b|\binterest|finance charge|surcharge|late charge|markup|mark-up|\bcharges?\b/i;
+const MERCHANT_FEE_RE = /baggage|visa fee|\bvfs\b|convenience fee|application fee/i;
 const CASHBACK_RE = /cash ?back|reward|waiver|reversal|cashback|refund of fee/i;
 
 export function classify(description: string, direction: "debit" | "credit"): LineKind {
@@ -116,7 +121,7 @@ export function classify(description: string, direction: "debit" | "credit"): Li
   if (direction === "debit") {
     // A bounced bill payment comes back as a debit.
     if (/reversal\W+.*payment|payment.*reversal|payment.*return/i.test(description)) return "payment";
-    return FEE_RE.test(description) && !/fuel station|petrol/i.test(description) ? "fee" : "purchase";
+    return FEE_RE.test(description) && !MERCHANT_FEE_RE.test(description) && !/fuel station|petrol/i.test(description) ? "fee" : "purchase";
   }
   if (PAYMENT_RE.test(description)) return "payment";
   if (/surcharge waiver|fee reversal|gst reversal|fee.*rev|reversal.*fee|annual fee/i.test(description)) return "fee_reversal";

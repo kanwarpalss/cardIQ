@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { StatementLine } from "./parse";
-import { alertSpans, amountAgreement, matchLines, merchantsAgree, numberInUse, secondPass, statementLineKey, type DbTxn, type StmtLineRef } from "./reconcile";
+import { alertSpans, amountAgreement, emiNamesPurchase, followCovered, matchLines, merchantsAgree, numberInUse, planRemovals, secondPass, statementLineKey, type DbTxn, type RemovalCandidate, type StmtLineRef } from "./reconcile";
 
 const line = (over: Partial<StmtLineRef> & { key: string }): StmtLineRef => ({
   date: "2026-10-04",
@@ -120,5 +120,88 @@ describe("statementLineKey", () => {
     expect(statementLineKey("g", l, 1)).toBe(statementLineKey("g", l, 1));
     expect(statementLineKey("g", l, 1)).toMatch(/^stmt:g:[0-9a-f]{16}$/);
     expect(statementLineKey("g", l, 1)).not.toBe(statementLineKey("g", l, 2));
+  });
+});
+
+describe("bank alerts win over merchant receipts", () => {
+  it("gives a statement line to the bank's alert when a receipt for the same charge also fits", () => {
+    // Real case: a Tada receipt (SGD 14.12) and HDFC's alert (₹878.08) for one ride.
+    const l = line({ key: "tada", amount: 878.08, foreign: { currency: "SGD", amount: 14.12 } });
+    const receipt = txn({ id: "receipt", amount_inr: 875.21, original_currency: "SGD", original_amount: 14.12, fromBank: false });
+    const alert = txn({ id: "alert", amount_inr: 878.08, original_amount: 878.08 });
+    for (const order of [[receipt, alert], [alert, receipt]]) {
+      const out = matchLines([l], order);
+      expect(out.matches.map((m) => m.txn.id)).toEqual(["alert"]);
+      expect(out.unmatchedTxns.map((t) => t.id)).toEqual(["receipt"]);
+    }
+  });
+
+  it("still matches a receipt when it is the only record of the charge", () => {
+    const out = matchLines([line({ key: "a" })], [txn({ id: "receipt", fromBank: false })]);
+    expect(out.matches).toHaveLength(1);
+  });
+});
+
+describe("followCovered", () => {
+  const monthly = ["2025-07-19", "2025-08-19", "2025-09-19", "2025-10-19"];
+  it("needs a statement before the day and an unbroken run of statements 21 days past it", () => {
+    expect(followCovered(monthly, "2025-08-25")).toBe(true);
+    expect(followCovered(monthly, "2025-10-01")).toBe(false); // nothing 21 days later yet
+    expect(followCovered(monthly, "2025-07-01")).toBe(false); // nothing before
+    expect(followCovered(["2025-07-19", "2025-10-19"], "2025-08-25")).toBe(false); // missing months
+  });
+});
+
+describe("planRemovals", () => {
+  const c = (over: Partial<RemovalCandidate> & { id: string }): RemovalCandidate => ({
+    kind: "not_on_statement", account: "4455", day: "2025-08-10", direction: "debit", amount: 500, foreign: null,
+    followCovered: true, emiEvidence: false, ...over,
+  });
+  const reasons = (p: ReturnType<typeof planRemovals>) => Object.fromEntries([...p.remove, ...p.keep].map((x) => [x.id, x.reason]));
+
+  it("removes second copies and charges a covered statement never billed", () => {
+    expect(reasons(planRemovals([c({ id: "dup", kind: "duplicate" }), c({ id: "hold" })]))).toEqual({ dup: "second_copy", hold: "not_charged" });
+  });
+
+  it("removes a hold and its release together, even without the next statement", () => {
+    const p = planRemovals([
+      c({ id: "d", followCovered: false }),
+      c({ id: "r", direction: "credit", day: "2025-08-12", followCovered: false }),
+    ]);
+    expect(reasons(p)).toEqual({ d: "hold_released", r: "hold_released" });
+  });
+
+  it("pairs zero-rupee foreign holds by their foreign amount", () => {
+    const fx = { currency: "LKR", amount: 1320 };
+    const p = planRemovals([c({ id: "d", amount: 0, foreign: fx }), c({ id: "r", amount: 0, foreign: fx, direction: "credit" }), c({ id: "x", amount: 0, foreign: { currency: "LKR", amount: 99 }, direction: "credit", followCovered: false })]);
+    expect(reasons(p)).toEqual({ d: "hold_released", r: "hold_released", x: "next_statement_missing" });
+  });
+
+  it("keeps a charge whose next statement isn't available", () => {
+    expect(reasons(planRemovals([c({ id: "late", followCovered: false })]))).toEqual({ late: "next_statement_missing" });
+  });
+
+  it("keeps one copy of a purchase the bank turned into EMI and removes the rest", () => {
+    const p = planRemovals([c({ id: "a", amount: 43825.5, emiEvidence: true }), c({ id: "b", amount: 43825.5, emiEvidence: true })]);
+    expect(reasons(p)).toEqual({ a: "shown_as_emi", b: "second_copy" });
+  });
+
+  it("never pairs a debit with a credit of a different amount or more than a week apart", () => {
+    const p = planRemovals([c({ id: "d", followCovered: false }), c({ id: "r1", direction: "credit", amount: 499, followCovered: false }), c({ id: "r2", direction: "credit", day: "2025-08-20", followCovered: false })]);
+    expect(p.remove).toEqual([]);
+  });
+});
+
+describe("emiNamesPurchase", () => {
+  it("recognises a merchant-EMI instalment by the merchant named after M-", () => {
+    // Real case: "Razorpay Payments" is all generic words, so name matching alone missed it.
+    expect(emiNamesPurchase("Razorpay Payments", "M-RAZORPAY PAYMENTS ,P:01,0000976 (Ref# 0999)")).toBe(true);
+    expect(emiNamesPurchase("Croma", "M-CROMA RETAIL ,P:01,0001")).toBe(true);
+  });
+
+  it("doesn't tie an unrelated purchase or a bank EMI to it", () => {
+    expect(emiNamesPurchase("Swiggy", "M-RAZORPAY PAYMENTS ,P:01,0000976")).toBe(false);
+    expect(emiNamesPurchase("Razorpay Payments", "OFFUS EMI,PRIN NB:01,00000095837424")).toBe(false);
+    expect(emiNamesPurchase(null, "M-RAZORPAY PAYMENTS ,P:01,0000976")).toBe(false);
   });
 });

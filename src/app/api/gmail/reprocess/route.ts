@@ -2,6 +2,7 @@ import { google } from "googleapis";
 import { createClient } from "@/lib/supabase/server";
 import { decrypt } from "@/lib/crypto";
 import { parseTxnEmailWithFallback, type ParsedTxn } from "@/lib/parsers/registry";
+import { loadExcludedMessageIds } from "@/lib/excluded-messages";
 import { categorize } from "@/lib/categorize";
 import { cleanMerchant } from "@/lib/merchant-clean";
 import { enrichAmount } from "@/lib/txn-enrich";
@@ -105,6 +106,7 @@ export async function POST(req: Request) {
   ]);
   const cardByLast4 = new Map((cardsRes.data || []).map((c) => [c.last4, c.id]));
   const knownLast4s = new Set((cardsRes.data || []).map((c) => c.last4));
+  const excludedIds = await loadExcludedMessageIds(supabase, user.id);
   const merchantMap = new Map((mappingsRes.data || []).map((m) => [m.raw_name.toLowerCase(), m]));
 
   const stream = new ReadableStream({
@@ -139,7 +141,8 @@ export async function POST(req: Request) {
             send(controller, { status: "offline_progress", ...result });
           }
 
-          const parsed = parseTxnEmailWithFallback(row.raw_from || "", row.raw_subject || "", row.raw_body || "", "", knownLast4s);
+          // A statement proved this email was never a charge (migration 023).
+          const parsed = excludedIds.has(row.gmail_message_id) ? null : parseTxnEmailWithFallback(row.raw_from || "", row.raw_subject || "", row.raw_body || "", "", knownLast4s);
           if (!parsed) {
             result.still_no_match++;
             continue;
@@ -196,7 +199,7 @@ export async function POST(req: Request) {
               const bodyTxt = extractBody(full.data.payload);
               const internalDate = parseInt(full.data.internalDate ?? "0", 10);
 
-              const parsed = parseTxnEmailWithFallback(fromHdr, subject, bodyTxt, full.data.snippet || "", knownLast4s);
+              const parsed = excludedIds.has(row.gmail_message_id) ? null : parseTxnEmailWithFallback(fromHdr, subject, bodyTxt, full.data.snippet || "", knownLast4s);
 
               if (parsed) {
                 await upsertTxnAndLink(parsed, row.gmail_message_id, subject, bodyTxt, internalDate, fromHdr);

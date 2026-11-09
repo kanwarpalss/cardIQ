@@ -13,6 +13,8 @@ export type DbTxn = {
   day: string;
   original_currency: string | null;
   original_amount: number | null;
+  /** False for a merchant receipt or other non-bank email stored as a charge. */
+  fromBank?: boolean;
 };
 
 export type StmtLineRef = StatementLine & { cardLast4: string; key: string };
@@ -86,7 +88,9 @@ export function matchLines(
       if (how) pairs.push({ line, txn, how, days });
     }
   }
-  pairs.sort((a, b) => HOW_RANK[a.how] - HOW_RANK[b.how] || a.days - b.days);
+  // On a tie the bank's own alert takes the line, so a receipt for the same charge is the leftover.
+  const notBank = (t: DbTxn) => Number(t.fromBank === false);
+  pairs.sort((a, b) => HOW_RANK[a.how] - HOW_RANK[b.how] || a.days - b.days || notBank(a.txn) - notBank(b.txn));
 
   const usedLines = new Set<string>();
   const usedTxns = new Set<string>();
@@ -221,4 +225,96 @@ export function secondPass(
 export function statementLineKey(statementGmailId: string, line: StatementLine & { cardLast4: string }, occurrence: number): string {
   const basis = [line.cardLast4, line.date, line.direction, line.amount.toFixed(2), line.description, occurrence].join("|");
   return `stmt:${statementGmailId}:${createHash("sha256").update(basis).digest("hex").slice(0, 16)}`;
+}
+
+/**
+ * True when statements cover `day` and the `followDays` after it without a gap:
+ * a charge that hasn't posted by then was never billed. `statementDays` are the
+ * account's statement dates (YYYY-MM-DD); a gap longer than `maxGapDays` means a
+ * statement is missing or still locked.
+ */
+export function followCovered(statementDays: string[], day: string, followDays = 21, maxGapDays = 35): boolean {
+  const ds = [...new Set(statementDays)].sort();
+  const before = ds.filter((d) => d <= day).pop();
+  const after = ds.find((d) => dayDiff(d, day) >= followDays);
+  if (!before || !after) return false;
+  const run = ds.filter((d) => d >= before && d <= after);
+  return run.every((d, i) => i === 0 || dayDiff(d, run[i - 1]) <= maxGapDays);
+}
+
+/** A CardIQ row inside a balanced statement's dates that the statement doesn't show. */
+export type RemovalCandidate = {
+  id: string;
+  /** "duplicate": a twin of a row the statement confirms once. */
+  kind: "duplicate" | "not_on_statement";
+  account: string;
+  day: string;
+  direction: "debit" | "credit";
+  amount: number;
+  foreign: { currency: string; amount: number } | null;
+  /** Statements cover the 21 days after this row, so a late posting would show. */
+  followCovered: boolean;
+  /** The statement bills this purchase as EMI instalments instead of one line. */
+  emiEvidence: boolean;
+};
+
+export type RemovalReason = "second_copy" | "hold_released" | "not_charged";
+export type KeepReason = "next_statement_missing" | "shown_as_emi";
+
+/** Days between a hold and its release for the two to count as one cancelled charge. */
+export const HOLD_RELEASE_DAYS = 7;
+
+/**
+ * Decides which rows a statement proves were never charged. A balanced statement
+ * is complete, so anything it doesn't show is a hold, a declined attempt or a
+ * second copy; the exceptions are kept and listed for KP.
+ */
+export function planRemovals(cands: RemovalCandidate[]): { remove: { id: string; reason: RemovalReason }[]; keep: { id: string; reason: KeepReason }[] } {
+  const remove: { id: string; reason: RemovalReason }[] = [];
+  const keep: { id: string; reason: KeepReason }[] = [];
+  const done = new Set<string>();
+  const sameMoney = (a: RemovalCandidate, b: RemovalCandidate) =>
+    a.foreign && b.foreign ? a.foreign.currency === b.foreign.currency && Math.abs(a.foreign.amount - b.foreign.amount) <= 0.005 : Math.abs(a.amount - b.amount) <= 0.005;
+
+  for (const c of cands) if (!done.has(c.id) && c.kind === "duplicate") (done.add(c.id), remove.push({ id: c.id, reason: "second_copy" }));
+
+  // A hold and its release cancel out whether or not the next statement is here.
+  const open = cands.filter((c) => !done.has(c.id));
+  for (const d of open.filter((c) => c.direction === "debit")) {
+    const release = open
+      .filter((r) => r.direction === "credit" && !done.has(r.id) && !done.has(d.id) && r.account === d.account && sameMoney(d, r) && Math.abs(dayDiff(r.day, d.day)) <= HOLD_RELEASE_DAYS)
+      .sort((a, b) => Math.abs(dayDiff(a.day, d.day)) - Math.abs(dayDiff(b.day, d.day)))[0];
+    if (!release) continue;
+    for (const id of [d.id, release.id]) (done.add(id), remove.push({ id, reason: "hold_released" }));
+  }
+
+  // The bank shows an EMI purchase as instalments: one alert is the real spend.
+  const emiKept = new Set<string>();
+  for (const c of cands.filter((x) => !done.has(x.id) && x.emiEvidence)) {
+    const k = `${c.account}|${c.day}|${c.direction}|${c.amount.toFixed(2)}`;
+    done.add(c.id);
+    if (emiKept.has(k)) remove.push({ id: c.id, reason: "second_copy" });
+    else (emiKept.add(k), keep.push({ id: c.id, reason: "shown_as_emi" }));
+  }
+
+  for (const c of cands.filter((x) => !done.has(x.id))) {
+    if (c.followCovered) remove.push({ id: c.id, reason: "not_charged" });
+    else keep.push({ id: c.id, reason: "next_statement_missing" });
+  }
+  return { remove, keep };
+}
+
+/**
+ * True when a merchant-EMI instalment line ("M-RAZORPAY PAYMENTS ,P:01,…") names
+ * the stored purchase's merchant. Such a purchase never appears as one statement
+ * line, so the instalments are its only evidence. Compared letter for letter,
+ * because merchant-EMI names are often all generic words merchantsAgree ignores.
+ */
+export function emiNamesPurchase(storedMerchant: string | null, emiDescription: string): boolean {
+  const named = /^M-([^,]+),/i.exec(emiDescription.trim())?.[1];
+  if (!storedMerchant || !named) return false;
+  const letters = (s: string) => s.toLowerCase().replace(/[^a-z]/g, "");
+  const a = letters(storedMerchant);
+  const b = letters(named);
+  return a.length >= 4 && b.length >= 4 && (a.includes(b) || b.includes(a));
 }
