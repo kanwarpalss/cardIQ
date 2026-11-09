@@ -2,7 +2,7 @@
 
 > Project brain. Updated every session.
 > Static architecture doc lives in ARCHITECTURE.md — don't duplicate it here.
-> Last updated: 2026-11-01
+> Last updated: 2026-11-09
 
 ---
 
@@ -71,7 +71,8 @@ A one-stop credit-card destination: syncs bank transaction emails from Gmail (Ax
 | `src/app/api/gmail/orders/sync/route.ts` | Orders sync — second Gmail pass; own cursor `_orders`, shares the gmail_seen_messages ledger |
 | `src/components/InsightsTab.tsx` | Insights: MoM bars, two-tier category breakdown, top merchants, top items (from orders.items) |
 | `src/app/api/transactions/bulk-notes/route.ts` | Feature B: same note across all txns of a merchant (no mapping created — notes aren't merchant metadata) |
-| `tailwind.config.ts` + `src/app/globals.css` | THE theme — all colors are semantic tokens (ink/surface/mist/gold); re-theme = edit values here only |
+| `tailwind.config.ts` + `src/app/globals.css` | Shared ivory/teal/coral/sage/lilac theme, responsive shell, phone transaction layout and safe-area rules |
+| `src/components/AppNavigation.tsx` | Desktop sidebar + four phone destinations and More drawer; native dialog with explicit keyboard wrap and resize focus restoration |
 | `src/lib/cards/registry.ts` | Hardcoded card specs (milestones, lounge access, senders) |
 | `supabase/migrations/` | SQL migration files (run in order) |
 
@@ -97,6 +98,7 @@ A one-stop credit-card destination: syncs bank transaction emails from Gmail (Ax
 
 | Date | Decision | Rejected alternative | Why |
 |---|---|---|---|
+| 2026-11-09 | A teal/ivory foundation with restrained coral, sage and lilac panels; phone Home/Spend/Rewards/Cards + More navigation. Keep one transaction component tree for desktop and phone, with full edit/detail controls. | Palette-only reskin, eleven scrolling phone tabs, a second mobile transaction implementation, or hiding fields and evidence to force tables to fit | KP asked for a chic, colourful app and a deliberately condensed phone experience. One tree preserves amounts, FX, notes, categories, pagination and purchase/voucher evidence across breakpoints. Active hidden filters stay counted; sorting returns to page one and preserves desktop direction after resize. |
 | 2026-11-01 | HSBC purchase currency and amount come from the declared purchase field; a damaged known template cannot fall through to balances. Recover the reported MYGATE alert only from its original email identity. | Whole-email currency detection, generic guessing after malformed fields, or inventing a Gmail ID from the pasted text | Six real USD Facebook alerts also contain INR balances. Generic payment footers can fabricate spend. The reported ₹16,387.79 alert is absent from the connected mailbox and attachment batch; an invented identity would risk duplicating it when the original arrives. |
 | 2026-11-01 | Prove card coverage against live message IDs and stored bodies, retain an independent warning check, and let All time include every recorded year | Stored-only parser success, blanket historical generic fallback, or a rolling eight-year display cap | The all-card audit recovered 1,110 events; generic fallback also invented spend from repayments, and the screen check found 280 saved records hidden by the display cutoff. Email completeness and statement completeness remain distinct. |
 | 2026-10-31 | A bank-parser release is complete only after checking the compiled, running Mac mini app as well as Vercel; recover missed alerts from stored bodies using the ingestion normalizer | Treat a pushed commit or source checkout as proof that both running copies changed; wipe/re-download Gmail history | The IndiGo ₹1,14,580 alert remained absent while the mini served a September build. The existing Axis fix was already on Vercel. Stored-body recovery restores the charge without re-downloading email or changing history cursors. |
@@ -163,7 +165,14 @@ A one-stop credit-card destination: syncs bank transaction emails from Gmail (Ax
 | 2026-07-27 | A labelled bank transaction amount is authoritative; fallback must never use a later account balance or credit limit | Let generic amount scanning salvage any number after a strict parser declines | An Axis alert for `SGD .1` failed strict parsing and then picked up ₹11,87,242.78 from `Available Limit`. Valid leading-decimal values now parse; malformed labelled foreign amounts are rejected rather than guessed, and an audit repaired the single affected historical row. |
 | 2026-07-27 | Amazon Pay-funded gift cards require exact issuance evidence and are marked with a separate funding source | Infer Amazon Pay funding from a same-brand or same-value order | An evidence-only record keeps the Birkenstock ₹5,000 gift card separate from card-funded Gyftr vouchers and avoids fictional voucher drawdowns. |
 
-## §6 Current State (as of 2026-11-01)
+## §6 Current State (as of 2026-11-09)
+
+**Mobile and visual redesign — 9 Nov 2026:** Application revision `aa8e614` is pushed to canonical GitHub `main` and running on Vercel and the Mac mini (details §10). Home now has one teal spend hero with supporting sage/lilac summaries and a swipeable card collection on phones. Spend has compact search/date/filter controls, active-filter counts, responsive transaction rows, phone sorting and full merchant/category/note editing. Orders and Vouchers reflow their source/status/amount rows; Insights has a scrollable monthly chart and full selected-month amount; Cards and Chat have clearer headings and phone controls. Login shares the new branding. Existing Transfer Partners work (`3f395b5`) is preserved. No sync, parser, ledger, database or environment changes were made.
+
+**Release checks:** 995 tests across 52 files, TypeScript, lint and production build pass locally and on the mini. Isolated actual-component browser QA used clearly labelled, non-persistent fixtures (not account data) at widths 320, 375, 390, 430, 768, 1023, 1024 and 1440. Checks covered full long-name/large-INR/native-FX rows, combined order + voucher details including unpriced long items, note/category forms, active hidden filters, date picker, page-two sorting, desktop-sort retention, menu keyboard wrapping, Escape focus restoration and resize closure. Six failure-injection assertions catch intentionally removed pagination/direction/focus protections. The running mini returns the new login at HTTP 200, and `npm run health` passes the raw-IP → MagicDNS → Supabase → Google handoff without selecting an account.
+
+**Verification limit:** No authenticated account visual sign-off is claimed. Automated Google account selection was rejected by approval review because Gmail read-only sign-in had not been specifically authorized. The fixture harness is outside the repository in `/private/tmp/cardiq-responsive-qa`; it is not product code or account evidence. Keep this distinct from the successful unauthenticated login smoke checks.
+
 
 **Session close — HSBC forwarding:** The subsequent read-back recorded in §9 has Premier 4502 at 34 rows, including two automatically forwarded purchases (₹214.98 Snabbit and USD 1.00 Facebook), and TravelOne 3337's 10 rows linked to its card. Earlier counts below are dated audit snapshots. The original ₹16,387.79 MYGATE alert remains the next source requirement in §7; no recovery or deployment operation is in flight.
 
@@ -345,6 +354,8 @@ A one-stop credit-card destination: syncs bank transaction emails from Gmail (Ax
 
 ## §7 Known Issues
 
+**Open 2026-11-09 — authenticated visual sign-off:** The redesign has isolated component/browser coverage and real login/rollout evidence, but checking it with KP’s real signed-in data still requires explicit permission for the existing Google/Gmail read-only sign-in (or KP’s own click-through). Do not call test-fixture previews real account validation. The earlier statement-reconciliation session in `.claude/worktrees/statement-reconcile` remains separate and was not resumed or altered.
+
 **Open 2026-11-01 (reported MYGATE ₹16,387.79, 31 Oct, 4502):** The pasted layout parses correctly, but this specific original alert is absent from the connected Gmail (including Spam/Trash), the 50 forwarded attachments and the transaction table. Forward the original alert into the connected mailbox, then run the normal sync or existing HSBC importer. Do not invent a synthetic Gmail ID or infer the charge from a merchant receipt. This is a source gap; historical statement completeness remains outside the email-only assurance below.
 
 **All-card audit closed 2026-11-01:** the available supported alert gaps and eight-year All time display limit were repaired; all 1,110 recovered events remain linked. The 35 residual watch notices were inspected as non-purchases, not silently discarded. Bank-statement completeness is unproven; retain the HSBC 4502 source gaps below and the audit report's missing historical FX-rate caveat.
@@ -433,9 +444,11 @@ Verified against the real live database, not synthetic data: 3126 real transacti
 | `GOOGLE_CLIENT_SECRET` | Server |
 | `ENCRYPTION_KEY` | Server (AES-256 for stored secrets) |
 
-## §9 Session Handoff Notes (2026-11-01)
+## §9 Session Handoff Notes (2026-11-09)
 
 ### Start Here — Current, Verified State
+
+**Latest — phone layout and visual redesign, 9 Nov 2026:** Source `aa8e614` is on GitHub and running on both Vercel and the mini after KP explicitly approved the mini rollout. Read §6 for scope and verification limits, §10 for exact runtime evidence. Home/Spend/Rewards/Cards are the phone primary destinations; More retains Orders, Vouchers, Insights, Offers, Dining, Chat and Review. “Rewards” is the navigation label for the existing Redemptions tab, including its new Transfer Partners section. New tests live in `src/components/mobile-navigation.test.ts` and `mobile-sort.test.ts`. All 995 tests/typecheck/lint/build pass locally and on the mini. Further design work should retain one transaction tree and the existing data calculations. Only authenticated visual sign-off remains pending; do not rerun historical imports or statement reconciliation as part of UI work.
 
 **Latest — HSBC cards closed out, 1 Nov 2026, after Codex's coverage note below:** TravelOne 3337 now has its card row and its 10 rows linked (`import-hsbc-alerts.ts --apply`, run after the deploy because the old code had no spec for it). Premier 4502 stands at 34 rows, ₹56,241.64 in stored rupees, 7 of them USD holds. Two alerts arrived on their own on 1 Nov through auto-forwarding: ₹214.98 Snabbit and a USD 1.00 Facebook hold stored as USD 1 (₹95.01), which is real proof of the foreign-currency path. No forwarded alert or OTP became a wrong row. The 05:13 UTC OTP email arrived before masking was live, so its stored body was masked by hand; 37 older archived emails from Axis, HDFC and Amazon would also change under `redactOtp`, weren't altered, and none is linked to a transaction. The weekly routine `trig_01UifzBYSn6b9cL3dewVMnvG` now has baseline 35 `unparsed` (newest 2026-03-12, all reviewed non-purchases), zero for every other `kind`, and treats a failed call as "did not run", never as all clear. Open for KP: forward the original ₹16,387.79 MYGATE alert; set TravelOne's anniversary in Cards so its ₹8L and ₹12L bars count the right year; no real HSBC reversal email has been seen yet, so that wording stays inferred.
 
@@ -624,6 +637,8 @@ Inspect the dry-run count, dates, totals, and item sample before `--apply`. Then
 Next session candidates: KP's visual click-through feedback (theme taste, expand-row polish), /lead-review findings, the recategorize re-cook fix (§7), and live TEST-02 verification of order sync once Gmail is re-granted.
 
 ## §10 Deployment
+
+- **Visual/mobile release, 2026-11-09:** Application source `aa8e614f46ae2bcd00be173f987a23ef04236e70` is on canonical GitHub `main`. Vercel production deployment `dpl_8iiTXLUGp9GgEE3jQKKywZEShpJ4` is **READY**, with canonical alias `https://card-iq-kanwarpalss-projects.vercel.app`. The Git push did not start a new deployment during the check, so the existing Vercel project was built from that exact Git commit via its deployment API; no deployment settings were changed. Mac mini `~/Code/cardIQ` was fast-forwarded through a source-only Git bundle after KP’s explicit go; tests (995), typecheck, lint and build passed there, then only PM2 `cardiq` was reloaded and PM2 state saved. Runtime PID `62547`, zero unstable restarts, port `3901`, build ID `K0EE7oDlQcGoEI_JQJVWV`. The new login responds HTTP 200; `npm run health` passes. The pre-existing untracked `.env.local.bak-20260902` was preserved and never included in Git or deployment bundles. No environment, database, port or launcher changes.
 
 - **HSBC boundary hardening, 2026-11-01:** Mini application code `45971a7`, fresh 1 Nov production build, PM2 `cardiq` PID 56509, saved state, login health passed. Production Vercel `dpl_G53pnZHvEJF841T9sHHZDKuHRsts` is READY on `efc59ec`, a documentation merge over the same application code. Release checks: 884 tests/typecheck/lint/build. Runtime watch: 401 unauthenticated, 200 authenticated, zero HSBC/check-failed candidates. Later documentation-only commits can advance git without changing the compiled mini app.
 
