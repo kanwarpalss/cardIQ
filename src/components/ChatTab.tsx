@@ -36,10 +36,11 @@ export default function ChatTab() {
   }
 
   return (
-    <div className="h-full flex flex-col max-w-3xl mx-auto p-6">
+    <div className="chat-workspace flex flex-col max-w-3xl mx-auto p-6">
+      <div className="mb-6"><p className="eyebrow mb-2">A SECOND OPINION</p><h1 className="font-serif text-3xl font-semibold">Let’s talk cards.</h1></div>
       <div className="flex-1 overflow-y-auto space-y-4 pb-4">
         {history.length === 0 && (
-          <p className="opacity-50 text-sm">
+          <p className="rounded-2xl bg-lilac text-plum p-5 leading-relaxed text-sm">
             Ask anything: best card for a merchant, current month spend, lounge availability, deals…
           </p>
         )}
@@ -68,18 +69,19 @@ export default function ChatTab() {
         {busy && <div className="opacity-50 text-sm">…thinking</div>}
         {err && <div className="text-red-400 text-sm">Error: {err}</div>}
       </div>
-      <div className="border-t border-line pt-3 flex gap-2">
+      <div className="chat-composer border-t border-line pt-3 flex gap-2">
         <input
+          aria-label="Message CardIQ"
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && send()}
           placeholder="Ask CardIQ…"
-          className="flex-1 bg-panel border border-line rounded px-3 py-2 outline-none focus:border-gold"
+          className="min-w-0 flex-1 bg-panel border border-line rounded-xl px-3 py-2 outline-none focus:border-gold"
         />
         <button
           onClick={send}
-          disabled={busy}
-          className="bg-gold text-ink px-4 rounded font-medium disabled:opacity-50"
+          disabled={busy || !input.trim()}
+          className="bg-teal text-white px-4 rounded-xl font-medium disabled:opacity-50"
         >
           Send
         </button>

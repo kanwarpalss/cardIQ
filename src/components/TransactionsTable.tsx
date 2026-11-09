@@ -274,23 +274,35 @@ export default function TransactionsTable({
         </span>
       </div>
 
-      <div className="overflow-x-auto">
-      <table className="w-full min-w-[760px] text-sm">
-        <thead className="border-b border-wire">
-          <tr>
-            {(["date", "merchant", "category", "card"] as const).map((col) => (
-              <th key={col} onClick={() => toggleSort(col)}
-                className="text-left px-5 py-2.5 text-2xs font-medium uppercase tracking-widest text-mist/55 cursor-pointer hover:text-mist/50 select-none capitalize">
-                {col} {sortIcon(col)}
+      <div className="mobile-sort-bar">
+        <label htmlFor="transaction-sort">Sort by</label>
+        <select id="transaction-sort" value={`${sort.col}:${sort.dir}`} onChange={event => {
+          const [col, dir] = event.target.value.split(":") as [SortCol, "asc" | "desc"];
+          setSort({ col, dir });
+          setPage(1);
+        }}>
+          <option value="date:desc">Newest first</option><option value="date:asc">Oldest first</option>
+          <option value="amount:desc">Highest amount</option><option value="amount:asc">Lowest amount</option>
+          <option value="merchant:asc">Merchant A–Z</option><option value="merchant:desc">Merchant Z–A</option>
+          <option value="category:asc">Category A–Z</option><option value="category:desc">Category Z–A</option>
+          <option value="card:asc">Card A–Z</option><option value="card:desc">Card Z–A</option>
+        </select>
+      </div>
+      <div className="transaction-scroll">
+      <table className="transaction-table w-full text-sm" role="table" aria-label="Transactions">
+        <thead className="border-b border-wire" role="rowgroup">
+          <tr role="row">
+            {(["date", "merchant", "category", "card", "amount"] as const).map((col) => (
+              <th key={col} scope="col" aria-sort={sort.col === col ? (sort.dir === "asc" ? "ascending" : "descending") : "none"}
+                className={`${col === "amount" ? "text-right" : "text-left"} px-5 py-2.5 text-2xs font-medium uppercase tracking-widest text-mist/60`}>
+                <button type="button" onClick={() => toggleSort(col)} className="capitalize hover:text-teal">
+                  {col} <span aria-hidden="true">{sortIcon(col)}</span>
+                </button>
               </th>
             ))}
-            <th onClick={() => toggleSort("amount")}
-              className="text-right px-5 py-2.5 text-2xs font-medium uppercase tracking-widest text-mist/55 cursor-pointer hover:text-mist/50 select-none">
-              Amount {sortIcon("amount")}
-            </th>
           </tr>
         </thead>
-        <tbody>
+        <tbody role="rowgroup">
           {visible.map((t) => {
             const isMerchantEditing = editMerchantId === t.id;
             const isCatEditing      = editCatId === t.id;
@@ -315,22 +327,22 @@ export default function TransactionsTable({
 
             return (
               <Fragment key={t.id}>
-              <tr className="group border-b border-wire last:border-0 hover:bg-raised transition-colors">
+              <tr role="row" className="transaction-row group border-b border-wire last:border-0 hover:bg-raised transition-colors">
 
                 {/* Date */}
-                <td className="px-5 py-3 text-mist/60 text-xs whitespace-nowrap align-top">
+                <td role="cell" className="txn-date px-5 py-3 text-mist/60 text-xs whitespace-nowrap align-top">
                   {new Date(t.txn_at).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "2-digit" })}
                 </td>
 
                 {/* Merchant — click to rename (applies to ALL transactions with same name) */}
-                <td className="px-5 py-3 align-top min-w-[140px]">
+                <td role="cell" className="txn-merchant px-5 py-3 align-top min-w-[140px]">
                   {isMerchantEditing ? (
                     <div className="space-y-1.5 py-0.5">
-                      <input autoFocus value={editMerchantName}
+                      <input aria-label="Merchant name" autoFocus value={editMerchantName}
                         onChange={(e) => setEditMerchantName(e.target.value)}
                         onKeyDown={(e) => { if (e.key === "Enter") commitMerchantEdit(t.merchant || ""); if (e.key === "Escape") cancelMerchantEdit(); }}
                         className="w-full bg-ink border border-gold/40 rounded-lg px-2 py-1 text-xs text-mist focus:border-gold outline-none" />
-                      <select value={editMerchantCat}
+                      <select aria-label="Merchant category" value={editMerchantCat}
                         onChange={(e) => { setEditMerchantCat(e.target.value); setEditMerchantSub(SUB_NONE); setEditMerchantSubCustom(""); }}
                         className="w-full bg-ink border border-rim rounded-lg px-2 py-1 text-xs text-mist focus:border-gold/40 outline-none">
                         {categories.map((c) => <option key={c} value={c}>{c}</option>)}
@@ -342,7 +354,7 @@ export default function TransactionsTable({
                           onKeyDown={(e) => { if (e.key === "Enter") commitMerchantEdit(t.merchant || ""); if (e.key === "Escape") cancelMerchantEdit(); }}
                           className="w-full bg-ink border border-rim rounded-lg px-2 py-1 text-xs text-mist focus:border-gold/40 outline-none" />
                       )}
-                      <select value={editMerchantSub}
+                      <select aria-label="Merchant subcategory" value={editMerchantSub}
                         onChange={(e) => setEditMerchantSub(e.target.value)}
                         className="w-full bg-ink border border-rim rounded-lg px-2 py-1 text-xs text-mist focus:border-gold/40 outline-none">
                         <option value={SUB_NONE}>No subcategory</option>
@@ -379,7 +391,7 @@ export default function TransactionsTable({
                           ▶
                         </button>
                       )}
-                      <button onClick={() => startMerchantEdit(t)} title="Click to rename merchant"
+                      <button onClick={() => startMerchantEdit(t)} title="Click to rename merchant" aria-label={`Rename merchant ${t.merchant ?? "missing"}`}
                         className="group/m flex flex-col text-left w-full text-mist/80 hover:text-gold transition-colors">
                         <span className="flex items-center gap-1">
                           <span>{enrichedName ?? t.merchant ?? <span className="text-mist/25 italic text-xs">missing</span>}</span>
@@ -396,7 +408,7 @@ export default function TransactionsTable({
                   {!isMerchantEditing && (
                     isNoteEditing ? (
                       <div className="mt-1.5 space-y-1 relative">
-                        <textarea autoFocus rows={2} value={editNoteText} placeholder="Add a note (e.g. 'pickleball at Huddle')…"
+                        <textarea aria-label="Transaction note" autoFocus rows={2} value={editNoteText} placeholder="Add a note (e.g. 'pickleball at Huddle')…"
                           onChange={(e) => setEditNoteText(e.target.value)}
                           onKeyDown={(e) => {
                             if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) commitNoteEdit(t);
@@ -435,13 +447,13 @@ export default function TransactionsTable({
                       </div>
                     ) : t.notes ? (
                       <button onClick={() => startNoteEdit(t)} title="Click to edit note"
-                        className="group/n mt-1 flex items-start gap-1 text-left text-xs italic text-mist/60 hover:text-mist/70 transition-colors w-full">
+                        className="txn-note group/n mt-1 flex items-start gap-1 text-left text-xs italic text-mist/60 hover:text-mist/70 transition-colors w-full">
                         <span className="text-gold/40 shrink-0 not-italic text-2xs mt-0.5">📝</span>
                         <span className="break-words">{t.notes}</span>
                       </button>
                     ) : (
                       <button onClick={() => startNoteEdit(t)}
-                        className="opacity-0 group-hover:opacity-40 hover:!opacity-80 mt-1 text-2xs text-mist/50 italic transition-opacity">
+                        className="add-note opacity-0 focus:opacity-100 group-hover:opacity-40 hover:!opacity-80 mt-1 text-2xs text-mist/50 italic transition-opacity">
                         + add note
                       </button>
                     )
@@ -449,7 +461,7 @@ export default function TransactionsTable({
                 </td>
 
                 {/* Category — click to change (explicit Save keeps category + subcategory in sync) */}
-                <td className="px-5 py-3 text-xs align-top">
+                <td role="cell" className="txn-category px-5 py-3 text-xs align-top">
                   {isCatEditing ? (
                     <div className="space-y-1">
                       {sameMerchantCount > 1 && (
@@ -459,7 +471,7 @@ export default function TransactionsTable({
                           All {sameMerchantCount} from &quot;{t.merchant}&quot;
                         </label>
                       )}
-                      <select autoFocus value={editCatValue}
+                      <select aria-label="Transaction category" autoFocus value={editCatValue}
                         onChange={(e) => {
                           setEditCatValue(e.target.value);
                           setEditSubValue(SUB_NONE);
@@ -477,7 +489,7 @@ export default function TransactionsTable({
                           className="w-full bg-ink border border-rim rounded-lg px-2 py-1 text-xs text-mist focus:border-gold/40 outline-none" />
                       )}
                       {/* Subcategory — always shown so KP can set it for any category */}
-                      <select value={editSubValue}
+                      <select aria-label="Transaction subcategory" value={editSubValue}
                         onChange={(e) => { setEditSubValue(e.target.value); setEditSubCustom(""); }}
                         onKeyDown={(e) => { if (e.key === "Escape") setEditCatId(null); }}
                         className="bg-ink border border-rim rounded-lg px-2 py-1 text-xs text-mist outline-none block">
@@ -509,7 +521,7 @@ export default function TransactionsTable({
                       </div>
                     </div>
                   ) : (
-                    <button onClick={() => startCatEdit(t)} title="Click to change category"
+                    <button onClick={() => startCatEdit(t)} title="Click to change category" aria-label={`Change category for ${t.merchant ?? "transaction"}`}
                       className="text-mist/50 hover:text-gold transition-colors text-left">
                       {t.subcategory
                         ? <>{t.category || "Uncategorized"} <span className="text-mist/35">· {t.subcategory}</span></>
@@ -519,13 +531,13 @@ export default function TransactionsTable({
                 </td>
 
                 {/* Card — show nickname */}
-                <td className="px-5 py-3 text-mist/35 text-xs align-top whitespace-nowrap">
+                <td role="cell" className="txn-card px-5 py-3 text-mist/60 text-xs align-top">
                   {cardNicknameMap.get(t.card_last4) ?? `··${t.card_last4}`}
                 </td>
 
                 {/* Amount — foreign-currency txns show the INR equivalent (bold)
                     with the original native amount underneath (muted). */}
-                <td className="px-5 py-3 text-right whitespace-nowrap align-top tabular-nums">
+                <td role="cell" className="txn-amount px-5 py-3 text-right align-top tabular-nums">
                   <div className={`font-semibold ${t.txn_type === "credit" ? "text-emerald" : "text-mist/90"}`}>
                     {t.txn_type === "credit" ? "+" : ""}{fmt(t.amount_inr)}
                   </div>
@@ -558,10 +570,10 @@ export default function TransactionsTable({
             {(page - 1) * PAGE + 1}–{Math.min(page * PAGE, processed.length)} of {processed.length}
           </span>
           <div className="flex items-center gap-1.5 text-xs">
-            <button disabled={page <= 1} onClick={() => setPage((p) => p - 1)}
+            <button aria-label="Previous transactions page" disabled={page <= 1} onClick={() => setPage((p) => p - 1)}
               className="px-2 py-1 border border-rim rounded-lg disabled:opacity-20 hover:border-gold/30 text-mist/60 hover:text-mist transition-all">‹</button>
             <span className="text-mist/60 tabular-nums">{page}/{totalPages}</span>
-            <button disabled={page >= totalPages} onClick={() => setPage((p) => p + 1)}
+            <button aria-label="Next transactions page" disabled={page >= totalPages} onClick={() => setPage((p) => p + 1)}
               className="px-2 py-1 border border-rim rounded-lg disabled:opacity-20 hover:border-gold/30 text-mist/60 hover:text-mist transition-all">›</button>
           </div>
         </div>

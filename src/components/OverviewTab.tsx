@@ -123,8 +123,9 @@ export default function OverviewTab({
     <div className="max-w-6xl mx-auto px-6 py-8 space-y-8 pb-20">
 
       {/* ── Greeting + hero ─────────────────────────────────────────────── */}
-      <div className="flex items-end justify-between gap-4 flex-wrap">
+      <div className="overview-intro">
         <div>
+          <p className="eyebrow mb-2">THE BIG PICTURE</p>
           <h1 className="font-serif text-3xl font-semibold text-mist">{greeting()}, KP</h1>
           <p className="text-sm text-mist/60 mt-1">
             Your cards at a glance — {monthName}
@@ -133,23 +134,26 @@ export default function OverviewTab({
             )}
           </p>
         </div>
-        <button onClick={() => onNavigate("Spend")}
-          className="text-sm text-gold hover:text-gold/80 font-medium transition-colors">
-          Full spend view →
-        </button>
+
       </div>
 
       {/* ── Hero stats ──────────────────────────────────────────────────── */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-        <HeroStat label="Spent this month" value={fmtINR(month.spend)} tone="gold" />
-        <HeroStat label="Refunded" value={fmtINR(month.refunds)} tone="emerald" />
-        <HeroStat label="Transactions" value={fmtNum(month.count)} tone="plain" />
-        <HeroStat label="Active cards" value={fmtNum(cards.length)} tone="plain" />
+      <div className="overview-summary">
+        <section className="spend-hero" aria-label="Monthly spending">
+          <p className="spend-hero-label">Spent this month · {monthName}</p>
+          <div className="spend-hero-value">{fmtINR(month.spend)}</div>
+          <div className="spend-hero-footer">
+            <span>{fmtNum(month.count)} transactions this month</span>
+            <button onClick={() => onNavigate("Spend")}>Explore spending ↗</button>
+          </div>
+        </section>
+        <HeroStat label="Back in your pocket" value={fmtINR(month.refunds)} tone="sage" note="Refunded this month" icon="↙" />
+        <HeroStat label="Cards in your corner" value={fmtNum(cards.length)} tone="lilac" note="Your connected collection" icon="▱" />
       </div>
 
       {/* ── Card tiles ──────────────────────────────────────────────────── */}
       <section className="space-y-3">
-        <div className="flex items-baseline justify-between">
+        <div className="section-heading">
           <h2 className="font-serif text-lg font-semibold text-mist">Your cards</h2>
           <button onClick={() => onNavigate("Cards")}
             className="text-xs text-mist/60 hover:text-gold transition-colors">Manage cards →</button>
@@ -161,7 +165,7 @@ export default function OverviewTab({
             body="Add your first card to start tracking spend, milestones and rewards."
             cta="Add a card →" onClick={() => onNavigate("Cards")} />
         ) : (
-          <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-4">
+          <div className="wallet-strip grid md:grid-cols-2 xl:grid-cols-3 gap-4">
             {cards.map((c) => {
               const spec = CARD_REGISTRY[c.product_key];
               const spent = month.perCard[c.last4] || 0;
@@ -215,7 +219,7 @@ export default function OverviewTab({
       {/* ── Holistic panels: rewards / offers / loyalty ─────────────────── */}
       {migrationNeeded && <MissingTableNotice feature="Rewards, Offers & Loyalty" />}
 
-      <div className="grid lg:grid-cols-3 gap-4 items-start">
+      <div className="overview-panels grid lg:grid-cols-3 gap-4 items-start">
 
         {/* Rewards */}
         <Panel title="Reward balances" onOpen={() => onNavigate("Redemptions", "points")}>
@@ -331,19 +335,22 @@ function MilestoneStrip({ pct, caption, toGo, reached }: {
       <div className="mt-1.5 flex justify-between text-2xs text-white/50">
         <span>{caption}</span>
         {reached
-          ? <span className="text-emerald">Reached ✓</span>
+          ? <span className="text-green-200">Reached ✓</span>
           : toGo && <span>{toGo} to go</span>}
       </div>
     </>
   );
 }
 
-function HeroStat({ label, value, tone }: { label: string; value: string; tone: "gold" | "emerald" | "plain" }) {
-  const cls = tone === "gold" ? "text-gold" : tone === "emerald" ? "text-emerald" : "text-mist/90";
+function HeroStat({ label, value, tone, note, icon }: {
+  label: string; value: string; tone: "sage" | "lilac"; note: string; icon: string;
+}) {
   return (
-    <div className="rounded-2xl border border-rim bg-surface p-5 shadow-card">
-      <div className="text-xs text-mist/60 mb-1.5">{label}</div>
-      <div className={`font-serif text-3xl font-semibold tabular-nums ${cls}`}>{value}</div>
+    <div className={`summary-card summary-${tone}`}>
+      <span className="summary-icon" aria-hidden="true">{icon}</span>
+      <div className="summary-value">{value}</div>
+      <div className="summary-label">{label}</div>
+      <div className="summary-note">{note}</div>
     </div>
   );
 }

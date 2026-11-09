@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { checkSupabaseReachable } from "@/lib/supabase/health";
 import { canonicalCardiqUrl } from "@/lib/canonical-host";
+import { Brand } from "@/components/AppNavigation";
 import SupabaseDownNotice from "@/components/SupabaseDownNotice";
 
 export default function LoginPage() {
@@ -62,47 +63,42 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-ink relative overflow-hidden">
-      {/* Ambient glow */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gold/5 rounded-full blur-3xl" />
-        <div className="absolute top-1/2 left-1/3 w-64 h-64 bg-sapphire/5 rounded-full blur-3xl" />
-      </div>
-
-      <div className="relative w-full max-w-sm mx-4">
+    <main className="login-page">
+      <section className="login-story">
+        <Brand inverse />
+        <div className="login-story-copy"><p className="eyebrow">THE PERKS OF KNOWING</p>
+          <h1>Good cards.<br /><em>Great possibilities.</em></h1>
+          <p>A clearer view of your spending.<br />A little more from your rewards.</p>
+        </div>
+        <div className="login-art" aria-hidden="true">
+          <div className="art-card art-card-lilac"><span>THE POSSIBILITIES</span><i /><strong>Go a little further.</strong></div>
+          <div className="art-card art-card-peach"><span>THE EVERYDAY</span><i /><strong>Make it count.</strong></div>
+          <div className="art-card art-card-teal"><span>CardIQ</span><i /><strong>Well played.</strong><small>YOUR CARDS. ALL TOGETHER.</small></div>
+        </div>
+        <div className="login-story-footer">SPEND SMARTER <span>✳</span> REWARD YOURSELF</div>
+      </section>
+      <section className="login-form-side">
+      <div className="w-full max-w-sm">
         {down ? (
           <SupabaseDownNotice onRetry={retry} retrying={retrying} />
         ) : (
         /* Card */
-        <div className="rounded-2xl border border-rim bg-surface shadow-card p-8 space-y-6">
+        <div className="login-form-card space-y-7">
 
-          {/* Logo + wordmark */}
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gold-shimmer flex items-center justify-center shadow-glow-gold">
-              <svg className="w-5 h-5 text-ink" fill="none" viewBox="0 0 16 16" stroke="currentColor" strokeWidth={2.2}>
-                <rect x="1" y="4" width="14" height="10" rx="2"/>
-                <path d="M1 7h14" strokeLinecap="square"/>
-                <circle cx="4.5" cy="11" r="1" fill="currentColor" stroke="none"/>
-              </svg>
-            </div>
-            <div>
-              <div className="font-serif font-semibold text-xl text-gold tracking-tight">CardIQ</div>
-              <div className="text-2xs text-mist/60 uppercase tracking-widest">Credit Intelligence</div>
-            </div>
-          </div>
-
+          <div className="lg:hidden mb-10"><Brand /></div>
           {/* Copy */}
           <div>
-            <h1 className="text-mist font-medium text-base mb-1">Welcome back</h1>
-            <p className="text-sm text-mist/50 leading-relaxed">
-              Your personal credit card intelligence hub — spend tracking, deal alerts, and reward optimization.
+            <p className="eyebrow mb-3">YOUR PERSONAL CARD COMPANION</p>
+            <h2 className="font-serif text-4xl text-teal mb-4">Hello again.</h2>
+            <p className="text-sm text-mist/70 leading-relaxed">
+              Your spending, rewards, and next great deal. All your cards, beautifully in one place.
             </p>
           </div>
 
           {/* CTA */}
           <button
             onClick={signIn}
-            className="w-full flex items-center justify-center gap-2.5 bg-gold-shimmer text-ink font-semibold py-2.5 rounded-xl shadow-glow-gold hover:opacity-90 transition-all"
+            className="w-full flex items-center justify-center gap-2.5 bg-white text-teal border border-rim font-medium py-3.5 rounded-xl shadow-card hover:bg-sage transition-all"
           >
             <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
               <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
@@ -114,7 +110,7 @@ export default function LoginPage() {
           </button>
 
           {signInError && (
-            <p role="alert" className="text-xs text-rose-300 text-center leading-relaxed">
+            <p role="alert" className="text-xs text-ruby text-center leading-relaxed">
               {signInError}
             </p>
           )}
@@ -122,11 +118,12 @@ export default function LoginPage() {
           {/* Fine print */}
           <p className="text-2xs text-mist/55 text-center leading-relaxed">
             Requires Gmail read-only access to parse credit card transaction alerts.
-            Your data stays on your device.
+            Your data is stored in your private CardIQ account.
           </p>
         </div>
         )}
       </div>
+      </section>
     </main>
   );
 }

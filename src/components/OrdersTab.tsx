@@ -450,7 +450,7 @@ export default function OrdersTab() {
           { label: "Linked to a card", value: stats.linked.toLocaleString("en-IN") },
           { label: "With item detail", value: stats.withItems.toLocaleString("en-IN") },
         ].map((s) => (
-          <div key={s.label} className="rounded-2xl border border-rim bg-surface p-4 shadow-card">
+          <div key={s.label} className="stat-tile">
             <div className="text-2xs uppercase tracking-widest text-mist/45">{s.label}</div>
             <div className="text-xl font-semibold text-mist mt-1 tabular-nums">{s.value}</div>
           </div>
@@ -458,12 +458,13 @@ export default function OrdersTab() {
       </div>
 
       {/* Filters */}
-      <div className="flex items-center gap-2 flex-wrap">
+      <div className="record-filters flex items-center gap-2 flex-wrap">
         <input
+          aria-label="Search orders"
           value={search} onChange={(e) => setSearch(e.target.value)}
           placeholder="Search item, merchant, order #…"
           className="flex-1 min-w-[180px] bg-ink border border-rim rounded-lg px-3 py-1.5 text-sm text-mist placeholder:text-mist/30 focus:border-gold/40 outline-none" />
-        <select value={source} onChange={(e) => setSource(e.target.value)}
+        <select aria-label="Order source" value={source} onChange={(e) => setSource(e.target.value)}
           className="bg-ink border border-rim rounded-lg px-2 py-1.5 text-xs text-mist/75 focus:border-gold/40 outline-none">
           {sources.map((s) => <option key={s} value={s}>{s === "all" ? "All sources" : SOURCE_LABELS[s] ?? s}</option>)}
         </select>
@@ -508,8 +509,8 @@ export default function OrdersTab() {
                 <div key={o.id}>
                   <button
                     onClick={() => setExpanded(open ? null : o.id)}
-                    className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-raised/40 transition-colors">
-                    <span className="text-2xs uppercase tracking-widest text-gold/60 w-16 shrink-0">
+                    className="order-row w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-raised/40 transition-colors" aria-expanded={open}>
+                    <span className="order-source text-2xs uppercase tracking-widest text-gold/60 w-16 shrink-0">
                       {SOURCE_LABELS[o.source] ?? o.source}
                     </span>
                     <div className="min-w-0 flex-1">
@@ -522,7 +523,7 @@ export default function OrdersTab() {
                       </div>
                     </div>
                     <LinkBadge o={o} />
-                    <span className="text-sm font-semibold text-mist tabular-nums w-20 text-right shrink-0">{fmt(o.total_amount)}</span>
+                    <span className="order-amount text-sm font-semibold text-mist tabular-nums sm:w-24 text-right shrink-0">{fmt(o.total_amount)}</span>
                     <svg className={`w-3.5 h-3.5 text-mist/40 shrink-0 transition-transform ${open ? "rotate-180" : ""}`} fill="none" viewBox="0 0 16 16" stroke="currentColor" strokeWidth={1.6}>
                       <path d="M4 6l4 4 4-4" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>

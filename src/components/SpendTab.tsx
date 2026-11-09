@@ -310,6 +310,7 @@ export default function SpendTab({ focusCard }: { focusCard?: { last4: string } 
   return (
     <div className="max-w-6xl mx-auto px-6 py-8 space-y-6 pb-20">
 
+      <div><p className="eyebrow mb-2">THE EVERYDAY EDIT</p><h1 className="font-serif text-3xl font-semibold">Your spending, in focus.</h1></div>
       <SpendFilterPanel
         search={search}
         onSearchChange={setSearch}
@@ -357,13 +358,13 @@ export default function SpendTab({ focusCard }: { focusCard?: { last4: string } 
           <StatTile
             label="Total spend"
             value={fmt(aggregates.summary.total_debit)}
-            sub={`${aggregates.summary.debit_count} INR spend${aggregates.summary.debit_count === 1 ? "" : "s"}`}
+            sub={`${aggregates.summary.debit_count} spend${aggregates.summary.debit_count === 1 ? "" : "s"} · in INR`}
             accent="gold"
           />
           <StatTile
             label="Refunded"
             value={fmt(aggregates.summary.total_credit)}
-            sub={`${aggregates.summary.credit_count} INR refund${aggregates.summary.credit_count === 1 ? "" : "s"}`}
+            sub={`${aggregates.summary.credit_count} refund${aggregates.summary.credit_count === 1 ? "" : "s"} · in INR`}
             accent="emerald"
           />
           <StatTile
@@ -476,9 +477,9 @@ function StatTile({ label, value, sub, accent }: {
 }) {
   const valClass = accent === "gold" ? "text-gold" : accent === "emerald" ? "text-emerald" : "text-mist/80";
   return (
-    <div className="rounded-2xl border border-rim bg-surface p-4 shadow-card">
+    <div className="stat-tile">
       <div className="text-2xs uppercase tracking-widest text-mist/55 mb-2">{label}</div>
-      <div className={`font-serif text-2xl font-semibold tabular-nums ${valClass}`}>{value}</div>
+      <div className={`stat-tile-value tabular-nums ${valClass}`}>{value}</div>
       <div className="text-2xs text-mist/55 mt-1">{sub}</div>
     </div>
   );

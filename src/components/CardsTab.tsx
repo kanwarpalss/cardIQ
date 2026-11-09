@@ -216,6 +216,7 @@ export default function CardsTab() {
   return (
     <div className="max-w-3xl mx-auto px-6 py-8 space-y-8">
 
+      <div><p className="eyebrow mb-2">YOUR COLLECTION</p><h1 className="font-serif text-3xl font-semibold">Cards with possibilities.</h1></div>
       {/* ── My Cards ─────────────────────────────────────────────────── */}
       <section className="rounded-2xl border border-rim bg-surface p-6 shadow-card space-y-5">
         <h2 className="font-serif text-lg font-semibold text-gold">My Cards</h2>
@@ -232,8 +233,8 @@ export default function CardsTab() {
             return (
               <div key={c.id}
                 className="px-4 py-3 rounded-xl border border-rim bg-raised hover:bg-hover transition-colors">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
+                <div className="flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-3 min-w-0">
                     {/* Mini card face in the product's real colors */}
                     <div className="w-10 h-7 rounded-md border border-white/15 flex items-center justify-center shrink-0"
                       style={{ background: getCardArt(c.product_key).gradient }}>
@@ -241,7 +242,7 @@ export default function CardsTab() {
                         {NETWORK_ICON[net.split(" ")[0]] ?? "★"}
                       </span>
                     </div>
-                    <div>
+                    <div className="min-w-0 break-words">
                       <div className="text-sm font-medium text-mist/90">{name}</div>
                       <div className="text-2xs text-mist/55">
                         <span className="tracking-widest">●●●● ●●●● ●●●● {c.last4}</span>
@@ -249,7 +250,7 @@ export default function CardsTab() {
                     </div>
                   </div>
                   <button onClick={() => removeCard(c.id)}
-                    className="text-2xs text-mist/25 hover:text-ruby transition-colors px-2 py-1">
+                    className="shrink-0 text-2xs text-mist/60 hover:text-ruby transition-colors px-2 py-1">
                     Remove
                   </button>
                 </div>
@@ -566,7 +567,7 @@ function MilestoneProgress({ cadence, spent, target, reward }: {
   const pct = target > 0 ? Math.min((spent / target) * 100, 100) : 0;
   return (
     <div className="space-y-2">
-      <div className="flex items-start justify-between gap-3">
+      <div className="flex items-start justify-between gap-3 flex-wrap">
         <div>
           <div className="text-2xs text-mist/45">{cadence}</div>
           <div className="text-xs text-mist/75 mt-0.5">{fmtINR(target)} · {reward}</div>

@@ -144,7 +144,7 @@ export default function VouchersTab() {
           { label: "Balance left", value: fmt(stats.remaining) },
           { label: "Brands", value: stats.brands.toLocaleString("en-IN") },
         ].map((s) => (
-          <div key={s.label} className="rounded-2xl border border-rim bg-surface p-4 shadow-card">
+          <div key={s.label} className="stat-tile">
             <div className="text-2xs uppercase tracking-widest text-mist/45">{s.label}</div>
             <div className="text-xl font-semibold text-mist mt-1 tabular-nums">{s.value}</div>
           </div>
@@ -152,12 +152,13 @@ export default function VouchersTab() {
       </div>
 
       {/* Filters */}
-      <div className="flex items-center gap-2 flex-wrap">
+      <div className="record-filters flex items-center gap-2 flex-wrap">
         <input
+          aria-label="Search vouchers"
           value={search} onChange={(e) => setSearch(e.target.value)}
           placeholder="Search brand or code…"
           className="flex-1 min-w-[180px] bg-ink border border-rim rounded-lg px-3 py-1.5 text-sm text-mist placeholder:text-mist/30 focus:border-gold/40 outline-none" />
-        <select value={brand} onChange={(e) => setBrand(e.target.value)}
+        <select aria-label="Voucher brand" value={brand} onChange={(e) => setBrand(e.target.value)}
           className="bg-ink border border-rim rounded-lg px-2 py-1.5 text-xs text-mist/75 focus:border-gold/40 outline-none max-w-[180px]">
           {brands.map((b) => <option key={b} value={b}>{b === "all" ? "All brands" : brandLabel.get(b) ?? b}</option>)}
         </select>
@@ -194,7 +195,7 @@ export default function VouchersTab() {
                 <div key={v.id}>
                   <button
                     onClick={() => setExpanded(open ? null : v.id)}
-                    className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-raised/40 transition-colors">
+                    className="voucher-row w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-raised/40 transition-colors" aria-expanded={open}>
                     <div className="min-w-0 flex-1">
                       <div className="text-sm text-mist/90 truncate">{v.brand}</div>
                       <div className="text-2xs text-mist/45">

@@ -93,6 +93,7 @@ interface Props {
 export default function PeriodPicker({ from, to, onChange }: Props) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+  const trigger = useRef<HTMLButtonElement>(null);
 
   // Local state for the custom-range inputs. We don't push to onChange
   // until the user clicks "Apply" so a half-typed date doesn't refilter
@@ -123,6 +124,7 @@ export default function PeriodPicker({ from, to, onChange }: Props) {
     const [f, t] = p.range();
     onChange(f, t);
     setOpen(false);
+    trigger.current?.focus();
   }
 
   function applyCustom() {
@@ -134,11 +136,13 @@ export default function PeriodPicker({ from, to, onChange }: Props) {
       onChange(customFrom, customTo);
     }
     setOpen(false);
+    trigger.current?.focus();
   }
 
   return (
-    <div className="relative" ref={ref}>
+    <div className="relative" ref={ref} onKeyDown={event => { if (event.key === "Escape") { setOpen(false); trigger.current?.focus(); } }}>
       <button
+        ref={trigger}
         type="button"
         aria-expanded={open}
         aria-haspopup="dialog"
@@ -156,7 +160,7 @@ export default function PeriodPicker({ from, to, onChange }: Props) {
       </button>
 
       {open && (
-        <div className="absolute top-full left-0 mt-2 z-50 shadow-dropdown rounded-xl border border-rim bg-raised overflow-hidden min-w-[280px]">
+        <div role="dialog" aria-label="Choose a spending period" className="period-popover absolute top-full left-0 mt-2 z-50 shadow-dropdown rounded-xl border border-rim bg-raised overflow-hidden w-[300px] max-w-[calc(100vw-32px)]">
           {/* Presets */}
           <div className="py-1">
             {PRESETS.map((p) => {
@@ -184,18 +188,20 @@ export default function PeriodPicker({ from, to, onChange }: Props) {
             <div className="flex items-center gap-2">
               <input
                 type="date"
+                aria-label="Period start date"
                 value={customFrom}
                 max={customTo || undefined}
                 onChange={(e) => setCustomFrom(e.target.value)}
-                className="flex-1 bg-ink border border-rim rounded px-2 py-1.5 text-xs text-mist focus:border-gold/40 outline-none"
+                className="min-w-0 w-0 flex-1 bg-ink border border-rim rounded px-2 py-1.5 text-xs text-mist focus:border-gold/40 outline-none"
               />
               <span className="text-mist/60 text-xs">→</span>
               <input
                 type="date"
+                aria-label="Period end date"
                 value={customTo}
                 min={customFrom || undefined}
                 onChange={(e) => setCustomTo(e.target.value)}
-                className="flex-1 bg-ink border border-rim rounded px-2 py-1.5 text-xs text-mist focus:border-gold/40 outline-none"
+                className="min-w-0 w-0 flex-1 bg-ink border border-rim rounded px-2 py-1.5 text-xs text-mist focus:border-gold/40 outline-none"
               />
             </div>
             <button
