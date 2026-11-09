@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useTransactionsAll } from "@/lib/transactions-cache";
 import { CARD_REGISTRY } from "@/lib/cards/registry";
-import { getCardArt } from "@/lib/card-art";
+import { CardFace } from "./CardVisual";
 import { fmtDate, fmtINR } from "@/lib/format";
 import {
   CALENDAR_YEAR_START,
@@ -24,12 +24,6 @@ type CardRow = {
   anniversary_date: string | null;
 };
 
-const NETWORK_ICON: Record<string, string> = {
-  Visa:       "V",
-  Mastercard: "M",
-  RuPay:      "R",
-  Amex:       "A",
-};
 
 type GmailScopeStatus = {
   status: "ok" | "no_token" | "insufficient_scope" | "expired_token" | "error";
@@ -39,6 +33,7 @@ type GmailScopeStatus = {
 };
 
 export default function CardsTab() {
+  const [section, setSection] = useState<"wallet" | "benefits" | "settings">("wallet");
   const supabase = createClient();
   const [cards,      setCards]      = useState<CardRow[]>([]);
   const [productKey, setProductKey] = useState(Object.keys(CARD_REGISTRY)[0]);
@@ -214,9 +209,13 @@ export default function CardsTab() {
   const selectedSpec = CARD_REGISTRY[productKey];
 
   return (
-    <div className="max-w-3xl mx-auto px-6 py-8 space-y-8">
+    <div className="max-w-5xl mx-auto px-6 py-8 space-y-4">
 
       <div><p className="eyebrow mb-2">YOUR COLLECTION</p><h1 className="font-serif text-3xl font-semibold">Cards with possibilities.</h1></div>
+      <div className="view-switch" role="group" aria-label="Cards view">
+        {([['wallet', 'My cards'], ['benefits', 'Benefits'], ['settings', 'Settings']] as const).map(([key,label]) => <button type="button" key={key} aria-pressed={section === key} onClick={() => setSection(key)}>{label}</button>)}
+      </div>
+      <div hidden={section !== "wallet"} className="space-y-4">
       {/* ── My Cards ─────────────────────────────────────────────────── */}
       <section className="rounded-2xl border border-rim bg-surface p-6 shadow-card space-y-5">
         <h2 className="font-serif text-lg font-semibold text-gold">My Cards</h2>
@@ -229,19 +228,12 @@ export default function CardsTab() {
           {cards.map((c) => {
             const spec = CARD_REGISTRY[c.product_key];
             const name = c.nickname || spec?.display_name || c.product_key;
-            const net  = spec?.network ?? "";
             return (
               <div key={c.id}
                 className="px-4 py-3 rounded-xl border border-rim bg-raised hover:bg-hover transition-colors">
                 <div className="flex items-center justify-between gap-3">
                   <div className="flex items-center gap-3 min-w-0">
-                    {/* Mini card face in the product's real colors */}
-                    <div className="w-10 h-7 rounded-md border border-white/15 flex items-center justify-center shrink-0"
-                      style={{ background: getCardArt(c.product_key).gradient }}>
-                      <span className="font-bold text-xs" style={{ color: getCardArt(c.product_key).accent }}>
-                        {NETWORK_ICON[net.split(" ")[0]] ?? "★"}
-                      </span>
-                    </div>
+                    <span className="card-thumb"><CardFace productKey={c.product_key} /></span>
                     <div className="min-w-0 break-words">
                       <div className="text-sm font-medium text-mist/90">{name}</div>
                       <div className="text-2xs text-mist/55">
@@ -265,8 +257,9 @@ export default function CardsTab() {
         </div>
 
         {/* Add card form */}
-        <div className="border-t border-wire pt-5 space-y-3">
-          <div className="text-2xs uppercase tracking-widest text-mist/55 mb-1">Add card</div>
+        <details className="disclosure-panel" open={cards.length === 0 || !!formError || undefined}>
+          <summary>Add a card <span>Product &amp; account details</span></summary>
+          <div className="space-y-3 mt-3">
 
           <select value={productKey} onChange={(e) => setProductKey(e.target.value)}
             className="w-full bg-ink border border-rim rounded-xl px-3 py-2 text-sm text-mist focus:border-gold/40 outline-none">
@@ -301,125 +294,11 @@ export default function CardsTab() {
             className="bg-gold-shimmer text-ink px-5 py-2 rounded-xl text-sm font-semibold shadow-glow-gold hover:opacity-90 transition-all">
             Add card
           </button>
-        </div>
-      </section>
-
-      {/* ── Bills by card ────────────────────────────────────────────── */}
-      <section className="rounded-2xl border border-rim bg-surface p-6 shadow-card space-y-3">
-        <div>
-          <h2 className="font-serif text-lg font-semibold text-gold">Utility and rent bills</h2>
-          <p className="text-xs text-mist/55 mt-1 leading-relaxed">
-            Banks decide by how the payment is coded, so try a small payment first when a biller is new.
-          </p>
-        </div>
-        <div className="space-y-2">
-          {Object.values(CARD_REGISTRY).map((spec) => (
-            <details key={spec.product_key} className="rounded-xl border border-rim bg-raised px-4 py-3">
-              <summary className="cursor-pointer text-sm font-medium text-mist/90">{spec.display_name}</summary>
-              <div className="mt-3 grid gap-3 sm:grid-cols-2">
-                {([["Utilities", spec.bill_rules?.utilities], ["Rent", spec.bill_rules?.rent]] as const).map(([label, rule]) => (
-                  <div key={label} className="space-y-1 text-xs text-mist/70 leading-relaxed">
-                    <div className="text-2xs uppercase tracking-widest text-mist/55">{label}</div>
-                    <p>{rule?.earns ?? "Not checked yet"}</p>
-                    {rule?.limit && <p>Limit: {rule.limit}</p>}
-                    {rule?.fee && <p>Fee: {rule.fee}</p>}
-                    {rule?.milestones && <p>Milestones: {rule.milestones}</p>}
-                  </div>
-                ))}
-              </div>
-              {spec.benefits_verified_at && (
-                <div className="mt-3 text-right text-2xs text-mist/35">Checked {fmtDate(spec.benefits_verified_at)}</div>
-              )}
-            </details>
-          ))}
-        </div>
-      </section>
-
-      {/* ── Gmail connection ─────────────────────────────────────────── */}
-      <section className="rounded-2xl border border-rim bg-surface p-6 shadow-card space-y-3">
-        <div className="flex items-center justify-between">
-          <h2 className="font-serif text-lg font-semibold text-gold">Gmail connection</h2>
-          <button onClick={checkGmail} disabled={checkingGmail}
-            className="text-xs text-mist/60 hover:text-gold disabled:opacity-40 transition-colors">
-            {checkingGmail ? "Checking…" : "Check now"}
-          </button>
-        </div>
-        {!gmailStatus ? (
-          <p className="text-sm text-mist/50">Checking Gmail access…</p>
-        ) : (
-          <div className={`rounded-xl border px-4 py-3 text-sm space-y-1.5 ${
-            gmailStatus.status === "ok"
-              ? "border-emerald/30 bg-emerald/5"
-              : gmailStatus.status === "no_token"
-              ? "border-rim bg-raised"
-              : "border-ruby/30 bg-ruby/5"
-          }`}>
-            <div className={`font-medium ${
-              gmailStatus.status === "ok" ? "text-emerald" : gmailStatus.status === "no_token" ? "text-mist/70" : "text-ruby"
-            }`}>
-              {gmailStatus.status === "ok" && "🟢 Connected"}
-              {gmailStatus.status === "no_token" && "⚪ Not connected"}
-              {gmailStatus.status === "insufficient_scope" && "🔴 Insufficient permission"}
-              {gmailStatus.status === "expired_token" && "🔴 Access expired"}
-              {gmailStatus.status === "error" && "🔴 Check failed"}
-            </div>
-            <p className="text-mist/70">{gmailStatus.message}</p>
-            {gmailStatus.fix && <p className="text-mist/55 text-xs leading-relaxed">{gmailStatus.fix}</p>}
           </div>
-        )}
+        </details>
       </section>
 
-      {/* ── Settings ─────────────────────────────────────────────────── */}
-      <section className="rounded-2xl border border-rim bg-surface p-6 shadow-card space-y-5">
-        <h2 className="font-serif text-lg font-semibold text-gold">Settings</h2>
-
-        <div className="space-y-1.5">
-          <label className="text-2xs uppercase tracking-widest text-mist/55 block">
-            Gmail address
-          </label>
-          <input type="email" value={gmailUser} onChange={(e) => setGmailUser(e.target.value)}
-            placeholder="you@gmail.com"
-            className="w-full bg-ink border border-rim rounded-xl px-3 py-2 text-sm text-mist placeholder:text-mist/25 focus:border-gold/40 outline-none" />
-        </div>
-
-        <div className="space-y-1.5">
-          <label className="text-2xs uppercase tracking-widest text-mist/55 block">
-            Gmail app password {savedAppPassword && <span className="text-emerald normal-case ml-1">● saved</span>}
-          </label>
-          <input type="password" value={gmailAppPassword} onChange={(e) => setGmailAppPassword(e.target.value)}
-            placeholder={savedAppPassword ? "•••• •••• •••• •••• (enter new to replace)" : "xxxx xxxx xxxx xxxx"}
-            className="w-full bg-ink border border-rim rounded-xl px-3 py-2 text-sm text-mist placeholder:text-mist/25 focus:border-gold/40 outline-none" />
-          <p className="text-2xs text-mist/25">
-            Replaces signing in with Google — this never expires, unlike the 7-day OAuth
-            connection. Create one at myaccount.google.com/apppasswords (needs 2-Step
-            Verification turned on first).
-          </p>
-        </div>
-
-        <div className="space-y-1.5">
-          <label className="text-2xs uppercase tracking-widest text-mist/55 block">
-            Anthropic API Key {savedKey && <span className="text-emerald normal-case ml-1">● saved</span>}
-          </label>
-          <input type="password" value={apiKey} onChange={(e) => setApiKey(e.target.value)}
-            placeholder={savedKey ? "•••••• (enter new to replace)" : "sk-ant-…"}
-            className="w-full bg-ink border border-rim rounded-xl px-3 py-2 text-sm text-mist placeholder:text-mist/25 focus:border-gold/40 outline-none" />
-          <p className="text-2xs text-mist/25">Used for the Chat tab — Claude-powered spending insights.</p>
-        </div>
-
-        <div className="space-y-1.5">
-          <label className="text-2xs uppercase tracking-widest text-mist/55 block">Profile</label>
-          <textarea value={profile} onChange={(e) => setProfile(e.target.value)} rows={4}
-            placeholder="Describe your spending habits, goals, and what matters to you (e.g. 'I travel frequently, care about lounge access, and spend heavily on dining')…"
-            className="w-full bg-ink border border-rim rounded-xl px-3 py-2 text-sm text-mist placeholder:text-mist/25 focus:border-gold/40 outline-none resize-none leading-relaxed" />
-          <p className="text-2xs text-mist/25">Helps the AI give you more relevant advice.</p>
-        </div>
-
-        <button onClick={saveSettings} disabled={saving}
-          className="bg-gold-shimmer text-ink px-5 py-2 rounded-xl text-sm font-semibold shadow-glow-gold hover:opacity-90 disabled:opacity-50 transition-all">
-          {saving ? "Saving…" : "Save settings"}
-        </button>
-      </section>
-
+      <details className="disclosure-panel"><summary>Milestone tracker <span>{cards.length} cards · spending years &amp; rewards</span></summary>
       {/* ── Milestone tracker ────────────────────────────────────────── */}
       <section className="rounded-2xl border border-rim bg-surface p-6 shadow-card space-y-5">
         <div>
@@ -533,6 +412,128 @@ export default function CardsTab() {
           </div>
         )}
       </section>
+      </details>
+      </div>
+      <div hidden={section !== "benefits"}>
+      {/* ── Bills by card ────────────────────────────────────────────── */}
+      <section className="rounded-2xl border border-rim bg-surface p-6 shadow-card space-y-3">
+        <div>
+          <h2 className="font-serif text-lg font-semibold text-gold">Utility and rent bills</h2>
+          <p className="text-xs text-mist/55 mt-1 leading-relaxed">
+            Banks decide by how the payment is coded, so try a small payment first when a biller is new.
+          </p>
+        </div>
+        <div className="space-y-2">
+          {Object.values(CARD_REGISTRY).map((spec) => (
+            <details key={spec.product_key} className="rounded-xl border border-rim bg-raised px-4 py-3">
+              <summary className="cursor-pointer text-sm font-medium text-mist/90">{spec.display_name}</summary>
+              <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                {([["Utilities", spec.bill_rules?.utilities], ["Rent", spec.bill_rules?.rent]] as const).map(([label, rule]) => (
+                  <div key={label} className="space-y-1 text-xs text-mist/70 leading-relaxed">
+                    <div className="text-2xs uppercase tracking-widest text-mist/55">{label}</div>
+                    <p>{rule?.earns ?? "Not checked yet"}</p>
+                    {rule?.limit && <p>Limit: {rule.limit}</p>}
+                    {rule?.fee && <p>Fee: {rule.fee}</p>}
+                    {rule?.milestones && <p>Milestones: {rule.milestones}</p>}
+                  </div>
+                ))}
+              </div>
+              {spec.benefits_verified_at && (
+                <div className="mt-3 text-right text-2xs text-mist/35">Checked {fmtDate(spec.benefits_verified_at)}</div>
+              )}
+            </details>
+          ))}
+        </div>
+      </section>
+
+      </div>
+      <div hidden={section !== "settings"} className="space-y-4">
+      {/* ── Gmail connection ─────────────────────────────────────────── */}
+      <section className="rounded-2xl border border-rim bg-surface p-6 shadow-card space-y-3">
+        <div className="flex items-center justify-between">
+          <h2 className="font-serif text-lg font-semibold text-gold">Gmail connection</h2>
+          <button onClick={checkGmail} disabled={checkingGmail}
+            className="text-xs text-mist/60 hover:text-gold disabled:opacity-40 transition-colors">
+            {checkingGmail ? "Checking…" : "Check now"}
+          </button>
+        </div>
+        {!gmailStatus ? (
+          <p className="text-sm text-mist/50">Checking Gmail access…</p>
+        ) : (
+          <div className={`rounded-xl border px-4 py-3 text-sm space-y-1.5 ${
+            gmailStatus.status === "ok"
+              ? "border-emerald/30 bg-emerald/5"
+              : gmailStatus.status === "no_token"
+              ? "border-rim bg-raised"
+              : "border-ruby/30 bg-ruby/5"
+          }`}>
+            <div className={`font-medium ${
+              gmailStatus.status === "ok" ? "text-emerald" : gmailStatus.status === "no_token" ? "text-mist/70" : "text-ruby"
+            }`}>
+              {gmailStatus.status === "ok" && "🟢 Connected"}
+              {gmailStatus.status === "no_token" && "⚪ Not connected"}
+              {gmailStatus.status === "insufficient_scope" && "🔴 Insufficient permission"}
+              {gmailStatus.status === "expired_token" && "🔴 Access expired"}
+              {gmailStatus.status === "error" && "🔴 Check failed"}
+            </div>
+            <p className="text-mist/70">{gmailStatus.message}</p>
+            {gmailStatus.fix && <p className="text-mist/55 text-xs leading-relaxed">{gmailStatus.fix}</p>}
+          </div>
+        )}
+      </section>
+
+      {/* ── Settings ─────────────────────────────────────────────────── */}
+      <section className="rounded-2xl border border-rim bg-surface p-6 shadow-card space-y-5">
+        <h2 className="font-serif text-lg font-semibold text-gold">Settings</h2>
+
+        <div className="space-y-1.5">
+          <label className="text-2xs uppercase tracking-widest text-mist/55 block">
+            Gmail address
+          </label>
+          <input type="email" value={gmailUser} onChange={(e) => setGmailUser(e.target.value)}
+            placeholder="you@gmail.com"
+            className="w-full bg-ink border border-rim rounded-xl px-3 py-2 text-sm text-mist placeholder:text-mist/25 focus:border-gold/40 outline-none" />
+        </div>
+
+        <div className="space-y-1.5">
+          <label className="text-2xs uppercase tracking-widest text-mist/55 block">
+            Gmail app password {savedAppPassword && <span className="text-emerald normal-case ml-1">● saved</span>}
+          </label>
+          <input type="password" value={gmailAppPassword} onChange={(e) => setGmailAppPassword(e.target.value)}
+            placeholder={savedAppPassword ? "•••• •••• •••• •••• (enter new to replace)" : "xxxx xxxx xxxx xxxx"}
+            className="w-full bg-ink border border-rim rounded-xl px-3 py-2 text-sm text-mist placeholder:text-mist/25 focus:border-gold/40 outline-none" />
+          <p className="text-2xs text-mist/25">
+            Replaces signing in with Google — this never expires, unlike the 7-day OAuth
+            connection. Create one at myaccount.google.com/apppasswords (needs 2-Step
+            Verification turned on first).
+          </p>
+        </div>
+
+        <div className="space-y-1.5">
+          <label className="text-2xs uppercase tracking-widest text-mist/55 block">
+            Anthropic API Key {savedKey && <span className="text-emerald normal-case ml-1">● saved</span>}
+          </label>
+          <input type="password" value={apiKey} onChange={(e) => setApiKey(e.target.value)}
+            placeholder={savedKey ? "•••••• (enter new to replace)" : "sk-ant-…"}
+            className="w-full bg-ink border border-rim rounded-xl px-3 py-2 text-sm text-mist placeholder:text-mist/25 focus:border-gold/40 outline-none" />
+          <p className="text-2xs text-mist/25">Used for the Chat tab — Claude-powered spending insights.</p>
+        </div>
+
+        <div className="space-y-1.5">
+          <label className="text-2xs uppercase tracking-widest text-mist/55 block">Profile</label>
+          <textarea value={profile} onChange={(e) => setProfile(e.target.value)} rows={4}
+            placeholder="Describe your spending habits, goals, and what matters to you (e.g. 'I travel frequently, care about lounge access, and spend heavily on dining')…"
+            className="w-full bg-ink border border-rim rounded-xl px-3 py-2 text-sm text-mist placeholder:text-mist/25 focus:border-gold/40 outline-none resize-none leading-relaxed" />
+          <p className="text-2xs text-mist/25">Helps the AI give you more relevant advice.</p>
+        </div>
+
+        <button onClick={saveSettings} disabled={saving}
+          className="bg-gold-shimmer text-ink px-5 py-2 rounded-xl text-sm font-semibold shadow-glow-gold hover:opacity-90 disabled:opacity-50 transition-all">
+          {saving ? "Saving…" : "Save settings"}
+        </button>
+      </section>
+
+      </div>
     </div>
   );
 }

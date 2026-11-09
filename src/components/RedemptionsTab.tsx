@@ -234,8 +234,8 @@ function MilesSection({ data, reload, setError }: {
       </div>
 
       {cardPerks.length > 0 && (
-        <section className="space-y-2.5">
-          <h3 className="text-xs uppercase tracking-widest text-mist/60">Granted by your cards</h3>
+        <details className="disclosure-panel">
+          <summary>Lounge access from your cards <span>{cardPerks.length} cards · view benefits</span></summary>
           <div className="grid sm:grid-cols-2 gap-3">
             {cardPerks.map(({ card, spec }) => (
               <div key={card.id} className="rounded-2xl border border-dashed border-rim bg-surface/60 p-4">
@@ -264,7 +264,7 @@ function MilesSection({ data, reload, setError }: {
               </div>
             ))}
           </div>
-        </section>
+        </details>
       )}
 
       {form && (
@@ -339,26 +339,17 @@ function MilesSection({ data, reload, setError }: {
                               </span>
                             )}
                           </div>
-                          <div className="text-xs text-mist/55 mt-1 space-x-2">
-                            {l.member_id && <span className="font-mono">{l.member_id}</span>}
-                            {l.linked_card && <span>· via {l.linked_card}</span>}
-                          </div>
-                          {(l.tier_expires_on || l.notes) && (
-                            <div className="text-xs mt-1.5 space-y-0.5">
-                              {l.tier_expires_on && (
-                                <div className={
-                                  tierExp.kind === "expired" ? "text-ruby"
-                                  : tierExp.kind === "soon" ? "text-amber" : "text-mist/50"}>
-                                  {tierExp.kind === "expired"
-                                    ? `Tier expired ${fmtDate(l.tier_expires_on)}`
-                                    : tierExp.kind === "soon"
-                                    ? `Tier expires in ${tierExp.days} days — ${fmtDate(l.tier_expires_on)}`
-                                    : `Tier valid till ${fmtDate(l.tier_expires_on)}`}
-                                </div>
-                              )}
-                              {l.notes && <div className="text-mist/55">{l.notes}</div>}
+                          {l.tier_expires_on && <p className={`text-xs mt-1 ${tierExp.kind === "expired" ? "text-ruby" : tierExp.kind === "soon" ? "text-amber" : "text-mist/60"}`}>
+                            {tierExp.kind === "expired" ? `Tier expired ${fmtDate(l.tier_expires_on)}` : tierExp.kind === "soon" ? `Tier expires in ${tierExp.days} days — ${fmtDate(l.tier_expires_on)}` : `Tier valid till ${fmtDate(l.tier_expires_on)}`}
+                          </p>}
+                          {(l.member_id || l.linked_card || l.notes) && <details className="mt-2 text-xs text-mist/60"><summary>Membership details</summary>
+                            <div className="mt-2 space-y-1">
+                              {l.member_id && <p className="font-mono break-all">{l.member_id}</p>}
+                              {l.linked_card && <p>Via {l.linked_card}</p>}
+                              {l.notes && <p>{l.notes}</p>}
                             </div>
-                          )}
+                          </details>}
+
                         </div>
                         <div className="text-right shrink-0">
                           {l.points_balance !== null && (
@@ -942,11 +933,11 @@ export default function RedemptionsTab({
   }
 
   return (
-    <div className={`${sub === "partners" || sub === "deals" ? "max-w-5xl" : "max-w-4xl"} mx-auto px-4 sm:px-6 py-8 space-y-6 pb-20`}>
+    <div className={`${sub === "partners" || sub === "deals" ? "max-w-5xl" : "max-w-4xl"} mx-auto px-4 sm:px-6 py-8 space-y-4 pb-6`}>
       <header>
         <h1 className="font-serif text-2xl font-semibold text-mist">Redemptions</h1>
         <p className="text-sm text-mist/60 mt-1">
-          Everything you&apos;re holding that&apos;s worth redeeming — and when it runs out.
+          Make more of what you hold.
         </p>
       </header>
 

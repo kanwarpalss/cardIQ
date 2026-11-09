@@ -5,6 +5,7 @@
 // reach the same partners) and the small visual atoms reused by the snapshot,
 // the routes and the grid.
 
+import { CardFace } from "@/components/CardVisual";
 import { CARD_REGISTRY } from "@/lib/cards/registry";
 import { getCardArt } from "@/lib/card-art";
 import { latestBalanceByCard } from "@/lib/perks";
@@ -128,8 +129,5 @@ export function RatioPill({ ratio, best, title }: { ratio: Ratio; best?: boolean
 }
 
 export function CardSwatch({ card, className = "" }: { card: WalletCard; className?: string }) {
-  return (
-    <span aria-hidden className={`inline-block w-6 h-4 rounded-[4px] border border-black/10 shrink-0 ${className}`}
-      style={{ background: card.gradient }} />
-  );
+  return <span aria-hidden="true" className={`card-swatch ${className}`}><CardFace productKey={card.product_key} /></span>;
 }

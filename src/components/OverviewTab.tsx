@@ -120,7 +120,7 @@ export default function OverviewTab({
   }
 
   return (
-    <div className="max-w-6xl mx-auto px-6 py-8 space-y-8 pb-20">
+    <div className="max-w-6xl mx-auto px-6 py-8 space-y-5 pb-6">
 
       {/* ── Greeting + hero ─────────────────────────────────────────────── */}
       <div className="overview-intro">
@@ -147,8 +147,8 @@ export default function OverviewTab({
             <button onClick={() => onNavigate("Spend")}>Explore spending ↗</button>
           </div>
         </section>
-        <HeroStat label="Back in your pocket" value={fmtINR(month.refunds)} tone="sage" note="Refunded this month" icon="↙" />
-        <HeroStat label="Cards in your corner" value={fmtNum(cards.length)} tone="lilac" note="Your connected collection" icon="▱" />
+        <HeroStat label="Refunds this month" value={fmtINR(month.refunds)} tone="sage" icon="↙" />
+        <HeroStat label="Connected cards" value={fmtNum(cards.length)} tone="lilac" icon="▱" />
       </div>
 
       {/* ── Card tiles ──────────────────────────────────────────────────── */}
@@ -165,7 +165,7 @@ export default function OverviewTab({
             body="Add your first card to start tracking spend, milestones and rewards."
             cta="Add a card →" onClick={() => onNavigate("Cards")} />
         ) : (
-          <div className="wallet-strip grid md:grid-cols-2 xl:grid-cols-3 gap-4">
+          <div className="wallet-strip grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {cards.map((c) => {
               const spec = CARD_REGISTRY[c.product_key];
               const spent = month.perCard[c.last4] || 0;
@@ -342,15 +342,14 @@ function MilestoneStrip({ pct, caption, toGo, reached }: {
   );
 }
 
-function HeroStat({ label, value, tone, note, icon }: {
-  label: string; value: string; tone: "sage" | "lilac"; note: string; icon: string;
+function HeroStat({ label, value, tone, icon }: {
+  label: string; value: string; tone: "sage" | "lilac"; icon: string;
 }) {
   return (
     <div className={`summary-card summary-${tone}`}>
       <span className="summary-icon" aria-hidden="true">{icon}</span>
       <div className="summary-value">{value}</div>
       <div className="summary-label">{label}</div>
-      <div className="summary-note">{note}</div>
     </div>
   );
 }

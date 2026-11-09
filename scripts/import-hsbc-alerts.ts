@@ -28,6 +28,7 @@ import { createClient } from "@supabase/supabase-js";
 import { ImapFlow } from "imapflow";
 import { simpleParser } from "mailparser";
 import { parseTxnEmailWithFallback } from "../src/lib/parsers/registry";
+import { loadExcludedMessageIds } from "../src/lib/excluded-messages";
 import { categorizeFull } from "../src/lib/categorize";
 import { cleanMerchant } from "../src/lib/merchant-clean";
 import { enrichAmount } from "../src/lib/txn-enrich";
@@ -136,9 +137,11 @@ async function main() {
     }
   }
   const knownLast4s = new Set([...cardByLast4.keys(), ...CARD_ROWS.map((c) => c.last4)]);
+  const excludedIds = await loadExcludedMessageIds(sb, uid);
 
   async function handleMail(mail: Mail, fromDump: boolean): Promise<"txn" | "dup" | "skipped"> {
-    const parsed = parseTxnEmailWithFallback(mail.from, mail.subject, mail.body, "", knownLast4s);
+    // A statement proved this email was never a charge (migration 023).
+    const parsed = excludedIds.has(mail.id) ? null : parseTxnEmailWithFallback(mail.from, mail.subject, mail.body, "", knownLast4s);
     const seenRow = {
       user_id: uid,
       gmail_message_id: mail.id,

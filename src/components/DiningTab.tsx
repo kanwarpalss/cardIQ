@@ -190,9 +190,14 @@ export default function DiningTab() {
 
       {!loading && !error && restaurants && restaurants.length > 0 && (
         <div className="space-y-3">
-          {restaurants.map((r) => (
+          <p className="text-xs text-mist/60">{restaurants.length} results loaded{restaurants.length > 6 ? " · first 6 shown" : ""}</p>
+          {restaurants.slice(0, 6).map((r) => (
             <RestaurantCard key={r.id} restaurant={r} />
           ))}
+          {restaurants.length > 6 && <details className="disclosure-panel" key={query}>
+            <summary>{restaurants.length - 6} more restaurants <span>Expand results</span></summary>
+            <div className="space-y-3 mt-3">{restaurants.slice(6).map(r => <RestaurantCard key={r.id} restaurant={r} />)}</div>
+          </details>}
         </div>
       )}
     </div>

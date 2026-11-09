@@ -44,6 +44,7 @@ const monthShort = (key: string) => {
 export default function InsightsTab() {
   const { data: rawAllData, loading } = useTransactionsAll();
   const allData = rawAllData as AllData | null;
+  const [lens, setLens] = useState<"categories" | "merchants" | "items">("categories");
   const [month, setMonth] = useState<string>(monthKey(new Date()));
 
   // Debits only, INR + foreign (converted at txn-date rate) — same rows
@@ -151,21 +152,21 @@ export default function InsightsTab() {
   if (!allData || debits.length === 0) {
     return (
       <div className="max-w-6xl mx-auto px-6 py-16 text-center text-mist/55 text-sm">
-        No transactions yet — sync Gmail from the Spend tab first, then come back for the good stuff.
+        No transactions yet. Open Transactions → Update spend data to sync Gmail.
       </div>
     );
   }
 
   return (
-    <div className="max-w-6xl mx-auto px-6 py-8 space-y-6 pb-20">
+    <div className="insights-view space-y-4">
 
       {/* Header + month focus */}
       <div className="flex items-center justify-between gap-3 flex-wrap">
         <div>
-          <h2 className="font-serif text-xl font-semibold text-gold">Insights</h2>
-          <p className="text-xs text-mist/55 mt-0.5">Where the money actually went.</p>
+          <h2 className="font-serif text-xl font-semibold text-gold">Spending trends</h2>
+          <p className="text-xs text-mist/55 mt-0.5">Monthly view across all cards. Transaction filters stay in Transactions.</p>
         </div>
-        <select value={month} onChange={(e) => setMonth(e.target.value)}
+        <select aria-label="Trend month" value={month} onChange={(e) => setMonth(e.target.value)}
           className="bg-surface border border-rim rounded-lg px-3 py-1.5 text-xs text-mist focus:border-gold/40 outline-none">
           {[...months].reverse().map((m) => (
             <option key={m.key} value={m.key}>{monthLabel(m.key)}</option>
@@ -212,9 +213,12 @@ export default function InsightsTab() {
         </div>
       </section>
 
-      {/* Category tiers + top merchants */}
-      <div className="grid md:grid-cols-2 gap-4">
-        <section className="rounded-2xl border border-rim bg-surface p-5 shadow-card space-y-3">
+      <div className="view-switch" role="group" aria-label="Trend breakdown">
+        {([['categories', 'Categories'], ['merchants', 'Merchants'], ['items', 'Items']] as const).map(([key,label]) => <button type="button" key={key} aria-pressed={lens === key} onClick={() => setLens(key)}>{label}</button>)}
+      </div>
+      {/* One lens at a time; every original breakdown remains available. */}
+      <div>
+        <section hidden={lens !== "categories"} className="trend-breakdown rounded-2xl border border-rim bg-surface p-5 shadow-card space-y-3">
           <div className="flex items-baseline justify-between">
             <h3 className="text-2xs uppercase tracking-widest text-mist/55">By category · {monthLabel(month)}</h3>
             <span className="text-2xs text-mist/45">{monthTxns.length} txns</span>
@@ -236,21 +240,21 @@ export default function InsightsTab() {
                   <span className="text-2xs text-mist/30 w-8 text-right shrink-0">{c.count}×</span>
                 </div>
                 {c.subs.length > 0 && (
-                  <div className="mt-1 space-y-0.5">
+                  <details className="mt-2 text-xs text-mist/60"><summary>{c.subs.length} subcategories</summary><div className="mt-2 space-y-1">
                     {c.subs.map(([sub, total]) => (
                       <div key={sub} className="flex justify-between items-baseline pl-4 text-xs">
                         <span className={sub === "(no subcategory)" ? "text-mist/35 italic" : "text-mist/55"}>↳ {sub}</span>
                         <span className="text-mist/45 tabular-nums">{fmt(total)}</span>
                       </div>
                     ))}
-                  </div>
+                  </div></details>
                 )}
               </div>
             ))}
           </div>
         </section>
 
-        <section className="rounded-2xl border border-rim bg-surface p-5 shadow-card space-y-3">
+        <section hidden={lens !== "merchants"} className="trend-breakdown rounded-2xl border border-rim bg-surface p-5 shadow-card space-y-3">
           <h3 className="text-2xs uppercase tracking-widest text-mist/55">Top merchants · {monthLabel(month)}</h3>
           {topMerchants.length === 0 && (
             <div className="text-xs text-mist/45 italic py-4">No spend in {monthLabel(month)}.</div>
@@ -269,10 +273,10 @@ export default function InsightsTab() {
       </div>
 
       {/* Top items — powered by matched order emails */}
-      <section className="rounded-2xl border border-rim bg-surface p-5 shadow-card space-y-3">
+      <section hidden={lens !== "items"} className="trend-breakdown rounded-2xl border border-rim bg-surface p-5 shadow-card space-y-3">
         <div className="flex items-baseline justify-between">
           <h3 className="text-2xs uppercase tracking-widest text-mist/55">Top items · {monthLabel(month)}</h3>
-          <span className="text-2xs text-mist/45">from matched order emails</span>
+          <span className="text-2xs text-mist/45">from order emails</span>
         </div>
         {topItems.length === 0 ? (
           <div className="text-xs text-mist/45 italic py-2">

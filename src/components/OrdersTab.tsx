@@ -66,7 +66,7 @@ const SOURCE_LABELS: Record<string, string> = {
   smartbuy: "SmartBuy", apple: "Apple",
 };
 
-const PAGE = 50;
+const PAGE = 10;
 const EIGHT_YEARS_DAYS = 365 * 8;
 const fmt = (n: number | string | null | undefined) =>
   n == null ? "—" : "₹" + Math.round(Number(n)).toLocaleString("en-IN");
@@ -412,12 +412,20 @@ export default function OrdersTab() {
         <div className="space-y-1">
           <h1 className="font-serif text-2xl text-gold tracking-tight">Orders</h1>
           <p className="text-sm text-mist/60 leading-relaxed max-w-xl">
-            Everything you&apos;ve bought — items, cost and merchant — no matter how you paid.
-            Voucher-paid orders live here too, even when no card charge lines up.
+            Purchases, baskets and payment links — including voucher-paid orders.
           </p>
         </div>
-        <div className="text-right space-y-1">
-          <div className="flex items-center justify-end gap-2">
+        <details className="record-tools text-sm text-mist/60"><summary>Import &amp; data tools</summary>
+        {stats.dups > 0 && (
+          <button onClick={() => setShowDups((v) => !v)}
+            title="Same-purchase duplicates (a merchant + its payment gateway report the one charge)"
+            className={`px-2.5 py-1.5 rounded-lg text-xs font-medium transition-all border ${
+              showDups ? "bg-surface text-mist border-rim" : "text-mist/45 hover:text-mist/70 border-transparent"
+            }`}>
+            {showDups ? "Hiding none" : `Hidden: ${stats.dups} duplicate${stats.dups === 1 ? "" : "s"}`}
+          </button>
+        )}
+          <div className="flex items-center justify-end gap-2 mt-3">
             <select value={uploadSource} onChange={(e) => setUploadSource(e.target.value as "amazon" | "blinkit")} disabled={importing}
               className="bg-ink border border-rim rounded-lg px-2 py-1.5 text-xs text-mist/75 focus:border-gold/40 outline-none disabled:opacity-40">
               <option value="amazon">Amazon CSV</option>
@@ -439,15 +447,15 @@ export default function OrdersTab() {
             {backfilling ? "Loading…" : "Load full history (8y)"}
           </button>
           {backfillMsg && <div className="text-2xs text-mist/55 max-w-xs">{backfillMsg}</div>}
-        </div>
+        </details>
       </header>
 
       {/* Summary tiles */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         {[
-          { label: "Orders", value: stats.total.toLocaleString("en-IN") },
+          { label: "All orders", value: stats.total.toLocaleString("en-IN") },
           { label: "Total value", value: fmt(stats.value) },
-          { label: "Linked to a card", value: stats.linked.toLocaleString("en-IN") },
+          { label: "Card or voucher", value: stats.linked.toLocaleString("en-IN") },
           { label: "With item detail", value: stats.withItems.toLocaleString("en-IN") },
         ].map((s) => (
           <div key={s.label} className="stat-tile">
@@ -468,28 +476,15 @@ export default function OrdersTab() {
           className="bg-ink border border-rim rounded-lg px-2 py-1.5 text-xs text-mist/75 focus:border-gold/40 outline-none">
           {sources.map((s) => <option key={s} value={s}>{s === "all" ? "All sources" : SOURCE_LABELS[s] ?? s}</option>)}
         </select>
-        <div className="flex items-center gap-1">
-          {(["all", "linked", "unlinked"] as LinkFilter[]).map((l) => (
-            <button key={l} onClick={() => setLink(l)}
-              className={`px-2.5 py-1.5 rounded-lg text-xs font-medium transition-all ${
-                link === l ? "bg-surface text-gold border border-gold/25" : "text-mist/55 hover:text-mist border border-transparent"
-              }`}>
-              {l === "all" ? "All" : l === "linked" ? "Card-linked" : "Unlinked"}
-            </button>
-          ))}
-        </div>
-        {stats.dups > 0 && (
-          <button onClick={() => setShowDups((v) => !v)}
-            title="Same-purchase duplicates (a merchant + its payment gateway report the one charge)"
-            className={`px-2.5 py-1.5 rounded-lg text-xs font-medium transition-all border ${
-              showDups ? "bg-surface text-mist border-rim" : "text-mist/45 hover:text-mist/70 border-transparent"
-            }`}>
-            {showDups ? "Hiding none" : `Hidden: ${stats.dups} duplicate${stats.dups === 1 ? "" : "s"}`}
-          </button>
-        )}
+        <select aria-label="Order payment link" value={link} onChange={e => setLink(e.target.value as LinkFilter)} className="record-select">
+          <option value="all">All payments</option><option value="linked">Card-linked</option><option value="unlinked">Unlinked</option>
+        </select>
+
       </div>
 
       {/* Ledger */}
+      {showDups && <p className="text-xs text-gold">Including {stats.dups} duplicates · <button type="button" onClick={() => setShowDups(false)} className="underline">Hide duplicates</button></p>}
+
       {loading ? (
         <div className="flex items-center justify-center py-20 text-mist/55 text-sm">Loading…</div>
       ) : error ? (
@@ -497,7 +492,7 @@ export default function OrdersTab() {
       ) : filtered.length === 0 ? (
         <div className="rounded-2xl border border-rim bg-surface p-10 text-center text-sm text-mist/70">
           {orders.length === 0
-            ? "No orders parsed yet. Run an order sync (Spend → Sync), or load full history above."
+            ? "No purchases yet. Open Import & data tools to add an export or load email history."
             : "No orders match these filters."}
         </div>
       ) : (
@@ -560,10 +555,10 @@ export default function OrdersTab() {
           <div className="flex items-center justify-between text-xs text-mist/55">
             <span>{filtered.length.toLocaleString("en-IN")} order{filtered.length === 1 ? "" : "s"}</span>
             <div className="flex items-center gap-1.5">
-              <button disabled={page <= 1} onClick={() => setPage((p) => p - 1)}
+              <button aria-label="Previous orders page" disabled={page <= 1} onClick={() => setPage((p) => p - 1)}
                 className="px-2 py-1 rounded border border-rim hover:border-gold/30 disabled:opacity-20 transition-all">‹</button>
               <span className="tabular-nums">{page} / {pageCount}</span>
-              <button disabled={page >= pageCount} onClick={() => setPage((p) => p + 1)}
+              <button aria-label="Next orders page" disabled={page >= pageCount} onClick={() => setPage((p) => p + 1)}
                 className="px-2 py-1 rounded border border-rim hover:border-gold/30 disabled:opacity-20 transition-all">›</button>
             </div>
           </div>

@@ -32,7 +32,7 @@ describe("phone navigation", () => {
     expect(html).toContain(`>${count > 99 ? "99+" : count}</span>`);
   });
 });
-it.each([null, "Minimum amount must be less than the maximum"])("discloses active constraints and errors while phone controls are folded away (%s)", amountError => {
+it.each([null, "Minimum amount must be less than the maximum"])("discloses active constraints and errors while controls are folded away on every screen (%s)", amountError => {
   const noop = () => {};
   const html = renderToStaticMarkup(createElement(SpendFilterPanel, {
     search: "", onSearchChange: noop, from: "", to: "", onPeriodChange: noop,
@@ -45,7 +45,7 @@ it.each([null, "Minimum amount must be less than the maximum"])("discloses activ
   }));
   expect(html).toContain("Filters · 5 active");
   expect(html).toContain('aria-expanded="false" aria-controls="spend-refinements"');
-  expect(html).toContain('id="spend-refinements" class="hidden md:grid');
+  expect(html).toContain('id="spend-refinements" class="hidden grid-cols');
   expect(html).toContain("Reset all");
   if (amountError) expect(html).toContain(`role="alert">${amountError}</p>`);
 });

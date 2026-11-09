@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import dynamic from "next/dynamic";
+const SpendTrends = dynamic(() => import("./InsightsTab"), { loading: () => <p className="text-sm text-mist/60 py-8">Loading trends…</p> });
 import { useTransactionsAll, refreshTransactionsAll, patchTransactionsAll } from "@/lib/transactions-cache";
 import { CARD_REGISTRY } from "@/lib/cards/registry";
 import { CATEGORIES, SUBCATEGORIES } from "@/lib/categories";
@@ -55,6 +57,8 @@ function defaultRange() {
 // `focusCard` is a deep-link from Overview card tiles: a fresh object per click
 // (identity change re-fires the effect even for the same card).
 export default function SpendTab({ focusCard }: { focusCard?: { last4: string } | null }) {
+  const [view, setView] = useState<"transactions" | "trends">("transactions");
+  const [trendsOpened, setTrendsOpened] = useState(false);
   const [initialRange] = useState(defaultRange);
   const init = initialRange;
   const [fromDate, setFromDate] = useState(init.from);
@@ -308,9 +312,15 @@ export default function SpendTab({ focusCard }: { focusCard?: { last4: string } 
 
   // ── Render ─────────────────────────────────────────────────────────────────
   return (
-    <div className="max-w-6xl mx-auto px-6 py-8 space-y-6 pb-20">
+    <div className="max-w-6xl mx-auto px-6 py-8 space-y-4 pb-6">
 
-      <div><p className="eyebrow mb-2">THE EVERYDAY EDIT</p><h1 className="font-serif text-3xl font-semibold">Your spending, in focus.</h1></div>
+      <div><p className="eyebrow mb-2">THE EVERYDAY EDIT</p><h1 className="font-serif text-3xl font-semibold">Your spending.</h1></div>
+      <div className="view-switch" role="group" aria-label="Spend view">
+        <button type="button" aria-pressed={view === "transactions"} onClick={() => setView("transactions")}>Transactions</button>
+        <button type="button" aria-pressed={view === "trends"} onClick={() => { setTrendsOpened(true); setView("trends"); }}>Trends</button>
+      </div>
+      <div hidden={view !== "trends"}>{trendsOpened && <SpendTrends />}</div>
+      <div hidden={view !== "transactions"} className="space-y-4">
       <SpendFilterPanel
         search={search}
         onSearchChange={setSearch}
@@ -354,6 +364,12 @@ export default function SpendTab({ focusCard }: { focusCard?: { last4: string } 
       )}
 
       {allData && (
+        <details className="spend-overview">
+          <summary>
+            <span><span className="net-label">Net spend</span><strong>{fmt(aggregates.summary.net)}</strong><small>{aggregates.summary.debit_count} spends · {aggregates.summary.credit_count} refunds{foreignTxns.length > 0 ? ` · ${foreignTxns.length} foreign` : ""}</small></span>
+            <span className="net-expand">All totals ⌄</span>
+          </summary>
+          <div className="p-3">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
           <StatTile
             label="Total spend"
@@ -374,14 +390,14 @@ export default function SpendTab({ focusCard }: { focusCard?: { last4: string } 
             accent="gold"
           />
           <StatTile
-            label="Results"
-            value={String(filteredTxns.length)}
-            sub={foreignTxns.length > 0
-              ? `incl. ${foreignTxns.length} foreign currency, converted to INR`
-              : `transaction${filteredTxns.length === 1 ? "" : "s"}`}
+            label="Foreign entries"
+            value={String(foreignTxns.length)}
+            sub="INR at transaction date"
             accent="muted"
           />
         </div>
+          </div>
+        </details>
       )}
 
       {allData && filteredTxns.length === 0 && (
@@ -410,9 +426,10 @@ export default function SpendTab({ focusCard }: { focusCard?: { last4: string } 
           )}
 
           {/* ── Foreign currency panel (renders only if foreign txns exist) ── */}
-          <ForeignCurrencyPanel transactions={foreignTxns} />
+          {foreignTxns.length > 0 && <details className="disclosure-panel"><summary>Foreign currency <span>{foreignTxns.length} transactions · compare rates</span></summary><div className="mt-3"><ForeignCurrencyPanel transactions={foreignTxns} /></div></details>}
 
           {(aggregates.by_category.length > 0 || aggregates.by_merchant.length > 0) && (
+            <details className="disclosure-panel"><summary>Filtered breakdown <span>Categories &amp; merchants</span></summary><div className="mt-3">
             <SpendBreakdowns
               categories={aggregates.by_category}
               merchants={aggregates.by_merchant}
@@ -425,6 +442,7 @@ export default function SpendTab({ focusCard }: { focusCard?: { last4: string } 
               subcategories={subcategorySuggestions}
               onMerchantSave={handleMerchantSave}
             />
+            </div></details>
           )}
         </>
       )}
@@ -466,6 +484,7 @@ export default function SpendTab({ focusCard }: { focusCard?: { last4: string } 
           </div>
         </details>
       </section>
+      </div>
     </div>
   );
 }

@@ -2,6 +2,7 @@ import { google } from "googleapis";
 import { createClient } from "@/lib/supabase/server";
 import { decrypt } from "@/lib/crypto";
 import { parseTxnEmailWithFallback } from "@/lib/parsers/registry";
+import { loadExcludedMessageIds } from "@/lib/excluded-messages";
 import { categorize } from "@/lib/categorize";
 import { cleanMerchant } from "@/lib/merchant-clean";
 import { enrichAmount } from "@/lib/txn-enrich";
@@ -117,6 +118,8 @@ export async function POST(req: Request) {
 
   const cardByLast4 = new Map((cardsRes.data || []).map((c) => [c.last4, c.id]));
   const knownLast4s = new Set((cardsRes.data || []).map((c) => c.last4));
+  // Kept in its own table, so it survives the wipe below.
+  const excludedIds = await loadExcludedMessageIds(supabase, user.id);
   const merchantMap = new Map((mappingsRes.data || []).map((m) => [m.raw_name.toLowerCase(), m]));
 
   const auth = getOAuthClient();
@@ -242,7 +245,8 @@ export async function POST(req: Request) {
             internalDate = parseInt(full.data.internalDate ?? "0", 10);
             if (internalDate > maxInternalDate) maxInternalDate = internalDate;
 
-            const parsed = parseTxnEmailWithFallback(fromHdr, subject, bodyTxt, full.data.snippet || "", knownLast4s);
+            // A statement proved this email was never a charge (migration 023).
+            const parsed = excludedIds.has(msgId) ? null : parseTxnEmailWithFallback(fromHdr, subject, bodyTxt, full.data.snippet || "", knownLast4s);
 
             if (parsed) {
               result.parsed++;

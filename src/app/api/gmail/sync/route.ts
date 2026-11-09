@@ -3,6 +3,7 @@ import { decrypt } from "@/lib/crypto";
 import { pickMailSource } from "@/lib/gmail/mail-source";
 import { friendlyGmailSyncError } from "@/lib/gmail/errors";
 import { parseTxnEmailWithFallback } from "@/lib/parsers/registry";
+import { loadExcludedMessageIds } from "@/lib/excluded-messages";
 import { categorizeFull } from "@/lib/categorize";
 import { isMissingColumnError } from "@/lib/supabase/errors";
 import { cleanMerchant } from "@/lib/merchant-clean";
@@ -105,6 +106,7 @@ export async function POST(req: Request) {
 
   const cardByLast4 = new Map((cards || []).map((c) => [c.last4, c.id]));
   const knownLast4s = new Set((cards || []).map((c) => c.last4));
+  const excludedIds = await loadExcludedMessageIds(supabase, user.id);
 
   // Two-tier categories arrived with migration 012 — probe for the column
   // once and degrade to category-only if it isn't there yet. A missing
@@ -376,7 +378,8 @@ export async function POST(req: Request) {
             lastBody = emailBody;
             lastFrom = fromHeader;
 
-            const parsed = parseTxnEmailWithFallback(fromHeader, subject, emailBody, snippet, knownLast4s);
+            // A statement proved this email was never a charge (migration 023).
+            const parsed = excludedIds.has(msgId) ? null : parseTxnEmailWithFallback(fromHeader, subject, emailBody, snippet, knownLast4s);
 
             if (!parsed) {
               result.skipped++;

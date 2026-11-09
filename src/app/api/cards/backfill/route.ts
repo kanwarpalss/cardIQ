@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { parseTxnEmailWithFallback } from "@/lib/parsers/registry";
+import { loadExcludedMessageIds } from "@/lib/excluded-messages";
 import { categorize } from "@/lib/categorize";
 import { cleanMerchant } from "@/lib/merchant-clean";
 import { enrichAmount } from "@/lib/txn-enrich";
@@ -68,6 +69,7 @@ export async function POST(req: Request) {
 
   const cardByLast4 = new Map((allCards || []).map((c) => [c.last4, c.id]));
   const knownLast4s = new Set((allCards || []).map((c) => c.last4));
+  const excludedIds = await loadExcludedMessageIds(supabase, user.id);
 
   // ── PHASE A: link orphan transactions to the new card ───────────────────
   const { count: linkedCount, error: linkErr } = await supabase
@@ -102,6 +104,8 @@ export async function POST(req: Request) {
   const errors: string[] = [];
 
   for (const row of orphanRows || []) {
+    // A statement proved this email was never a charge (migration 023).
+    if (excludedIds.has(row.gmail_message_id)) continue;
     const parsed = parseTxnEmailWithFallback(
       row.raw_from || "",
       row.raw_subject || "",
