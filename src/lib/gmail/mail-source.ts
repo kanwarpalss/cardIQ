@@ -225,6 +225,37 @@ export class ImapSource implements MailSource {
     }
   }
 
+  /**
+   * Like search(), but also returns each message's subject, sender and date —
+   * the envelope search() already downloads and throws away. Lets a caller
+   * filter on subject lines BEFORE fetching any bodies (ARCH-12). IMAP-only;
+   * used by the deal finder (scripts/find-deals.ts), not by the sync routes.
+   */
+  async searchHeaders(query: string): Promise<{ id: string; subject: string; from: string; date: string | null }[]> {
+    await this.ensureConnected();
+    const lock = await this.client.getMailboxLock(ALL_MAIL);
+    try {
+      const uids = await this.client.search({ gmailraw: query }, { uid: true });
+      if (!uids || uids.length === 0) return [];
+      const out: { id: string; subject: string; from: string; date: string | null }[] = [];
+      for await (const msg of this.client.fetch(uids, { uid: true, envelope: true }, { uid: true })) {
+        if (msg.emailId == null) continue;
+        const id = toCanonicalId(msg.emailId);
+        this.idToUid.set(id, msg.uid);
+        const f = msg.envelope?.from?.[0];
+        out.push({
+          id,
+          subject: msg.envelope?.subject ?? "",
+          from: [f?.name, f?.address].filter(Boolean).join(" "),
+          date: msg.envelope?.date ? new Date(msg.envelope.date).toISOString() : null,
+        });
+      }
+      return out;
+    } finally {
+      lock.release();
+    }
+  }
+
   async fetchMessage(id: string): Promise<NormalizedMessage> {
     // Checked BEFORE connecting: a caller programming error (fetching an id
     // search() never returned) should fail immediately, not after a network

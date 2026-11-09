@@ -20,11 +20,13 @@ import {
 } from "@/lib/redemptions-data";
 import MissingTableNotice from "./MissingTableNotice";
 import TransferPartners from "./redemptions/TransferPartners";
+import LiveDeals from "./redemptions/LiveDeals";
 
 // ── Sub-section chrome ──────────────────────────────────────────────────────
 
 const SUBS = [
   { key: "partners", label: "Transfer partners", hint: "Where each card's points can go, and the best routes" },
+  { key: "deals",    label: "Live deals",     hint: "Points sales and transfer bonuses found in your mail and on points blogs" },
   { key: "miles",    label: "Miles & status", hint: "Airline and hotel programs" },
   { key: "points",   label: "Card points",    hint: "Point balances per card" },
   { key: "vouchers", label: "Vouchers",       hint: "Certificates you've been granted" },
@@ -940,7 +942,7 @@ export default function RedemptionsTab({
   }
 
   return (
-    <div className={`${sub === "partners" ? "max-w-5xl" : "max-w-4xl"} mx-auto px-4 sm:px-6 py-8 space-y-6 pb-20`}>
+    <div className={`${sub === "partners" || sub === "deals" ? "max-w-5xl" : "max-w-4xl"} mx-auto px-4 sm:px-6 py-8 space-y-6 pb-20`}>
       <header>
         <h1 className="font-serif text-2xl font-semibold text-mist">Redemptions</h1>
         <p className="text-sm text-mist/60 mt-1">
@@ -970,6 +972,7 @@ export default function RedemptionsTab({
       </nav>
 
       {sub === "partners" && <TransferPartners data={data} onAddCard={() => onNavigate("Cards")} />}
+      {sub === "deals" && <LiveDeals data={data} />}
       {sub === "miles" && <MilesSection data={data} reload={reload} setError={setError} />}
       {sub === "points" && (
         <PointsSection data={data} reload={reload} setError={setError} onNavigate={onNavigate} />
