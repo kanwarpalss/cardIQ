@@ -158,7 +158,7 @@ export default function AutoSync({ onSynced }: { onSynced?: () => void }) {
   if (phase.kind === "idle") return null;
 
   const base =
-    "fixed z-50 bottom-4 right-4 max-w-sm rounded-xl border px-4 py-2.5 text-sm shadow-card backdrop-blur-md";
+    "sync-notice fixed z-50 bottom-4 right-4 max-w-sm rounded-xl border px-4 py-2.5 text-sm shadow-card backdrop-blur-md";
 
   if (phase.kind === "syncing") {
     return (

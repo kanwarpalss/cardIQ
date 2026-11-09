@@ -289,3 +289,26 @@ body:has(.more-drawer[open]) { overflow: hidden; }
 /* Secondary copy must remain legible on white and pastel surfaces. */
 .workspace :where(.text-mist\/35, .text-mist\/40, .text-mist\/45, .text-mist\/50, .text-mist\/55, .text-mist\/60) { color: #536960; }
 .wallet-strip :where(.text-white\/35, .text-white\/45, .text-white\/50, .text-white\/55) { color: rgba(255,250,240,0.75); }
+
+.fx-mobile-label { display: none; }
+@media (max-width: 1023px) {
+  .sync-notice { bottom: calc(80px + env(safe-area-inset-bottom)); left: max(16px, env(safe-area-inset-left)); right: max(16px, env(safe-area-inset-right)); margin-left: auto; max-width: 384px; overflow-wrap: anywhere; }
+}
+@media (max-width: 767px) {
+  .fx-summary { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; text-align: left; }
+  .fx-summary > * { min-width: 0; overflow-wrap: anywhere; }
+  .fx-summary > :nth-child(2) { justify-self: end; flex-wrap: wrap; justify-content: end; text-align: right; }
+  .fx-summary > .fx-native { grid-column: 1 / -1; text-align: left; font-size: 18px; }
+  .fx-summary > :nth-child(4) { text-align: left; }
+  .fx-transaction { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .fx-transaction > * { min-width: 0; overflow-wrap: anywhere; }
+  .fx-transaction > :nth-child(2) { grid-column: 1; grid-row: 1; flex-wrap: wrap; }
+  .fx-transaction > :first-child { grid-column: 2; grid-row: 1; text-align: right; }
+  .fx-transaction > :nth-child(3) { grid-column: 1 / -1; text-align: left; }
+  .fx-transaction > :nth-child(4) { text-align: left; }
+  .fx-merchant { white-space: normal; overflow: visible; }
+  .fx-mobile-label { display: block; font-size: 10px; font-weight: 400; color: #536960; margin-bottom: 3px; }
+  .fx-totals > div { align-items: start; gap: 12px; }
+  .fx-totals > div > span { min-width: 0; overflow-wrap: anywhere; }
+  .fx-totals > div > span:last-child { text-align: right; }
+}

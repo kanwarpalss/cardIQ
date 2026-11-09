@@ -80,7 +80,9 @@ export default function ForeignCurrencyPanel({ transactions }: Props) {
   function toInrToday(amount: number, currency: string | null | undefined): number | null {
     if (!currency) return amount;
     const rate = todayRates[currency.toUpperCase()];
-    return rate == null ? null : amount * rate;
+    if (rate == null || !Number.isFinite(rate) || rate <= 0) return null;
+    const converted = amount * rate;
+    return Number.isFinite(converted) ? converted : null;
   }
 
   if (transactions.length === 0) return null;
@@ -122,6 +124,8 @@ export default function ForeignCurrencyPanel({ transactions }: Props) {
   const totalMissing       = list.reduce((s, b) => s + b.missingRateCount,   0);
   const totalMissingToday  = list.reduce((s, b) => s + b.missingTodayCount,  0);
   const inrDelta           = grandInrToday - grandInrHistorical;
+  // Comparing a partial total with a complete total invents an exchange-rate change.
+  const canCompare = todayLoaded && totalMissingToday === 0 && totalMissing === 0;
 
   async function refreshRates() {
     setRefreshing(true);
@@ -179,9 +183,10 @@ export default function ForeignCurrencyPanel({ transactions }: Props) {
             <div key={b.currency} className="rounded-xl bg-raised border border-rim overflow-hidden">
               <button
                 onClick={() => setExpandedCurrency(expanded ? null : b.currency)}
+                aria-expanded={expanded}
                 className="w-full px-4 py-3 hover:bg-hover transition-colors"
               >
-                <div className="grid grid-cols-[auto_1fr_auto_auto_auto] items-baseline gap-x-4 text-sm">
+                <div className="fx-summary grid grid-cols-[auto_1fr_auto_auto_auto] items-baseline gap-x-4 text-sm">
                   <div className="flex items-center gap-2">
                     <span className="text-xs font-mono font-semibold text-gold/80 w-10 text-left">{b.currency}</span>
                     <svg className={`w-3 h-3 opacity-30 transition-transform ${expanded ? "rotate-180" : ""}`}
@@ -195,7 +200,7 @@ export default function ForeignCurrencyPanel({ transactions }: Props) {
                       <span className="text-amber">· {b.missingRateCount} missing rate</span>
                     )}
                   </div>
-                  <span className="font-semibold text-mist/90 tabular-nums text-right">
+                  <span className="fx-native font-semibold text-mist/90 tabular-nums text-right">
                     {formatCurrency(b.totalOriginal, b.currency)}
                   </span>
                   <span className="font-medium text-gold/90 tabular-nums text-right text-xs">
@@ -203,9 +208,9 @@ export default function ForeignCurrencyPanel({ transactions }: Props) {
                     <div className="text-2xs text-mist/55 font-normal">at txn date</div>
                   </span>
                   <span className="font-medium text-mist/70 tabular-nums text-right text-xs">
-                    {todayLoaded
-                      ? `₹${Math.round(b.totalInrToday).toLocaleString("en-IN")}`
-                      : <span className="text-mist/30">…</span>}
+                    {!todayLoaded ? "Loading…" : b.missingTodayCount > 0
+                      ? "Unavailable"
+                      : `₹${Math.round(b.totalInrToday).toLocaleString("en-IN")}`}
                     <div className="text-2xs text-mist/55 font-normal">today</div>
                   </span>
                 </div>
@@ -219,26 +224,29 @@ export default function ForeignCurrencyPanel({ transactions }: Props) {
                     const inrHist  = Number(t.amount_inr ?? 0);
                     const inrToday = toInrToday(native, t.original_currency);
                     return (
-                      <div key={t.id} className="px-4 py-2.5 grid grid-cols-[auto_1fr_auto_auto_auto] items-baseline gap-x-4 text-xs">
+                      <div key={t.id} className="fx-transaction px-4 py-2.5 grid grid-cols-[auto_1fr_auto_auto_auto] items-baseline gap-x-4 text-xs">
                         <span className="text-mist/60 tabular-nums">
                           {new Date(t.txn_at).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "2-digit" })}
                         </span>
                         <div className="min-w-0 flex items-center gap-2">
-                          <span className="text-mist/80 truncate">{t.merchant || "—"}</span>
+                          <span className="fx-merchant text-mist/80 truncate">{t.merchant || "—"}</span>
                           <span className="text-2xs text-mist/55 shrink-0">··{t.card_last4}</span>
                         </div>
                         <span className={`tabular-nums font-medium text-right ${
                           t.txn_type === "credit" ? "text-emerald" : "text-mist/90"
                         }`}>
+                          <span className="fx-mobile-label">Original</span>
                           {t.txn_type === "credit" ? "+" : ""}
                           {formatCurrency(native, t.original_currency)}
                         </span>
                         <span className="tabular-nums text-right text-gold/80">
+                          <span className="fx-mobile-label">At txn date</span>
                           {inrHist > 0
                             ? `≈ ₹${Math.round(inrHist).toLocaleString("en-IN")}`
                             : <span className="text-amber" title="Click 'Refresh missing rates' to fetch">no rate</span>}
                         </span>
                         <span className="tabular-nums text-right text-mist/50">
+                          <span className="fx-mobile-label">Today</span>
                           {inrToday != null
                             ? `≈ ₹${Math.round(inrToday).toLocaleString("en-IN")}`
                             : <span className="text-mist/30">…</span>}
@@ -272,11 +280,12 @@ export default function ForeignCurrencyPanel({ transactions }: Props) {
       </div>
 
       {/* ── Grand totals ──────────────────────────────────────────────────── */}
-      <div className="space-y-1.5 pt-3 border-t border-wire text-xs">
+      <div className="fx-totals space-y-1.5 pt-3 border-t border-wire text-xs">
         <div className="flex items-center justify-between">
           <span className="text-mist/50">Total in INR (rates on txn dates):</span>
           <span className="font-semibold text-gold tabular-nums">
             ₹{Math.round(grandInrHistorical).toLocaleString("en-IN")}
+            {totalMissing > 0 && <span className="text-2xs text-amber ml-1">({totalMissing} unpriced)</span>}
           </span>
         </div>
         <div className="flex items-center justify-between">
@@ -284,7 +293,7 @@ export default function ForeignCurrencyPanel({ transactions }: Props) {
             Total in INR (today&apos;s live rate{todayAsOf ? `, ${todayAsOf}` : ""}):
           </span>
           <span className="font-semibold text-mist/80 tabular-nums">
-            {todayLoaded ? `₹${Math.round(grandInrToday).toLocaleString("en-IN")}` : "Loading…"}
+            {!todayLoaded ? "Loading…" : totalMissingToday > 0 ? "Unavailable" : `₹${Math.round(grandInrToday).toLocaleString("en-IN")}`}
             {todayLoaded && totalMissingToday > 0 && (
               <span className="text-2xs text-amber ml-1">({totalMissingToday} unpriced)</span>
             )}
@@ -293,12 +302,14 @@ export default function ForeignCurrencyPanel({ transactions }: Props) {
         <div className="flex items-center justify-between pt-1 border-t border-wire/50">
           <span className="text-2xs text-mist/55">Difference (today vs txn date):</span>
           <span className={`text-2xs tabular-nums font-medium ${
-            inrDelta >= 0 ? "text-amber" : "text-emerald"
+            !canCompare ? "text-mist/60" : inrDelta >= 0 ? "text-amber" : "text-emerald"
           }`}>
+            {!todayLoaded ? "Loading rates…" : !canCompare ? "Unavailable — incomplete rates" : <>
             {inrDelta >= 0 ? "+" : ""}₹{Math.round(inrDelta).toLocaleString("en-IN")}
             {grandInrHistorical > 0 && (
               <span className="text-mist/55 ml-1">({((inrDelta / grandInrHistorical) * 100).toFixed(1)}%)</span>
             )}
+            </>}
           </span>
         </div>
       </div>
