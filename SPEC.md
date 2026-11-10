@@ -371,6 +371,8 @@ A one-stop credit-card destination: syncs bank transaction emails from Gmail (Ax
 
 ## §7 Known Issues
 
+**Open 2026-11-10 (deal finder, minor):** an email whose AI read failed is retried only while it is still inside a run's look-back window (normally 2 days). The one failure so far — an October "15% more points on Marriott Bonvoy conversion" reminder — will not be retried, but that same offer was already stored from two sibling emails. Fix if it recurs: widen the look-back to the oldest retryable error.
+
 **Closed 2026-11-09 — UX clutter/redundancy:** Standalone Insights, default expanded Spend refinements, stacked transfer views, long route prose and long default ledger pages are replaced as described in §6. The Orders summary's old “Linked to a card” wording incorrectly included voucher-funded records; `order-summary.test.ts` protects the corrected label and full-history count. Current issuer artwork represents each product; exact older issued generations/networks may differ. Existing statement/source-data issues below are unchanged by this presentation pass.
 
 **Open 2026-11-09 (statement reconciliation):** the full list is `~/.cardiq-statements/reconcile-report.json`.
