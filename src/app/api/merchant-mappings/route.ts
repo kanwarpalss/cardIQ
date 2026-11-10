@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
-import { isMissingColumnError } from "@/lib/supabase/errors";
+import { upsertMerchantMapping } from "@/lib/merchant-mapping-store";
+import { withOptionalColumns } from "@/lib/supabase/optional-columns";
 
 /**
  * POST /api/merchant-mappings
@@ -13,6 +14,9 @@ import { isMissingColumnError } from "@/lib/supabase/errors";
  * - Upserts into merchant_mappings so future syncs pick it up.
  * - Bulk-updates transactions so the change is instant in the UI.
  * - Works for rename-only, category-only, or both in one call.
+ *
+ * To change only SOME of a merchant's transactions, the review popup uses
+ * /api/transactions/bulk-category instead.
  */
 export async function POST(req: NextRequest) {
   const supabase = await createClient();
@@ -39,48 +43,26 @@ export async function POST(req: NextRequest) {
   // 1. Upsert the mapping so future syncs respect this override.
   //    raw_name is keyed to the current display name (post-clean). The sync
   //    uses a two-pass lookup (raw first, then cleaned) so this is reliable.
-  let { error: mapErr } = await supabase
-    .from("merchant_mappings")
-    .upsert(
-      { user_id: user.id, raw_name: old_name, normalized_name: new_name, category, subcategory: sub },
-      { onConflict: "user_id,raw_name" }
-    );
-
-  // Migration 012 not yet run: retry without subcategory so rename/recategorize
-  // still works. Subcategory column in merchant_mappings won't exist until migration applied.
-  if (mapErr && isMissingColumnError(mapErr, "subcategory")) {
-    ({ error: mapErr } = await supabase
-      .from("merchant_mappings")
-      .upsert(
-        { user_id: user.id, raw_name: old_name, normalized_name: new_name, category },
-        { onConflict: "user_id,raw_name" }
-      ));
-  }
-
-  if (mapErr) {
-    return NextResponse.json({ error: mapErr.message }, { status: 500 });
-  }
+  const mapErr = await upsertMerchantMapping(supabase, user.id, {
+    raw_name: old_name, normalized_name: new_name, category, subcategory: sub,
+  });
+  if (mapErr) return NextResponse.json({ error: mapErr }, { status: 500 });
 
   // 2. Bulk-update all transactions for this user that currently have the old name.
-  let { data: updated, error: txnErr } = await supabase
-    .from("transactions")
-    .update({ merchant: new_name, category, subcategory: sub })
-    .eq("user_id", user.id)
-    .eq("merchant", old_name)
-    .select("id");
-
-  if (txnErr && isMissingColumnError(txnErr, "subcategory")) {
-    ({ data: updated, error: txnErr } = await supabase
+  const { result } = await withOptionalColumns(
+    { merchant: new_name, category, subcategory: sub },
+    ["subcategory"], // migration 012 not yet run
+    (values) => supabase
       .from("transactions")
-      .update({ merchant: new_name, category })
+      .update(values)
       .eq("user_id", user.id)
       .eq("merchant", old_name)
-      .select("id"));
+      .select("id"),
+  );
+
+  if (result.error) {
+    return NextResponse.json({ error: result.error.message }, { status: 500 });
   }
 
-  if (txnErr) {
-    return NextResponse.json({ error: txnErr.message }, { status: 500 });
-  }
-
-  return NextResponse.json({ updated: updated?.length ?? 0 });
+  return NextResponse.json({ updated: result.data?.length ?? 0 });
 }

@@ -5,8 +5,18 @@ import dynamic from "next/dynamic";
 const SpendTrends = dynamic(() => import("./InsightsTab"), { loading: () => <p className="text-sm text-mist/60 py-8">Loading trends…</p> });
 import { useTransactionsAll, refreshTransactionsAll, patchTransactionsAll } from "@/lib/transactions-cache";
 import { CARD_REGISTRY } from "@/lib/cards/registry";
-import { CATEGORIES, SUBCATEGORIES } from "@/lib/categories";
+import {
+  aliasKey,
+  effectiveTaxonomy,
+  sanitizeTaxonomy,
+  subcategoryMap,
+  type CategoryPair,
+  type CreateSuggestion,
+  type TaxonomyOp,
+} from "@/lib/category-taxonomy";
+import { sendTaxonomyOp, useCategoryTaxonomy } from "@/lib/category-taxonomy-cache";
 import { ymd } from "@/lib/format";
+import CategoryManager from "./category/CategoryManager";
 import {
   buildSpendSearchContext,
   filterSpendTransactions,
@@ -25,6 +35,7 @@ type Txn = {
   original_amount:   number | null;
   merchant: string | null; category: string | null;
   subcategory?: string | null;
+  category_manual?: boolean | null;
   txn_at: string; txn_type: "debit" | "credit"; notes?: string | null;
 };
 type CardRow = { id: string; last4: string; nickname: string | null; product_key: string };
@@ -75,6 +86,8 @@ export default function SpendTab({ focusCard }: { focusCard?: { last4: string } 
   const { data: rawAllData, loading } = useTransactionsAll();
   const allData = rawAllData as AllData | null;
   const [recat,    setRecat]    = useState<string | null>(null);
+  const { data: categoryData } = useCategoryTaxonomy();
+  const [managerOpen, setManagerOpen] = useState(false);
 
   useEffect(() => {
     if (focusCard) setSelectedCards(new Set([focusCard.last4]));
@@ -110,7 +123,9 @@ export default function SpendTab({ focusCard }: { focusCard?: { last4: string } 
     setRecat("Re-categorizing…");
     const res  = await fetch("/api/recategorize", { method: "POST" });
     const json = await res.json();
-    setRecat(res.ok ? `✓ Re-categorized ${json.updated}/${json.total} transactions` : `Error: ${json.error}`);
+    setRecat(res.ok
+      ? `✓ Re-categorized ${json.updated}/${json.total} transactions${json.kept_manual ? ` · kept ${json.kept_manual} you set by hand` : ""}`
+      : `Error: ${json.error}`);
     if (res.ok) refreshTransactionsAll();
   }
 
@@ -135,7 +150,10 @@ export default function SpendTab({ focusCard }: { focusCard?: { last4: string } 
       method: "PATCH", headers: { "Content-Type": "application/json" },
       body: JSON.stringify(patch),
     });
-    if (!res.ok) return;
+    if (!res.ok) {
+      const json = await res.json().catch(() => ({}));
+      throw new Error(json.error || `Couldn't save the category (error ${res.status}).`);
+    }
     patchTransactionsAll((prev) => ({
       ...prev,
       transactions: (prev.transactions as Txn[]).map((t) =>
@@ -144,10 +162,53 @@ export default function SpendTab({ focusCard }: { focusCard?: { last4: string } 
               ...t,
               ...(patch.category !== undefined ? { category: patch.category } : {}),
               ...(patch.subcategory !== undefined ? { subcategory: patch.subcategory } : {}),
+              category_manual: true,
             }
           : t
       ),
     }));
+  }
+
+  async function handleBulkCategory(ids: string[], pair: CategoryPair, rememberMerchant: string | null) {
+    const res = await fetch("/api/transactions/bulk-category", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ids, category: pair.category, subcategory: pair.subcategory, remember_merchant: rememberMerchant }),
+    });
+    const json = await res.json().catch(() => ({}));
+    // A partial failure still changed some rows — reload so the screen is true.
+    if (!res.ok) { void refreshTransactionsAll(); throw new Error(json.error || `Couldn't save (error ${res.status}).`); }
+    const picked = new Set(ids);
+    patchTransactionsAll((prev) => ({
+      ...prev,
+      transactions: (prev.transactions as Txn[]).map((t) =>
+        picked.has(t.id) ? { ...t, category: pair.category, subcategory: pair.subcategory, category_manual: true } : t
+      ),
+    }));
+    return { updated: Number(json.updated ?? ids.length), remembered: json.remembered === true };
+  }
+
+  // Picker "+ New …" rows. Before migration 025 the name is simply saved on
+  // the transaction (as custom values always were) and shows up from there.
+  async function handleCreateCategory(s: CreateSuggestion): Promise<CategoryPair | null> {
+    const pair: CategoryPair = s.kind === "category"
+      ? { category: s.category, subcategory: null }
+      : { category: s.category, subcategory: s.subcategory };
+    if (categoryData?.table_missing) return pair;
+    if (s.kind === "category" || s.newCategory) await sendTaxonomyOp({ op: "add_category", name: s.category });
+    if (s.kind === "subcategory") await sendTaxonomyOp({ op: "add_subcategory", category: s.category, name: s.subcategory });
+    return pair;
+  }
+
+  async function runCategoryOp(op: TaxonomyOp): Promise<string> {
+    const res = await sendTaxonomyOp(op);
+    const { transactions: t, rules } = res.moved ?? { transactions: 0, rules: 0 };
+    if (t || rules) {
+      await refreshTransactionsAll();
+      if (categoryFilter) { setCategoryFilter(null); setSubcategoryFilter(null); }
+    }
+    const moved = [t ? `${t} transaction${t === 1 ? "" : "s"}` : "", rules ? `${rules} merchant rule${rules === 1 ? "" : "s"}` : ""]
+      .filter(Boolean).join(" and ");
+    return moved ? `${res.summary} Updated ${moved}.` : res.summary;
   }
 
   async function handleTxnNotesChange(txnId: string, notes: string) {
@@ -175,12 +236,24 @@ export default function SpendTab({ focusCard }: { focusCard?: { last4: string } 
   }
 
   // ── Memos ──────────────────────────────────────────────────────────────────
-  const allCategories = useMemo(() => {
-    const set = new Set<string>(CATEGORIES);
+  // One tree for every category control on this screen: the user's saved
+  // list (or the defaults) plus any value already on a transaction.
+  const taxonomy = useMemo(
+    () => effectiveTaxonomy(sanitizeTaxonomy(categoryData?.taxonomy), allData?.transactions ?? []),
+    [categoryData, allData],
+  );
+  const allCategories = useMemo(() => taxonomy.map((n) => n.name), [taxonomy]);
+
+  // Transactions per category and per category+subcategory, for the manager.
+  const categoryCounts = useMemo(() => {
+    const map = new Map<string, number>();
     for (const t of allData?.transactions ?? []) {
-      if (t.category?.trim()) set.add(t.category.trim());
+      const cat = t.category?.trim() || "Uncategorized";
+      map.set(aliasKey(cat), (map.get(aliasKey(cat)) ?? 0) + 1);
+      const sub = t.subcategory?.trim();
+      if (sub) map.set(aliasKey(cat, sub), (map.get(aliasKey(cat, sub)) ?? 0) + 1);
     }
-    return Array.from(set);
+    return map;
   }, [allData]);
 
   const allMerchants = useMemo(() => {
@@ -197,20 +270,8 @@ export default function SpendTab({ focusCard }: { focusCard?: { last4: string } 
     return Array.from(set);
   }, [allData]);
 
-  // Subcategory suggestions per category: canonical list (SUBCATEGORIES) +
-  // anything the user has already typed on a transaction in that category —
-  // same "custom values resurface" behaviour as categories.
-  const subcategorySuggestions = useMemo(() => {
-    const map: Record<string, Set<string>> = {};
-    for (const [cat, subs] of Object.entries(SUBCATEGORIES)) map[cat] = new Set(subs);
-    for (const t of allData?.transactions ?? []) {
-      const cat = t.category?.trim();
-      const sub = t.subcategory?.trim();
-      if (!cat || !sub) continue;
-      (map[cat] ??= new Set()).add(sub);
-    }
-    return Object.fromEntries(Object.entries(map).map(([k, v]) => [k, Array.from(v)]));
-  }, [allData]);
+  // Subcategories per category, from the same tree (filter panel shape).
+  const subcategorySuggestions = useMemo(() => subcategoryMap(taxonomy), [taxonomy]);
 
   const filterSubcategories = useMemo(() => {
     const set = new Set<string>();
@@ -315,10 +376,23 @@ export default function SpendTab({ focusCard }: { focusCard?: { last4: string } 
     <div className="max-w-6xl mx-auto px-6 py-8 space-y-4 pb-6">
 
       <div><p className="eyebrow mb-2">THE EVERYDAY EDIT</p><h1 className="font-serif text-3xl font-semibold">Your spending.</h1></div>
-      <div className="view-switch" role="group" aria-label="Spend view">
-        <button type="button" aria-pressed={view === "transactions"} onClick={() => setView("transactions")}>Transactions</button>
-        <button type="button" aria-pressed={view === "trends"} onClick={() => { setTrendsOpened(true); setView("trends"); }}>Trends</button>
+      <div className="spend-view-row">
+        <div className="view-switch" role="group" aria-label="Spend view">
+          <button type="button" aria-pressed={view === "transactions"} onClick={() => setView("transactions")}>Transactions</button>
+          <button type="button" aria-pressed={view === "trends"} onClick={() => { setTrendsOpened(true); setView("trends"); }}>Trends</button>
+        </div>
+        <button type="button" className="manage-categories-button" aria-haspopup="dialog" onClick={() => setManagerOpen(true)}>
+          Manage categories
+        </button>
       </div>
+      <CategoryManager
+        open={managerOpen}
+        onClose={() => setManagerOpen(false)}
+        taxonomy={taxonomy}
+        counts={categoryCounts}
+        tableMissing={categoryData?.table_missing === true}
+        runOp={runCategoryOp}
+      />
       <div hidden={view !== "trends"}>{trendsOpened && <SpendTrends />}</div>
       <div hidden={view !== "transactions"} className="space-y-4">
       <SpendFilterPanel
@@ -412,14 +486,17 @@ export default function SpendTab({ focusCard }: { focusCard?: { last4: string } 
             <TransactionsTable
               resultKey={filterKey}
               transactions={filteredTxns}
+              allTransactions={allData.transactions}
               cards={allData.cards}
-              categories={allCategories}
-              subcategories={subcategorySuggestions}
+              taxonomy={taxonomy}
               ordersByTxn={ordersByTxn}
               vouchersByTxn={vouchersByTxn}
               existingNotes={existingNotes}
               onMerchantSave={handleMerchantSave}
               onCategoryChange={handleTxnCategoryChange}
+              onBulkCategory={handleBulkCategory}
+              onCreateCategory={handleCreateCategory}
+              onManageCategories={() => setManagerOpen(true)}
               onNotesChange={handleTxnNotesChange}
               onNotesBulk={handleNotesBulk}
             />
@@ -438,8 +515,8 @@ export default function SpendTab({ focusCard }: { focusCard?: { last4: string } 
                 setCategoryFilter(value);
                 setSubcategoryFilter(null);
               }}
-              allCategories={allCategories}
-              subcategories={subcategorySuggestions}
+              taxonomy={taxonomy}
+              onCreateCategory={handleCreateCategory}
               onMerchantSave={handleMerchantSave}
             />
             </div></details>

@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import MerchantPanel from "./MerchantPanel";
+import type { CategoryPair, CreateSuggestion, Taxonomy } from "@/lib/category-taxonomy";
 
 type CategoryRow = {
   category: string;
@@ -22,8 +23,8 @@ interface Props {
   merchants: MerchantRow[];
   categoryFilter: string | null;
   onCategoryFilter: (value: string | null) => void;
-  allCategories: string[];
-  subcategories: Record<string, string[]>;
+  taxonomy: Taxonomy;
+  onCreateCategory: (s: CreateSuggestion) => Promise<CategoryPair | null>;
   onMerchantSave: (
     oldName: string,
     newName: string,
@@ -68,8 +69,8 @@ export default function SpendBreakdowns({
   merchants,
   categoryFilter,
   onCategoryFilter,
-  allCategories,
-  subcategories,
+  taxonomy,
+  onCreateCategory,
   onMerchantSave,
 }: Props) {
   const [view, setView] = useState<"category" | "merchant">("category");
@@ -204,8 +205,8 @@ export default function SpendBreakdowns({
           <MerchantPanel
             merchants={visibleMerchants}
             maxTotal={maxMerchantTotal}
-            categories={allCategories}
-            subcategories={subcategories}
+            taxonomy={taxonomy}
+            onCreateCategory={onCreateCategory}
             onSave={onMerchantSave}
           />
         )}

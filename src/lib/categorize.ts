@@ -8,13 +8,14 @@
 // Rules without a subcategory leave it null — the txn renders as just the
 // category. Every keyword lives in exactly ONE rule (ARCH-04).
 
-const RULES: { category: string; subcategory?: string; keywords: string[] }[] = [
+export const CATEGORY_RULES: readonly { category: string; subcategory?: string; keywords: string[] }[] = [
   {
-    category: "Rent",
+    category: "Home & Bills",
+    subcategory: "Rent",
     keywords: ["red giraffe", "nobroker", "no broker", "magicbricks", "rent payment", "housingedge"],
   },
   {
-    category: "Vouchers",
+    category: "Vouchers & Rewards",
     keywords: ["gyftr", "gyfter", "smartbuy", "voucher", "wogo"],
   },
   {
@@ -22,21 +23,22 @@ const RULES: { category: string; subcategory?: string; keywords: string[] }[] = 
     keywords: ["heads up for tails", "huft", "supertails", "petsworld", "dogspot", "wiggles"],
   },
   {
-    category: "Sports & Recreation",
+    category: "Sports & Fitness",
     subcategory: "Pickleball",
     keywords: ["pickleball", "huddle"],
   },
   {
-    category: "Sports & Recreation",
+    category: "Sports & Fitness",
     subcategory: "Padel",
     keywords: ["padel"],
   },
   {
-    category: "Sports & Recreation",
+    category: "Sports & Fitness",
     keywords: ["playo", "kheloo", "khelomore", "sportskeeda"],
   },
   {
-    category: "CRED Payments",
+    category: "Financial",
+    subcategory: "CRED Payments",
     keywords: ["cred ", "cred store", "cred ecom", "cred club", "cred cash"],
   },
   {
@@ -143,7 +145,8 @@ const RULES: { category: string; subcategory?: string; keywords: string[] }[] = 
     keywords: ["bookmyshow", "bms", "pvr", "inox"],
   },
   {
-    category: "Fuel",
+    category: "Transport",
+    subcategory: "Fuel",
     keywords: [
       "petrol", "hpcl", "indian oil", "iocl", "bpcl", "bharat petroleum",
       "shell", "essar oil", "reliance petrol",
@@ -198,11 +201,19 @@ const RULES: { category: string; subcategory?: string; keywords: string[] }[] = 
     keywords: ["decathlon"],
   },
   {
-    category: "Utilities",
+    // FASTag above the bills rule: "Airtel FASTag recharge" is a toll, not a
+    // phone bill. Same slot the old Utilities rule held, so no other rule's
+    // precedence changes.
+    category: "Transport",
+    subcategory: "FASTag",
+    keywords: ["fastag"],
+  },
+  {
+    category: "Home & Bills",
     keywords: [
       "electricity", "bescom", "tata power", "adani electric",
       "airtel", "jio", "vi ", "vodafone", "bsnl", "tata sky",
-      "dish tv", "d2h", "recharge", "fastag", "broadband",
+      "dish tv", "d2h", "recharge", "broadband",
     ],
   },
   {
@@ -223,7 +234,8 @@ const RULES: { category: string; subcategory?: string; keywords: string[] }[] = 
     keywords: ["mutual fund", "groww", "zerodha", "kuvera"],
   },
   {
-    category: "Financial",
+    // Before the EMI rule (its old position) so "Tanishq Gold EMI" stays Jewellery.
+    category: "Shopping",
     subcategory: "Jewellery",
     keywords: ["malabar gold", "jewellery", "jewelry", "gold"],
   },
@@ -232,7 +244,8 @@ const RULES: { category: string; subcategory?: string; keywords: string[] }[] = 
     keywords: ["emi"],
   },
   {
-    category: "Rewards",
+    category: "Vouchers & Rewards",
+    subcategory: "Reward Credits",
     keywords: [
       "icici reward", "reward 360", "reward points",
     ],
@@ -244,7 +257,7 @@ export type CategoryResult = { category: string; subcategory: string | null };
 export function categorizeFull(merchant: string | null | undefined): CategoryResult {
   if (!merchant) return { category: "Uncategorized", subcategory: null };
   const lower = merchant.toLowerCase();
-  for (const rule of RULES) {
+  for (const rule of CATEGORY_RULES) {
     if (rule.keywords.some((k) => lower.includes(k))) {
       return { category: rule.category, subcategory: rule.subcategory ?? null };
     }

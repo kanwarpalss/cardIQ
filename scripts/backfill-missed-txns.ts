@@ -22,7 +22,9 @@ for (const line of readFileSync(join(process.cwd(), ".env.local"), "utf8").split
 import { createClient } from "@supabase/supabase-js";
 import { parseTxnEmailWithFallback, type ParsedTxn } from "../src/lib/parsers/registry";
 import { loadExcludedMessageIds } from "../src/lib/excluded-messages";
-import { categorize } from "../src/lib/categorize";
+import { categorizeFull } from "../src/lib/categorize";
+import { resolveTxnCategory } from "../src/lib/category-taxonomy";
+import { loadCategoryAliases } from "../src/lib/category-taxonomy-store";
 import { cleanMerchant } from "../src/lib/merchant-clean";
 import { enrichAmount } from "../src/lib/txn-enrich";
 import { normalizeMojibake } from "../src/lib/gmail/mail-source";
@@ -43,6 +45,7 @@ async function main() {
   const knownLast4s = new Set((cardsRes.data || []).map((c) => c.last4));
   const excludedIds = await loadExcludedMessageIds(sb, uid);
   const merchantMap = new Map((mappingsRes.data || []).map((m) => [m.raw_name.toLowerCase(), m]));
+  const categoryAliases = await loadCategoryAliases(sb, uid);
 
   type Row = { gmail_message_id: string; raw_subject: string; raw_body: string; raw_from: string; internal_date: number | null };
   const rows: Row[] = [];
@@ -81,7 +84,7 @@ async function main() {
     const cleanedK = cleaned?.toLowerCase() ?? "";
     const mapping = (rawKey && merchantMap.get(rawKey)) || (cleanedK && merchantMap.get(cleanedK)) || null;
     const merchant = mapping?.normalized_name ?? cleaned ?? null;
-    const category = mapping?.category ?? categorize(merchant);
+    const { category } = resolveTxnCategory(mapping, categorizeFull(merchant), categoryAliases);
     const txnAt = row.internal_date ? new Date(row.internal_date) : parsed.txn_at;
 
     if (samples.length < 20) {

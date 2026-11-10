@@ -5,6 +5,8 @@ import { friendlyGmailSyncError } from "@/lib/gmail/errors";
 import { parseTxnEmailWithFallback } from "@/lib/parsers/registry";
 import { loadExcludedMessageIds } from "@/lib/excluded-messages";
 import { categorizeFull } from "@/lib/categorize";
+import { resolveTxnCategory } from "@/lib/category-taxonomy";
+import { loadCategoryAliases } from "@/lib/category-taxonomy-store";
 import { isMissingColumnError } from "@/lib/supabase/errors";
 import { cleanMerchant } from "@/lib/merchant-clean";
 import { enrichAmount } from "@/lib/txn-enrich";
@@ -134,6 +136,9 @@ export async function POST(req: Request) {
   const merchantMap = new Map(
     mappingsRaw.map((m) => [m.raw_name.toLowerCase(), m])
   );
+  // The user's category renames/deletes (migration 025) — applied on top of
+  // rules and mappings so a renamed category never comes back from a sync.
+  const categoryAliases = await loadCategoryAliases(supabase, user.id);
 
   // ── Read the forward cursor ───────────────────────────────────────────────
   // gmail_sync_state holds the internalDate (ms) of the most-recent email
@@ -414,9 +419,7 @@ export async function POST(req: Request) {
             // A mapping is the user's explicit choice and wins wholesale —
             // including its subcategory (or deliberate lack of one). Keyword
             // rules only apply when no mapping exists.
-            const ruled = categorizeFull(merchant);
-            const category = mapping?.category ?? ruled.category;
-            const subcategory = mapping ? (mapping.subcategory ?? null) : ruled.subcategory;
+            const { category, subcategory } = resolveTxnCategory(mapping, categorizeFull(merchant), categoryAliases);
 
             // Centralized foreign-currency handling. enrichAmount looks up the
             // historical FX rate for the txn date when needed, so foreign

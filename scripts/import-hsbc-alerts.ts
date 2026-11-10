@@ -30,6 +30,8 @@ import { simpleParser } from "mailparser";
 import { parseTxnEmailWithFallback } from "../src/lib/parsers/registry";
 import { loadExcludedMessageIds } from "../src/lib/excluded-messages";
 import { categorizeFull } from "../src/lib/categorize";
+import { resolveTxnCategory } from "../src/lib/category-taxonomy";
+import { loadCategoryAliases } from "../src/lib/category-taxonomy-store";
 import { cleanMerchant } from "../src/lib/merchant-clean";
 import { enrichAmount } from "../src/lib/txn-enrich";
 import { decrypt } from "../src/lib/crypto";
@@ -107,6 +109,7 @@ async function main() {
 
   const cardByLast4 = new Map((cardsRes.data || []).map((c) => [c.last4 as string, c.id as string]));
   const merchantMap = new Map((mappingsRes.data || []).map((m) => [(m.raw_name as string).toLowerCase(), m]));
+  const categoryAliases = await loadCategoryAliases(sb, uid);
 
   for (const c of CARD_ROWS) {
     if (cardByLast4.has(c.last4)) {
@@ -172,9 +175,11 @@ async function main() {
     const cleanedKey = cleaned?.toLowerCase() ?? "";
     const mapping = (rawKey ? merchantMap.get(rawKey) : undefined) ?? (cleanedKey ? merchantMap.get(cleanedKey) : undefined);
     const merchant = (mapping?.normalized_name as string | undefined) ?? cleaned ?? null;
-    const ruled = categorizeFull(merchant);
-    const category = (mapping?.category as string | undefined) ?? ruled.category;
-    const subcategory = mapping ? ((mapping.subcategory as string | null) ?? null) : ruled.subcategory;
+    const { category, subcategory } = resolveTxnCategory(
+      mapping as { category?: string | null; subcategory?: string | null } | undefined,
+      categorizeFull(merchant),
+      categoryAliases,
+    );
 
     const money = parsed.currency ? `${parsed.currency} ${parsed.amount_original}` : `INR ${parsed.amount_inr}`;
     const line = `${istDay(txnAt)}  ...${parsed.card_last4}  ${parsed.txn_type.padEnd(6)}  ${money.padEnd(14)}  ${merchant ?? "(no merchant)"}  [${category}]${parsed.low_confidence ? "  LOW-CONFIDENCE" : ""}`;

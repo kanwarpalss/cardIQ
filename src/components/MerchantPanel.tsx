@@ -1,68 +1,45 @@
 "use client";
 
 import { useState } from "react";
+import { pairLabel, type CategoryPair, type CreateSuggestion, type Taxonomy } from "@/lib/category-taxonomy";
+import CategoryField from "./category/CategoryField";
 
 type MerchantRow = { merchant: string; total: number; count: number; category: string; subcategory: string | null };
 
 interface Props {
   merchants: MerchantRow[];
   maxTotal: number;
-  /** Canonical + custom categories — the dropdown shows all of these. */
-  categories: string[];
-  /** Per-category subcategory suggestions (canonical + user-typed). */
-  subcategories: Record<string, string[]>;
+  /** The user's category tree — the picker shows all of it at once. */
+  taxonomy: Taxonomy;
+  onCreateCategory: (s: CreateSuggestion) => Promise<CategoryPair | null>;
   /** Called when a rename/recategorize is saved. */
   onSave: (old_name: string, new_name: string, category: string, subcategory: string | null) => Promise<void>;
 }
 
 const fmt = (n: number) => "₹" + Math.round(n).toLocaleString("en-IN");
 
-// Sentinels for the subcategory dropdown (real values are free text).
-const SUB_NONE  = "__none";
-const SUB_OTHER = "__other";
-
-export default function MerchantPanel({ merchants, maxTotal, categories, subcategories, onSave }: Props) {
+export default function MerchantPanel({ merchants, maxTotal, taxonomy, onCreateCategory, onSave }: Props) {
   const [editingMerchant, setEditingMerchant] = useState<string | null>(null);
   const [editName, setEditName] = useState("");
-  const [editCategory, setEditCategory] = useState("");
-  const [customCategory, setCustomCategory] = useState("");
-  const [editSubcategory, setEditSubcategory] = useState<string>(SUB_NONE);
-  const [customSubcategory, setCustomSubcategory] = useState("");
+  const [editPair, setEditPair] = useState<CategoryPair>({ category: "Uncategorized", subcategory: null });
   const [saving, setSaving] = useState(false);
 
   function startEdit(m: MerchantRow) {
     setEditingMerchant(m.merchant);
     setEditName(m.merchant);
-    const isCategoryKnown = categories.includes(m.category);
-    setEditCategory(isCategoryKnown ? m.category : "Other");
-    setCustomCategory(isCategoryKnown ? "" : m.category);
-    const subs = subcategories[m.category] ?? [];
-    setEditSubcategory(m.subcategory === null ? SUB_NONE : subs.includes(m.subcategory) ? m.subcategory : SUB_OTHER);
-    setCustomSubcategory(m.subcategory !== null && !subs.includes(m.subcategory) ? m.subcategory : "");
+    setEditPair({ category: m.category || "Uncategorized", subcategory: m.subcategory });
   }
 
   function cancelEdit() {
     setEditingMerchant(null);
     setEditName("");
-    setEditCategory("");
-    setCustomCategory("");
-    setEditSubcategory(SUB_NONE);
-    setCustomSubcategory("");
   }
 
   async function commitEdit(oldMerchant: string) {
-    const finalCategory = editCategory === "Other"
-      ? customCategory.trim() || "Uncategorized"
-      : editCategory;
     const finalName = editName.trim() || oldMerchant;
-    const finalSubcategory =
-      editSubcategory === SUB_NONE  ? null :
-      editSubcategory === SUB_OTHER ? (customSubcategory.trim() || null) :
-      editSubcategory;
-
     setSaving(true);
     try {
-      await onSave(oldMerchant, finalName, finalCategory, finalSubcategory);
+      await onSave(oldMerchant, finalName, editPair.category, editPair.subcategory);
       setEditingMerchant(null);
     } finally {
       setSaving(false);
@@ -75,7 +52,6 @@ export default function MerchantPanel({ merchants, maxTotal, categories, subcate
         const isEditing = editingMerchant === m.merchant;
 
         if (isEditing) {
-          const subOptions = subcategories[editCategory] ?? [];
           return (
             <div key={m.merchant} className="p-2 -mx-2 rounded border border-gold/30 bg-gold/5 space-y-2">
               {/* Name input */}
@@ -90,57 +66,18 @@ export default function MerchantPanel({ merchants, maxTotal, categories, subcate
                 />
               </div>
 
-              {/* Category dropdown */}
+              {/* Category + subcategory — one picker showing the whole tree */}
               <div className="space-y-1">
-                <label className="text-xs opacity-40 uppercase tracking-wider">Category</label>
-                <select
-                  value={editCategory}
-                  onChange={(e) => { setEditCategory(e.target.value); setEditSubcategory(SUB_NONE); setCustomSubcategory(""); }}
-                  className="w-full bg-panel border border-line rounded px-2 py-1 text-sm focus:border-gold outline-none"
-                >
-                  {categories.map((c) => (
-                    <option key={c} value={c}>{c}</option>
-                  ))}
-                  <option value="Other">Other (type below)</option>
-                </select>
-              </div>
-
-              {/* Custom category input (only shown when "Other" selected) */}
-              {editCategory === "Other" && (
-                <input
-                  placeholder="Type custom category…"
-                  value={customCategory}
-                  onChange={(e) => setCustomCategory(e.target.value)}
-                  onKeyDown={(e) => { if (e.key === "Enter") commitEdit(m.merchant); if (e.key === "Escape") cancelEdit(); }}
-                  className="w-full bg-panel border border-line rounded px-2 py-1 text-sm focus:border-gold outline-none"
+                <span className="text-xs opacity-40 uppercase tracking-wider">Category</span>
+                <CategoryField
+                  label={`Category for every ${m.merchant} transaction`}
+                  context={`Applies to all ${m.count} and future ones`}
+                  value={editPair}
+                  onChange={setEditPair}
+                  taxonomy={taxonomy}
+                  onCreate={onCreateCategory}
                 />
-              )}
-
-              {/* Subcategory dropdown (second tier — optional) */}
-              <div className="space-y-1">
-                <label className="text-xs opacity-40 uppercase tracking-wider">Subcategory</label>
-                <select
-                  value={editSubcategory}
-                  onChange={(e) => setEditSubcategory(e.target.value)}
-                  className="w-full bg-panel border border-line rounded px-2 py-1 text-sm focus:border-gold outline-none"
-                >
-                  <option value={SUB_NONE}>No subcategory</option>
-                  {subOptions.map((s) => (
-                    <option key={s} value={s}>{s}</option>
-                  ))}
-                  <option value={SUB_OTHER}>Other (type below)</option>
-                </select>
               </div>
-
-              {editSubcategory === SUB_OTHER && (
-                <input
-                  placeholder="Type custom subcategory…"
-                  value={customSubcategory}
-                  onChange={(e) => setCustomSubcategory(e.target.value)}
-                  onKeyDown={(e) => { if (e.key === "Enter") commitEdit(m.merchant); if (e.key === "Escape") cancelEdit(); }}
-                  className="w-full bg-panel border border-line rounded px-2 py-1 text-sm focus:border-gold outline-none"
-                />
-              )}
 
               {/* Action buttons */}
               <div className="flex gap-2 pt-1">
@@ -176,13 +113,14 @@ export default function MerchantPanel({ merchants, maxTotal, categories, subcate
                 <button
                   onClick={() => startEdit(m)}
                   title="Edit merchant name, category or subcategory"
-                  className="opacity-0 group-hover:opacity-60 hover:!opacity-100 transition text-xs shrink-0 leading-none"
+                  aria-label={`Edit ${m.merchant}`}
+                  className="opacity-0 group-hover:opacity-60 focus:opacity-100 hover:!opacity-100 transition text-xs shrink-0 leading-none"
                 >
                   ✏
                 </button>
               </div>
               <span className="text-xs opacity-40 shrink-0">
-                {m.subcategory ? `${m.category} · ${m.subcategory}` : m.category}
+                {pairLabel(m.category, m.subcategory)}
               </span>
               <span className="text-gold/80 shrink-0">{fmt(m.total)}</span>
             </div>
