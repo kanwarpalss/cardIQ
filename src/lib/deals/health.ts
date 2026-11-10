@@ -7,6 +7,23 @@ import type { DealRun } from "./types";
 export type HealthLevel = "ok" | "stale" | "failed" | "never";
 export type Health = { level: HealthLevel; text: string };
 
+/**
+ * The job skips itself if a good run finished this recently. It exists only
+ * to stop a double run when PM2 restarts (a reboot right after the 08:30
+ * run). It must stay well under a day: the first run ever, or a catch-up
+ * after the mini was off, can land at any hour, and the next morning's 08:30
+ * run must still go ahead. At 20h it didn't (10 Nov 2026: a 15:41 catch-up
+ * made the 08:30 run skip). Re-runs are cheap — seen items are never re-read.
+ */
+export const MIN_GAP_HOURS = 6;
+
+/** True when a run should be skipped because a good one happened recently. */
+export function ranRecently(lastGoodStartedAt: string | null | undefined, now: number): boolean {
+  if (!lastGoodStartedAt) return false;
+  const t = Date.parse(lastGoodStartedAt);
+  return Number.isFinite(t) && now - t >= 0 && now - t < MIN_GAP_HOURS * 3600000;
+}
+
 /** A daily job is late once its last good run is older than this. */
 export const STALE_AFTER_HOURS = 36;
 

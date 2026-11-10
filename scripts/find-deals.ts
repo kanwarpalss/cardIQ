@@ -44,6 +44,7 @@ import { screen, dealSearchQuery } from "../src/lib/deals/prefilter";
 import { FEEDS, parseRss } from "../src/lib/deals/feeds";
 import { extractDeal, bestBodyText, usageCostUsd, UNREADABLE, type ReadItem, type Usage } from "../src/lib/deals/extract";
 import { planUpsert } from "../src/lib/deals/store";
+import { ranRecently, MIN_GAP_HOURS } from "../src/lib/deals/health";
 import type { DealSource, StoredDeal } from "../src/lib/deals/types";
 
 const args = process.argv.slice(2);
@@ -60,7 +61,6 @@ const numArg = (flag: string) => {
 /** Most AI reads in one run — a cost ceiling; the rest wait for the next run. */
 const LIMIT = numArg("--limit") ?? 80;
 const FIRST_RUN_DAYS = 365;
-const MIN_GAP_HOURS = 20;
 /** An item whose AI read failed this many times is given up on. */
 const MAX_ATTEMPTS = 3;
 const PAGE = 1000;
@@ -113,7 +113,7 @@ async function main() {
     log(`${msg} (dry run continues with no history)`);
   }
   const lastGood = lastRuns?.[0]?.started_at as string | undefined;
-  if (APPLY && !FORCE && lastGood && Date.now() - Date.parse(lastGood) < MIN_GAP_HOURS * 3600000) {
+  if (APPLY && !FORCE && ranRecently(lastGood, Date.now())) {
     log(`last good run ${lastGood} is under ${MIN_GAP_HOURS}h old — nothing to do (use --force to run anyway)`);
     return;
   }

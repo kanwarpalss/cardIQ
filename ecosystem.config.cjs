@@ -18,7 +18,7 @@ module.exports = {
     // Daily deal finder (scripts/find-deals.ts). Not a server: it runs once
     // and exits. PM2 starts it at 08:30 every day (cron_restart) and once
     // whenever PM2 itself starts, so a mini that was off catches up on boot;
-    // the script skips itself if a good run happened in the last 20 hours.
+    // the script skips itself if a good run happened in the last 6 hours.
     // autorestart:false keeps a finished run from being relaunched in a loop.
     {
       name: "cardiq-deals",

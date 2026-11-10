@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { runHealth } from "./health";
+import { runHealth, ranRecently } from "./health";
 import type { DealRun } from "./types";
 
 const NOW = Date.parse("2026-11-09T12:00:00Z");
@@ -36,5 +36,20 @@ describe("runHealth — the job reports its own failure", () => {
 
   it("an unfinished run on top of a good one defers to the good one's age", () => {
     expect(runHealth([run(0.1, false, false), run(40, true)], NOW).level).toBe("stale");
+  });
+});
+
+describe("ranRecently — the restart guard must never eat the daily run", () => {
+  it("does not skip the 08:30 run after a mid-afternoon catch-up the day before (10 Nov 2026)", () => {
+    // First run 9 Nov 15:41 IST; cron fired 10 Nov 08:30 IST, ~16.8 hours later.
+    expect(ranRecently("2026-11-09T10:11:56.015696+00:00", Date.parse("2026-11-10T03:00:03Z"))).toBe(false);
+  });
+  it("skips a PM2 restart minutes after a good run", () => {
+    expect(ranRecently("2026-11-10T03:00:00Z", Date.parse("2026-11-10T03:20:00Z"))).toBe(true);
+  });
+  it("runs with no history, a bad timestamp, or a clock that went backwards", () => {
+    expect(ranRecently(null, NOW)).toBe(false);
+    expect(ranRecently("not a date", NOW)).toBe(false);
+    expect(ranRecently(new Date(NOW + 3600000).toISOString(), NOW)).toBe(false);
   });
 });
