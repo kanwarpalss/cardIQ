@@ -56,7 +56,7 @@ A one-stop credit-card destination: syncs bank transaction emails from Gmail (Ax
 | `src/components/SpendBreakdowns.tsx` | Lower, switchable category/merchant breakdown |
 | `src/lib/spend-filter.ts` | Canonical Spend filtering, enrichment-search context, and result summaries |
 | `src/components/RewardsTab.tsx` | Per-card point balance snapshots + history |
-| `src/components/OffersTab.tsx` | Card offers CRUD with expiry chips + status filters |
+| `src/components/OffersTab.tsx` | REMOVED 2026-11-10 (Offers tab deleted; deals live in Rewards → Live deals) |
 | `src/components/RedemptionsTab.tsx` | Airline/hotel program tiers, member ids, expiry warnings |
 | `src/components/MerchantPanel.tsx` | By-merchant panel with inline name + category editing |
 | `src/lib/perks.ts` | Pure logic for rewards/offers/loyalty (unit-tested in perks.test.ts) |
@@ -175,8 +175,11 @@ A one-stop credit-card destination: syncs bank transaction emails from Gmail (Ax
 | 2026-07-26 | Review shows only an existing, same-user card charge | Treat `review_status='pending'` as proof that a pair exists | De-duplication intentionally leaves duplicate emails in `pending` after releasing their card charge. Status alone therefore created 276 empty “pairs.” The route now requires both `txn_id` and a resolvable charge; historic empty entries were returned to `unmatched` without deleting orders. |
 | 2026-07-27 | A labelled bank transaction amount is authoritative; fallback must never use a later account balance or credit limit | Let generic amount scanning salvage any number after a strict parser declines | An Axis alert for `SGD .1` failed strict parsing and then picked up ₹11,87,242.78 from `Available Limit`. Valid leading-decimal values now parse; malformed labelled foreign amounts are rejected rather than guessed, and an audit repaired the single affected historical row. |
 | 2026-07-27 | Amazon Pay-funded gift cards require exact issuance evidence and are marked with a separate funding source | Infer Amazon Pay funding from a same-brand or same-value order | An evidence-only record keeps the Birkenstock ₹5,000 gift card separate from card-funded Gyftr vouchers and avoids fictional voucher drawdowns. |
+| 2026-11-10 | Offers tab removed; Live deals gets "Add a deal" (manual deals stored in `deals` with a `manual` source) | A separate hand-entered Offers list; a new table or migration for manual deals | Offers was empty while real offers lived in Live deals. One table means manual deals are scored, ranked, merged with found ones and need no migration (RLS already allows the owner to write). Manual rows are deletable only while nothing but KP vouches for them. |
 
 ## §6 Current State (as of 2026-11-10)
+
+**Live deals redesign, add-your-own, Offers removed — 10 Nov 2026:** KP found Offers empty while real offers sat under Live deals, and every tab cluttered. (1) Offers tab deleted from nav/page/code (`OffersTab.tsx` removed; table had 0 rows, left in place); Home's "Active offers" panel became "Live deals" (top 4 usable, `rankLive`, same wording via shared `src/lib/deals/display.ts`). (2) **+ Add a deal** (`src/lib/deals/manual.ts`, `AddDealForm` in `LiveDeals.tsx`): points sale (bonus or % off) or transfer bonus from a bank; builds a normal `deals` row with a `kind:"manual"` source (`DealSourceKind` gained `"manual"`), so it is scored/graded like found deals and a later email merges into it via `findMergeTarget`; validated in the form before sending (program, bank, % limits 300 bonus / <100 discount, end date not past, https link); duplicates refused by unique `dedup_key` (23505); Delete only when every source is manual (`isManualOnly`). Verified on the real table: 3 shapes inserted, read back, duplicate refused, deleted, none left. (3) Live deals decluttered: status line + Add button; rows = program · figure · days left (+ grade / "You hold"); native `<details>` for the rest; not-for-you and ended folded; run stats in a hover title; one-line footnote. Rejected: new migration for a free-text deal kind; modal form. 12 rewritten rendered-row tests + 5 manual-deal tests.
 
 **Home core-facts cleanup — 10 Nov 2026:** Application source `3b42c69` is on GitHub, READY on Vercel and running on the mini (§10). One compact monthly spend summary and dense wallet rows replace large card tiles with milestone bars and base reward estimates. All cards are visible together on desktop and in a vertical phone list; each retains official artwork, name, last four, actual monthly spend and its card-filtered Spend action. Refunds remain separate. Home and Cards reuse a compact Infinia retention reference with both the ₹18L Apr–Mar primary/add-on spend criterion and ₹50L RLV alternative; definition, qualification limits, check date and source expand on demand. The misleading Cards milestone tracker/year editor and Infinia renewal-year default are removed. No account fee plan, anniversary date, database or environment was changed. Product fee thresholds remain generic reference data. Read `docs/audits/2026-11-10-home-core-facts.md`.
 
@@ -379,6 +382,8 @@ A one-stop credit-card destination: syncs bank transaction emails from Gmail (Ax
 
 ## §7 Known Issues
 
+**Open 2026-11-10 (Live deals):** the 4-line row footnote and "Added by you" delete rely on RLS `for all` on `deals` (migration 024) — verified against the real table via service key, but not via a signed-in browser session. Delete is offered only on rows whose sources are all `manual`. The orphaned `offers` table (migration 009, 0 rows) and `OfferRow` helpers in `src/lib/perks.ts` remain; remove in a later cleanup migration if KP wants.
+
 **Closed 2026-11-10 — inferred milestone clutter and period mix-up:** Home/Cards no longer derive personal milestone/fee-waiver targets or reward estimates from generic product data. HDFC's ₹18L Apr–Mar retention criterion is separate from the ₹10L fee waiver over the preceding 12 months; `home-core-facts.test.ts` protects the reference, absent qualification claims and bounded monthly totals. Authoritative HDFC eligible-spend/RLV progress remains unavailable, so the app shows the condition without claiming it is met. Account-specific fee arrangements must outrank general product terms.
 
 **Open 2026-11-10 (deal finder, minor):** an email whose AI read failed is retried only while it is still inside a run's look-back window (normally 2 days). The one failure so far — an October "15% more points on Marriott Bonvoy conversion" reminder — will not be retried, but that same offer was already stored from two sibling emails. Fix if it recurs: widen the look-back to the oldest retryable error.
@@ -487,6 +492,8 @@ Verified against the real live database, not synthetic data: 3126 real transacti
 ## §9 Session Handoff Notes (2026-11-10)
 
 ### Start Here — Current, Verified State
+
+**Latest — Live deals redesign + add-your-own + Offers removed (10 Nov 2026):** see §6. Pushed (`edb664b`, merged with main `715418e`), Vercel auto-deploys; 1,260 tests/typecheck/lint pass after the merge. **Not yet done:** pull + `pm2 reload cardiq` + `pm2 save` on the mini; no signed-in look at the real screen (only a throwaway preview page, deleted); the 375px row fix ("You hold 21…" cut off → wrap + hide chevron on phones) was applied but its final screenshot was not captured. Next if KP wants: the same declutter for the other Rewards sub-tabs (Transfer partners, Miles & status, Card points, Vouchers).
 
 **Latest — transfer search and balances (10 Nov 2026):** see §6. After refreshing statements, run `npx tsx scripts/statements-balances.ts --apply` on the MacBook (statement text lives only in `~/.cardiq-statements`) to update card balances; partner balances update themselves in the daily job.
 
