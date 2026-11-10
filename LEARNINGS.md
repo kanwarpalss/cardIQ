@@ -4,8 +4,8 @@ A living document of bugs surfaced, root causes, and the principles
 extracted. Structured in the canonical **three zones** (see
 `~/CODE_PUPPY_SYSTEM.md` → LEARNINGS three-zone structure):
 
-- **Zone A** — global lessons CardIQ proved (pointers to `AGENTS/NN-*.md`).
-- **Zone B** — CardIQ-specific knowledge (architecture, conventions, gotchas).
+- **Zone A** — global lessons cardIQ proved (pointers to `AGENTS/NN-*.md`).
+- **Zone B** — cardIQ-specific knowledge (architecture, conventions, gotchas).
 - **Zone C** — generic principles that are promotion *candidates* (smell
   global, not yet cleared the `puppy-lesson` gate). The `G1`–`G13` anchors
   here are referenced by commit messages and HANDOFF.md — **do not renumber.**
@@ -15,15 +15,15 @@ non-obvious.
 
 ---
 
-## Zone A — Global lessons CardIQ proved (pointers only)
+## Zone A — Global lessons cardIQ proved (pointers only)
 
-_None formally promoted to the global playbook from CardIQ yet._ Several
+_None formally promoted to the global playbook from cardIQ yet._ Several
 Zone-C principles below are strong candidates (G1 pagination-caps, G3 DRY
 chokepoints, G8 idempotent migrations, G11 money-is-never-one-number, G13
 Zen). When one clears the `puppy-lesson` promotion gate (2-project breadth
 or severity fast-track), move it here as a pointer:
 
-| Global lesson | Born from (CardIQ bug) | Anchor |
+| Global lesson | Born from (cardIQ bug) | Anchor |
 |---|---|---|
 | _(none yet)_ | | |
 
@@ -33,7 +33,7 @@ or severity fast-track), move it here as a pointer:
 
 ## Zone C — Generic principles (promotion candidates · formerly "Part 1")
 
-> These apply beyond CardIQ but have **not** been promoted to global. Each is
+> These apply beyond cardIQ but have **not** been promoted to global. Each is
 > a candidate for `puppy-lesson propose`. `G`-anchors are stable — referenced
 > by commit messages (`fix(sync): … (G1)`) and HANDOFF.md. Do not renumber.
 
@@ -104,7 +104,7 @@ codepath runs the FX conversion. Mystery rows appear.
 through it. The signature *is* the contract — no caller can
 accidentally skip a step.
 
-In CardIQ this is `src/lib/txn-enrich.ts` — required reading before
+In cardIQ this is `src/lib/txn-enrich.ts` — required reading before
 adding a 5th write path.
 
 ---
@@ -252,7 +252,7 @@ find anything.
 - "Top N" default + "Show all" toggle
 - Pager (Prev / 3-of-12 / Next)
 
-In CardIQ this is the merchant + category panel pattern — copy it for
+In cardIQ this is the merchant + category panel pattern — copy it for
 any new list.
 
 ---
@@ -268,7 +268,7 @@ When in doubt:
 
 ---
 
-## Zone B — CardIQ-specific knowledge (formerly "Part 2")
+## Zone B — cardIQ-specific knowledge (formerly "Part 2")
 
 ### Architecture at a glance
 
@@ -319,7 +319,7 @@ correct way.**
 - Project ref: `dmmhtzwxqkduxvxipfqs` (in `db.sh` and `.env.local`).
 - Always idempotent — see G8.
 
-### Foreign currency rules (CardIQ-specific embodiment of G11)
+### Foreign currency rules (cardIQ-specific embodiment of G11)
 
 1. **Detect** with `lib/currency.ts` — never write your own currency
    regex. Default-to-INR is intentional.
@@ -341,7 +341,7 @@ correct way.**
 - Generic sniffer tests in `src/lib/parsers/generic-sniffer.test.ts` —
   13 cases including IDR/THB/MYR/HKD coverage.
 
-### Walmart-network gotchas (CardIQ-specific)
+### Walmart-network gotchas (cardIQ-specific)
 
 - `npm run dev` needs to reach `dmmhtzwxqkduxvxipfqs.supabase.co` →
   must be on **Eagle WiFi or phone hotspot or off-Walmart-VPN**.
@@ -377,7 +377,7 @@ correct way.**
   bug + root cause + the principle/learning extracted.
 - **Never force-push** to git.
 - Walmart colors palette only when adding new UI components (per Code
-  Puppy rules) — but CardIQ has its own dark theme already, follow
+  Puppy rules) — but cardIQ has its own dark theme already, follow
   existing tokens (`gold`, `mist`, `ink`, `rim`, `gold/X`, etc.).
 
 ---
@@ -388,10 +388,10 @@ When you fix a non-obvious bug:
 1. Add a row to "Bugs we already squashed" (Zone B).
 2. If the root cause maps to a NEW generic principle, add it to **Zone C**
    with a `### G<N>.` heading (next number; never reuse).
-3. If it's CardIQ-specific only, expand **Zone B**.
+3. If it's cardIQ-specific only, expand **Zone B**.
 4. If a Zone-C principle has now bitten a 2nd unrelated project (or is a
    severe recurring class), run `puppy-lesson propose` to promote it; once
-   accepted, replace it here with a **Zone-A pointer** (keep the CardIQ
+   accepted, replace it here with a **Zone-A pointer** (keep the cardIQ
    anecdote, drop the duplicated rule text — this prevents fork rot).
 5. Commit with a message that references the principle:
    `fix(X): … (see LEARNINGS.md G7)`.

@@ -2,7 +2,7 @@
 
 This is a dated audit result. Current handoff and release details live in SPEC.md.
 
-The 31 October full-mailbox index contained 353 HSBC sender messages across All Mail, Spam and Trash with no lower date cutoff. The follow-up search through 1 November returned three newer HSBC messages: a downtime notice, an OTP and a completed INR 214.98 PYU*SNABBIT purchase. All three are archived; the purchase already links to a 4502 transaction. Its forwarding headers preserve HSBC as sender and show delivery from the other household mailbox to CardIQ's connected mailbox.
+The 31 October full-mailbox index contained 353 HSBC sender messages across All Mail, Spam and Trash with no lower date cutoff. The follow-up search through 1 November returned three newer HSBC messages: a downtime notice, an OTP and a completed INR 214.98 PYU*SNABBIT purchase. All three are archived; the purchase already links to a 4502 transaction. Its forwarding headers preserve HSBC as sender and show delivery from the other household mailbox to cardIQ's connected mailbox.
 
 The forwarded `hsbc emails` message contains 50 original email attachments: **32 purchases, 13 OTPs, four limit changes and one aggregate-credit notice**. All 32 purchases already have one matching transaction and archive link under the earlier import's `eml-<SHA256(Message-ID)[:24]>` identity. Every suffix, native currency/amount and debit direction agrees with the shared parser. Six purchases are USD 1.00 Facebook alerts; the other 26 are INR. No additional transaction was inserted or overwritten by this follow-up. The read-back has 33 entries for Premier 4502, including today's automatically forwarded purchase, and 10 for TravelOne 3337.
 

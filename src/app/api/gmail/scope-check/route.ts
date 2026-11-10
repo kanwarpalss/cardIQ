@@ -96,7 +96,7 @@ async function checkOAuth(refreshTokenEncrypted: string) {
       return NextResponse.json({
         status: "insufficient_scope",
         message: "Gmail access was granted WITHOUT read permission — sync will keep failing.",
-        fix: "Simply signing in again usually does NOT fix this, because Google reuses the existing grant. Go to myaccount.google.com/permissions, remove CardIQ's access there, then come back and sign in again — that forces Google to ask for permission fresh. Or skip OAuth entirely by adding a Gmail app password in Settings.",
+        fix: "Simply signing in again usually does NOT fix this, because Google reuses the existing grant. Go to myaccount.google.com/permissions, remove cardIQ's access there, then come back and sign in again — that forces Google to ask for permission fresh. Or skip OAuth entirely by adding a Gmail app password in Settings.",
       });
     }
     if (isExpired) {

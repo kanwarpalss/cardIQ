@@ -21,7 +21,7 @@ function successfulFetch() {
   return vi
     .fn<typeof fetch>()
     .mockResolvedValueOnce(response(307, INPUT.canonicalLoginUrl))
-    .mockResolvedValueOnce(response(200, undefined, "<title>CardIQ</title>"))
+    .mockResolvedValueOnce(response(200, undefined, "<title>cardIQ</title>"))
     .mockResolvedValueOnce(
       response(302, "https://accounts.google.com/v3/signin/accountchooser")
     );
@@ -73,7 +73,7 @@ describe("runLoginSmoke", () => {
     const fetchImpl = vi
       .fn<typeof fetch>()
       .mockResolvedValueOnce(response(307, INPUT.canonicalLoginUrl))
-      .mockResolvedValueOnce(response(200, undefined, "<title>CardIQ</title>"))
+      .mockResolvedValueOnce(response(200, undefined, "<title>cardIQ</title>"))
       .mockResolvedValueOnce(response(status, undefined, body));
     await expect(runLoginSmoke({ ...INPUT, fetchImpl })).rejects.toThrow(
       /cloudflare blocked/i
@@ -89,7 +89,7 @@ describe("runLoginSmoke", () => {
     const fetchImpl = vi
       .fn<typeof fetch>()
       .mockResolvedValueOnce(response(307, INPUT.canonicalLoginUrl))
-      .mockResolvedValueOnce(response(200, undefined, "<title>CardIQ</title>"))
+      .mockResolvedValueOnce(response(200, undefined, "<title>cardIQ</title>"))
       .mockResolvedValueOnce(response(302, location));
     await expect(runLoginSmoke({ ...INPUT, fetchImpl })).rejects.toThrow(
       /accounts\.google\.com|location/i

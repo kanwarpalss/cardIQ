@@ -49,7 +49,7 @@ export default function SupabaseDownNotice({ onRetry, retrying }: Props) {
             Can&apos;t reach the database
           </h1>
           <p className="text-sm text-mist/50 leading-relaxed">
-            CardIQ&apos;s Supabase backend isn&apos;t responding. On the free
+            cardIQ&apos;s Supabase backend isn&apos;t responding. On the free
             tier, projects automatically pause after about a week of
             inactivity — that&apos;s the usual culprit (not a bug in the app).
           </p>

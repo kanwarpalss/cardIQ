@@ -19,7 +19,7 @@ const SUPABASE_PROJECT_HOST = /^([a-z0-9]{20})\.supabase\.co$/;
  *
  * Fail closed on malformed values and lookalike hosts. A bare `supabase.co`,
  * an HTTP URL, credentials, a non-standard port, or an unexpected path is not
- * a CardIQ project endpoint and must never be used to start authentication.
+ * a cardIQ project endpoint and must never be used to start authentication.
  */
 export function getSupabaseUrl(): string {
   const raw = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim();

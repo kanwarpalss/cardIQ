@@ -1,4 +1,4 @@
-// CardIQ's project rules live in TWO files on purpose:
+// cardIQ's project rules live in TWO files on purpose:
 //   .claude/CLAUDE.md  — read by Claude Code
 //   AGENTS.md          — read by a second LLM that looks for AGENTS.md
 //

@@ -1,5 +1,5 @@
 /**
- * import-amazon.ts — load Amazon order history into CardIQ.
+ * import-amazon.ts — load Amazon order history into cardIQ.
  *
  * 1. amazon.in → Account → "Request Your Information" → select "Your Orders".
  * 2. Amazon emails a ZIP (usually within hours). Unzip it.
@@ -55,7 +55,7 @@ async function main() {
     if (data.length < 1000) break;
   }
   const fresh = orders.filter((o) => !existing.has(o.orderRef));
-  console.log(`${fresh.length} new, ${orders.length - fresh.length} already in CardIQ (skipped).`);
+  console.log(`${fresh.length} new, ${orders.length - fresh.length} already in cardIQ (skipped).`);
   for (const o of fresh.slice(0, 8)) console.log(`  ${o.orderedAt.slice(0, 10)} ₹${o.total} — ${o.items.map((i) => i.name).join(", ").slice(0, 90)}`);
 
   if (!APPLY) { console.log("\n(dry run — nothing written. Re-run with --apply.)"); return; }

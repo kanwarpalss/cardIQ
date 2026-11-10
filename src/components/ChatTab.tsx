@@ -71,11 +71,11 @@ export default function ChatTab() {
       </div>
       <div className="chat-composer border-t border-line pt-3 flex gap-2">
         <input
-          aria-label="Message CardIQ"
+          aria-label="Message cardIQ"
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && send()}
-          placeholder="Ask CardIQ…"
+          placeholder="Ask cardIQ…"
           className="min-w-0 flex-1 bg-panel border border-line rounded-xl px-3 py-2 outline-none focus:border-gold"
         />
         <button

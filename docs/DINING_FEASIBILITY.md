@@ -52,7 +52,7 @@ We need to choose a tradeoff, not "find the API".
 | Partner API | **Exists** — used by HDFC Diners Club, Axis Magnus, IndusInd, etc. to surface "EazyDiner Prime" discounts inside bank apps. Requires a signed B2B agreement. Not accessible to individuals. |
 | Internal mobile API | Reverse-engineerable but small surface area, less community tooling than Swiggy/Zomato. |
 | ToS | Standard "no automated access" boilerplate. |
-| Discount/offer data | **This is the platform that matters most for CardIQ** — EazyDiner's whole value-prop is *card-linked* dining discounts (e.g. "25% off on HDFC Diners, 20% on Axis Magnus"), which maps 1:1 onto CardIQ's existing card registry. |
+| Discount/offer data | **This is the platform that matters most for cardIQ** — EazyDiner's whole value-prop is *card-linked* dining discounts (e.g. "25% off on HDFC Diners, 20% on Axis Magnus"), which maps 1:1 onto cardIQ's existing card registry. |
 | Open-source datasets | None. |
 | Realistic options | (a) B2B partnership (not realistic for a personal app), (b) scrape mobile API, (c) skip. |
 
@@ -63,14 +63,14 @@ We need to choose a tradeoff, not "find the API".
 - **Google Places API (New)** — official, ~$17/1000 Nearby Search calls, includes rating/price-level/cuisine. **No dining discount data.**
 - **Foursquare Places API** — free tier of 1000 calls/day, similar shape. **No discounts.**
 - **OpenStreetMap / Overpass** — free, decent restaurant coverage in metros, no ratings or discounts.
-- **Bank issuer pages** (HDFC SmartBuy, Axis Dining Delights, ICICI Culinary Treats) — published HTML lists of partner restaurants + discount %. Static-ish (refreshed monthly). **Most legitimately scrapable** of any source here, and aligns perfectly with CardIQ's "what does each card give me" thesis.
+- **Bank issuer pages** (HDFC SmartBuy, Axis Dining Delights, ICICI Culinary Treats) — published HTML lists of partner restaurants + discount %. Static-ish (refreshed monthly). **Most legitimately scrapable** of any source here, and aligns perfectly with cardIQ's "what does each card give me" thesis.
 
 ---
 
-## 4. Honest assessment vs. CardIQ's architecture
+## 4. Honest assessment vs. cardIQ's architecture
 
-CardIQ's superpower is that it **already knows which cards KP holds**
-(`src/lib/cards/registry.ts`). The most CardIQ-native framing for a
+cardIQ's superpower is that it **already knows which cards KP holds**
+(`src/lib/cards/registry.ts`). The most cardIQ-native framing for a
 Dining tab is not "show me Zomato listings" — it's **"given I'm
 about to dine, which of my cards gives me the best offer at this
 restaurant?"**. That reframing changes which data source matters:
@@ -79,7 +79,7 @@ restaurant?"**. That reframing changes which data source matters:
 |---|---|---|---|
 | "Show me listings + offers like the Zomato app does" | Scrape Swiggy Dineout + EazyDiner mobile APIs | High | High — bot-protection cat-and-mouse |
 | **"Which of my cards wins at restaurant X?"** | **Issuer dining-program pages + EazyDiner public restaurant pages (HTML)** | **Medium** | **Low–medium — pages change ~quarterly** |
-| "Notify me when there's a new offer at a place I've been" | Same as above + CardIQ's existing merchant history | Medium | Low |
+| "Notify me when there's a new offer at a place I've been" | Same as above + cardIQ's existing merchant history | Medium | Low |
 
 The middle row is the one I'd defend in code review.
 
@@ -92,7 +92,7 @@ Scrape the four issuer pages KP cares about (HDFC SmartBuy Dineout,
 Axis Dining Delights, ICICI Culinary Treats, HSBC) nightly into a
 `dining_offers` Supabase table. Build the tab as "search restaurant
 → rank by best card discount". No Zomato/Swiggy/EazyDiner dependency.
-Legit, low maintenance, leverages CardIQ's unique data. ~1 week.
+Legit, low maintenance, leverages cardIQ's unique data. ~1 week.
 
 **Option B — Aggregator scrape (the original ask)**
 Reverse-engineer Swiggy Dineout + EazyDiner mobile APIs. Cache per

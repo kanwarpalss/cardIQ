@@ -1,4 +1,4 @@
-# CardIQ — 2026-07-27: review, vouchers, login, and currency
+# cardIQ — 2026-07-27: review, vouchers, login, and currency
 
 ## Outcome
 

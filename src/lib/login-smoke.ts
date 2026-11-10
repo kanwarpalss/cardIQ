@@ -60,7 +60,7 @@ async function fetchManual(
 
 /**
  * Exercise the complete unauthenticated login handoff without selecting a
- * Google account: raw Tailscale URL -> MagicDNS -> CardIQ -> Supabase -> Google.
+ * Google account: raw Tailscale URL -> MagicDNS -> cardIQ -> Supabase -> Google.
  */
 export async function runLoginSmoke({
   rawLoginUrl,
@@ -69,33 +69,33 @@ export async function runLoginSmoke({
   fetchImpl = fetch,
   timeoutMs = 8_000,
 }: LoginSmokeInput): Promise<void> {
-  const raw = await fetchManual(fetchImpl, rawLoginUrl, "Raw CardIQ login", timeoutMs);
+  const raw = await fetchManual(fetchImpl, rawLoginUrl, "Raw cardIQ login", timeoutMs);
   if (raw.response.status !== 307) {
     throw new Error(
-      `Raw CardIQ login returned HTTP ${raw.response.status}; expected canonical 307 redirect`
+      `Raw cardIQ login returned HTTP ${raw.response.status}; expected canonical 307 redirect`
     );
   }
 
-  const rawDestination = requireLocation(raw.response, "Raw CardIQ login");
+  const rawDestination = requireLocation(raw.response, "Raw cardIQ login");
   if (rawDestination.toString() !== canonicalLoginUrl) {
     throw new Error(
-      `Raw CardIQ login redirected to ${rawDestination.toString()} instead of ${canonicalLoginUrl}`
+      `Raw cardIQ login redirected to ${rawDestination.toString()} instead of ${canonicalLoginUrl}`
     );
   }
 
   const canonical = await fetchManual(
     fetchImpl,
     canonicalLoginUrl,
-    "Canonical CardIQ login",
+    "Canonical cardIQ login",
     timeoutMs
   );
   if (canonical.response.status !== 200) {
     throw new Error(
-      `Canonical CardIQ login returned HTTP ${canonical.response.status}; expected 200`
+      `Canonical cardIQ login returned HTTP ${canonical.response.status}; expected 200`
     );
   }
-  if (!canonical.body.includes("<title>CardIQ</title>")) {
-    throw new Error("Canonical CardIQ login was answered by the wrong application");
+  if (!canonical.body.includes("<title>cardIQ</title>")) {
+    throw new Error("Canonical cardIQ login was answered by the wrong application");
   }
 
   const oauth = await fetchManual(

@@ -5,7 +5,7 @@ const eslintConfig = defineConfig([
   ...nextVitals,
   {
     rules: {
-      // CardIQ intentionally loads remote data when client screens mount.
+      // cardIQ intentionally loads remote data when client screens mount.
       // The React 19 rule treats those async loaders as synchronous state
       // writes even though their updates happen after fetch promises settle.
       "react-hooks/set-state-in-effect": "off",

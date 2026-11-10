@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# CardIQ database management — one-stop wrapper for Supabase CLI.
+# cardIQ database management — one-stop wrapper for Supabase CLI.
 #
 # Usage:
 #   ./scripts/db.sh link                  → one-time: link this repo to your Supabase project
@@ -64,7 +64,7 @@ case "$cmd" in
     ;;
   help|*)
     echo ""
-    echo "CardIQ DB wrapper — commands:"
+    echo "cardIQ DB wrapper — commands:"
     echo "  ./scripts/db.sh login                 → one-time: log in to Supabase (use Safari!)"
     echo "  ./scripts/db.sh link                  → one-time: link this repo to your project"
     echo "  ./scripts/db.sh push                  → apply new migrations to remote"

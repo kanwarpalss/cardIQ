@@ -87,7 +87,7 @@ async function loadAll<T>(sb: SupabaseClient, table: string, cols: string, uid: 
 
 async function fetchFeed(url: string): Promise<string> {
   const res = await fetch(url, {
-    headers: { "User-Agent": "Mozilla/5.0 (CardIQ deal finder; personal use)" },
+    headers: { "User-Agent": "Mozilla/5.0 (cardIQ deal finder; personal use)" },
     signal: AbortSignal.timeout(20000),
   });
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
