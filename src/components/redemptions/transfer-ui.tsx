@@ -128,6 +128,6 @@ export function RatioPill({ ratio, best, title }: { ratio: Ratio; best?: boolean
   );
 }
 
-export function CardSwatch({ card, className = "" }: { card: WalletCard; className?: string }) {
+export function CardSwatch({ card, className = "" }: { card: Pick<WalletCard, "product_key">; className?: string }) {
   return <span aria-hidden="true" className={`card-swatch ${className}`}><CardFace productKey={card.product_key} /></span>;
 }

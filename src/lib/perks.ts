@@ -43,6 +43,9 @@ export type LoyaltyRow = {
   linked_card: string | null;
   notes: string | null;
   updated_at: string;
+  /** "parsed" when the daily job read the balance from the program's email
+   *  (src/lib/balances/sync-loyalty.ts); updated_at is then that email's date. */
+  source?: "manual" | "parsed";
 };
 
 // ── Reward balances ──────────────────────────────────────────────────────────

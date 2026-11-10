@@ -21,6 +21,7 @@ import {
   buildWallet, holdingsByProgram, Monogram, RatioPill, CardSwatch, GROUP_STYLE, type WalletCard,
 } from "./transfer-ui";
 import RouteCards from "./RouteCards";
+import TransferSearch from "./TransferSearch";
 import PartnerGrid from "./PartnerGrid";
 
 type Filter = "all" | Alliance | "hotel";
@@ -75,6 +76,8 @@ export default function TransferPartners({ data, onAddCard }: {
 
   return (
     <div className="space-y-4">
+      <TransferSearch data={data} wallet={wallet} />
+
       <WalletSummary wallet={transferable} />
 
       <FreshnessNote wallet={transferable} />

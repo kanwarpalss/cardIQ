@@ -44,6 +44,7 @@ import { screen, dealSearchQuery } from "../src/lib/deals/prefilter";
 import { FEEDS, parseRss } from "../src/lib/deals/feeds";
 import { extractDeal, bestBodyText, usageCostUsd, UNREADABLE, type ReadItem, type Usage } from "../src/lib/deals/extract";
 import { planUpsert } from "../src/lib/deals/store";
+import { syncLoyaltyBalances } from "../src/lib/balances/sync-loyalty";
 import { ranRecently, MIN_GAP_HOURS } from "../src/lib/deals/health";
 import type { DealSource, StoredDeal } from "../src/lib/deals/types";
 
@@ -264,6 +265,15 @@ async function main() {
         errors++;
         record(kind, item_id, "error", (e as Error).message.slice(0, 300));
         log(`  ! ${p.source.title.slice(0, 70)} — ${(e as Error).message}`);
+      }
+    }
+    // Partner balances from the programs' own emails (src/lib/balances).
+    // Its own failure is a note on the run, never a failed deal check.
+    if (imap) {
+      try {
+        notes.push(await syncLoyaltyBalances({ imap, sb, uid, apply: APPLY, log }));
+      } catch (e) {
+        notes.push(`balance check failed (${(e as Error).message})`);
       }
     }
     await imap?.close();
