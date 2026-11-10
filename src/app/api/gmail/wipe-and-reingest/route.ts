@@ -3,7 +3,9 @@ import { createClient } from "@/lib/supabase/server";
 import { decrypt } from "@/lib/crypto";
 import { parseTxnEmailWithFallback } from "@/lib/parsers/registry";
 import { loadExcludedMessageIds } from "@/lib/excluded-messages";
-import { categorize } from "@/lib/categorize";
+import { categorizeFull } from "@/lib/categorize";
+import { resolveTxnCategory } from "@/lib/category-taxonomy";
+import { loadCategoryAliases } from "@/lib/category-taxonomy-store";
 import { cleanMerchant } from "@/lib/merchant-clean";
 import { enrichAmount } from "@/lib/txn-enrich";
 import { CARD_REGISTRY } from "@/lib/cards/registry";
@@ -121,6 +123,7 @@ export async function POST(req: Request) {
   // Kept in its own table, so it survives the wipe below.
   const excludedIds = await loadExcludedMessageIds(supabase, user.id);
   const merchantMap = new Map((mappingsRes.data || []).map((m) => [m.raw_name.toLowerCase(), m]));
+  const categoryAliases = await loadCategoryAliases(supabase, user.id);
 
   const auth = getOAuthClient();
   auth.setCredentials({ refresh_token: decrypt(settingsRes.data.google_refresh_token_encrypted) });
@@ -257,7 +260,7 @@ export async function POST(req: Request) {
               const cleanedK = cleaned?.toLowerCase() ?? "";
               const mapping = (rawKey && merchantMap.get(rawKey)) || (cleanedK && merchantMap.get(cleanedK)) || null;
               const merchant = mapping?.normalized_name ?? cleaned ?? null;
-              const category = mapping?.category ?? categorize(merchant);
+              const { category } = resolveTxnCategory(mapping, categorizeFull(merchant), categoryAliases);
 
               const txnAt = internalDate > 0 ? new Date(internalDate) : parsed.txn_at;
               const enriched = await enrichAmount(supabase, parsed, txnAt);

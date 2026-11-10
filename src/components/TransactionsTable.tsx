@@ -3,15 +3,19 @@
 import { Fragment, useEffect, useMemo, useState } from "react";
 import { CARD_REGISTRY } from "@/lib/cards/registry";
 import { formatCategory } from "@/lib/categories";
+import type { CategoryPair, CreateSuggestion, Taxonomy } from "@/lib/category-taxonomy";
 import { isInr } from "@/lib/currency";
 import { formatCurrency } from "@/lib/forex";
 import { groupVoucherSpendDetails, hasExpandableSpendDetails } from "@/lib/spend-details";
 import TransactionSpendDetails from "./TransactionSpendDetails";
+import CategorizeDialog from "./category/CategorizeDialog";
+import CategoryField from "./category/CategoryField";
 
 type Txn = {
   id: string; card_last4: string; amount_inr: number;
   merchant: string | null; category: string | null;
   subcategory?: string | null;
+  category_manual?: boolean | null;
   txn_at: string; txn_type: "debit" | "credit";
   notes?: string | null;
   original_currency?: string | null;
@@ -39,11 +43,11 @@ interface Props {
   /** Changes only when the shared Spend filters change; edits keep their page. */
   resultKey: string;
   transactions: Txn[];
+  /** Whole history (not just this filter) — the "N more from merchant" review lists from it. */
+  allTransactions?: Txn[];
   cards: CardRow[];
-  /** Canonical + custom categories — shown in the dropdown. */
-  categories: string[];
-  /** Per-category subcategory suggestions (canonical + user-typed). */
-  subcategories: Record<string, string[]>;
+  /** The user's category tree (saved or default + values in use). */
+  taxonomy: Taxonomy;
   /** Matched order emails keyed by txn id. */
   ordersByTxn: Map<string, OrderRow>;
   /** Vouchers a charge funded, keyed by txn id — shows the brand a GYFTR charge
@@ -52,7 +56,13 @@ interface Props {
   /** All distinct existing notes — used for autofill suggestions. */
   existingNotes: string[];
   onMerchantSave: (old_name: string, new_name: string, category: string, subcategory: string | null) => Promise<void>;
+  /** Saves one transaction's category. Throws a plain-English Error on failure. */
   onCategoryChange: (txnId: string, patch: CategoryPatch) => Promise<void>;
+  /** Saves the ticked rows from the review popup (+ optional future rule). Throws on failure. */
+  onBulkCategory?: (ids: string[], pair: CategoryPair, rememberMerchant: string | null) => Promise<{ updated: number; remembered: boolean }>;
+  /** Adds a new category/subcategory from the picker; resolves to the pair to pick. */
+  onCreateCategory?: (s: CreateSuggestion) => Promise<CategoryPair | null>;
+  onManageCategories?: () => void;
   onNotesChange:    (txnId: string, notes: string) => Promise<void>;
   /** Sets the same note on every txn of a merchant (scope-choice, feature B). */
   onNotesBulk:      (merchant: string, notes: string) => Promise<void>;
@@ -88,13 +98,13 @@ const fmt = (n: number) => "₹" + Math.round(n).toLocaleString("en-IN");
 const cardLabel = (c: CardRow) =>
   c.nickname || CARD_REGISTRY[c.product_key]?.display_name || c.product_key;
 
-// Sentinels for the subcategory dropdown (real values are free text).
-const SUB_NONE  = "__none";
-const SUB_OTHER = "__other";
+/** Free-text fallback when no tree-editing backend is wired (tests, older callers). */
+const createAsTyped = async (s: CreateSuggestion): Promise<CategoryPair> =>
+  s.kind === "category" ? { category: s.category, subcategory: null } : { category: s.category, subcategory: s.subcategory };
 
 export default function TransactionsTable({
-  resultKey, transactions, cards, categories, subcategories, ordersByTxn, vouchersByTxn, existingNotes,
-  onMerchantSave, onCategoryChange, onNotesChange, onNotesBulk,
+  resultKey, transactions, allTransactions, cards, taxonomy, ordersByTxn, vouchersByTxn, existingNotes,
+  onMerchantSave, onCategoryChange, onBulkCategory, onCreateCategory, onManageCategories, onNotesChange, onNotesBulk,
 }: Props) {
   // Filtering is owned by SpendTab so the table and every metric always use
   // the exact same rows. This component only sorts, paginates, and edits.
@@ -104,23 +114,16 @@ export default function TransactionsTable({
   // ── Order-details expansion (rows with a matched order email) ──
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
-  // ── Category-only quick edit (two-tier) ──
-  const [editCatId, setEditCatId]         = useState<string | null>(null);
-  const [editCatValue, setEditCatValue]   = useState("");
-  const [editCatCustom, setEditCatCustom] = useState("");
-  const [editSubValue, setEditSubValue]   = useState<string>(SUB_NONE);
-  const [editSubCustom, setEditSubCustom] = useState("");
-  // Scope-choice (feature B): unchecked = just this transaction.
-  const [applyAllCat, setApplyAllCat]     = useState(false);
+  // ── Categorize dialog: picker, then the same-merchant review ──
+  const [categorizing, setCategorizing]   = useState<Txn | null>(null);
+  const [catNotice, setCatNotice]         = useState<string | null>(null);
+  // Scope-choice (feature B) for notes: unchecked = just this transaction.
   const [applyAllNote, setApplyAllNote]   = useState(false);
 
   // ── Full merchant edit (name + category + subcategory, applies to all matching txns) ──
   const [editMerchantId, setEditMerchantId]         = useState<string | null>(null);
   const [editMerchantName, setEditMerchantName]     = useState("");
-  const [editMerchantCat, setEditMerchantCat]       = useState("");
-  const [editMerchantCustom, setEditMerchantCustom] = useState("");
-  const [editMerchantSub, setEditMerchantSub]       = useState<string>(SUB_NONE);
-  const [editMerchantSubCustom, setEditMerchantSubCustom] = useState("");
+  const [editMerchantPair, setEditMerchantPair]     = useState<CategoryPair>({ category: "Uncategorized", subcategory: null });
   const [savingMerchant, setSavingMerchant]         = useState(false);
 
   // ── Per-transaction notes edit ──
@@ -185,14 +188,7 @@ export default function TransactionsTable({
   function startMerchantEdit(t: Txn) {
     setEditMerchantId(t.id);
     setEditMerchantName(t.merchant || "");
-    const known = categories.includes(t.category || "");
-    setEditMerchantCat(known ? (t.category || "Uncategorized") : "Other");
-    setEditMerchantCustom(known ? "" : (t.category || ""));
-    const subs = subcategories[t.category || ""] ?? [];
-    const sub  = t.subcategory ?? null;
-    setEditMerchantSub(sub === null ? SUB_NONE : subs.includes(sub) ? sub : SUB_OTHER);
-    setEditMerchantSubCustom(sub !== null && !subs.includes(sub) ? sub : "");
-    setEditCatId(null);
+    setEditMerchantPair({ category: t.category || "Uncategorized", subcategory: t.subcategory ?? null });
     setEditNoteId(null);
   }
 
@@ -201,7 +197,6 @@ export default function TransactionsTable({
     setEditNoteText(t.notes || "");
     setApplyAllNote(false);
     setEditMerchantId(null);
-    setEditCatId(null);
   }
 
   function cancelNoteEdit() { setEditNoteId(null); setEditNoteText(""); setApplyAllNote(false); }
@@ -218,50 +213,30 @@ export default function TransactionsTable({
 
   function cancelMerchantEdit() {
     setEditMerchantId(null);
-    setEditMerchantName(""); setEditMerchantCat(""); setEditMerchantCustom("");
-    setEditMerchantSub(SUB_NONE); setEditMerchantSubCustom("");
+    setEditMerchantName("");
   }
 
   async function commitMerchantEdit(oldName: string) {
-    const finalCat  = editMerchantCat === "Other" ? (editMerchantCustom.trim() || "Uncategorized") : editMerchantCat;
     const finalName = editMerchantName.trim() || oldName;
-    const finalSub  =
-      editMerchantSub === SUB_NONE  ? null :
-      editMerchantSub === SUB_OTHER ? (editMerchantSubCustom.trim() || null) :
-      editMerchantSub;
     setSavingMerchant(true);
-    try { await onMerchantSave(oldName, finalName, finalCat, finalSub); cancelMerchantEdit(); }
+    try { await onMerchantSave(oldName, finalName, editMerchantPair.category, editMerchantPair.subcategory); cancelMerchantEdit(); }
     finally { setSavingMerchant(false); }
   }
 
-  // ── Category quick-edit helpers ──
-  function startCatEdit(t: Txn) {
-    setEditCatId(t.id);
-    const known = categories.includes(t.category || "");
-    setEditCatValue(known ? (t.category || "Uncategorized") : "Other");
-    setEditCatCustom(known ? "" : (t.category || ""));
-    const subs = subcategories[t.category || ""] ?? [];
-    const sub  = t.subcategory ?? null;
-    setEditSubValue(sub === null ? SUB_NONE : subs.includes(sub) ? sub : SUB_OTHER);
-    setEditSubCustom(sub !== null && !subs.includes(sub) ? sub : "");
-    setApplyAllCat(false);
+  // ── Categorize dialog ──
+  function startCategorize(t: Txn) {
+    setCategorizing(t);
+    setCatNotice(null);
     setEditMerchantId(null);
     setEditNoteId(null);
   }
 
-  function commitCatPatch(t: Txn, patch: CategoryPatch) {
-    if (patch.category !== undefined && !patch.category.trim()) return;
-    if (applyAllCat && t.merchant) {
-      // Scope = all N from this merchant: route through the merchant-mapping
-      // path (bulk txn update + mapping upsert so future syncs agree).
-      const category = (patch.category ?? t.category ?? "Uncategorized").trim() || "Uncategorized";
-      const subcategory = patch.subcategory !== undefined ? patch.subcategory : (t.subcategory ?? null);
-      onMerchantSave(t.merchant, t.merchant, category, subcategory);
-    } else {
-      onCategoryChange(t.id, patch);
-    }
-    setEditCatId(null);
-  }
+  const createCategory = onCreateCategory ?? createAsTyped;
+  // Fallback when a caller has no bulk endpoint: one PATCH per row.
+  const saveMany = onBulkCategory ?? (async (ids: string[], pair: CategoryPair) => {
+    for (const id of ids) await onCategoryChange(id, pair);
+    return { updated: ids.length, remembered: false };
+  });
 
   // ── Render ──
   return (
@@ -278,6 +253,12 @@ export default function TransactionsTable({
         </select></label>
       </div>
       </div>
+      {catNotice && (
+        <div className="cat-table-notice" role="status">
+          <span><span aria-hidden="true">✓ </span>{catNotice}</span>
+          <button type="button" aria-label="Dismiss" onClick={() => setCatNotice(null)}>×</button>
+        </div>
+      )}
 
 
       <div className="mobile-sort-bar">
@@ -311,7 +292,6 @@ export default function TransactionsTable({
         <tbody role="rowgroup">
           {visible.map((t) => {
             const isMerchantEditing = editMerchantId === t.id;
-            const isCatEditing      = editCatId === t.id;
             const isNoteEditing     = editNoteId === t.id;
             const noteSuggestions   = isNoteEditing ? suggestNotes(editNoteText, existingNotes) : [];
             const order             = ordersByTxn.get(t.id);
@@ -324,10 +304,8 @@ export default function TransactionsTable({
             const enrichedName = order?.merchant_name && order.match_confidence !== "low"
               ? order.merchant_name
               : null;
-            const subOptions = subcategories[editCatValue] ?? [];
-            const merchantSubOptions = subcategories[editMerchantCat] ?? [];
-            // Scope-choice count — only computed while this row is being edited.
-            const sameMerchantCount = (isCatEditing || isNoteEditing) && t.merchant
+            // Scope-choice count — only computed while this row's note is being edited.
+            const sameMerchantCount = isNoteEditing && t.merchant
               ? transactions.reduce((n, x) => n + (x.merchant === t.merchant ? 1 : 0), 0)
               : 0;
 
@@ -348,31 +326,14 @@ export default function TransactionsTable({
                         onChange={(e) => setEditMerchantName(e.target.value)}
                         onKeyDown={(e) => { if (e.key === "Enter") commitMerchantEdit(t.merchant || ""); if (e.key === "Escape") cancelMerchantEdit(); }}
                         className="w-full bg-ink border border-gold/40 rounded-lg px-2 py-1 text-xs text-mist focus:border-gold outline-none" />
-                      <select aria-label="Merchant category" value={editMerchantCat}
-                        onChange={(e) => { setEditMerchantCat(e.target.value); setEditMerchantSub(SUB_NONE); setEditMerchantSubCustom(""); }}
-                        className="w-full bg-ink border border-rim rounded-lg px-2 py-1 text-xs text-mist focus:border-gold/40 outline-none">
-                        {categories.map((c) => <option key={c} value={c}>{c}</option>)}
-                        <option value="Other">Other (type below)</option>
-                      </select>
-                      {editMerchantCat === "Other" && (
-                        <input placeholder="Custom category…" value={editMerchantCustom}
-                          onChange={(e) => setEditMerchantCustom(e.target.value)}
-                          onKeyDown={(e) => { if (e.key === "Enter") commitMerchantEdit(t.merchant || ""); if (e.key === "Escape") cancelMerchantEdit(); }}
-                          className="w-full bg-ink border border-rim rounded-lg px-2 py-1 text-xs text-mist focus:border-gold/40 outline-none" />
-                      )}
-                      <select aria-label="Merchant subcategory" value={editMerchantSub}
-                        onChange={(e) => setEditMerchantSub(e.target.value)}
-                        className="w-full bg-ink border border-rim rounded-lg px-2 py-1 text-xs text-mist focus:border-gold/40 outline-none">
-                        <option value={SUB_NONE}>No subcategory</option>
-                        {merchantSubOptions.map((s) => <option key={s} value={s}>{s}</option>)}
-                        <option value={SUB_OTHER}>Other (type below)</option>
-                      </select>
-                      {editMerchantSub === SUB_OTHER && (
-                        <input placeholder="Custom subcategory…" value={editMerchantSubCustom}
-                          onChange={(e) => setEditMerchantSubCustom(e.target.value)}
-                          onKeyDown={(e) => { if (e.key === "Enter") commitMerchantEdit(t.merchant || ""); if (e.key === "Escape") cancelMerchantEdit(); }}
-                          className="w-full bg-ink border border-rim rounded-lg px-2 py-1 text-xs text-mist focus:border-gold/40 outline-none" />
-                      )}
+                      <CategoryField
+                        label="Category for every transaction from this merchant"
+                        context={`Applies to all “${t.merchant}” transactions and future ones`}
+                        value={editMerchantPair}
+                        onChange={setEditMerchantPair}
+                        taxonomy={taxonomy}
+                        onCreate={createCategory}
+                      />
                       <div className="flex items-center gap-1.5 pt-0.5">
                         <button onClick={() => commitMerchantEdit(t.merchant || "")} disabled={savingMerchant}
                           className="px-2.5 py-1 text-xs bg-gold-shimmer text-ink rounded-lg font-semibold disabled:opacity-50">
@@ -466,74 +427,15 @@ export default function TransactionsTable({
                   )}
                 </td>
 
-                {/* Category — click to change (explicit Save keeps category + subcategory in sync) */}
+                {/* Category — one click opens the whole tree; picking saves it */}
                 <td role="cell" className="txn-category px-5 py-3 text-xs align-top">
-                  {isCatEditing ? (
-                    <div className="space-y-1">
-                      {sameMerchantCount > 1 && (
-                        <label className="flex items-center gap-1.5 text-2xs text-mist/60 cursor-pointer select-none">
-                          <input type="checkbox" checked={applyAllCat}
-                            onChange={(e) => setApplyAllCat(e.target.checked)} className="accent-gold" />
-                          All {sameMerchantCount} from &quot;{t.merchant}&quot;
-                        </label>
-                      )}
-                      <select aria-label="Transaction category" autoFocus value={editCatValue}
-                        onChange={(e) => {
-                          setEditCatValue(e.target.value);
-                          setEditSubValue(SUB_NONE);
-                          setEditSubCustom("");
-                        }}
-                        onKeyDown={(e) => { if (e.key === "Escape") setEditCatId(null); }}
-                        className="bg-ink border border-gold/40 rounded-lg px-2 py-1 text-xs text-mist outline-none">
-                        {categories.map((c) => <option key={c} value={c}>{c}</option>)}
-                        <option value="Other">Other (type below)</option>
-                      </select>
-                      {editCatValue === "Other" && (
-                        <input placeholder="Custom category…" value={editCatCustom}
-                          onChange={(e) => setEditCatCustom(e.target.value)}
-                          onKeyDown={(e) => { if (e.key === "Escape") setEditCatId(null); }}
-                          className="w-full bg-ink border border-rim rounded-lg px-2 py-1 text-xs text-mist focus:border-gold/40 outline-none" />
-                      )}
-                      {/* Subcategory — always shown so KP can set it for any category */}
-                      <select aria-label="Transaction subcategory" value={editSubValue}
-                        onChange={(e) => { setEditSubValue(e.target.value); setEditSubCustom(""); }}
-                        onKeyDown={(e) => { if (e.key === "Escape") setEditCatId(null); }}
-                        className="bg-ink border border-rim rounded-lg px-2 py-1 text-xs text-mist outline-none block">
-                        <option value={SUB_NONE}>No subcategory</option>
-                        {subOptions.map((s) => <option key={s} value={s}>{s}</option>)}
-                        <option value={SUB_OTHER}>Other (type below)</option>
-                      </select>
-                      {editSubValue === SUB_OTHER && (
-                        <input placeholder="Custom subcategory…" value={editSubCustom}
-                          onChange={(e) => setEditSubCustom(e.target.value)}
-                          onKeyDown={(e) => { if (e.key === "Escape") setEditCatId(null); }}
-                          className="w-full bg-ink border border-rim rounded-lg px-2 py-1 text-xs text-mist focus:border-gold/40 outline-none" />
-                      )}
-                      <div className="flex items-center gap-1.5 pt-0.5">
-                        <button onClick={() => {
-                          const cat = editCatValue === "Other" ? (editCatCustom.trim() || "Uncategorized") : editCatValue;
-                          const sub = editSubValue === SUB_NONE ? null
-                            : editSubValue === SUB_OTHER ? (editSubCustom.trim() || null)
-                            : editSubValue;
-                          if (cat) commitCatPatch(t, { category: cat, subcategory: sub });
-                        }}
-                          className="px-2.5 py-1 text-xs bg-gold-shimmer text-ink rounded-lg font-semibold">
-                          Save
-                        </button>
-                        <button onClick={() => setEditCatId(null)}
-                          className="px-2.5 py-1 text-xs border border-rim rounded-lg hover:border-gold/30 text-mist/60 hover:text-mist">
-                          Cancel
-                        </button>
-                      </div>
-                    </div>
-                  ) : (
-                    <button onClick={() => startCatEdit(t)} title="Click to change category" aria-label={`Change category for ${t.merchant ?? "transaction"}`}
-                      className="text-mist/50 hover:text-gold transition-colors text-left">
-                      {t.subcategory
-                        ? <>{t.category || "Uncategorized"} <span className="text-mist/35">· {t.subcategory}</span></>
-                        : (t.category || "Uncategorized")}
-                    </button>
-                  )}
+                  <button type="button" onClick={() => startCategorize(t)} title="Change category"
+                    aria-haspopup="dialog"
+                    aria-label={`Change category for ${t.merchant ?? "transaction"} (now ${formatCategory(t.category, t.subcategory)})`}
+                    className={`cat-pill${!t.category || t.category === "Uncategorized" ? " is-empty" : ""}`}>
+                    <span>{t.category || "Uncategorized"}</span>
+                    {t.subcategory && <span className="cat-pill-sub">{t.subcategory}</span>}
+                  </button>
                 </td>
 
                 {/* Card — show nickname */}
@@ -569,6 +471,18 @@ export default function TransactionsTable({
         </tbody>
       </table>
       </div>
+
+      <CategorizeDialog
+        txn={categorizing}
+        allTransactions={allTransactions ?? transactions}
+        taxonomy={taxonomy}
+        cardLabel={(last4) => cardNicknameMap.get(last4) ?? `··${last4}`}
+        onSaveOne={(id, pair) => onCategoryChange(id, pair)}
+        onSaveMany={saveMany}
+        onCreate={createCategory}
+        onManage={() => onManageCategories?.()}
+        onDone={(message) => { setCategorizing(null); if (message) setCatNotice(message); }}
+      />
 
       {totalPages > 1 && (
         <div className="px-5 py-3 border-t border-wire flex items-center justify-between">

@@ -37,7 +37,7 @@ function elements(value: unknown): Node[] {
   return [node, ...elements(node.props.children)];
 }
 const props: Parameters<typeof TransactionsTable>[0] = {
-  resultKey: "all", transactions: [], cards: [], categories: [], subcategories: {},
+  resultKey: "all", transactions: [], cards: [], taxonomy: [],
   ordersByTxn: new Map(), existingNotes: [],
   onMerchantSave: async () => {}, onCategoryChange: async () => {},
   onNotesChange: async () => {}, onNotesBulk: async () => {},

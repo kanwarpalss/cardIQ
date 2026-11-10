@@ -24,6 +24,8 @@ config({ path: ".env.local" });
 
 import { createClient } from "@supabase/supabase-js";
 import { categorizeFull } from "../src/lib/categorize";
+import { resolveTxnCategory } from "../src/lib/category-taxonomy";
+import { loadCategoryAliases } from "../src/lib/category-taxonomy-store";
 import { cleanMerchant } from "../src/lib/merchant-clean";
 import type { ParsedStatement, StatementLine } from "../src/lib/statements/parse";
 import { BANK_EMAIL_SENDERS } from "../src/lib/cards/registry";
@@ -308,13 +310,18 @@ async function main() {
   if (mappingsRes.error) throw new Error(mappingsRes.error.message);
   const cardByLast4 = new Map((cardsRes.data ?? []).map((c) => [c.last4 as string, c.id as string]));
   const merchantMap = new Map((mappingsRes.data ?? []).map((m) => [String(m.raw_name).toLowerCase(), m]));
+  const categoryAliases = await loadCategoryAliases(sb, uid);
 
   const payload = missing.map((l) => {
     const rawKey = l.merchant.toLowerCase();
     const cleaned = cleanMerchant(l.merchant);
     const mapping = merchantMap.get(rawKey) ?? (cleaned ? merchantMap.get(cleaned.toLowerCase()) : undefined);
     const merchant = (mapping?.normalized_name as string | undefined) ?? cleaned ?? l.merchant;
-    const ruled = categorizeFull(merchant);
+    const resolved = resolveTxnCategory(
+      mapping as { category?: string | null; subcategory?: string | null } | undefined,
+      categorizeFull(merchant),
+      categoryAliases,
+    );
     return {
       user_id: uid,
       card_id: cardByLast4.get(l.cardLast4) ?? null,
@@ -324,8 +331,8 @@ async function main() {
       original_amount: l.foreign?.amount ?? l.amount,
       low_confidence: false,
       merchant,
-      category: (mapping?.category as string | undefined) ?? ruled.category,
-      subcategory: mapping ? ((mapping.subcategory as string | null) ?? null) : ruled.subcategory,
+      category: resolved.category,
+      subcategory: resolved.subcategory,
       txn_type: l.direction,
       // Statements give a day, not a time: noon IST keeps it on the right day in every view.
       txn_at: new Date(`${l.date}T12:00:00+05:30`).toISOString(),
