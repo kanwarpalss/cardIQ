@@ -1,20 +1,11 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { useTransactionsAll } from "@/lib/transactions-cache";
 import { CARD_REGISTRY } from "@/lib/cards/registry";
 import { CardFace } from "./CardVisual";
-import { fmtDate, fmtINR } from "@/lib/format";
-import {
-  CALENDAR_YEAR_START,
-  currentCalendarMonth,
-  currentMilestoneYear,
-  inclusiveWindowEnd,
-  localDateKey,
-  spendInWindow,
-  type MilestoneTxn,
-} from "@/lib/milestones";
+import { fmtDate } from "@/lib/format";
+import CardRetentionNote from "./CardRetentionNote";
 
 type CardRow = {
   id: string;
@@ -50,22 +41,6 @@ export default function CardsTab() {
   const [saving,     setSaving]     = useState(false);
   const [gmailStatus, setGmailStatus] = useState<GmailScopeStatus | null>(null);
   const [checkingGmail, setCheckingGmail] = useState(false);
-  // Milestones need complete transaction history — shared with Overview/
-  // Spend/Insights via the same cache instead of a fourth independent full
-  // re-fetch on every mount (2026-09-05, found while auditing "are all tabs
-  // fast" after the Orders/Vouchers fix). Order doesn't matter here:
-  // spendInWindow only sums via reduce(), so the cache's descending order
-  // (vs. this tab's old ascending fetch) changes nothing.
-  const { data: allData, error: fetchError } = useTransactionsAll();
-  const milestoneTxns = useMemo(
-    () => (allData?.transactions as MilestoneTxn[]) ?? [],
-    [allData]
-  );
-  const milestoneError = fetchError ? "Milestone spend couldn't be loaded. Try refreshing Cards." : null;
-  const [editingPeriod, setEditingPeriod] = useState<string | null>(null);
-  const [periodDraft, setPeriodDraft] = useState("");
-  const [savingPeriod, setSavingPeriod] = useState(false);
-  const [periodMessage, setPeriodMessage] = useState<Record<string, string>>({});
 
   async function load() {
     const [{ data: cardsData }, { data: settings }] = await Promise.all([
@@ -167,45 +142,6 @@ export default function CardsTab() {
     checkGmail();
   }
 
-  function beginPeriodEdit(card: CardRow) {
-    const spec = CARD_REGISTRY[card.product_key];
-    const window = currentMilestoneYear(card.anniversary_date, spec?.milestone_year_start);
-    setEditingPeriod(card.id);
-    setPeriodDraft(localDateKey(window.start));
-    setPeriodMessage((prev) => ({ ...prev, [card.id]: "" }));
-  }
-
-  async function saveMilestoneYear(card: CardRow, value: string | null) {
-    setSavingPeriod(true);
-    setPeriodMessage((prev) => ({ ...prev, [card.id]: "" }));
-    if (value) {
-      const parsed = new Date(value + "T00:00:00");
-      if (Number.isNaN(parsed.getTime()) || localDateKey(parsed) !== value) {
-        setPeriodMessage((prev) => ({ ...prev, [card.id]: "Choose a valid spending-year start date." }));
-        setSavingPeriod(false);
-        return;
-      }
-    }
-    const { error } = await supabase.from("cards")
-      .update({ anniversary_date: value })
-      .eq("id", card.id);
-    if (error) {
-      setPeriodMessage((prev) => ({ ...prev, [card.id]: error.message }));
-    } else {
-      setEditingPeriod(null);
-      setPeriodMessage((prev) => ({ ...prev, [card.id]: value ? "Spending year updated." : "Card default restored." }));
-      await load();
-    }
-    setSavingPeriod(false);
-  }
-
-  const [now] = useState(() => new Date());
-  const monthWindow = useMemo(() => currentCalendarMonth(now), [now]);
-  const calendarWindow = useMemo(
-    () => currentMilestoneYear(null, CALENDAR_YEAR_START, now),
-    [now]
-  );
-
   const selectedSpec = CARD_REGISTRY[productKey];
 
   return (
@@ -298,121 +234,7 @@ export default function CardsTab() {
         </details>
       </section>
 
-      <details className="disclosure-panel"><summary>Milestone tracker <span>{cards.length} cards · spending years &amp; rewards</span></summary>
-      {/* ── Milestone tracker ────────────────────────────────────────── */}
-      <section className="rounded-2xl border border-rim bg-surface p-6 shadow-card space-y-5">
-        <div>
-          <h2 className="font-serif text-lg font-semibold text-gold">Milestone tracker</h2>
-          <p className="text-xs text-mist/55 mt-1 leading-relaxed">
-            Each card follows its own spending year. Infinia defaults to 1 Apr–31 Mar; you can change any card or switch it to the calendar year.
-          </p>
-        </div>
-
-        {milestoneError && (
-          <div className="rounded-xl border border-ruby/30 bg-ruby/5 px-4 py-3 text-xs text-ruby">
-            {milestoneError}
-          </div>
-        )}
-
-        {cards.length === 0 ? (
-          <p className="text-sm text-mist/50">Add a card above to start tracking milestones.</p>
-        ) : (
-          <div className="space-y-4">
-            {cards.map((card) => {
-              const spec = CARD_REGISTRY[card.product_key];
-              const name = card.nickname || spec?.display_name || card.product_key;
-              const annualWindow = currentMilestoneYear(card.anniversary_date, spec?.milestone_year_start, now);
-              const annualSpend = spendInWindow(milestoneTxns, card.last4, annualWindow, now);
-              const calendarSpend = spendInWindow(milestoneTxns, card.last4, calendarWindow, now);
-              const monthlySpend = spendInWindow(milestoneTxns, card.last4, monthWindow, now);
-              const monthly = [...(spec?.milestones_monthly ?? [])].sort((a, b) => a.spend_inr - b.spend_inr);
-              const annual = [...(spec?.milestones_anniversary ?? [])].sort((a, b) => a.spend_inr - b.spend_inr);
-              const hasMilestones = monthly.length > 0 || annual.length > 0;
-              const isEditing = editingPeriod === card.id;
-
-              return (
-                <div key={card.id} className="rounded-xl border border-rim bg-raised p-4 space-y-4">
-                  <div className="flex items-start justify-between gap-3 flex-wrap">
-                    <div>
-                      <div className="text-sm font-medium text-mist/90">{name}</div>
-                      <div className="text-2xs text-mist/45 tracking-wider">••{card.last4}</div>
-                    </div>
-                    <button onClick={() => isEditing ? setEditingPeriod(null) : beginPeriodEdit(card)}
-                      className="text-xs text-mist/55 hover:text-gold transition-colors">
-                      {isEditing ? "Cancel" : "Edit spending year"}
-                    </button>
-                  </div>
-
-                  <div className="grid sm:grid-cols-2 gap-2.5">
-                    <PeriodStat
-                      label="Milestone spending year"
-                      range={windowLabel(annualWindow)}
-                      value={fmtINR(annualSpend)}
-                      note={card.anniversary_date ? "Your custom start" : spec?.milestone_year_start ? "Card default" : "Calendar-year default"}
-                    />
-                    <PeriodStat
-                      label={`Calendar year ${calendarWindow.start.getFullYear()}`}
-                      range={windowLabel(calendarWindow)}
-                      value={fmtINR(calendarSpend)}
-                      note="For comparison"
-                    />
-                  </div>
-
-                  {isEditing && (
-                    <div className="rounded-lg border border-gold/20 bg-ink/50 p-3 space-y-3">
-                      <label className="block">
-                        <span className="text-2xs uppercase tracking-widest text-mist/50">Spending year starts</span>
-                        <input type="date" value={periodDraft} onChange={(e) => setPeriodDraft(e.target.value)}
-                          className="mt-1.5 w-full bg-ink border border-rim rounded-lg px-3 py-2 text-sm text-mist focus:border-gold/40 outline-none" />
-                      </label>
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <button onClick={() => void saveMilestoneYear(card, periodDraft)} disabled={savingPeriod || !periodDraft}
-                          className="px-3 py-1.5 rounded-lg text-xs font-medium bg-gold/15 text-gold border border-gold/30 hover:bg-gold/25 disabled:opacity-40">
-                          {savingPeriod ? "Saving…" : "Save"}
-                        </button>
-                        <button onClick={() => setPeriodDraft(`${now.getFullYear()}-01-01`)} disabled={savingPeriod}
-                          className="px-3 py-1.5 rounded-lg text-xs text-mist/65 border border-rim hover:text-mist">
-                          Use calendar year
-                        </button>
-                        <button onClick={() => void saveMilestoneYear(card, null)} disabled={savingPeriod}
-                          className="px-3 py-1.5 rounded-lg text-xs text-mist/45 hover:text-mist/70">
-                          Restore card default
-                        </button>
-                      </div>
-                    </div>
-                  )}
-
-                  {periodMessage[card.id] && (
-                    <div className={`text-xs ${periodMessage[card.id].includes("updated") || periodMessage[card.id].includes("restored") ? "text-emerald" : "text-ruby"}`}>
-                      {periodMessage[card.id]}
-                    </div>
-                  )}
-
-                  {!hasMilestones ? (
-                    <div className="text-xs text-mist/45 border-t border-wire pt-3">
-                      No documented spend milestone for this card.
-                    </div>
-                  ) : (
-                    <div className="space-y-4 border-t border-wire pt-4">
-                      {monthly.map((milestone) => (
-                        <MilestoneProgress key={`monthly-${milestone.spend_inr}`}
-                          cadence={`Monthly · ${fmtDate(localDateKey(monthWindow.start))}–${fmtDate(localDateKey(inclusiveWindowEnd(monthWindow)))}`}
-                          spent={monthlySpend} target={milestone.spend_inr} reward={milestone.reward} />
-                      ))}
-                      {annual.map((milestone) => (
-                        <MilestoneProgress key={`annual-${milestone.spend_inr}`}
-                          cadence={`Spending year · ${windowLabel(annualWindow)}`}
-                          spent={annualSpend} target={milestone.spend_inr} reward={milestone.reward} />
-                      ))}
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        )}
-      </section>
-      </details>
+      {cards.some(card => card.product_key === "hdfc_infinia") && <CardRetentionNote />}
       </div>
       <div hidden={section !== "benefits"}>
       {/* ── Bills by card ────────────────────────────────────────────── */}
@@ -533,57 +355,6 @@ export default function CardsTab() {
         </button>
       </section>
 
-      </div>
-    </div>
-  );
-}
-
-function windowLabel(window: { start: Date; endExclusive: Date }): string {
-  return `${fmtDate(localDateKey(window.start))} – ${fmtDate(localDateKey(inclusiveWindowEnd(window)))}`;
-}
-
-function PeriodStat({ label, range, value, note }: {
-  label: string;
-  range: string;
-  value: string;
-  note: string;
-}) {
-  return (
-    <div className="rounded-lg border border-wire bg-ink/35 px-3 py-2.5">
-      <div className="text-2xs uppercase tracking-widest text-mist/45">{label}</div>
-      <div className="text-xs text-mist/55 mt-1">{range}</div>
-      <div className="font-serif text-xl font-semibold text-mist/90 tabular-nums mt-1">{value}</div>
-      <div className="text-2xs text-mist/35">{note}</div>
-    </div>
-  );
-}
-
-function MilestoneProgress({ cadence, spent, target, reward }: {
-  cadence: string;
-  spent: number;
-  target: number;
-  reward: string;
-}) {
-  const reached = spent >= target;
-  const pct = target > 0 ? Math.min((spent / target) * 100, 100) : 0;
-  return (
-    <div className="space-y-2">
-      <div className="flex items-start justify-between gap-3 flex-wrap">
-        <div>
-          <div className="text-2xs text-mist/45">{cadence}</div>
-          <div className="text-xs text-mist/75 mt-0.5">{fmtINR(target)} · {reward}</div>
-        </div>
-        <span className={`text-xs font-medium shrink-0 ${reached ? "text-emerald" : "text-gold"}`}>
-          {reached ? "Reached ✓" : `${fmtINR(target - spent)} to go`}
-        </span>
-      </div>
-      <div className="h-1.5 bg-ink rounded-full overflow-hidden">
-        <div className="h-full bg-gold-shimmer rounded-full transition-all duration-700"
-          style={{ width: `${pct}%` }} />
-      </div>
-      <div className="flex justify-between text-2xs text-mist/45">
-        <span>{Math.round(pct)}%</span>
-        <span>{fmtINR(spent)} spent</span>
       </div>
     </div>
   );

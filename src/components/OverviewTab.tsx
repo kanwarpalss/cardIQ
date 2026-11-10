@@ -6,13 +6,13 @@ import { isMissingTableError } from "@/lib/supabase/errors";
 import { useTransactionsAll } from "@/lib/transactions-cache";
 import { CARD_REGISTRY } from "@/lib/cards/registry";
 import { fmtINR, fmtNum, fmtDate } from "@/lib/format";
-import { currentMilestoneYear, spendInWindow } from "@/lib/milestones";
 import {
-  latestBalanceByCard, estimatePoints, sortOffersForDisplay,
+  latestBalanceByCard, sortOffersForDisplay,
   effectiveOfferStatus, expiryState,
   type RewardBalanceRow, type OfferRow, type LoyaltyRow,
 } from "@/lib/perks";
-import CardVisual from "./CardVisual";
+import { CardFace } from "./CardVisual";
+import CardRetentionNote from "./CardRetentionNote";
 import MissingTableNotice from "./MissingTableNotice";
 
 type Txn = {
@@ -74,7 +74,10 @@ export default function OverviewTab({
     const txns = allData?.transactions ?? [];
     const now = new Date();
     const startMs = new Date(now.getFullYear(), now.getMonth(), 1).getTime();
-    const inThisMonth = txns.filter((t) => new Date(t.txn_at).getTime() >= startMs);
+    const inThisMonth = txns.filter((t) => {
+      const at = new Date(t.txn_at).getTime();
+      return at >= startMs && at <= now.getTime() && Number.isFinite(Number(t.amount_inr)) && Number(t.amount_inr) >= 0;
+    });
     const debits = inThisMonth.filter((t) => t.txn_type === "debit");
     const credits = inThisMonth.filter((t) => t.txn_type === "credit");
     const perCard: Record<string, number> = {};
@@ -85,21 +88,6 @@ export default function OverviewTab({
       count: inThisMonth.length,
       perCard,
     };
-  }, [allData]);
-
-  // Card-specific milestone spend uses the product's documented year start,
-  // with an individual saved override when KP changes it in Cards.
-  const anniversarySpendByCard = useMemo(() => {
-    const out: Record<string, number> = {};
-    if (!allData) return out;
-    const now = new Date();
-    for (const card of allData.cards) {
-      const spec = CARD_REGISTRY[card.product_key];
-      if (!spec?.milestones_anniversary?.length) continue;
-      const window = currentMilestoneYear(card.anniversary_date, spec.milestone_year_start, now);
-      out[card.last4] = spendInWindow(allData.transactions, card.last4, window, now);
-    }
-    return out;
   }, [allData]);
 
   const latestBalances = useMemo(() => latestBalanceByCard(rewards), [rewards]);
@@ -120,7 +108,7 @@ export default function OverviewTab({
   }
 
   return (
-    <div className="max-w-6xl mx-auto px-6 py-8 space-y-5 pb-6">
+    <div className="home-overview max-w-6xl mx-auto px-6 py-8 space-y-5 pb-6">
 
       {/* ── Greeting + hero ─────────────────────────────────────────────── */}
       <div className="overview-intro">
@@ -128,7 +116,7 @@ export default function OverviewTab({
           <p className="eyebrow mb-2">THE BIG PICTURE</p>
           <h1 className="font-serif text-3xl font-semibold text-mist">{greeting()}, KP</h1>
           <p className="text-sm text-mist/60 mt-1">
-            Your cards at a glance — {monthName}
+            Spend, rewards and the essentials.
             {allData?.last_sync && (
               <span className="text-mist/45"> · synced {new Date(allData.last_sync).toLocaleDateString("en-IN", { day: "numeric", month: "short" })}</span>
             )}
@@ -138,23 +126,23 @@ export default function OverviewTab({
       </div>
 
       {/* ── Hero stats ──────────────────────────────────────────────────── */}
-      <div className="overview-summary">
-        <section className="spend-hero" aria-label="Monthly spending">
+        <section className="home-month" aria-label="Monthly spending">
+          <div>
           <p className="spend-hero-label">Spent this month · {monthName}</p>
-          <div className="spend-hero-value">{fmtINR(month.spend)}</div>
-          <div className="spend-hero-footer">
-            <span>{fmtNum(month.count)} transactions this month</span>
+          <div className="home-month-amount">{fmtINR(month.spend)}</div>
+          <span className="text-xs">{fmtNum(month.count)} transaction{month.count === 1 ? "" : "s"}</span>
+          </div>
+          <div className="home-month-support">
+            <div><small>Refunded</small><strong>{fmtINR(month.refunds)}</strong></div>
+            <div><small>Cards</small><strong>{fmtNum(cards.length)}</strong></div>
             <button onClick={() => onNavigate("Spend")}>Explore spending ↗</button>
           </div>
         </section>
-        <HeroStat label="Refunds this month" value={fmtINR(month.refunds)} tone="sage" icon="↙" />
-        <HeroStat label="Connected cards" value={fmtNum(cards.length)} tone="lilac" icon="▱" />
-      </div>
 
       {/* ── Card tiles ──────────────────────────────────────────────────── */}
       <section className="space-y-3">
         <div className="section-heading">
-          <h2 className="font-serif text-lg font-semibold text-mist">Your cards</h2>
+          <div><h2 className="font-serif text-lg font-semibold text-mist">Your wallet</h2><p className="text-xs text-mist/60 mt-1">Spent this month · select a card to explore</p></div>
           <button onClick={() => onNavigate("Cards")}
             className="text-xs text-mist/60 hover:text-gold transition-colors">Manage cards →</button>
         </div>
@@ -162,56 +150,21 @@ export default function OverviewTab({
         {cards.length === 0 ? (
           <EmptyPanel
             title="No cards yet"
-            body="Add your first card to start tracking spend, milestones and rewards."
+            body="Add your first card to see its spending and saved rewards."
             cta="Add a card →" onClick={() => onNavigate("Cards")} />
         ) : (
-          <div className="wallet-strip grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-            {cards.map((c) => {
-              const spec = CARD_REGISTRY[c.product_key];
-              const spent = month.perCard[c.last4] || 0;
-              const est = spec?.rewards ? estimatePoints(spent, spec.rewards) : null;
-
-              // Same honest monthly-vs-anniversary-vs-nothing logic as SpendTab —
-              // never fabricate a milestone for a card that doesn't document one.
-              const monthly = spec?.milestones_monthly?.[0];
-              const annualTiers = spec?.milestones_anniversary ?? [];
-              let milestoneBlock: React.ReactNode = null;
-              if (monthly) {
-                const pct = Math.min((spent / monthly.spend_inr) * 100, 100);
-                milestoneBlock = (
-                  <MilestoneStrip pct={pct} reached={pct >= 100}
-                    caption={`${Math.round(pct)}% of ${fmtINR(monthly.spend_inr)}`}
-                    toGo={pct < 100 ? fmtINR(monthly.spend_inr - spent) : null} />
-                );
-              } else if (annualTiers.length > 0) {
-                const annSpent = anniversarySpendByCard[c.last4] || 0;
-                const next = annualTiers.find((m) => annSpent < m.spend_inr) ?? annualTiers[annualTiers.length - 1];
-                const pct = Math.min((annSpent / next.spend_inr) * 100, 100);
-                const reached = annSpent >= annualTiers[annualTiers.length - 1].spend_inr;
-                milestoneBlock = (
-                  <MilestoneStrip pct={pct} reached={reached}
-                    caption={reached ? "Anniversary milestones reached" : `${Math.round(pct)}% of ${fmtINR(next.spend_inr)} (anniversary year)`}
-                    toGo={!reached ? fmtINR(next.spend_inr - annSpent) : null} />
-                );
-              }
-
-              return (
-                <CardVisual key={c.id} productKey={c.product_key}
-                  name={cardLabel(c)} issuer={spec?.issuer ?? ""} network={spec?.network ?? ""}
-                  last4={c.last4} onClick={() => onOpenSpend(c.last4)}>
-                  <div className="flex items-baseline justify-between gap-2">
-                    <span className="text-xs text-white/55">This month</span>
-                    <span className="font-serif text-xl font-semibold text-white tabular-nums">{fmtINR(spent)}</span>
-                  </div>
-                  {milestoneBlock}
-                  {est !== null && spec?.rewards && (
-                    <div className="mt-2 text-2xs text-white/50">
-                      ≈ {fmtNum(est)} {spec.rewards.program} this month <span className="text-white/35">(base-rate estimate)</span>
-                    </div>
-                  )}
-                </CardVisual>
-              );
-            })}
+          <div className="home-wallet-layout">
+            <div className="home-wallet" aria-label="Card spending this month">
+              {cards.map(c => {
+                const spec = CARD_REGISTRY[c.product_key];
+                return <button type="button" key={c.id} className="home-wallet-row" onClick={() => onOpenSpend(c.last4)}>
+                  <span className="home-wallet-art"><CardFace productKey={c.product_key} /></span>
+                  <span className="home-wallet-identity"><strong>{cardLabel(c)}</strong><small>{spec?.issuer || "Card"} · ••{c.last4}</small></span>
+                  <span className="home-wallet-spend">{fmtINR(month.perCard[c.last4] || 0)}<span aria-hidden="true">↗</span></span>
+                </button>;
+              })}
+            </div>
+            {cards.some(c => c.product_key === "hdfc_infinia") && <CardRetentionNote />}
           </div>
         )}
       </section>
@@ -323,36 +276,6 @@ export default function OverviewTab({
 }
 
 // ── Local pieces ──────────────────────────────────────────────────────────────
-
-function MilestoneStrip({ pct, caption, toGo, reached }: {
-  pct: number; caption: string; toGo: string | null; reached: boolean;
-}) {
-  return (
-    <>
-      <div className="mt-2.5 h-1 bg-black/40 rounded-full overflow-hidden">
-        <div className="h-full bg-gold-shimmer rounded-full transition-all duration-700" style={{ width: `${pct}%` }} />
-      </div>
-      <div className="mt-1.5 flex justify-between text-2xs text-white/50">
-        <span>{caption}</span>
-        {reached
-          ? <span className="text-green-200">Reached ✓</span>
-          : toGo && <span>{toGo} to go</span>}
-      </div>
-    </>
-  );
-}
-
-function HeroStat({ label, value, tone, icon }: {
-  label: string; value: string; tone: "sage" | "lilac"; icon: string;
-}) {
-  return (
-    <div className={`summary-card summary-${tone}`}>
-      <span className="summary-icon" aria-hidden="true">{icon}</span>
-      <div className="summary-value">{value}</div>
-      <div className="summary-label">{label}</div>
-    </div>
-  );
-}
 
 function Panel({ title, onOpen, children }: { title: string; onOpen: () => void; children: React.ReactNode }) {
   return (

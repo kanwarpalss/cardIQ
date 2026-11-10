@@ -8,6 +8,7 @@
     "build": "next build --webpack",
     "start": "node scripts/require-cardiq-port.mjs && next start --port 3901",
     "health": "tsx scripts/verify-login.ts",
+    "deals:status": "tsx scripts/deals-status.ts",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",

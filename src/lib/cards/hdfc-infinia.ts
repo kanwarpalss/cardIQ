@@ -34,8 +34,9 @@ export const HDFC_INFINIA: CardSpec = {
   milestones_anniversary: [
     { spend_inr: 1000000, reward: "Renewal fee (₹12,500 + GST) waived" },
   ],
-  // HDFC tracks Infinia milestone/renewal spend from 1 Apr through 31 Mar.
-  milestone_year_start: { month: 4, day: 1 },
+  // HDFC's current product page says the fee waiver uses the preceding 12
+  // months. Apr–Mar is the separate retention year, not a renewal-year default.
+  // Keep the fee threshold as reference only; do not infer eligibility/progress.
 
   lounge: {
     domestic: {
@@ -67,6 +68,7 @@ export const HDFC_INFINIA: CardSpec = {
   },
 
   sources: {
+    retention: "https://www.hdfc.bank.in/content/dam/hdfcbankpws/in/en/personal-banking/discover-products/cards/credit-cards/personal-mitc/mitc-in-english.pdf",
     deals: "https://www.hdfcbank.com/personal/pay/cards/credit-cards/infinia-metal-credit-card",
     points: "https://offers.smartbuy.hdfcbank.com/",
     vouchers: "https://offers.smartbuy.hdfcbank.com/",
