@@ -933,7 +933,7 @@ export default function RedemptionsTab({
   }
 
   return (
-    <div className={`${sub === "partners" || sub === "deals" ? "max-w-5xl" : "max-w-4xl"} mx-auto px-4 sm:px-6 py-8 space-y-4 pb-6`}>
+    <div className={`${sub === "partners" ? "max-w-5xl" : "max-w-4xl"} mx-auto px-4 sm:px-6 py-8 space-y-4 pb-6`}>
       <header>
         <h1 className="font-serif text-2xl font-semibold text-mist">Redemptions</h1>
         <p className="text-sm text-mist/60 mt-1">

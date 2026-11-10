@@ -58,80 +58,131 @@ const DEALS: StoredDeal[] = [
 const RUN_OK: DealRun = { started_at: "2026-11-09T03:00:00Z", finished_at: "2026-11-09T03:01:20Z", ok: true,
   summary: "Checked 476 emails and 44 blog posts; 479 filtered out free, 33 read by AI · 26 deals" };
 
-const render = (deals: Partial<DealsData> = {}) => renderToStaticMarkup(createElement(DealsView, {
-  data: DATA, now: NOW,
+const render = (deals: Partial<DealsData> = {}, extra: { initialAdding?: boolean } = {}) => renderToStaticMarkup(createElement(DealsView, {
+  data: DATA, now: NOW, onSave: async () => null, onDelete: async () => null, ...extra,
   deals: { deals: DEALS, runs: [RUN_OK], tableMissing: false, error: null, ...deals },
 }));
 /** Visible text, tags removed, entities for quotes/apostrophes decoded. */
 const text = (html: string) => html.replace(/<[^>]+>/g, " ").replace(/&#x27;|&#39;/g, "'").replace(/&quot;/g, '"')
   .replace(/&amp;/g, "&").replace(/\s+/g, " ");
 
-describe("Live deals screen — rendered rows", () => {
+
+/** One deal's row — from its program name on the row to the next row's start. */
+const rowOf = (html: string, headline: string) => {
+  const rows = html.split(/(?=<details class="group )/).slice(1).map(text);
+  const row = rows.find((r) => r.includes(headline));
+  if (!row) throw new Error(`no row for ${headline}`);
+  return row;
+};
+
+describe("Live deals screen — layout", () => {
   const html = render();
   const t = text(html);
 
-  it("shows the job's health and last summary first", () => {
-    expect(t).toContain("Last checked 3 hours ago");
-    expect(t).toContain("Checked 476 emails and 44 blog posts");
-    expect(t.indexOf("Last checked")).toBeLessThan(t.indexOf("For your cards"));
+  it("opens with one quiet status line and the Add button; the run stats only on hover", () => {
+    expect(t).toMatch(/^ ?4 live deals you can use Last checked 3 hours ago \+ Add a deal/);
+    expect(t).not.toContain("Checked 476 emails");
+    expect(html).toContain('title="Checked 476 emails and 44 blog posts');
   });
 
-  it("orders sections: your cards, then points sales, then the rest", () => {
+  it("orders groups: your cards, then points sales, then the folded-away rest", () => {
     const at = (s: string) => t.indexOf(s);
-    expect(at("For your cards")).toBeGreaterThan(-1);
-    expect(at("For your cards")).toBeLessThan(at("Points sales"));
-    expect(at("Points sales")).toBeLessThan(at("Not for your cards"));
-    expect(at("Not for your cards")).toBeLessThan(at("Recently ended"));
+    expect(at("Transfer bonuses for your cards · 1")).toBeGreaterThan(-1);
+    expect(at("Transfer bonuses for your cards")).toBeLessThan(at("Points sales · 3"));
+    expect(at("Points sales · 3")).toBeLessThan(at("Not for your cards · 1"));
+    expect(at("Not for your cards · 1")).toBeLessThan(at("Ended in the last 60 days · 1"));
+    // Folded groups and every row start closed: nothing is open on arrival.
+    expect(html).not.toMatch(/<details[^>]* open/);
   });
 
-  it("reads the HDFC → Accor row with consistent numbers: 2:1, then +30%", () => {
-    // Infinia → Accor is 2:1: 1,00,000 → 50,000; ×1.3 → 65,000. Magnus is
-    // Axis, so it must not appear on an HDFC-only bonus.
-    expect(t).toContain("Your HDFC points transfer to Accor ALL");
-    expect(t).toContain("Infinia : 1,00,000 points → 50,000 points normally, 65,000 with the 30% bonus");
-    const accorCard = t.slice(t.indexOf("HDFC → Accor"), t.indexOf("Points sales"));
-    expect(accorCard).not.toContain("Magnus");
-    expect(accorCard).toContain("30% bonus");
-    expect(accorCard).toContain("Ends 30 Nov 2026 · 21 days left");
+  it("each row's face says program · type · figure · time, nothing more", () => {
+    const accor = rowOf(html, "HDFC → Accor");
+    expect(accor.slice(0, accor.indexOf("HDFC → Accor"))).toMatch(/^ ?AC? ?\w* ?Accor ALL Transfer bonus from HDFC 30% bonus 21 days left $/);
+    const marriott = rowOf(html, "up to 55% bonus on bought points");
+    // A live points sale sits under "Points sales": its row shows grade and balance instead.
+    expect(marriott).toMatch(/Marriott Bonvoy Best yet · You hold 23,456 55% bonus 14 days left/);
+  });
+});
+
+describe("Live deals screen — what's inside a row", () => {
+  const html = render();
+
+  it("HDFC → Accor: 2:1, then +30%, and no Axis card on an HDFC-only bonus", () => {
+    // Infinia → Accor is 2:1: 1,00,000 → 50,000; ×1.3 → 65,000.
+    const row = rowOf(html, "HDFC → Accor");
+    expect(row).toContain("Ends 30 Nov 2026 · 21 days left");
+    expect(row).toContain("For you Your HDFC points transfer to Accor ALL");
+    expect(row).toContain("Infinia: 1,00,000 points → 50,000 points normally, 65,000 with the 30% bonus");
+    expect(row).not.toContain("Magnus");
   });
 
-  it("grades the 55% Marriott sale against the earlier 50% one, and shows his balance", () => {
-    const card = t.slice(t.indexOf("up to 55% bonus on bought points"), t.indexOf("IHG Points sale"));
-    expect(card).toContain("Bought with cash, direct from Marriott Bonvoy");
-    expect(card).toContain("up to 55% bonus");
-    expect(card).toContain("Best yet");
-    expect(card).toContain("Beats the best of 1 earlier offer since Aug 2026 (was 50%)");
-    expect(card).toContain("You hold 23,456 points");
-    expect(card).toContain("Ends 23 Nov 2026 · 14 days left");
+  it("Marriott 55%: graded against the earlier 50%, with his balance, the quote and the email link", () => {
+    const row = rowOf(html, "up to 55% bonus on bought points");
+    expect(row).not.toContain("For you");
+    expect(row).toContain("Compared Beats the best of 1 earlier offer since Aug 2026 (was 50%)");
+    expect(row).toContain("You hold 23,456 points");
+    expect(row).toContain('It says “Get up to 55% bonus points when you buy”');
+    expect(row).toContain("Email from Points for Marriott Bonvoy, 4 Nov 2026");
     expect(html).toContain('href="https://mail.google.com/mail/u/0/#all/1a1a768e21084950"');
-    expect(card).toContain("Email from Points for Marriott Bonvoy");
+    expect(row).not.toContain("Delete");
   });
 
-  it("flags blog-only, unverified, no-end-date and ending-tomorrow deals in words", () => {
-    const finnair = t.slice(t.indexOf("Finnair Plus: 50% off"), t.indexOf("Not for your cards"));
-    expect(finnair).toContain("50% off");
+  it("says blog-only, unmatched-quote, no-end-date and ending-tomorrow in words", () => {
+    const finnair = rowOf(html, "Finnair Plus: 50% off");
+    expect(finnair).toMatch(/Finnair Plus Points sale 50% off No end date/); // nothing else to say → type
     expect(finnair).toContain("From a blog, unconfirmed");
-    expect(finnair).toContain("No end date given");
     expect(finnair).toContain("Couldn't match this quote");
-    const ihg = t.slice(t.indexOf("IHG Points sale"), t.indexOf("Finnair Plus: 50% off"));
-    expect(ihg).toContain("Ends tomorrow");
-    // Ranked by grade, then soonest end: the 55% "best yet" Marriott sale
-    // leads, then IHG ending tomorrow, then Finnair with no end date.
-    expect(t.indexOf("Marriott Bonvoy: up to 55%")).toBeLessThan(t.indexOf("IHG Points sale"));
+    expect(finnair).toContain("No end date given — check before you buy");
+    expect(rowOf(html, "IHG: up to 100%")).toContain("100% bonus Ends tomorrow");
+    // Ranked by grade, then soonest end.
+    const t = text(html);
+    expect(t.indexOf("up to 55% bonus on bought")).toBeLessThan(t.indexOf("IHG: up to 100%"));
+    expect(t.indexOf("IHG: up to 100%")).toBeLessThan(t.indexOf("Finnair Plus: 50% off"));
   });
 
-  it("collapses the not-for-you and ended sections to their headers", () => {
-    expect(t).toContain("Not for your cards (1)");
-    // The 50% Marriott sale was last seen 7 Sep — over 60 days ago — so only
-    // the KrisFlyer → Accor bonus (last seen 30 Sep) is still listed.
-    expect(t).toContain("Recently ended (1)");
-    expect(t).not.toContain("JAL: 30% bonus from HeyMax");
-    expect(t).not.toContain("converting KrisFlyer miles");
+  it("folds deals not for his cards and recently ended ones away; drops ones older than 60 days", () => {
+    const t = text(html);
+    expect(t.indexOf("JAL: 30% bonus from HeyMax")).toBeGreaterThan(t.indexOf("Not for your cards · 1"));
+    expect(t.indexOf("converting KrisFlyer miles")).toBeGreaterThan(t.indexOf("Ended in the last 60 days · 1"));
+    expect(t).not.toContain("up to 50% bonus on bought points"); // last seen 7 Sep
+  });
+});
+
+describe("Live deals screen — deals he adds himself", () => {
+  const mine = deal({ headline: "Hilton Honors: 40% bonus on bought points", program: "hilton", bonus_pct: 40, ends_on: "2026-11-20",
+    evidence: "App-only", sources: [{ kind: "manual", item_id: "m1", origin: "You", title: "t", url: "https://hilton.com/buy", seen_at: "2026-11-09T05:00:00Z" }] });
+  const html = render({ deals: [...DEALS, mine] });
+
+  it("shows as his, with his note, his link and a Delete button", () => {
+    const row = rowOf(html, "Hilton Honors: 40%");
+    expect(row).toMatch(/Hilton Honors Added by you 40% bonus 11 days left/);
+    expect(row).toContain("Your note App-only");
+    expect(row).not.toContain("“App-only”");
+    expect(row).toContain("Added by you, 9 Nov 2026 Delete");
+    expect(html).toContain('href="https://hilton.com/buy"');
+    expect(row).not.toMatch(/unconfirmed|Couldn't match/);
   });
 
-  it("puts a failed run in front of the deals, with its reason", () => {
+  it("the Add form offers both deal types, every program and his banks first", () => {
+    const form = text(render({}, { initialAdding: true }));
+    expect(form).toContain("Add a deal Points sale Transfer bonus");
+    expect(form).toContain("Bonus points % off");
+    expect(form).toContain("Marriott Bonvoy");
+    expect(form).toContain("Save deal");
+    expect(form).not.toContain("+ Add a deal");
+  });
+});
+
+describe("Live deals screen — health and setup", () => {
+  it("puts a failed run in the status line, with its reason", () => {
     const failed = text(render({ runs: [{ ...RUN_OK, ok: false, summary: "Failed: no Gmail app password — save one in Cards → Settings" }, RUN_OK] }));
     expect(failed).toContain("Last check failed 3 hours ago: no Gmail app password");
+  });
+
+  it("an empty list says so and still offers Add", () => {
+    const empty = text(render({ deals: [] }));
+    expect(empty).toContain("No live deals right now");
+    expect(empty).toContain("+ Add a deal");
   });
 
   it("asks for migration 024 when the tables don't exist", () => {
