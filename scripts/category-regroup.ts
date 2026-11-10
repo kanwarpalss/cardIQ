@@ -102,7 +102,11 @@ async function main() {
   console.log([...after].sort((a, b) => b[1] - a[1]).map(([c, n]) => `  ${String(n).padStart(5)}  ${c}`).join("\n"));
   console.log("");
 
+  // Migration 025 preflight — read the database, never assume it was run.
   const row = await loadTaxonomyRow(sb, uid);
+  const { error: manualErr } = await sb.from("transactions").select("category_manual").limit(1);
+  const tableOk = !row.tableMissing && !row.error;
+  console.log(`Migration 025: category table ${tableOk ? "present" : `MISSING${row.error ? ` (${row.error})` : ""}`}, transactions.category_manual ${manualErr ? `MISSING (${manualErr.message})` : "present"}.`);
   if (row.taxonomy) {
     console.log("⚠ A saved category list exists — the regroup only moves data; rename list entries in Manage categories if needed.");
   }
