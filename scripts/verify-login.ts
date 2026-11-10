@@ -27,11 +27,11 @@ async function main() {
   });
 
   console.log(
-    "CardIQ login is healthy: raw Tailscale links canonicalize, the login page is current, and Supabase hands OAuth to Google."
+    "cardIQ login is healthy: raw Tailscale links canonicalize, the login page is current, and Supabase hands OAuth to Google."
   );
 }
 
 main().catch((error) => {
-  console.error(error instanceof Error ? error.message : "CardIQ login check failed");
+  console.error(error instanceof Error ? error.message : "cardIQ login check failed");
   process.exitCode = 1;
 });

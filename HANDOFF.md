@@ -1,11 +1,11 @@
-# HANDOFF.md — paste this to start any new conversation about CardIQ
+# HANDOFF.md — paste this to start any new conversation about cardIQ
 
 **Purpose**: drop this into a fresh chat so the next assistant (or
 future-you in 3 weeks) has full context without re-discovery.
 
 ---
 
-## What CardIQ is
+## What cardIQ is
 
 A personal credit-card spend tracker. Reads your Gmail (read-only OAuth),
 extracts transaction emails from Indian banks (Axis, HDFC, ICICI, HSBC),
@@ -178,7 +178,7 @@ Total tests: 152 (74 existing + 78 dining-related).
 
 Paste this into the new chat:
 
-> I'm working on CardIQ, a personal credit-card tracker at
+> I'm working on cardIQ, a personal credit-card tracker at
 > `/Users/k0s0k30/Code/cardIQ`. Please read `HANDOFF.md` and
 > `LEARNINGS.md` in that directory before making any changes — they
 > contain the architecture, conventions, and accumulated principles

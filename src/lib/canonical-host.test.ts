@@ -250,7 +250,7 @@ describe("canonicalCardiqUrl", () => {
   });
 
   describe("non-canonical names that still reach the Mac mini", () => {
-    // These all serve CardIQ fine. They matter because window.location.origin
+    // These all serve cardIQ fine. They matter because window.location.origin
     // becomes the OAuth redirect_to, and Supabase matches redirect URLs as
     // literal strings — an unrecognised one silently falls back to the Site
     // URL instead of erroring, stranding the login on localhost.

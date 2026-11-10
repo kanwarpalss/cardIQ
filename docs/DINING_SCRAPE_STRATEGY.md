@@ -86,11 +86,11 @@ Not every restaurant deserves the same attention:
 
 | Tier | What's in it | Size | Detail refresh |
 |---|---|---|---|
-| **🔥 Hot** | Restaurants KP has actually paid at (join `dining_listings` × CardIQ's existing transactions on merchant name + locality) | ~50–200 | **Nightly** |
-| **♨️ Warm** | Restaurants in localities where KP transacts (Koramangala, Indiranagar, etc. — derived from CardIQ data) **OR** anything where the list-endpoint headline changed since last sweep **OR** anything KP searched in the tab in the last 30d | ~1k–2k | **Weekly** (Sun discovery sweep) |
+| **🔥 Hot** | Restaurants KP has actually paid at (join `dining_listings` × cardIQ's existing transactions on merchant name + locality) | ~50–200 | **Nightly** |
+| **♨️ Warm** | Restaurants in localities where KP transacts (Koramangala, Indiranagar, etc. — derived from cardIQ data) **OR** anything where the list-endpoint headline changed since last sweep **OR** anything KP searched in the tab in the last 30d | ~1k–2k | **Weekly** (Sun discovery sweep) |
 | **🧊 Cold** | Everything else | ~10k–13k | **On-demand only** — when KP clicks the restaurant in the UI, we kick off a detail fetch with a "fetching fresh offers…" spinner. Falls back to the list-endpoint snippet meanwhile. |
 
-**This is the CardIQ-native insight.** We already know which
+**This is the cardIQ-native insight.** We already know which
 restaurants matter to KP — they're in his transaction history. We
 don't burn requests re-detailing 12k restaurants he'll never visit.
 
@@ -113,7 +113,7 @@ Crucially: **bootstrap is NOT "fetch detail for 15k restaurants on day
 | Step | What | Calls | Time |
 |---|---|---|---|
 | 1 | One discovery sweep across all BLR localities × 3 platforms | ~700 list calls | ~25 min |
-| 2 | Compute hot tier by joining listings ↔ KP's CardIQ transactions | 0 (DB-only) | seconds |
+| 2 | Compute hot tier by joining listings ↔ KP's cardIQ transactions | 0 (DB-only) | seconds |
 | 3 | Detail fetch the hot tier only (~150 restaurants) | ~150 detail calls | ~10 min |
 | 4 | Dedupe across platforms (§5 of BUILD_PLAN) | 0 (DB + embedding cache) | ~2 min |
 | 5 | UI is now useful: search any restaurant (basic info + headline offer from list endpoint), full detail for hot tier | — | — |
@@ -151,7 +151,7 @@ create table dining_scrape_pages (
 - **Idempotent**: detail upserts on `(platform, external_id)`, offers
   written with `snapshot_run_id` so they never collide across runs.
 - **Observable**: `dining_runs` row per platform per city per run;
-  `status='partial'` if any page failed; CardIQ tab shows last-run
+  `status='partial'` if any page failed; cardIQ tab shows last-run
   age + per-platform health dots.
 
 Mirrors how `gmail/sync/route.ts` already handles the "8 years of
@@ -196,7 +196,7 @@ With tiered freshness, that splits into:
 - **5d** — Detail-fetch function per platform (same files), tested
   same way.
 - **5e** — `scripts/dining-scrape.ts` orchestrator: discovery sweep,
-  tier-classification join against CardIQ txns, detail-fetch
+  tier-classification join against cardIQ txns, detail-fetch
   scheduler, `dining_runs` bookkeeping, resume flag.
 
 Each is independently committable. 5a is the hardest because politeness

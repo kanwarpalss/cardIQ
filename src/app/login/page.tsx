@@ -73,7 +73,7 @@ export default function LoginPage() {
         <div className="login-art" aria-hidden="true">
           <div className="art-card art-card-lilac"><span>THE POSSIBILITIES</span><i /><strong>Go a little further.</strong></div>
           <div className="art-card art-card-peach"><span>THE EVERYDAY</span><i /><strong>Make it count.</strong></div>
-          <div className="art-card art-card-teal"><span>CardIQ</span><i /><strong>Well played.</strong><small>YOUR CARDS. ALL TOGETHER.</small></div>
+          <div className="art-card art-card-teal"><span>cardIQ</span><i /><strong>Well played.</strong><small>YOUR CARDS. ALL TOGETHER.</small></div>
         </div>
         <div className="login-story-footer">SPEND SMARTER <span>✳</span> REWARD YOURSELF</div>
       </section>
@@ -118,7 +118,7 @@ export default function LoginPage() {
           {/* Fine print */}
           <p className="text-2xs text-mist/55 text-center leading-relaxed">
             Requires Gmail read-only access to parse credit card transaction alerts.
-            Your data is stored in your private CardIQ account.
+            Your data is stored in your private cardIQ account.
           </p>
         </div>
         )}

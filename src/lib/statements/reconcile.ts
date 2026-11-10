@@ -1,5 +1,5 @@
-// Pairs card-statement lines with transactions CardIQ already holds, so only charges
-// the statement proves and CardIQ lacks get added. Pure: no database access.
+// Pairs card-statement lines with transactions cardIQ already holds, so only charges
+// the statement proves and cardIQ lacks get added. Pure: no database access.
 
 import { createHash } from "crypto";
 import type { StatementLine } from "./parse";
@@ -35,7 +35,7 @@ export function amountAgreement(line: StatementLine, txn: DbTxn): Match["how"] |
   if (line.foreign && line.foreign.currency === currency && txn.original_amount != null) {
     return Math.abs(Number(txn.original_amount) - line.foreign.amount) <= 0.005 ? "foreign" : null;
   }
-  // A foreign alert whose statement line doesn't show the currency: CardIQ's INR is
+  // A foreign alert whose statement line doesn't show the currency: cardIQ's INR is
   // an estimate at that day's rate, so allow the bank's conversion to differ by 5%.
   if (!line.foreign && Number(txn.amount_inr) > 0) {
     return Math.abs(Number(txn.amount_inr) - line.amount) / line.amount <= 0.05 ? "foreign_inr_approx" : null;
@@ -161,7 +161,7 @@ export function merchantsAgree(stored: string | null, statementDescription: stri
 }
 
 export type SecondPass = {
-  /** Same amount, posted 4–10 days from the alert. Already in CardIQ. */
+  /** Same amount, posted 4–10 days from the alert. Already in cardIQ. */
   latePosted: Match[];
   /** Same merchant within 10 days, different amount: a hold or tip settled at another figure. */
   repriced: { line: StmtLineRef; txn: DbTxn }[];
@@ -242,7 +242,7 @@ export function followCovered(statementDays: string[], day: string, followDays =
   return run.every((d, i) => i === 0 || dayDiff(d, run[i - 1]) <= maxGapDays);
 }
 
-/** A CardIQ row inside a balanced statement's dates that the statement doesn't show. */
+/** A cardIQ row inside a balanced statement's dates that the statement doesn't show. */
 export type RemovalCandidate = {
   id: string;
   /** "duplicate": a twin of a row the statement confirms once. */

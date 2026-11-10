@@ -39,7 +39,7 @@ export interface SessionRow {
 //
 // The scraper runs from KP's Mac mini (not browser), so we can use the
 // service-role key and bypass RLS. Env vars come from .env.local just
-// like the rest of CardIQ.
+// like the rest of cardIQ.
 // ────────────────────────────────────────────────────────────────────
 
 function serviceClient() {

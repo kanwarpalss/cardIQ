@@ -1,4 +1,4 @@
--- CardIQ initial schema
+-- cardIQ initial schema
 -- Safe to re-run: all DDL uses IF NOT EXISTS / DROP IF EXISTS guards.
 
 -- ============================================================

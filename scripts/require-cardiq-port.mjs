@@ -9,7 +9,7 @@ try {
       if (error && typeof error === "object" && "code" in error && error.code === "EADDRINUSE") {
         reject(
           new Error(
-            `CardIQ will not start: its dedicated port ${port} is already in use. Stop the conflicting app instead of changing CardIQ's port.`,
+            `cardIQ will not start: its dedicated port ${port} is already in use. Stop the conflicting app instead of changing cardIQ's port.`,
           ),
         );
         return;
@@ -20,8 +20,8 @@ try {
       server.close(resolve);
     });
   });
-  console.log(`CardIQ port ${port} is reserved and ready.`);
+  console.log(`cardIQ port ${port} is reserved and ready.`);
 } catch (error) {
-  console.error(error instanceof Error ? error.message : "CardIQ could not reserve its dedicated port.");
+  console.error(error instanceof Error ? error.message : "cardIQ could not reserve its dedicated port.");
   process.exitCode = 1;
 }

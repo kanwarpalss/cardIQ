@@ -61,7 +61,7 @@ describe("classify", () => {
   });
 
   it("never mistakes a merchant's name for a bank fee or a bill payment", () => {
-    // Real lines that hid purchases and refunds CardIQ already held.
+    // Real lines that hid purchases and refunds cardIQ already held.
     expect(classify("KALMANE KOFFEES CHENNAI", "debit")).toBe("purchase");
     expect(classify("PINTEREST ADS DUBLIN", "debit")).toBe("purchase");
     expect(classify("DELTA AIR Baggage Fee NEW YORK", "debit")).toBe("purchase");

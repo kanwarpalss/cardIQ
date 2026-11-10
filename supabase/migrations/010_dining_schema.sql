@@ -22,7 +22,7 @@
 --   decisions ("Toit on Zomato == Toit on Swiggy"). Explicit > implicit.
 --
 -- RLS: restaurant / listing / offer / run / page tables are GLOBAL
--- (shared across users — though right now CardIQ is single-user, the
+-- (shared across users — though right now cardIQ is single-user, the
 -- data itself is not user-specific). sessions + manual_links carry
 -- user_id and RLS, since they encode user secrets / user judgement.
 --

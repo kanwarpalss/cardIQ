@@ -3,7 +3,7 @@
  *
  * Reads <dir>/text/*.json (from statements-unlock.ts), writes <dir>/parsed.json,
  * and prints, per bank, how many statements reconciled against their own totals.
- * Read-only: touches nothing in CardIQ.
+ * Read-only: touches nothing in cardIQ.
  *
  * Run:  npx tsx scripts/statements-parse.ts --dir ~/.cardiq-statements [--show-failures]
  */

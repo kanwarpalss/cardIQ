@@ -39,7 +39,7 @@ export function buildSystemPrompt(opts: {
     .map((c) => `- ${c.display_name} (••${c.last4})`)
     .join("\n") || "(no cards yet)";
 
-  return `You are CardIQ, a concise credit-card research assistant for an Indian user.
+  return `You are cardIQ, a concise credit-card research assistant for an Indian user.
 
 # USER PROFILE
 ${opts.profile || "(not set)"}

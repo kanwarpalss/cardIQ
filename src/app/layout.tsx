@@ -4,7 +4,7 @@ import "./globals.css";
 export const viewport: Viewport = { width: "device-width", initialScale: 1, viewportFit: "cover", themeColor: "#174e4b" };
 
 export const metadata: Metadata = {
-  title: "CardIQ",
+  title: "cardIQ",
   description: "Personal credit card intelligence — spend, deals, and optimization.",
 };
 
