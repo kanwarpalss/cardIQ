@@ -8,7 +8,7 @@ import {
 import { runFullSync } from "@/lib/gmail/stream-sync";
 
 /**
- * Keeps CardIQ current without the user ever pressing Sync.
+ * Keeps cardIQ current without the user ever pressing Sync.
  *
  * Fires on three triggers, all funnelled through the same decision rules:
  *   1. app open (mount)
@@ -182,7 +182,7 @@ export default function AutoSync({ onSynced }: { onSynced?: () => void }) {
       <div className={`${base} border-gold/40 bg-surface/95 text-mist/85`}>
         <div className="font-medium text-gold mb-1">One-time setup: import your history</div>
         <p className="text-xs text-mist/65 mb-2.5">
-          CardIQ hasn&apos;t imported your bank emails yet. The first import covers several
+          cardIQ hasn&apos;t imported your bank emails yet. The first import covers several
           years and takes 20–30 minutes — after that it keeps itself up to date automatically.
         </p>
         <div className="flex gap-2">

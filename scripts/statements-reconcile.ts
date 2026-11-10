@@ -1,14 +1,14 @@
 /**
- * statements-reconcile.ts — compare card statements with CardIQ and add what's missing.
+ * statements-reconcile.ts — compare card statements with cardIQ and add what's missing.
  *
  * Uses <dir>/parsed.json from statements-parse.ts. Only statements that balance
  * against their own printed totals are used. Purchases and refunds the statement
- * shows but CardIQ lacks are added; bank fees, tax, interest, bill payments and
+ * shows but cardIQ lacks are added; bank fees, tax, interest, bill payments and
  * cashback are reported but never added, since alert-based Spend has never
  * counted them. Every added row's gmail_message_id starts with "stmt:", so they
  * can be found or removed as a group.
  *
- * With --remove-unbilled it also removes CardIQ rows a balanced statement proves
+ * With --remove-unbilled it also removes cardIQ rows a balanced statement proves
  * were never charged (planRemovals: second copies, released holds, declined or
  * receipt-only rows). Removed rows are backed up to <dir>/removed-<time>.json and
  * their emails recorded in excluded_messages (migration 023) first, so no
@@ -135,7 +135,7 @@ async function main() {
         noCard.push(`${s.subject}: ${l.date} ${l.description} ${l.amount}`);
         continue;
       }
-      // The key uses the printed number so it never changes as CardIQ's data does.
+      // The key uses the printed number so it never changes as cardIQ's data does.
       const base = [printed, l.date, l.direction, l.amount.toFixed(2), l.description].join("|");
       const n = (occurrences.get(base) ?? 0) + 1;
       occurrences.set(base, n);
@@ -154,7 +154,7 @@ async function main() {
   const unmatchedTxns = second.unmatchedTxns;
   const missing = second.unmatchedLines as typeof lines;
 
-  // CardIQ rows inside a statement's dates that the statement doesn't contain.
+  // cardIQ rows inside a statement's dates that the statement doesn't contain.
   // The last few days of a period are left out: a charge made then often posts on
   // the next statement.
   const windows = used.map((s) => {
@@ -165,7 +165,7 @@ async function main() {
   const notOnStatement = unmatchedTxns.filter((t) =>
     windows.some((w) => w.from && w.cards.has(t.card_last4) && t.day >= w.from && t.day <= w.to),
   );
-  // A second CardIQ row with the same card, day and amount as one the statement
+  // A second cardIQ row with the same card, day and amount as one the statement
   // confirmed is most likely the same alert stored twice.
   const confirmed = new Set(matches.map((m) => `${m.txn.card_last4}|${m.txn.day}|${m.txn.txn_type}|${m.txn.amount_inr}`));
   const likelyDuplicates = notOnStatement.filter((t) => confirmed.has(`${t.card_last4}|${t.day}|${t.txn_type}|${t.amount_inr}`));
@@ -173,7 +173,7 @@ async function main() {
 
   // ── Report ─────────────────────────────────────────────────────────────
   console.log(`Statements: ${statements.length} read, ${unreconciled.length} didn't balance (not used), ${duplicates.length} duplicate copies skipped, ${used.length} used.`);
-  console.log(`Purchase/refund lines: ${lines.length}; already in CardIQ: ${matches.length}; missing: ${missing.length}.`);
+  console.log(`Purchase/refund lines: ${lines.length}; already in cardIQ: ${matches.length}; missing: ${missing.length}.`);
   const how: Record<string, number> = {};
   for (const m of matches) how[m.how] = (how[m.how] ?? 0) + 1;
   console.log(`  matched by: ${JSON.stringify(how)} (+${second.latePosted.length} posted 4–10 days after the alert)`);
@@ -194,7 +194,7 @@ async function main() {
     if (l.direction === "debit") c.missingDebit += l.amount;
     else c.missingCredit += l.amount;
   }
-  console.log("\nBy card (statement lines → already in CardIQ / missing):");
+  console.log("\nBy card (statement lines → already in cardIQ / missing):");
   for (const [card, c] of [...byCard].sort((a, b) => a[1].from.localeCompare(b[1].from))) {
     console.log(`  ${card}  ${c.from} → ${c.to}  ${String(c.lines).padStart(5)} lines  ${String(c.matched).padStart(5)} present  ${String(c.missing).padStart(5)} missing  (+${inr(c.missingDebit)} spend, ${inr(c.missingCredit)} refunds)`);
   }
@@ -202,7 +202,7 @@ async function main() {
   for (const [kind, k] of otherKinds) console.log(`  ${kind.padEnd(13)} ${String(k.n).padStart(5)} lines  ${inr(k.total)}`);
   if (noCard.length) console.log(`  no card number on statement: ${noCard.length} lines`);
   const sum = (ts: DbTxn[]) => inr(ts.reduce((s, t) => s + t.amount_inr, 0));
-  console.log(`\nCardIQ rows inside a statement's dates but not on it (listed for review, not changed):`);
+  console.log(`\ncardIQ rows inside a statement's dates but not on it (listed for review, not changed):`);
   console.log(`  likely stored twice: ${likelyDuplicates.length} (${sum(likelyDuplicates)})`);
   console.log(`  bank never charged (declined, cancelled, or another card): ${neverCharged.length} (${sum(neverCharged)})`);
 
@@ -344,7 +344,7 @@ async function main() {
   }
   const { count, error: cErr } = await sb.from("transactions").select("id", { count: "exact", head: true }).eq("user_id", uid).like("gmail_message_id", "stmt:%");
   if (cErr) throw new Error(cErr.message);
-  console.log(`\nWrote ${written} rows. CardIQ now holds ${count} statement-sourced rows.`);
+  console.log(`\nWrote ${written} rows. cardIQ now holds ${count} statement-sourced rows.`);
 
   if (!removalPlan || removalPlan.remove.length === 0) return;
   // The exclusion list must exist first, or reprocess would re-create every removed row.
@@ -359,7 +359,7 @@ async function main() {
     if (error) throw new Error(`Backup read failed: ${error.message}. Nothing was removed.`);
     full.push(...(data ?? []));
   }
-  if (full.length !== removeIds.length) throw new Error(`Backup found ${full.length} of ${removeIds.length} rows; CardIQ changed since this run read it. Nothing was removed.`);
+  if (full.length !== removeIds.length) throw new Error(`Backup found ${full.length} of ${removeIds.length} rows; cardIQ changed since this run read it. Nothing was removed.`);
   if (full.some((r) => String(r.gmail_message_id).startsWith("stmt:"))) throw new Error("A statement-sourced row was planned for removal; that is a bug. Nothing was removed.");
   const backup = join(dir, `removed-${new Date().toISOString().replace(/[:.]/g, "-")}.json`);
   writeFileSync(backup, JSON.stringify(full.map((r) => ({ ...r, removal_reason: reasonOf.get(r.id as string) })), null, 1), { mode: 0o600 });
@@ -381,7 +381,7 @@ async function main() {
     removed += data?.length ?? 0;
   }
   console.log(`Removed ${removed} of ${removeIds.length} planned rows; their emails are on the excluded list.`);
-  if (removed !== removeIds.length) throw new Error("Fewer rows were removed than planned; check the backup file against CardIQ.");
+  if (removed !== removeIds.length) throw new Error("Fewer rows were removed than planned; check the backup file against cardIQ.");
 }
 
 main().catch((e) => {

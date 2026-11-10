@@ -1,6 +1,6 @@
-# CardIQ — Project Rules
+# cardIQ — Project Rules
 
-> Project rules for CardIQ, for any agent that reads `AGENTS.md`.
+> Project rules for cardIQ, for any agent that reads `AGENTS.md`.
 >
 > ⚠️ This file MIRRORS `.claude/CLAUDE.md` from `## Stack` onward. Two agents
 > read the same invariants from two paths, so the bodies must never drift.
@@ -35,7 +35,7 @@ Next.js 16.3.4 (App Router) + React 19.2.8 + TypeScript + Tailwind · Supabase (
 
 ## Deployment
 
-- Local dev: `npm run dev` at repo root → http://localhost:3901. The command refuses to start if another app owns CardIQ's dedicated port.
+- Local dev: `npm run dev` at repo root → http://localhost:3901. The command refuses to start if another app owns cardIQ's dedicated port.
 - Production: Vercel — auto-deploys on `git push origin main` (solo, direct-to-main)
 - Env vars per SPEC §8 **must** be mirrored in Vercel project settings
 - Supabase migrations run manually in the SQL Editor, in numeric order
@@ -52,7 +52,7 @@ Next.js 16.3.4 (App Router) + React 19.2.8 + TypeScript + Tailwind · Supabase (
 - "Load full history" (5-year backfill) is long-running (20–30 min) — never interrupt it, and never trigger it as a casual test.
 - Amounts are money: parser/aggregation logic is boundary-prover territory (₹ formats, lakhs separators, reversals/refunds).
 - Blinkit has no email/export path: its only complete source is the authenticated browser collector (`scripts/blinkit-browser-collector.ts`). The order-detail endpoint is **POST**, uses the `order_details_v2` deeplink ID format, and Blinkit 429-rate-limits concurrent detail fetches — the collector fetches serially with adaptive backoff, never in parallel. Amazon's complete source is the user's official "Request Your Information" export; the real amazon.in file is `Your Amazon Orders/Order History.csv` (NOT `Retail.OrderHistory.1.csv`, which is Amazon US's filename). Both import scripts dry-run by default; do not claim either history is complete until its real source file has been imported and audited. Amazon's CSV has a `Shipment Item Subtotal` column that repeats a per-SHIPMENT total on every item row of that shipment — never sum it as a per-item price (use `Total Amount`/`Total Owed` instead); this inflated real totals before the 2026-07-22 fix.
-- Sender lists gate what the sync fetches, and `gmail_seen_messages` only holds what it fetched, so a bank moving to a new address is invisible to anything reading that table (HSBC, 2026). `GET /api/gmail/format-watch` therefore also searches the mailbox itself (`src/lib/gmail/mailbox-watch.ts`) and checks for quiet cards and transactions with no card. When a bank's sender changes, add it to that card's `gmail.senders`. When format-watch's rules change, update the baseline in the weekly "CardIQ weekly format-watch check" routine, or it will compare against a stale count.
+- Sender lists gate what the sync fetches, and `gmail_seen_messages` only holds what it fetched, so a bank moving to a new address is invisible to anything reading that table (HSBC, 2026). `GET /api/gmail/format-watch` therefore also searches the mailbox itself (`src/lib/gmail/mailbox-watch.ts`) and checks for quiet cards and transactions with no card. When a bank's sender changes, add it to that card's `gmail.senders`. When format-watch's rules change, update the baseline in the weekly "cardIQ weekly format-watch check" routine, or it will compare against a stale count.
 - A parser result with no 4-digit card is refused centrally in `parseTxnEmail`: a row with no card shows under no card in any tab. Never default a card number to `""`.
 - Card statements are an audit source, not a sync: `scripts/statements-*.ts` read PDFs from Gmail into `~/.cardiq-statements` (never the repo). Only statements that balance against their own printed totals may add rows, only purchases and refunds are added, and every added row's `gmail_message_id` starts `stmt:`. KP unlocks PDFs himself with `statements-unlock.ts`; never type, derive or store a statement password. A wipe deletes `stmt:` rows: re-run `statements-reconcile.ts --apply` after one. Rows a balanced statement proves were never charged (second copies, released holds, declined or receipt-only rows) are removed only by `statements-reconcile.ts --remove-unbilled --apply`, which backs them up and records their emails in `excluded_messages` (migration 023) first. Every path that turns an email into a transaction must skip those IDs (`loadExcludedMessageIds`; `src/lib/excluded-messages-wiring.test.ts` fails the suite otherwise), or reprocess/backfill/wipe re-creates them.
 - After any bulk import, run `scripts/sync-orders-offline.ts` (dry-run first, `--apply` to write) to match new orders to card charges and flag same-purchase duplicates without needing a live Gmail session — it calls the same `matchOrderToTxn`/`planDedup` the live sync uses.

@@ -482,7 +482,7 @@ function PointsSection({ data, reload, setError, onNavigate }: {
   return (
     <div className="space-y-5">
       <p className="text-sm text-mist/60">
-        Point balances per card. Enter what your bank app shows — CardIQ keeps the history
+        Point balances per card. Enter what your bank app shows — cardIQ keeps the history
         and warns you before the points expire.
       </p>
 

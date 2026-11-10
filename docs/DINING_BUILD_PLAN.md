@@ -60,7 +60,7 @@ and arguably crosses an ethics line. Better:
 2. **Weekly cron** (Vercel cron or a GitHub Action) calls each
    scraper. Before each run, hit a cheap `/me`-equivalent endpoint
    to validate the token. If 401, the run aborts with a Supabase
-   `dining_alerts` row → CardIQ UI shows a red "re-login Swiggy"
+   `dining_alerts` row → cardIQ UI shows a red "re-login Swiggy"
    banner. KP re-runs the login CLI. Total downtime per re-auth
    event: ~2 minutes of his time, ~once every 30–90 days.
 
@@ -68,7 +68,7 @@ and arguably crosses an ethics line. Better:
    automation patterns platforms flag on. Token expired = surface
    it, ask KP, move on.
 
-This is the same shape as CardIQ's existing Gmail OAuth: long-lived
+This is the same shape as cardIQ's existing Gmail OAuth: long-lived
 auth obtained interactively once, encrypted at rest, validated each
 run, fail-loud on expiry. Conceptually consistent.
 
@@ -237,7 +237,7 @@ Once §6 is signed off:
 | 9 | Manual-link review widget for ambiguous matches | Closes the dedupe loop | low |
 
 Each chunk: code → tests → commit → next. No big-bangs. Every
-commit leaves CardIQ green (74 existing tests stay passing; new
+commit leaves cardIQ green (74 existing tests stay passing; new
 tests add cleanly).
 
 ---
@@ -247,7 +247,7 @@ tests add cleanly).
 - No card-linked offer layer (that's Phase 2, distinct project).
 - No real-time scraping on user search — strictly weekly batch.
 - No push notifications for new offers (idea log, not v1).
-- No mobile-specific UI (CardIQ doesn't have one anywhere).
+- No mobile-specific UI (cardIQ doesn't have one anywhere).
 - No offer history/trend charts (data accumulates from week 1;
   charts are a thin addition later if KP wants them).
 - No auto-OTP automation — manual login is the contract (§3).

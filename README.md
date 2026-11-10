@@ -1,4 +1,4 @@
-# CardIQ
+# cardIQ
 
 Personal credit-card research, deal tracking, and spend optimization. One URL, accessible from any device.
 
@@ -74,7 +74,7 @@ Open http://localhost:3901, sign in with Google, paste your Anthropic API key in
 ## Running on a second machine (same data)
 
 Your transactions live in **Supabase (the cloud), not in this repo**. To run
-CardIQ on another laptop, you just clone the code and recreate the
+cardIQ on another laptop, you just clone the code and recreate the
 `.env.local` file by fetching each value from the dashboards below. Nothing
 secret is ever committed — `.env.local` is gitignored on purpose.
 
@@ -130,13 +130,13 @@ Google Cloud changes are needed for another *local* machine.
 ### Launch from any Mac
 
 The iCloud-synced `cardiq` terminal command clones or fast-forwards
-`~/Code/cardIQ` from GitHub `main`, starts CardIQ on its dedicated port
+`~/Code/cardIQ` from GitHub `main`, starts cardIQ on its dedicated port
 **3901**, and opens it. It never falls back to another port: if another app
 uses 3901, it stops with a plain-English error instead.
 
-CardIQ's `.env.local` is deliberately not in GitHub or the shared launcher.
+cardIQ's `.env.local` is deliberately not in GitHub or the shared launcher.
 Before the first `cardiq` run on a new Mac, securely copy that file from an
-already configured CardIQ Mac into `~/Code/cardIQ/.env.local`. It contains the
+already configured cardIQ Mac into `~/Code/cardIQ/.env.local`. It contains the
 encryption key required to read the existing Gmail connection. After that
 one-time setup, open a new Terminal window and run `cardiq`.
 

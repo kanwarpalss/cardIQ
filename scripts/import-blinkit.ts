@@ -1,5 +1,5 @@
 /**
- * import-blinkit.ts — load Blinkit order history into CardIQ from the JSON its
+ * import-blinkit.ts — load Blinkit order history into cardIQ from the JSON its
  * web app returns (Blinkit has no order emails and no official export).
  *
  * Get the JSON one of two ways:

@@ -1,7 +1,7 @@
 // Importer for Amazon's official data export ("Request Your Information" →
 // Your Orders → Retail.OrderHistory.1.csv). Pure + unit-tested; the DB write
 // lives in scripts/import-amazon.ts. One CSV row = one item; rows sharing an
-// Order ID collapse into one order with an items[] list — matching CardIQ's
+// Order ID collapse into one order with an items[] list — matching cardIQ's
 // order shape so Amazon purchases the email parser never saw still land in the
 // dashboard (and dedupe against email-sourced Amazon orders by order_ref).
 //
@@ -73,7 +73,7 @@ function toIso(raw: string | undefined): string | undefined {
 }
 
 /**
- * Parse a Retail.OrderHistory CSV into CardIQ orders. `onlyCurrency` (default
+ * Parse a Retail.OrderHistory CSV into cardIQ orders. `onlyCurrency` (default
  * "INR") drops foreign-currency rows so amounts stay comparable to the INR
  * transaction ledger; pass null to keep everything.
  */

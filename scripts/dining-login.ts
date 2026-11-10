@@ -146,7 +146,7 @@ async function main() {
   const browser = await chromium.launch({ headless: false });
   // A persistent context (with its own cookie jar) so a single login
   // works. We DON'T reuse the user's real Chrome profile — that would
-  // mix CardIQ scraping with KP's personal browsing in concerning ways.
+  // mix cardIQ scraping with KP's personal browsing in concerning ways.
   const ctx = await browser.newContext({
     userAgent:
       "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_5) AppleWebKit/537.36 " +

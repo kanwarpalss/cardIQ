@@ -1,4 +1,4 @@
-# 🍽 CardIQ Dining — Mac mini setup runbook
+# 🍽 cardIQ Dining — Mac mini setup runbook
 
 **Where this runs**: KP's personal Mac mini at home, on personal
 Supabase / GitHub / Vercel. **Not** on the Walmart laptop.
@@ -57,7 +57,7 @@ drives. **This is the slow step** — go make tea.
 You need the UUID Supabase assigned to your account. Find it:
 
 1. Go to https://supabase.com/dashboard
-2. Open your CardIQ project
+2. Open your cardIQ project
 3. Sidebar → **Authentication** → **Users**
 4. Click your row → copy the **User UID** (looks like `a1b2c3d4-...`)
 
@@ -79,7 +79,7 @@ CARDIQ_USER_ID=<paste-the-uuid-here>
 Save the file.
 
 > **⚠️ Check while you're in there**: confirm `ENCRYPTION_KEY` is set
-> (32-byte hex). If you've been running CardIQ already, it should be.
+> (32-byte hex). If you've been running cardIQ already, it should be.
 > If it's blank, you'll need to set it — but **use the same value
 > you've been using all along**, otherwise it'll orphan your existing
 > Gmail tokens. If you've never set it, generate one:
@@ -215,7 +215,7 @@ If any dot is red:
 When you want to start the next session (capturing real API fixtures
 + building the actual scrapers), paste this prompt verbatim:
 
-> **CardIQ Dining — sessions captured on Mac mini, all three
+> **cardIQ Dining — sessions captured on Mac mini, all three
 > `dining-verify-session.ts` checks pass, Dining tab shows empty
 > state cleanly with 3 green session dots. Ready for chunks 5b–d
 > (per-platform scrapers + orchestrator). Read `HANDOFF.md` +
@@ -269,7 +269,7 @@ Anything else weird, screenshot it and share next session 📸
   locked decisions D1–D5, definition of done.
 - `docs/DINING_SCRAPE_STRATEGY.md` — two endpoint tiers × three
   freshness tiers; bootstrap math; politeness policy.
-- `HANDOFF.md` — current state of the whole CardIQ project, what's
+- `HANDOFF.md` — current state of the whole cardIQ project, what's
   shipped, what's pending, conventions.
 
 Good luck — see you on the other side 🚀

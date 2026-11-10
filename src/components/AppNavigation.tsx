@@ -132,7 +132,7 @@ export default function AppNavigation({ tab, onNavigate, onSignOut, reviewCount,
             <span><strong>{next}</strong><small>{DESCRIPTIONS[next]}</small></span>{badge(next)}
           </button>)}
         </nav>
-        <button type="button" onClick={onSignOut} className="drawer-signout">Sign out of CardIQ <span aria-hidden="true">↗</span></button>
+        <button type="button" onClick={onSignOut} className="drawer-signout">Sign out of cardIQ <span aria-hidden="true">↗</span></button>
       </div>
     </dialog>
   </>;

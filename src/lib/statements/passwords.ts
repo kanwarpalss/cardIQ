@@ -6,7 +6,7 @@ export type PasswordInputs = {
   name4: string;
   /** Date of birth as DDMMYYYY. */
   dob: string;
-  /** Card last-4s already known to CardIQ, for "name + last 4" formats. */
+  /** Card last-4s already known to cardIQ, for "name + last 4" formats. */
   last4s: string[];
   /** Card last-6s the cardholder typed, for HSBC's "DOB + last 6" format. */
   last6s?: string[];

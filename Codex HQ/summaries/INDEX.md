@@ -1,4 +1,4 @@
-# CardIQ Session Summaries
+# cardIQ Session Summaries
 
 | Date | Topic | Summary |
 |---|---|---|
