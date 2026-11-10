@@ -70,7 +70,7 @@ async function main() {
   const txnMoves = plan(txns);
   const ruleMoves = plan(rules);
 
-  console.log(`CardIQ category regroup — ${APPLY ? "APPLY" : "DRY RUN (nothing will be written)"}`);
+  console.log(`cardIQ category regroup — ${APPLY ? "APPLY" : "DRY RUN (nothing will be written)"}`);
   console.log(`Scanned ${txns.length} transactions and ${rules.length} merchant rules.\n`);
 
   const summarize = (title: string, moves: Planned[]) => {
