@@ -3,6 +3,7 @@
 
 import { createClient } from "@/lib/supabase/client";
 import { isMissingTableError } from "@/lib/supabase/errors";
+import { toStoredDeal } from "./status";
 import type { DealRun, StoredDeal } from "./types";
 
 export type DealsData = {
@@ -26,11 +27,7 @@ export async function loadDeals(): Promise<DealsData> {
       return { deals: [], runs: [], tableMissing: isMissingTableError(error), error: isMissingTableError(error) ? null : error.message };
     }
     // numeric columns arrive as strings from PostgREST.
-    deals.push(...(data ?? []).map((d) => ({
-      ...d,
-      bonus_pct: d.bonus_pct == null ? null : Number(d.bonus_pct),
-      discount_pct: d.discount_pct == null ? null : Number(d.discount_pct),
-    }) as StoredDeal));
+    deals.push(...(data ?? []).map(toStoredDeal));
     if (!data || data.length < PAGE) break;
   }
   const { data: runs, error } = await sb.from("deal_runs")
