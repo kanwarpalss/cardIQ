@@ -2,19 +2,19 @@
 
 import { useEffect, useRef } from "react";
 
-export const TABS = ["Overview", "Spend", "Orders", "Vouchers", "Redemptions", "Offers", "Dining", "Chat", "Review", "Cards"] as const;
+export const TABS = ["Overview", "Spend", "Orders", "Vouchers", "Redemptions", "Dining", "Chat", "Review", "Cards"] as const;
 export type Tab = (typeof TABS)[number];
 
 const GROUPS: { label: string; tabs: Tab[] }[] = [
   { label: "Your everyday", tabs: ["Overview", "Spend", "Orders", "Vouchers"] },
-  { label: "The good stuff", tabs: ["Redemptions", "Offers", "Dining", "Chat"] },
+  { label: "The good stuff", tabs: ["Redemptions", "Dining", "Chat"] },
 ];
 const PRIMARY: Tab[] = ["Overview", "Spend", "Redemptions", "Cards"];
-const MORE: Tab[] = ["Orders", "Vouchers", "Offers", "Dining", "Chat", "Review"];
+const MORE: Tab[] = ["Orders", "Vouchers", "Dining", "Chat", "Review"];
 const LABELS: Partial<Record<Tab, string>> = { Overview: "Home", Redemptions: "Rewards" };
 const DESCRIPTIONS: Partial<Record<Tab, string>> = {
   Orders: "Purchases & baskets", Vouchers: "Balances & drawdowns",
-  Offers: "Deals worth keeping", Dining: "Find your next table", Chat: "Ask your card assistant", Review: "Check suggested matches",
+  Dining: "Find your next table", Chat: "Ask your card assistant", Review: "Check suggested matches",
 };
 const PATHS: Record<Tab, React.ReactNode> = {
   Overview: <path d="m3 10 9-7 9 7M5 9v11h14V9M9 20v-6h6v6" />,
@@ -22,7 +22,6 @@ const PATHS: Record<Tab, React.ReactNode> = {
   Orders: <><path d="M4 7h16l-1 14H5L4 7Z" /><path d="M8 7V5a4 4 0 0 1 8 0v2" /></>,
   Vouchers: <><path d="M3 6h18v4a2 2 0 0 0 0 4v4H3v-4a2 2 0 0 0 0-4V6Z" /><path d="M15 6v12" strokeDasharray="2 3" /></>,
   Redemptions: <path d="m12 3 2.8 5.8 6.2.9-4.5 4.4 1.1 6.2-5.6-3-5.6 3 1.1-6.2L3 9.7l6.2-.9L12 3Z" />,
-  Offers: <><path d="M3 3h9l9 9-9 9-9-9V3Z" /><circle cx="8" cy="8" r="1" /></>,
   Dining: <><path d="M4 3v6a2 2 0 0 0 4 0V3M6 3v18M18 3c-4 2-4 8 0 9V3Zm0 9v9" /></>,
   Chat: <path d="M3 4h18v13h-8l-6 4v-4H3V4Z" />,
   Review: <><circle cx="12" cy="12" r="9" /><path d="m8 12 3 3 5-6" /></>,

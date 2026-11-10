@@ -20,7 +20,8 @@ export type DealKind = "buy_points" | "transfer_bonus" | "ratio_change";
 /** Banks whose points KP's cards earn. Derived from CARD_REGISTRY issuers. */
 export type BankKey = "axis" | "hdfc" | "hsbc" | "icici" | "amex";
 
-export type DealSourceKind = "email" | "blog";
+/** "manual" = KP added it himself (src/lib/deals/manual.ts). */
+export type DealSourceKind = "email" | "blog" | "manual";
 
 /** What one email or blog post said, after validation. */
 export type ExtractedDeal = {

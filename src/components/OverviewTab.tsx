@@ -7,13 +7,17 @@ import { useTransactionsAll } from "@/lib/transactions-cache";
 import { CARD_REGISTRY } from "@/lib/cards/registry";
 import { fmtINR, fmtNum, fmtDate } from "@/lib/format";
 import {
-  latestBalanceByCard, sortOffersForDisplay,
-  effectiveOfferStatus, expiryState,
-  type RewardBalanceRow, type OfferRow, type LoyaltyRow,
+  latestBalanceByCard, expiryState,
+  type RewardBalanceRow, type LoyaltyRow,
 } from "@/lib/perks";
 import { CardFace } from "./CardVisual";
 import CardRetentionNote from "./CardRetentionNote";
 import MissingTableNotice from "./MissingTableNotice";
+import { loadDeals } from "@/lib/deals/load";
+import { rankLive, scoreWallet } from "@/lib/deals/status";
+import { figureOf, kindLine, timeLeft } from "@/lib/deals/display";
+import type { StoredDeal } from "@/lib/deals/types";
+import { PROGRAMS } from "@/lib/transfer-partners/programs";
 
 type Txn = {
   id: string; card_last4: string; amount_inr: number;
@@ -45,26 +49,26 @@ export default function OverviewTab({
   const { data: rawAllData, loading } = useTransactionsAll();
   const allData = rawAllData as AllData | null;
   const [rewards, setRewards] = useState<RewardBalanceRow[]>([]);
-  const [offers, setOffers] = useState<OfferRow[]>([]);
   const [loyalty, setLoyalty] = useState<LoyaltyRow[]>([]);
   const [migrationNeeded, setMigrationNeeded] = useState(false);
+  // `now` captured with the data so ranking stays a pure render.
+  const [deals, setDeals] = useState<{ list: StoredDeal[]; now: number } | null>(null);
 
   useEffect(() => {
     (async () => {
-      const [rewardRes, offerRes, loyaltyRes] = await Promise.all([
+      const [rewardRes, loyaltyRes] = await Promise.all([
         supabase.from("reward_balances").select("*"),
-        supabase.from("offers").select("*"),
         supabase.from("loyalty_accounts").select("*"),
       ]);
-      if (rewardRes.error || offerRes.error || loyaltyRes.error) {
-        const missing = [rewardRes.error, offerRes.error, loyaltyRes.error]
+      if (rewardRes.error || loyaltyRes.error) {
+        const missing = [rewardRes.error, loyaltyRes.error]
           .some((e) => isMissingTableError(e));
         setMigrationNeeded(missing);
       }
       setRewards((rewardRes.data as RewardBalanceRow[]) ?? []);
-      setOffers((offerRes.data as OfferRow[]) ?? []);
       setLoyalty((loyaltyRes.data as LoyaltyRow[]) ?? []);
     })();
+    loadDeals().then((d) => setDeals({ list: d.deals, now: Date.now() }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -91,16 +95,20 @@ export default function OverviewTab({
   }, [allData]);
 
   const latestBalances = useMemo(() => latestBalanceByCard(rewards), [rewards]);
-  const activeOffers = useMemo(
-    () => sortOffersForDisplay(offers).filter((o) => effectiveOfferStatus(o) === "active"),
-    [offers]
-  );
   const sortedLoyalty = useMemo(() => {
     const order = { airline: 0, hotel: 1, other: 2 } as const;
     return [...loyalty].sort((a, b) => order[a.program_type] - order[b.program_type]);
   }, [loyalty]);
 
   const cards = allData?.cards ?? [];
+  // Ranked exactly as Rewards → Live deals ranks them; "not for your cards"
+  // left out — Home shows only what he can act on.
+  const topDeals = useMemo(() => {
+    if (!deals) return [];
+    const wallet = scoreWallet((allData?.cards ?? []).map((c) => c.product_key)).cards;
+    const today = new Date(deals.now).toLocaleDateString("en-CA");
+    return rankLive(deals.list, wallet, today).filter((r) => r.assessment.reach !== "not_yours");
+  }, [deals, allData]);
   const monthName = new Date().toLocaleDateString("en-IN", { month: "long", year: "numeric" });
 
   if (loading) {
@@ -169,8 +177,8 @@ export default function OverviewTab({
         )}
       </section>
 
-      {/* ── Holistic panels: rewards / offers / loyalty ─────────────────── */}
-      {migrationNeeded && <MissingTableNotice feature="Rewards, Offers & Loyalty" />}
+      {/* ── Holistic panels: rewards / deals / loyalty ──────────────────── */}
+      {migrationNeeded && <MissingTableNotice feature="Rewards & Loyalty" />}
 
       <div className="overview-panels grid lg:grid-cols-3 gap-4 items-start">
 
@@ -203,32 +211,26 @@ export default function OverviewTab({
           )}
         </Panel>
 
-        {/* Offers */}
-        <Panel title="Active offers" onOpen={() => onNavigate("Offers")}>
-          {activeOffers.length === 0 ? (
-            <PanelEmpty body="Save card offers you spot — with expiry reminders so none slip past." cta="Add an offer →" onClick={() => onNavigate("Offers")} />
+        {/* Live deals */}
+        <Panel title="Live deals" onOpen={() => onNavigate("Redemptions", "deals")}>
+          {topDeals.length === 0 ? (
+            <PanelEmpty body="Points sales and transfer bonuses for your cards, checked every morning — or add one you've spotted."
+              cta="See deals →" onClick={() => onNavigate("Redemptions", "deals")} />
           ) : (
             <ul className="space-y-3">
-              {activeOffers.slice(0, 5).map((o) => {
-                const card = cards.find((c) => c.id === o.card_id);
-                const exp = expiryState(o.valid_until, 14);
+              {topDeals.slice(0, 4).map(({ d, assessment: a }) => {
+                const fig = figureOf(d);
+                const time = timeLeft(a, d);
                 return (
-                  <li key={o.id} className="flex items-start justify-between gap-3">
+                  <li key={d.id} className="flex items-start justify-between gap-3">
                     <div className="min-w-0">
-                      <div className="text-sm text-mist/85 truncate">{o.title}</div>
-                      <div className="text-xs text-mist/50 truncate">
-                        {card ? cardLabel(card) : "All cards"}{o.merchant ? ` · ${o.merchant}` : ""}
-                      </div>
+                      <div className="text-sm text-mist/85 truncate">{PROGRAMS[d.program].name}</div>
+                      <div className="text-xs text-mist/50 truncate">{kindLine(d)}</div>
                     </div>
-                    <span className={`shrink-0 text-2xs px-2 py-0.5 rounded-full border ${
-                      exp.kind === "soon"
-                        ? "border-amber/40 text-amber bg-amber/10"
-                        : "border-rim text-mist/55"
-                    }`}>
-                      {exp.kind === "none" ? "No expiry"
-                        : exp.kind === "soon" ? (exp.days === 0 ? "Today!" : `${exp.days}d left`)
-                        : `till ${fmtDate(o.valid_until!)}`}
-                    </span>
+                    <div className="text-right shrink-0">
+                      {fig && <div className="text-sm font-semibold text-gold tabular-nums">{fig.big} {fig.small}</div>}
+                      <div className={`text-2xs ${time.urgent ? "text-ruby font-semibold" : "text-mist/45"}`}>{time.text}</div>
+                    </div>
                   </li>
                 );
               })}

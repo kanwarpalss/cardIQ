@@ -203,7 +203,7 @@ export function assessDeal(d: StoredDeal, cards: ScoreCard[], history: StoredDea
     ...reachOf(d, cards),
     multiplier: multiplierOf(d),
     ...gradeOf(d, history),
-    verified: d.evidence_verified && d.sources.some((s) => s.kind === "email"),
+    verified: d.evidence_verified && d.sources.some((s) => s.kind === "email" || s.kind === "manual"),
   };
 }
 

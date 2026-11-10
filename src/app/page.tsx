@@ -25,7 +25,6 @@ const OrdersTab      = dynamic(() => import("@/components/OrdersTab"), { loading
 const VouchersTab    = dynamic(() => import("@/components/VouchersTab"), { loading: TAB_LOADING });
 const ReviewTab      = dynamic(() => import("@/components/ReviewTab"), { loading: TAB_LOADING });
 const RedemptionsTab = dynamic(() => import("@/components/RedemptionsTab"), { loading: TAB_LOADING });
-const OffersTab      = dynamic(() => import("@/components/OffersTab"), { loading: TAB_LOADING });
 const DiningTab      = dynamic(() => import("@/components/DiningTab"), { loading: TAB_LOADING });
 const ChatTab        = dynamic(() => import("@/components/ChatTab"), { loading: TAB_LOADING });
 const CardsTab       = dynamic(() => import("@/components/CardsTab"), { loading: TAB_LOADING });
@@ -107,7 +106,6 @@ export default function Home() {
           <RedemptionsTab onNavigate={navigate} onExpiringChange={refreshExpiringCount}
             focusSub={redemptionFocus} />
         )}
-        {tab === "Offers"   && <OffersTab />}
         {tab === "Dining"   && <DiningTab />}
         {tab === "Chat"     && <ChatTab />}
         {tab === "Cards"    && <CardsTab />}
